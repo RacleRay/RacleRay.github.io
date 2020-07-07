@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
   
-  <title>Racle的博客</title>
+  <title>Racle</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="个人博客">
+  <meta name="description" content="个人博客&amp;笔记">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Racle的博客">
+<meta property="og:title" content="Racle">
 <meta property="og:url" content="https://racleray.github.io/index.html">
-<meta property="og:site_name" content="Racle的博客">
-<meta property="og:description" content="个人博客">
+<meta property="og:site_name" content="Racle">
+<meta property="og:description" content="个人博客&amp;笔记">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:author" content="江左时雨">
 <meta name="twitter:card" content="summary">
   
-    <link rel="alternate" href="/atom.xml" title="Racle的博客" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="Racle" type="application/atom+xml">
   
   
   
@@ -31,10 +31,10 @@
 
   
 
-<meta name="generator" content="Hexo 4.2.0"></head>
+<meta name="generator" content="Hexo 4.2.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
 
 <body>
-  <nav class="navbar navbar-inverse">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-inverse">
   <div class="container">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
@@ -75,9 +75,9 @@
 
   <div class="container">
     <div class="blog-header">
-  <h1 class="blog-title">Racle的博客</h1>
+  <h1 class="blog-title">Racle</h1>
   
-    <p class="lead blog-description">个人博客</p>
+    <p class="lead blog-description">Recording</p>
   
 </div>
 
@@ -85,13 +85,13 @@
         <div class="col-sm-8 blog-main">
           
   
-    <article id="post-hello" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-CapsuleNet" class="article article-type-post" itemscope itemprop="blogPost">
 
   <header class="article-header">
     
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/04/16/hello/">hello</a>
+      <a class="article-title" href="/2020/07/07/CapsuleNet/">CapsuleNet</a>
     </h1>
   
 
@@ -100,7 +100,476 @@
 
   <div class="article-meta">
     <div class="article-datetime">
-  <a href="/2020/04/16/hello/" class="article-date"><time datetime="2020-04-15T16:41:05.000Z" itemprop="datePublished">2020-04-16</time></a>
+  <a href="/2020/07/07/CapsuleNet/" class="article-date"><time datetime="2020-07-07T11:55:17.000Z" itemprop="datePublished">2020-07-07</time></a>
+</div>
+
+    
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Notes/">Notes</a>
+  </div>
+
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- TOC -->
+
+<ul>
+<li><a href="#motivation">Motivation</a></li>
+<li><a href="#vector-inputs-and-outputs-of-a-capsule">Vector inputs and outputs of a capsule</a><ul>
+<li><a href="#max-pooling-problem">max-pooling problem</a></li>
+</ul>
+</li>
+<li><a href="#margin-loss-for-digit-existence">Margin loss for digit existence</a></li>
+<li><a href="#capsnet-architecture">CapsNet architecture</a></li>
+<li><a href="#code">Code</a></li>
+<li><a href="#other-capsules">Other capsules</a><ul>
+<li><a href="#text">Text</a></li>
+<li><a href="#graph">Graph</a></li>
+<li><a href="#3d-point-cloud">3D point cloud</a></li>
+</ul>
+</li>
+<li><a href="#applications">Applications</a></li>
+<li><a href="#problems">Problems</a></li>
+<li><a href="#resources">Resources</a></li>
+</ul>
+<!-- /TOC -->
+        
+          <p class="article-more-link">
+            <a class="btn btn-primary" href="/2020/07/07/CapsuleNet/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+
+    
+
+    <footer class="article-footer">
+      <a data-url="https://racleray.github.io/2020/07/07/CapsuleNet/" data-id="ckcc38qwp0002xs2f8ub181xv" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/capsule/" rel="tag">capsule</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+
+
+  
+    <article id="post-A-SENTENCE-EMBEDDINGS-Baseline" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/07/07/A-SENTENCE-EMBEDDINGS-Baseline/">A SENTENCE EMBEDDINGS Baseline</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2020/07/07/A-SENTENCE-EMBEDDINGS-Baseline/" class="article-date"><time datetime="2020-07-07T11:45:39.000Z" itemprop="datePublished">2020-07-07</time></a>
+</div>
+
+    
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Notes/">Notes</a>
+  </div>
+
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- TOC -->
+
+<ul>
+<li><a href="#info">Info:</a></li>
+<li><a href="#brief-summary">Brief Summary:</a></li>
+<li><a href="#main-thought">Main Thought:</a></li>
+<li><a href="#method">Method</a></li>
+<li><a href="#notes">Notes:</a></li>
+</ul>
+<!-- /TOC -->
+        
+          <p class="article-more-link">
+            <a class="btn btn-primary" href="/2020/07/07/A-SENTENCE-EMBEDDINGS-Baseline/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+
+    
+
+    <footer class="article-footer">
+      <a data-url="https://racleray.github.io/2020/07/07/A-SENTENCE-EMBEDDINGS-Baseline/" data-id="ckcc38qwi0000xs2f0arkarth" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/baseline/" rel="tag">baseline</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sentence-embedding/" rel="tag">sentence embedding</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+
+
+  
+    <article id="post-Git-sheet" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/07/07/Git-sheet/">Git sheet</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2020/07/07/Git-sheet/" class="article-date"><time datetime="2020-07-07T11:13:39.000Z" itemprop="datePublished">2020-07-07</time></a>
+</div>
+
+    
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Tools/">Tools</a>
+  </div>
+
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- TOC -->
+
+<ul>
+<li><a href="#basic">basic</a></li>
+<li><a href="#------------------------------关联远程仓库------------------------------">——————————关联远程仓库——————————</a></li>
+<li><a href="#------------------------------branch------------------------------">——————————branch——————————</a></li>
+<li><a href="#------------------------------organization------------------------------">——————————organization——————————</a></li>
+<li><a href="#------------------------------opensource------------------------------">——————————opensource——————————</a></li>
+<li><a href="#------------------------------log---------------------------------">——————————log———————————</a></li>
+<li><a href="#------------------------------config---------------------------------">——————————config———————————</a></li>
+<li><a href="#-----------------------------rejected问题------------------------">—————————–rejected问题————————</a></li>
+<li><a href="#----------------------------ssh密匙问题没有权限访问仓库--------------------------">—————————-ssh密匙问题，没有权限访问仓库————————–</a></li>
+</ul>
+<!-- /TOC -->
+        
+          <p class="article-more-link">
+            <a class="btn btn-primary" href="/2020/07/07/Git-sheet/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+
+    
+
+    <footer class="article-footer">
+      <a data-url="https://racleray.github.io/2020/07/07/Git-sheet/" data-id="ckcc38qwz0008xs2fbh8oamzw" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/" rel="tag">git</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+
+
+  
+    <article id="post-文本相似性深度学习方法" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/07/07/%E6%96%87%E6%9C%AC%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/">文本相似性深度学习方法</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2020/07/07/%E6%96%87%E6%9C%AC%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/" class="article-date"><time datetime="2020-07-07T10:49:20.000Z" itemprop="datePublished">2020-07-07</time></a>
+</div>
+
+    
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Notes/">Notes</a>
+  </div>
+
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- TOC -->
+
+<ul>
+<li><a href="#representation-based">Representation-based</a><ul>
+<li><a href="#infersent">InferSent</a></li>
+<li><a href="#dssmdeep-structured-semantic-model">DSSM(Deep Structured Semantic Model)</a><ul>
+<li><a href="#word-hashing">Word Hashing</a></li>
+<li><a href="#模型">模型</a></li>
+<li><a href="#cdssm">CDSSM</a></li>
+<li><a href="#recurrent-dssm">Recurrent DSSM</a></li>
+<li><a href="#评价指标">评价指标</a><ul>
+<li><a href="#cumulative-gain">Cumulative Gain</a></li>
+<li><a href="#discounted-cumulative-gain">Discounted Cumulative Gain</a></li>
+<li><a href="#ndcgnormalized-discounted-cumulative-gain">NDCG：normalized discounted cumulative gain</a></li>
+<li><a href="#example">Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#dssm的其他应用">DSSM的其他应用</a></li>
+</ul>
+</li>
+<li><a href="#interaction-based-matching">Interaction-based Matching</a><ul>
+<li><a href="#drmmdeep-relevance-matching-model">DRMM：Deep Relevance Matching Model</a><ul>
+<li><a href="#term-gating-network">Term Gating Network</a></li>
+<li><a href="#hinge-loss">Hinge loss</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<!-- /TOC -->
+        
+          <p class="article-more-link">
+            <a class="btn btn-primary" href="/2020/07/07/%E6%96%87%E6%9C%AC%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+
+    
+
+    <footer class="article-footer">
+      <a data-url="https://racleray.github.io/2020/07/07/%E6%96%87%E6%9C%AC%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/" data-id="ckcc38qxu001kxs2f0n7y7675" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cdssm/" rel="tag">cdssm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dssm/" rel="tag">dssm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/text-similarity/" rel="tag">text similarity</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+
+
+  
+    <article id="post-文本相似性" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/07/07/%E6%96%87%E6%9C%AC%E7%9B%B8%E4%BC%BC%E6%80%A7/">文本相似性</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2020/07/07/%E6%96%87%E6%9C%AC%E7%9B%B8%E4%BC%BC%E6%80%A7/" class="article-date"><time datetime="2020-07-07T10:19:49.000Z" itemprop="datePublished">2020-07-07</time></a>
+</div>
+
+    
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Notes/">Notes</a>
+  </div>
+
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- TOC -->
+
+<ul>
+<li><a href="#基于字符串匹配的文本相似度">基于字符串匹配的文本相似度</a></li>
+<li><a href="#基于文本特征的相似度计算方法">基于文本特征的相似度计算方法</a><ul>
+<li><a href="#simhash">SimHash</a></li>
+<li><a href="#cosine-similarity">Cosine Similarity</a></li>
+<li><a href="#word2vec">Word2Vec</a></li>
+<li><a href="#doc2vec">Doc2Vec</a></li>
+</ul>
+</li>
+</ul>
+<!-- /TOC -->
+        
+          <p class="article-more-link">
+            <a class="btn btn-primary" href="/2020/07/07/%E6%96%87%E6%9C%AC%E7%9B%B8%E4%BC%BC%E6%80%A7/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+
+    
+
+    <footer class="article-footer">
+      <a data-url="https://racleray.github.io/2020/07/07/%E6%96%87%E6%9C%AC%E7%9B%B8%E4%BC%BC%E6%80%A7/" data-id="ckcc38qxr001dxs2feuso16vm" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/doc2vec/" rel="tag">doc2vec</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/text-similarity/" rel="tag">text similarity</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/word2vec/" rel="tag">word2vec</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+
+
+  
+    <article id="post-Vision-to-text" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/07/07/Vision-to-text/">Vision to text</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2020/07/07/Vision-to-text/" class="article-date"><time datetime="2020-07-07T09:55:15.000Z" itemprop="datePublished">2020-07-07</time></a>
+</div>
+
+    
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Notes/">Notes</a>
+  </div>
+
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- TOC -->
+
+<ul>
+<li><a href="#vqa-notes">VQA Notes</a><ul>
+<li><a href="#基于图像信息和文本信息匹配的vqa">基于图像信息和文本信息匹配的VQA</a></li>
+<li><a href="#基于注意力attention的vqa">基于注意力（attention）的VQA</a></li>
+<li><a href="#stacked-attention">Stacked Attention</a></li>
+</ul>
+</li>
+<li><a href="#image-captioning">Image captioning</a><ul>
+<li><a href="#基本模型">基本模型</a><ul>
+<li><a href="#图像编码">图像编码</a><ul>
+<li><a href="#注意力机制">注意力机制</a></li>
+<li><a href="#beam-search-优化">beam search 优化</a></li>
+</ul>
+</li>
+<li><a href="#目标识别">目标识别</a></li>
+</ul>
+</li>
+<li><a href="#评估指标">评估指标</a></li>
+</ul>
+</li>
+</ul>
+<!-- /TOC -->
+        
+          <p class="article-more-link">
+            <a class="btn btn-primary" href="/2020/07/07/Vision-to-text/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+
+    
+
+    <footer class="article-footer">
+      <a data-url="https://racleray.github.io/2020/07/07/Vision-to-text/" data-id="ckcc38qxa000oxs2f8axc2z5s" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/visual-text/" rel="tag">visual text</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+
+
+  
+    <article id="post-Rasa-Notes" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/07/07/Rasa-Notes/">Rasa Notes</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2020/07/07/Rasa-Notes/" class="article-date"><time datetime="2020-07-07T09:47:25.000Z" itemprop="datePublished">2020-07-07</time></a>
 </div>
 
     
@@ -111,21 +580,43 @@
 
     <div class="article-entry" itemprop="articleBody">
       
+        <!-- TOC -->
+
+<ul>
+<li><a href="#rasa_nlu训练数据的生成">rasa_nlu训练数据的生成</a></li>
+<li><a href="#官方doc">官方DOC</a></li>
+<li><a href="#mini-rasa-tutorial">mini rasa tutorial</a><ul>
+<li><a href="#创建新项目">创建新项目</a></li>
+<li><a href="#自定义nlu训练数据">自定义NLU训练数据</a></li>
+<li><a href="#自定义stories">自定义stories</a></li>
+<li><a href="#自定义动作acitons"><strong>自定义动作acitons</strong></a></li>
+<li><a href="#自定义domain">自定义domain</a></li>
+<li><a href="#定义模型配置">定义模型配置</a></li>
+<li><a href="#训练模型">训练模型</a></li>
+<li><a href="#shell启动">SHELL启动</a></li>
+<li><a href="#可视化界面">可视化界面</a></li>
+</ul>
+</li>
+</ul>
+<!-- /TOC -->
+        
+          <p class="article-more-link">
+            <a class="btn btn-primary" href="/2020/07/07/Rasa-Notes/#more">Read More</a>
+          </p>
         
       
     </div>
 
     
-      
-
-    
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/04/16/hello/" data-id="ck91kcp630000n0j287tyb1c3" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/07/07/Rasa-Notes/" data-id="ckcc38qx6000gxs2ffzbm5itz" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/rasa/" rel="tag">rasa</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/tutorial/" rel="tag">tutorial</a></li></ul>
+
 
     </footer>
   </div>
@@ -134,8 +625,264 @@
 
 
 
+
+
+  
+    <article id="post-ChatBot-Notes" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/07/07/ChatBot-Notes/">ChatBot Notes</a>
+    </h1>
   
 
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2020/07/07/ChatBot-Notes/" class="article-date"><time datetime="2020-07-07T09:42:09.000Z" itemprop="datePublished">2020-07-07</time></a>
+</div>
+
+    
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Notes/">Notes</a>
+  </div>
+
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- TOC -->
+
+<ul>
+<li><a href="#基于检索技术的模型-vs-生成式模型">基于检索技术的模型 VS 生成式模型</a></li>
+<li><a href="#短对话-vs-长对话">短对话 VS 长对话</a></li>
+<li><a href="#开放域-vs-特定领域">开放域 VS 特定领域</a></li>
+<li><a href="#面临的挑战">面临的挑战</a><ul>
+<li><a href="#如何结合上下文信息">如何结合上下文信息</a></li>
+<li><a href="#语义一致性">语义一致性</a></li>
+<li><a href="#对话模型的评测">对话模型的评测</a></li>
+<li><a href="#意图和回复多样性">意图和回复多样性</a></li>
+</ul>
+</li>
+<li><a href="#公开语料">公开语料</a></li>
+<li><a href="#基于内容检索式的聊天机器人">基于内容检索式的聊天机器人</a><ul>
+<li><a href="#ubuntu对话数据集">Ubuntu对话数据集</a><ul>
+<li><a href="#训练集">训练集</a></li>
+<li><a href="#测试集和验证集">测试集和验证集</a></li>
+<li><a href="#评测">评测</a></li>
+</ul>
+</li>
+<li><a href="#dual-encoder-lstm-network">Dual Encoder LSTM Network</a></li>
+</ul>
+</li>
+</ul>
+<!-- /TOC -->
+        
+          <p class="article-more-link">
+            <a class="btn btn-primary" href="/2020/07/07/ChatBot-Notes/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+
+    
+
+    <footer class="article-footer">
+      <a data-url="https://racleray.github.io/2020/07/07/ChatBot-Notes/" data-id="ckcc38qww0006xs2fb5eua68f" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/retireval/" rel="tag">retireval</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+
+
+  
+    <article id="post-Transformer-Model" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/07/07/Transformer-Model/">Transformer Model</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2020/07/07/Transformer-Model/" class="article-date"><time datetime="2020-07-07T09:30:12.000Z" itemprop="datePublished">2020-07-07</time></a>
+</div>
+
+    
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Notes/">Notes</a>
+  </div>
+
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- TOC -->
+
+<ul>
+<li><a href="#1transformer模型">1.Transformer模型</a><ul>
+<li><a href="#11-编码器-encoder">1.1 编码器 encoder</a></li>
+<li><a href="#12-解码器-decoder">1.2 解码器 decoder</a></li>
+<li><a href="#13-注意力机制">1.3 注意力机制</a></li>
+<li><a href="#14-multi-head-attention">1.4 Multi-Head Attention</a></li>
+<li><a href="#15-基于位置的前向神经网络position-wise-feed-forward-networks">1.5 基于位置的前向神经网络（Position-wise Feed-Forward Networks）</a></li>
+<li><a href="#16-词向量矩阵及softmax层">1.6 词向量矩阵及Softmax层</a></li>
+<li><a href="#17-位置编码position-embeddings">1.7 位置编码（position embeddings）</a></li>
+<li><a href="#18-transformer-对比rnn及cnn">1.8 Transformer 对比RNN及CNN</a></li>
+</ul>
+</li>
+<li><a href="#2-transformer模型的训练细节">2. Transformer模型的训练细节</a><ul>
+<li><a href="#21-优化方法">2.1 优化方法</a></li>
+<li><a href="#22-正则化-regularization">2.2 正则化 Regularization</a></li>
+<li><a href="#23-label-smoothing">2.3 Label Smoothing</a></li>
+</ul>
+</li>
+<li><a href="#3-tranformer-code">3 Tranformer Code</a></li>
+</ul>
+<!-- /TOC -->
+        
+          <p class="article-more-link">
+            <a class="btn btn-primary" href="/2020/07/07/Transformer-Model/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+
+    
+
+    <footer class="article-footer">
+      <a data-url="https://racleray.github.io/2020/07/07/Transformer-Model/" data-id="ckcc38qx8000jxs2f2l4v7no2" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/transformer/" rel="tag">transformer</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+
+
+  
+    <article id="post-Fairseq-Notes" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/07/07/Fairseq-Notes/">Fairseq Notes</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2020/07/07/Fairseq-Notes/" class="article-date"><time datetime="2020-07-07T09:01:06.000Z" itemprop="datePublished">2020-07-07</time></a>
+</div>
+
+    
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Notes/">Notes</a>
+  </div>
+
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- TOC -->
+
+<ul>
+<li><a href="#1基于cnn的翻译系统模型结构">1.基于CNN的翻译系统模型结构</a><ul>
+<li><a href="#11-pooling-encoder">1.1 Pooling Encoder</a></li>
+<li><a href="#12-卷积编码器convolutional-encoder-nmt-gehring-et-al-2016">1.2 卷积编码器Convolutional Encoder NMT Gehring et. al 2016</a></li>
+<li><a href="#1３-全卷积神经翻译模型convolutional-nmt-gehring-et-al-2017">1.３ 全卷积神经翻译模型　Convolutional NMT Gehring et. al 2017</a></li>
+<li><a href="#14-全卷积神经翻译模型对比rnn神经翻译模型">1.4 全卷积神经翻译模型对比RNN神经翻译模型</a></li>
+</ul>
+</li>
+<li><a href="#2-使用cnn完成神经机器翻译系统的tricks">2 使用CNN完成神经机器翻译系统的tricks</a><ul>
+<li><a href="#21-缩放操作scaling">2.1 缩放操作（scaling）</a></li>
+<li><a href="#22-参数初始化">2.2 参数初始化</a></li>
+<li><a href="#23-超参数设置">2.3 超参数设置</a></li>
+</ul>
+</li>
+<li><a href="#3-facebook-cnn-机器翻译系统代码解析">3. Facebook CNN 机器翻译系统代码解析</a><ul>
+<li><a href="#31-code">3.1 Code</a></li>
+<li><a href="#32-使用预训练好的模型">3.2 使用预训练好的模型</a></li>
+<li><a href="#33-notes">3.3 Notes</a></li>
+</ul>
+</li>
+</ul>
+<!-- /TOC -->
+        
+          <p class="article-more-link">
+            <a class="btn btn-primary" href="/2020/07/07/Fairseq-Notes/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+
+    
+
+    <footer class="article-footer">
+      <a data-url="https://racleray.github.io/2020/07/07/Fairseq-Notes/" data-id="ckcc38qwy0007xs2f9cka7ius" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Fairseq/" rel="tag">Fairseq</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cnn/" rel="tag">cnn</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/seq2seq/" rel="tag">seq2seq</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+
+
+  
+
+
+  <div id="page-nav">
+    <nav><ul class="pagination"><li class="disabled"><span class="page-prev"><i class="fa fa-chevron-left"></i> Prev</a></li><li class="active"><span class="page-number">1</span></li><li><a class="page-number" href="/page/2/">2</a></li><li><a class="page-number" href="/page/3/">3</a></li><li><a class="page-next" rel="next" href="/page/2/">Next <i class="fa fa-chevron-right"></i></a></li></ul></nav>
+  </div>
 
 
 
@@ -150,17 +897,34 @@
 
 
   
+  <div class="sidebar-module">
+    <h4>Categories</h4>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/categories/Notes/">Notes</a><span class="sidebar-module-list-count">20</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/categories/Tools/">Tools</a><span class="sidebar-module-list-count">3</span></li></ul>
+  </div>
+
 
 
   
+  <div class="sidebar-module">
+    <h4>Tags</h4>
+    <ul class="sidebar-module-list" itemprop="keywords"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/CNN/" rel="tag">CNN</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Docker/" rel="tag">Docker</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Fairseq/" rel="tag">Fairseq</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/KenLM/" rel="tag">KenLM</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Language-Model/" rel="tag">Language Model</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Linux/" rel="tag">Linux</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/NVIDIA-Container-Toolkit/" rel="tag">NVIDIA Container Toolkit</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/RNN/" rel="tag">RNN</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Smoothing/" rel="tag">Smoothing</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/attention/" rel="tag">attention</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/baseline/" rel="tag">baseline</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/basic/" rel="tag">basic</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/basics/" rel="tag">basics</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/bleu/" rel="tag">bleu</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/capsule/" rel="tag">capsule</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/cdssm/" rel="tag">cdssm</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/chinese-process/" rel="tag">chinese process</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/classification/" rel="tag">classification</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/cnn/" rel="tag">cnn</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/doc2vec/" rel="tag">doc2vec</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/dssm/" rel="tag">dssm</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/english-process/" rel="tag">english process</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/evaluation/" rel="tag">evaluation</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/fastText/" rel="tag">fastText</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/fine-grained/" rel="tag">fine-grained</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/git/" rel="tag">git</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/lda/" rel="tag">lda</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/machine-learning/" rel="tag">machine learning</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/pretrained-LM/" rel="tag">pretrained LM</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/" rel="tag">python</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/rasa/" rel="tag">rasa</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/regex/" rel="tag">regex</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/representation/" rel="tag">representation</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/retireval/" rel="tag">retireval</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/rouge/" rel="tag">rouge</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/sentence-embedding/" rel="tag">sentence embedding</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/seq2seq/" rel="tag">seq2seq</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/simple-notes/" rel="tag">simple notes</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/text-similarity/" rel="tag">text similarity</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/transformer/" rel="tag">transformer</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tutorial/" rel="tag">tutorial</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/visual-text/" rel="tag">visual text</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/w2v/" rel="tag">w2v</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/word2vec/" rel="tag">word2vec</a><span class="sidebar-module-list-count">1</span></li></ul>
+  </div>
+
 
 
   
+  <div class="sidebar-module">
+    <h4>Tag Cloud</h4>
+    <p class="tagcloud">
+      <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Fairseq/" style="font-size: 10px;">Fairseq</a> <a href="/tags/KenLM/" style="font-size: 10px;">KenLM</a> <a href="/tags/Language-Model/" style="font-size: 10px;">Language Model</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/NVIDIA-Container-Toolkit/" style="font-size: 10px;">NVIDIA Container Toolkit</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/Smoothing/" style="font-size: 10px;">Smoothing</a> <a href="/tags/attention/" style="font-size: 10px;">attention</a> <a href="/tags/baseline/" style="font-size: 10px;">baseline</a> <a href="/tags/basic/" style="font-size: 20px;">basic</a> <a href="/tags/basics/" style="font-size: 10px;">basics</a> <a href="/tags/bleu/" style="font-size: 10px;">bleu</a> <a href="/tags/capsule/" style="font-size: 10px;">capsule</a> <a href="/tags/cdssm/" style="font-size: 10px;">cdssm</a> <a href="/tags/chinese-process/" style="font-size: 10px;">chinese process</a> <a href="/tags/classification/" style="font-size: 20px;">classification</a> <a href="/tags/cnn/" style="font-size: 10px;">cnn</a> <a href="/tags/doc2vec/" style="font-size: 10px;">doc2vec</a> <a href="/tags/dssm/" style="font-size: 10px;">dssm</a> <a href="/tags/english-process/" style="font-size: 10px;">english process</a> <a href="/tags/evaluation/" style="font-size: 10px;">evaluation</a> <a href="/tags/fastText/" style="font-size: 20px;">fastText</a> <a href="/tags/fine-grained/" style="font-size: 10px;">fine-grained</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/lda/" style="font-size: 10px;">lda</a> <a href="/tags/machine-learning/" style="font-size: 10px;">machine learning</a> <a href="/tags/pretrained-LM/" style="font-size: 10px;">pretrained LM</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/rasa/" style="font-size: 10px;">rasa</a> <a href="/tags/regex/" style="font-size: 10px;">regex</a> <a href="/tags/representation/" style="font-size: 20px;">representation</a> <a href="/tags/retireval/" style="font-size: 10px;">retireval</a> <a href="/tags/rouge/" style="font-size: 10px;">rouge</a> <a href="/tags/sentence-embedding/" style="font-size: 10px;">sentence embedding</a> <a href="/tags/seq2seq/" style="font-size: 20px;">seq2seq</a> <a href="/tags/simple-notes/" style="font-size: 10px;">simple notes</a> <a href="/tags/text-similarity/" style="font-size: 20px;">text similarity</a> <a href="/tags/transformer/" style="font-size: 10px;">transformer</a> <a href="/tags/tutorial/" style="font-size: 10px;">tutorial</a> <a href="/tags/visual-text/" style="font-size: 10px;">visual text</a> <a href="/tags/w2v/" style="font-size: 10px;">w2v</a> <a href="/tags/word2vec/" style="font-size: 10px;">word2vec</a>
+    </p>
+  </div>
+
 
   
   <div class="sidebar-module">
     <h4>Archives</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2020/04/">四月 2020</a><span class="sidebar-module-list-count">1</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2020/07/">七月 2020</a><span class="sidebar-module-list-count">24</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2020/04/">四月 2020</a><span class="sidebar-module-list-count">1</span></li></ul>
   </div>
 
 
@@ -171,7 +935,23 @@
     <ul class="sidebar-module-list">
       
         <li>
-          <a href="/2020/04/16/hello/">hello</a>
+          <a href="/2020/07/07/CapsuleNet/">CapsuleNet</a>
+        </li>
+      
+        <li>
+          <a href="/2020/07/07/A-SENTENCE-EMBEDDINGS-Baseline/">A SENTENCE EMBEDDINGS Baseline</a>
+        </li>
+      
+        <li>
+          <a href="/2020/07/07/Git-sheet/">Git sheet</a>
+        </li>
+      
+        <li>
+          <a href="/2020/07/07/%E6%96%87%E6%9C%AC%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/">文本相似性深度学习方法</a>
+        </li>
+      
+        <li>
+          <a href="/2020/07/07/%E6%96%87%E6%9C%AC%E7%9B%B8%E4%BC%BC%E6%80%A7/">文本相似性</a>
         </li>
       
     </ul>
@@ -210,5 +990,37 @@
 <script src="/js/script.js"></script>
 
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 </body>
 </html>

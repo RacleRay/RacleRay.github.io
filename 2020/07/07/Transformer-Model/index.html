@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>Transformer Model | Racle</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.Transformer模型 1.1 编码器 encoder 1.2 解码器 decoder 1.3 注意力机制 1.4 Multi-Head Attention 1.5 基于位置的前向神经网络（Position-wise Feed-Forward Networks） 1.6 词向量矩阵及Softmax层 1.7 位置编码（position embeddings） 1.8 Transfor">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Transformer Model">
+<meta property="og:url" content="https://racleray.github.io/2020/07/07/Transformer-Model/index.html">
+<meta property="og:site_name" content="Racle">
+<meta property="og:description" content="1.Transformer模型 1.1 编码器 encoder 1.2 解码器 decoder 1.3 注意力机制 1.4 Multi-Head Attention 1.5 基于位置的前向神经网络（Position-wise Feed-Forward Networks） 1.6 词向量矩阵及Softmax层 1.7 位置编码（position embeddings） 1.8 Transfor">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://racleray.github.io/images/pic/attention.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/mha.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/transformer.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/compare.png">
+<meta property="article:published_time" content="2020-07-07T09:30:12.000Z">
+<meta property="article:modified_time" content="2020-07-07T09:41:19.541Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="transformer">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://racleray.github.io/images/pic/attention.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Racle" type="application/atom+xml">
+  
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous">
+
+  
+<link rel="stylesheet" href="/css/styles.css">
+
+  
+
+<meta name="generator" content="Hexo 4.2.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-inverse">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-menu-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="main-menu-navbar">
+      <ul class="nav navbar-nav">
+        
+          <li><a class=""
+                 href="/index.html">Home</a></li>
+        
+          <li><a class=""
+                 href="/archives/">Archives</a></li>
+        
+          <li><a class=""
+                 href="https://github.com/RacleRay">Github</a></li>
+        
+      </ul>
+
+      <!--
+      <ul class="nav navbar-nav navbar-right">
+        
+          <li><a href="/atom.xml" title="RSS Feed"><i class="fa fa-rss"></i></a></li>
+        
+      </ul>
+      -->
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+  <div class="container">
+    <div class="blog-header">
+  <h1 class="blog-title">Racle</h1>
+  
+    <p class="lead blog-description">Recording</p>
+  
+</div>
+
+    <div class="row">
+        <div class="col-sm-8 blog-main">
+          <article id="post-Transformer-Model" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 class="article-title" itemprop="name">
+      Transformer Model
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2020/07/07/Transformer-Model/" class="article-date"><time datetime="2020-07-07T09:30:12.000Z" itemprop="datePublished">2020-07-07</time></a>
+</div>
+
+    
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Notes/">Notes</a>
+  </div>
+
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- TOC -->
+
+<ul>
+<li><a href="#1transformer模型">1.Transformer模型</a><ul>
+<li><a href="#11-编码器-encoder">1.1 编码器 encoder</a></li>
+<li><a href="#12-解码器-decoder">1.2 解码器 decoder</a></li>
+<li><a href="#13-注意力机制">1.3 注意力机制</a></li>
+<li><a href="#14-multi-head-attention">1.4 Multi-Head Attention</a></li>
+<li><a href="#15-基于位置的前向神经网络position-wise-feed-forward-networks">1.5 基于位置的前向神经网络（Position-wise Feed-Forward Networks）</a></li>
+<li><a href="#16-词向量矩阵及softmax层">1.6 词向量矩阵及Softmax层</a></li>
+<li><a href="#17-位置编码position-embeddings">1.7 位置编码（position embeddings）</a></li>
+<li><a href="#18-transformer-对比rnn及cnn">1.8 Transformer 对比RNN及CNN</a></li>
+</ul>
+</li>
+<li><a href="#2-transformer模型的训练细节">2. Transformer模型的训练细节</a><ul>
+<li><a href="#21-优化方法">2.1 优化方法</a></li>
+<li><a href="#22-正则化-regularization">2.2 正则化 Regularization</a></li>
+<li><a href="#23-label-smoothing">2.3 Label Smoothing</a></li>
+</ul>
+</li>
+<li><a href="#3-tranformer-code">3 Tranformer Code</a></li>
+</ul>
+<!-- /TOC -->
+<a id="more"></a>
+
+<h2 id="1-Transformer模型"><a href="#1-Transformer模型" class="headerlink" title="1.Transformer模型"></a>1.Transformer模型</h2><p>​    序列计算中，传统的RNN在预测下一个符号（token）的时候，会对以往的历史信息有很强的依赖，使得难以充分地并行化，也无法很好地加深网络的层级结构。</p>
+<p>​    而对于传统的基于CNN的神经机器翻译模型，两个任意输入与输出位置的信号关联所需要的运算数量与它们的位置距离成正比，Facebook提出的CNN NMT 为线性增长。</p>
+<p>​    <span class="mark">这两种常见的结构使得学习较远位置的依赖关系（long-term dependency）非常困难</span>。</p>
+<p>​    在 Transformer 中，两个任意输入的信号关联的开销会减少到一个固定的运算数量，使用 Multi-Head Attention 注意力机制可以完全脱离RNN及CNN的结构，只使用自注意机制（self-attention)，使得Transformer可以高效地并行化，并堆叠非常多层的深层网络。</p>
+<p>​    自注意力（Self-attention），是一种涉及<span class="mark">单序列不同位置的注意力机制</span>，并能计算序列的表征。自注意力这种<span class="mark">在序列内部执行 Attention 的方法可以视为搜索序列内部的隐藏关系</span>，这种内部关系对于翻译以及序列任务的性能非常重要。</p>
+<h3 id="1-1-编码器-encoder"><a href="#1-1-编码器-encoder" class="headerlink" title="1.1 编码器 encoder"></a>1.1 编码器 encoder</h3><ul>
+<li><p>编码器encoder由6层结构一样的网络层组成，每一层有2个子层：</p>
+<ul>
+<li><p>第一个子层是multi-head self-attention Layer</p>
+</li>
+<li><p>第二个子层是一个<span class="mark">基于位置编码的全连接网络层</span>（position-wise fully connected feed-forward network）</p>
+</li>
+<li><p>会使用残差连接的方式，分别对每个子层的输入加到这个子层的输出上，然后再接一个Layer normalization的归一化层。</p>
+<p>​    $$ \text{LayerNorm}(x+\text{Sublayer}(x)) $$</p>
+</li>
+<li><p>所有的embedding及hidden state的维度都是512 </p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="1-2-解码器-decoder"><a href="#1-2-解码器-decoder" class="headerlink" title="1.2 解码器 decoder"></a>1.2 解码器 decoder</h3><ul>
+<li><p>解码器decoder由6层结构一样的网络层组成，每一层除了跟encode人一样有2个子层以外，还有第3个子层</p>
+<ul>
+<li>第一个子层是multi-head self-attention Layer</li>
+<li>第二个子层是一个基于位置编码的全连接网络层（position-wise fully connected feed-forward network）</li>
+<li><font color='red'>第三个子层用于对encoder的输出向量进行multi-head attention</font></li>
+<li>同样的，会使用残差连接的方式，然后再接一个Layer normalization的归一化层。<br>$$ \text{LayerNorm}(x+\text{Sublayer}(x))\ $$</li>
+<li>decoder还需要将还没有生成的后续序列掩盖（masking），这样做是为了防止decoder在做self-attention的时候关注到后续还未生成的单词上去。</li>
+</ul>
+</li>
+</ul>
+<h3 id="1-3-注意力机制"><a href="#1-3-注意力机制" class="headerlink" title="1.3 注意力机制"></a>1.3 注意力机制</h3><ul>
+<li>传统的注意力机制，也称为scaled Dot-Product Attention，可以看成是有一个询问的词（query），去跟一堆哈希表中的键值对（key-value pair）进行匹配，找到最相关的键（key），之后返回该键所对应的值（value）。通常的，如果只返回一个key所对应的value，称之为hard attention。如果对所有的key都计算一个相关系数，（也称之为attention weight），可以将所有key对应的value进行加权求和（weighted sum）这样的操作称之为soft attention。<br>$$\text{Attention}(Q,K,V) = \text{softmax}\left({QK^T \over \sqrt{d_k}}\right)V$$</li>
+<li>其中所有的query和key都是维度为$d_k$的向量，将这些向量分别叠在一起形成 $Q\in\mathbb{R}^{|Q|\times d_k}, K\in\mathbb{R}^{|K|\times d_k}$的矩阵。</li>
+<li>所有的value都是维度为$d_v$的向量，将这些向量叠在一起形成$V\in\mathbb{R}^{|V|\times d_k}$</li>
+<li>这里如果维度$d_k$很大的时候，两个向量的乘积会变得很大，使得softmax会得到非常小的数值，所以会在这里除以$\sqrt{d_k}$来抵消这个影响。<br><img src="/images/pic/attention.png" alt=""></li>
+</ul>
+<h3 id="1-4-Multi-Head-Attention"><a href="#1-4-Multi-Head-Attention" class="headerlink" title="1.4 Multi-Head Attention"></a>1.4 Multi-Head Attention</h3><ul>
+<li><p>这里假设$Q,<del>K,</del>V\in \mathbb{R}^{d_\text{model}}$都在一个${d_\text{model}}$维度的空间中</p>
+</li>
+<li><p>使用h个不一样权重的线性映射函数$(QW^Q_i, KW^K_i, VW^V_i)$将Q, K, V分别映射到$d_k,<del>d_k,</del>d_v$空间中</p>
+</li>
+<li><p>对映射之后的Q, K, V 做h次attention，并将h个attention head连接在一起形成一个新的向量</p>
+</li>
+<li><p>最后再将这个向量映射到$d_\text{model}$空间，作为下一层的输入</p>
+<p>​    $$ \text{MultiHead}(Q,K,V) = \text{Concat}(\text{head}_1,\cdots, \text{head}_h) W^O \ \text{head}_i = \text{Attention}(QW^Q_i, KW^K_i, VW^V_i) $$</p>
+</li>
+<li><p>其中$W^Q_i\in \mathbb{R}^{d_\text{model}\times d_k}, W^K_i\in \mathbb{R}^{d_\text{model}\times d_k}, W^V_i\in \mathbb{R}^{d_\text{model}\times d_v}, W^O\in \mathbb{R}^{hd_v\times d_\text{model}}$, 常见的设置$h=8,d_k=d_v=d_\text{model}/h=64$</p>
+</li>
+<li><p>模型图<br><img src="/images/pic/mha.png" alt=""></p>
+</li>
+</ul>
+<ul>
+<li><p>应用</p>
+<ul>
+<li>将decoder上一个时刻的hidden state 作为query，将encoder的<span class="mark">最顶层</span>的所有输出的hidden state作为key和value，这样可以类似传统的attention机制一样去发现源语言单词与目标语言单词之间的联系</li>
+<li>encoder本身会对源语言单词进行multi-head self attention，其中query，key，value都是一样的，都是上一层中输出的单词的hidden state，<strong>每一个时刻计算出来的context vector都会作为该层输出的新的单词的hidden state，并作为下一层的输入</strong>。</li>
+<li><span class="mark">decoder本身也会类似encoder一样去做self attention，不同的是，decoder只对左边已经生成的序列进行attention，对还没有生成的（右边的）序列掩盖（masking）</span></li>
+</ul>
+</li>
+<li><p>完整的模型图<br><img src="/images/pic/transformer.png" alt=""></p>
+</li>
+</ul>
+<h3 id="1-5-基于位置的前向神经网络（Position-wise-Feed-Forward-Networks）"><a href="#1-5-基于位置的前向神经网络（Position-wise-Feed-Forward-Networks）" class="headerlink" title="1.5 基于位置的前向神经网络（Position-wise Feed-Forward Networks）"></a>1.5 基于位置的前向神经网络（Position-wise Feed-Forward Networks）</h3><ul>
+<li>对于encoder和decoder的每个attention层之后，<span class="mark">还会在连接一个全连接的前向神经网络</span>。这个网络包含了<span class="mark">两个线性转换</span>和中间加一个ReLU的激活函数<br>$$FFN(x) =\max(0, xW_1+b_1) W_2+b_2$$</li>
+<li>这里每一层，都用不同的$W_1,W_2,b_1,b_2$。</li>
+</ul>
+<h3 id="1-6-词向量矩阵及Softmax层"><a href="#1-6-词向量矩阵及Softmax层" class="headerlink" title="1.6 词向量矩阵及Softmax层"></a>1.6 词向量矩阵及Softmax层</h3><ul>
+<li>这里使用常见的词向量矩阵，并encoder会把词向量映射到$d_\text{model}$空间上，作为第一层的输入</li>
+<li>在做预测的时候，会将输出向量映射到一个词表大小的概率空间中，并使用softmax来归一化到一个$[0,1]$之间的概率值。</li>
+</ul>
+<h3 id="1-7-位置编码（position-embeddings）"><a href="#1-7-位置编码（position-embeddings）" class="headerlink" title="1.7 位置编码（position embeddings）"></a>1.7 位置编码（position embeddings）</h3><ul>
+<li><p>因为模型没有recurrence及convolution的操作，所以为了<span class="mark">让模型能够分辨不同位置的单词</span>，需要对单词的位置进行编码。</p>
+<p>​    $$PE(pos, 2i)=\sin(pos/10000^{2i/d_\text{model}}) \ PE(pos, 2i+1)=\cos(pos/10000^{2i/d_\text{model}})$$</p>
+</li>
+<li><p><span class="mark">pos是这个单词在句子中的位置</span>，<span class="mark">i是这个位置向量的第i个维度的编号</span>。这样的波长形成了一个从$2\pi$到$1000\cdot 2\pi$的几何级数。这样会使得模型更容易学到相对距离，因为$PE_{pos+k}$可以表示为$PE_{pos}$的一个线性变化。</p>
+</li>
+</ul>
+<h3 id="1-8-Transformer-对比RNN及CNN"><a href="#1-8-Transformer-对比RNN及CNN" class="headerlink" title="1.8 Transformer 对比RNN及CNN"></a>1.8 Transformer 对比RNN及CNN</h3><ul>
+<li>发现RNN需要进行$O(n)$个序列操作，而Transformer和CNN只需要$O(1)$个</li>
+<li>CNN会形成一个层级结构，类似树状，<span class="mark">所以任意两个单词到达的最大路径长度是</span>$O(\log_k(n))$</li>
+<li>如果self-attention只对该单词周围r个单词进行attention操作，可以得到restricted版本的self-attention， 这样可以减少每一层的计算复杂度，但未增加两个任意词之间到达的最长路径。<br><img src="/images/pic/compare.png" alt=""></li>
+</ul>
+<h2 id="2-Transformer模型的训练细节"><a href="#2-Transformer模型的训练细节" class="headerlink" title="2. Transformer模型的训练细节"></a>2. Transformer模型的训练细节</h2><ol>
+<li>优化方法</li>
+<li>正则化 （regularization） </li>
+<li>label smoothing</li>
+</ol>
+<h3 id="2-1-优化方法"><a href="#2-1-优化方法" class="headerlink" title="2.1 优化方法"></a>2.1 优化方法</h3><ul>
+<li>Adam 优化方法，$\beta_1=0.9, \beta_2=0.98, \epsilon=10^{-9}$</li>
+<li>learning rate是随着训练的过程中，通过以下一个函数进行变化。一开始在前 warmup_steps个训练迭代中learning rate是线性增长的，往后随着步长的增加而下降。 一般会设置 warmup_steps = 4000<br>$$lr = d_\text{model}^{-0.5} \cdot \min(\text{step_num}^{-0.5},\text{step_num}\cdot \text{warmup_steps}^{-1.5}) $$</li>
+</ul>
+<h3 id="2-2-正则化-Regularization"><a href="#2-2-正则化-Regularization" class="headerlink" title="2.2 正则化 Regularization"></a>2.2 正则化 Regularization</h3><ul>
+<li>对每一个子层的输出，在<span class="mark">该子层的输出加上该子层的输入之前进行</span>dropout</li>
+<li>对encoder及decoder，<span class="mark">词向量和位置向量求和之后</span>都进行dropout</li>
+</ul>
+<h3 id="2-3-Label-Smoothing"><a href="#2-3-Label-Smoothing" class="headerlink" title="2.3 Label Smoothing"></a>2.3 Label Smoothing</h3><ul>
+<li>对于<span class="mark">正确的标注label</span>，在其one-hot表达上，<span class="mark">加上一个均匀分布的向量</span>，这个smoothing的数值是$\epsilon_{ls}=0.1$</li>
+</ul>
+<h2 id="3-Tranformer-Code"><a href="#3-Tranformer-Code" class="headerlink" title="3 Tranformer Code"></a>3 Tranformer Code</h2><p><a href="https://github.com/RacleRay/DeepLearningFoundation/blob/master/2.0-Transformer.ipynb" target="_blank" rel="noopener">TensorFlow transformer</a></p>
+<ul>
+<li><a href="https://github.com/tensorflow/models/tree/master/official/transformer" target="_blank" rel="noopener">官方代码</a></li>
+<li><a href="https://github.com/tensorflow/tensor2tensor/blob/master/tensor2tensor/models/transformer.py" target="_blank" rel="noopener">作者代码</a></li>
+<li><a href="https://github.com/OpenNMT/OpenNMT-py/tree/master/onmt" target="_blank" rel="noopener">哈佛NLP组pytorch实现</a></li>
+</ul>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="https://racleray.github.io/2020/07/07/Transformer-Model/" data-id="ckcc38qx8000jxs2f2l4v7no2" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/transformer/" rel="tag">transformer</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+    
+<ul id="article-nav" class="nav nav-pills nav-justified">
+  
+  <li role="presentation">
+    <a href="/2020/07/07/Fairseq-Notes/" id="article-nav-older" class="article-nav-link-wrap">
+      <i class="fa fa-chevron-left pull-left"></i>
+      <span class="article-nav-link-title">Fairseq Notes</span>
+    </a>
+  </li>
+  
+  
+  <li role="presentation">
+    <a href="/2020/07/07/ChatBot-Notes/" id="article-nav-newer" class="article-nav-link-wrap">
+      <span class="article-nav-link-title">ChatBot Notes</span>
+      <i class="fa fa-chevron-right pull-right"></i>
+    </a>
+  </li>
+  
+</ul>
+
+
+  
+</article>
+
+
+
+
+
+<script>
+  var tocEx = function(el){
+    var toc = document.querySelector(el), content = toc.innerHTML;
+    content = content.replace('<!-- toc -->', '<div class="toc"><b>文章目录</b>').replace('<!-- tocstop -->', '</div>');
+    toc.innerHTML = content;
+  }('.entry');
+</script>
+
+
+        </div>
+        <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+          
+  <div class="sidebar-module sidebar-module-inset">
+  <h4>About</h4>
+  <p><a href="https://github.com/RacleRay" target="_blank" rel="noopener">Github Link</a>.<br>Email:969232057@qq.com.</p>
+
+</div>
+
+
+  
+  <div class="sidebar-module">
+    <h4>Categories</h4>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/categories/Notes/">Notes</a><span class="sidebar-module-list-count">20</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/categories/Tools/">Tools</a><span class="sidebar-module-list-count">3</span></li></ul>
+  </div>
+
+
+
+  
+  <div class="sidebar-module">
+    <h4>Tags</h4>
+    <ul class="sidebar-module-list" itemprop="keywords"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/CNN/" rel="tag">CNN</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Docker/" rel="tag">Docker</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Fairseq/" rel="tag">Fairseq</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/KenLM/" rel="tag">KenLM</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Language-Model/" rel="tag">Language Model</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Linux/" rel="tag">Linux</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/NVIDIA-Container-Toolkit/" rel="tag">NVIDIA Container Toolkit</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/RNN/" rel="tag">RNN</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Smoothing/" rel="tag">Smoothing</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/attention/" rel="tag">attention</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/baseline/" rel="tag">baseline</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/basic/" rel="tag">basic</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/basics/" rel="tag">basics</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/bleu/" rel="tag">bleu</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/capsule/" rel="tag">capsule</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/cdssm/" rel="tag">cdssm</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/chinese-process/" rel="tag">chinese process</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/classification/" rel="tag">classification</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/cnn/" rel="tag">cnn</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/doc2vec/" rel="tag">doc2vec</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/dssm/" rel="tag">dssm</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/english-process/" rel="tag">english process</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/evaluation/" rel="tag">evaluation</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/fastText/" rel="tag">fastText</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/fine-grained/" rel="tag">fine-grained</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/git/" rel="tag">git</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/lda/" rel="tag">lda</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/machine-learning/" rel="tag">machine learning</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/pretrained-LM/" rel="tag">pretrained LM</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/" rel="tag">python</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/rasa/" rel="tag">rasa</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/regex/" rel="tag">regex</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/representation/" rel="tag">representation</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/retireval/" rel="tag">retireval</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/rouge/" rel="tag">rouge</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/sentence-embedding/" rel="tag">sentence embedding</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/seq2seq/" rel="tag">seq2seq</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/simple-notes/" rel="tag">simple notes</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/text-similarity/" rel="tag">text similarity</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/transformer/" rel="tag">transformer</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tutorial/" rel="tag">tutorial</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/visual-text/" rel="tag">visual text</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/w2v/" rel="tag">w2v</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/word2vec/" rel="tag">word2vec</a><span class="sidebar-module-list-count">1</span></li></ul>
+  </div>
+
+
+
+  
+  <div class="sidebar-module">
+    <h4>Tag Cloud</h4>
+    <p class="tagcloud">
+      <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Fairseq/" style="font-size: 10px;">Fairseq</a> <a href="/tags/KenLM/" style="font-size: 10px;">KenLM</a> <a href="/tags/Language-Model/" style="font-size: 10px;">Language Model</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/NVIDIA-Container-Toolkit/" style="font-size: 10px;">NVIDIA Container Toolkit</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/Smoothing/" style="font-size: 10px;">Smoothing</a> <a href="/tags/attention/" style="font-size: 10px;">attention</a> <a href="/tags/baseline/" style="font-size: 10px;">baseline</a> <a href="/tags/basic/" style="font-size: 20px;">basic</a> <a href="/tags/basics/" style="font-size: 10px;">basics</a> <a href="/tags/bleu/" style="font-size: 10px;">bleu</a> <a href="/tags/capsule/" style="font-size: 10px;">capsule</a> <a href="/tags/cdssm/" style="font-size: 10px;">cdssm</a> <a href="/tags/chinese-process/" style="font-size: 10px;">chinese process</a> <a href="/tags/classification/" style="font-size: 20px;">classification</a> <a href="/tags/cnn/" style="font-size: 10px;">cnn</a> <a href="/tags/doc2vec/" style="font-size: 10px;">doc2vec</a> <a href="/tags/dssm/" style="font-size: 10px;">dssm</a> <a href="/tags/english-process/" style="font-size: 10px;">english process</a> <a href="/tags/evaluation/" style="font-size: 10px;">evaluation</a> <a href="/tags/fastText/" style="font-size: 20px;">fastText</a> <a href="/tags/fine-grained/" style="font-size: 10px;">fine-grained</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/lda/" style="font-size: 10px;">lda</a> <a href="/tags/machine-learning/" style="font-size: 10px;">machine learning</a> <a href="/tags/pretrained-LM/" style="font-size: 10px;">pretrained LM</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/rasa/" style="font-size: 10px;">rasa</a> <a href="/tags/regex/" style="font-size: 10px;">regex</a> <a href="/tags/representation/" style="font-size: 20px;">representation</a> <a href="/tags/retireval/" style="font-size: 10px;">retireval</a> <a href="/tags/rouge/" style="font-size: 10px;">rouge</a> <a href="/tags/sentence-embedding/" style="font-size: 10px;">sentence embedding</a> <a href="/tags/seq2seq/" style="font-size: 20px;">seq2seq</a> <a href="/tags/simple-notes/" style="font-size: 10px;">simple notes</a> <a href="/tags/text-similarity/" style="font-size: 20px;">text similarity</a> <a href="/tags/transformer/" style="font-size: 10px;">transformer</a> <a href="/tags/tutorial/" style="font-size: 10px;">tutorial</a> <a href="/tags/visual-text/" style="font-size: 10px;">visual text</a> <a href="/tags/w2v/" style="font-size: 10px;">w2v</a> <a href="/tags/word2vec/" style="font-size: 10px;">word2vec</a>
+    </p>
+  </div>
+
+
+  
+  <div class="sidebar-module">
+    <h4>Archives</h4>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2020/07/">七月 2020</a><span class="sidebar-module-list-count">24</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2020/04/">四月 2020</a><span class="sidebar-module-list-count">1</span></li></ul>
+  </div>
+
+
+
+  
+  <div class="sidebar-module">
+    <h4>Recents</h4>
+    <ul class="sidebar-module-list">
+      
+        <li>
+          <a href="/2020/07/07/CapsuleNet/">CapsuleNet</a>
+        </li>
+      
+        <li>
+          <a href="/2020/07/07/A-SENTENCE-EMBEDDINGS-Baseline/">A SENTENCE EMBEDDINGS Baseline</a>
+        </li>
+      
+        <li>
+          <a href="/2020/07/07/Git-sheet/">Git sheet</a>
+        </li>
+      
+        <li>
+          <a href="/2020/07/07/%E6%96%87%E6%9C%AC%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/">文本相似性深度学习方法</a>
+        </li>
+      
+        <li>
+          <a href="/2020/07/07/%E6%96%87%E6%9C%AC%E7%9B%B8%E4%BC%BC%E6%80%A7/">文本相似性</a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+
+        </div>
+    </div>
+  </div>
+  <footer class="blog-footer">
+  <div class="container">
+    <div id="footer-info" class="inner">
+      &copy; 2020 江左时雨<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+  
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" integrity="sha384-8gBf6Y4YYq7Jx97PIqmTwLPin4hxIzQw5aDmUg/DDhul9fFpbbLcLh3nTIIDJKhx" crossorigin="anonymous"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>
