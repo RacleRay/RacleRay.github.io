@@ -3,17 +3,22 @@
 <head>
   <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
   
-  <title>Tag: library | Racle</title>
+  <title>Large scale GAN training for high fidelity natural image synthesis | Racle</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="个人博客&amp;笔记">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Racle">
-<meta property="og:url" content="https://racleray.github.io/tags/library/index.html">
+  <meta name="description" content="问题 方法 实验结果 实验后分析 结论">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Large scale GAN training for high fidelity natural image synthesis">
+<meta property="og:url" content="https://racleray.github.io/2020/08/04/Large-scale-GAN-training-for-high-fidelity-natural-image-synthesis/index.html">
 <meta property="og:site_name" content="Racle">
-<meta property="og:description" content="个人博客&amp;笔记">
+<meta property="og:description" content="问题 方法 实验结果 实验后分析 结论">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://racleray.github.io/images/pic/Large-scale-GAN-training-for-high-fidelity-natural-image-synthesis_pic/image-20200806164910557.png">
+<meta property="article:published_time" content="2020-08-04T08:08:56.000Z">
+<meta property="article:modified_time" content="2020-08-06T09:10:21.733Z">
 <meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="gan">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://racleray.github.io/images/pic/Large-scale-GAN-training-for-high-fidelity-natural-image-synthesis_pic/image-20200806164910557.png">
   
     <link rel="alternate" href="/atom.xml" title="Racle" type="application/atom+xml">
   
@@ -83,42 +88,164 @@
 
     <div class="row">
         <div class="col-sm-8 blog-main">
-          
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <header class="archive-article-header">
+          <article id="post-Large-scale-GAN-training-for-high-fidelity-natural-image-synthesis" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
     
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/07/08/C-Project%E4%BD%BF%E7%94%A8%E5%A4%96%E9%83%A8%E5%BA%93/">C++ Project使用外部库</a>
+    <h1 class="article-title" itemprop="name">
+      Large scale GAN training for high fidelity natural image synthesis
     </h1>
   
 
 
+  </header>
+
+  <div class="article-meta">
     <div class="article-datetime">
-  <a href="/2020/07/08/C-Project%E4%BD%BF%E7%94%A8%E5%A4%96%E9%83%A8%E5%BA%93/" class="archive-article-date"><time datetime="2020-07-08T04:59:37.000Z" itemprop="datePublished">七月 8日</time></a>
+  <a href="/2020/08/04/Large-scale-GAN-training-for-high-fidelity-natural-image-synthesis/" class="article-date"><time datetime="2020-08-04T08:08:56.000Z" itemprop="datePublished">2020-08-04</time></a>
 </div>
 
-  </header>
+    
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Notes/">Notes</a>
+  </div>
+
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- TOC -->
+
+<ul>
+<li><a href="#问题">问题</a></li>
+<li><a href="#方法">方法</a></li>
+<li><a href="#实验结果">实验结果</a></li>
+<li><a href="#实验后分析">实验后分析</a></li>
+<li><a href="#结论">结论</a></li>
+</ul>
+<!-- /TOC -->
+<a id="more"></a>
+
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>GAN生成图像的过程是一个敏感的过程。虽然相比于VAE，其优化目标从Elmo最优损失函数的一个下界，变为直接优化生成结果和目标之间差异损失本身，直觉上是一种更好的方法，但是由于动态地交叉训练生成器与判别器，导致对网络设计、训练方法、参数设置等非常敏感。</p>
+<p>尽管有研究表明在经验和理论上，获得了在多种设置中可以实现稳定训练的结论。但是GAN生成网络的效果始终有点差强人意。</p>
+<p>当前在Image Net建模上的最佳结果仅达到了<strong>52.5的IS</strong>，而真实数据有<strong>233的IS</strong>。</p>
+<blockquote>
+<p>Is( inception score)：用来衡量GAN网络的两个指标: 生成图片的质量和多样性</p>
+<ul>
+<li>entropy = -sum(p_i * log(p_i))</li>
+</ul>
+<p>The conditional probability captures our interest in image quality.</p>
+<ul>
+<li>KL (C || M) : KL divergence = p(y|x) * (log(p(y|x)) – log(p(y)))</li>
+</ul>
+<p>The average of the KL divergence for all generated images. C for conditional and M for marginal distributions.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># calculate inception score in numpy</span></span><br><span class="line"><span class="keyword">from</span> numpy <span class="keyword">import</span> asarray</span><br><span class="line"><span class="keyword">from</span> numpy <span class="keyword">import</span> expand_dims</span><br><span class="line"><span class="keyword">from</span> numpy <span class="keyword">import</span> log</span><br><span class="line"><span class="keyword">from</span> numpy <span class="keyword">import</span> mean</span><br><span class="line"><span class="keyword">from</span> numpy <span class="keyword">import</span> exp</span><br><span class="line"> </span><br><span class="line"><span class="comment"># calculate the inception score for p(y|x)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">calculate_inception_score</span><span class="params">(p_yx， eps=<span class="number">1E-16</span>)</span>:</span></span><br><span class="line">	<span class="comment"># calculate p(y)</span></span><br><span class="line">	p_y = expand_dims(p_yx.mean(axis=<span class="number">0</span>)， <span class="number">0</span>)</span><br><span class="line">	<span class="comment"># kl divergence for each image</span></span><br><span class="line">	kl_d = p_yx * (log(p_yx + eps) - log(p_y + eps))</span><br><span class="line">	<span class="comment"># sum over classes</span></span><br><span class="line">	sum_kl_d = kl_d.sum(axis=<span class="number">1</span>)</span><br><span class="line">	<span class="comment"># average over images</span></span><br><span class="line">	avg_kl_d = mean(sum_kl_d)</span><br><span class="line">	<span class="comment"># undo the logs</span></span><br><span class="line">	is_score = exp(avg_kl_d)</span><br><span class="line">	<span class="keyword">return</span> is_score</span><br></pre></td></tr></table></figure>
+
+<p>但是有一个缺陷，概率计算是建立在Inception数据集限制的1000种类别中的，不在其中的类别则无法评估，同时要达到较好的效果，计算score时，不同类别中的数据分布最好是比较均匀的。</p>
+</blockquote>
+<p>《<a href="https://arxiv.org/abs/1809.11096" target="_blank" rel="noopener">Large scale GAN training for high fidelity natural image synthesis</a>》的研究正是探索生成效果的一项成果，作者成功地将GAN生成图像和真实图像之间的保真度和多样性gap大幅降低。</p>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p>高分辨率能够带来更为真实的生成图像，在这样的思想的指导下，本论文结合了GAN的各种新技术，并且分析了训练难的原因，最后提出自己的模型。</p>
+<p>本文展示了GAN可以<strong>从训练规模中显著获益</strong>，并且能在参数数量很大和八倍Batch size于之前最佳结果，的条件下，仍然能以2倍到4倍的速度进行训练。</p>
+<p>作者引入了两种简单的生成架构变化，提高了可扩展性，并修改了正则化方案以提升conditioning，通过实验说明了这样可以提升性能。</p>
+<p><img src="/images/pic/Large-scale-GAN-training-for-high-fidelity-natural-image-synthesis_pic/image-20200806164910557.png" alt="image"></p>
+<p>这篇论文没有提出新的模型，只是将原有的GAN的模型：</p>
+<ol>
+<li>用8倍原有的batch size大小</li>
+<li>将隐层的变量数量扩充到原有模型的4倍</li>
+</ol>
+<p>训练获得了很好的图片生成的效果。与此同时，在扩充了变量数量和 batch size大小后，模型出现了不稳定的现象。</p>
+<p>文章中对出现的不稳定现象，采用现有的比较有效的稳定训练GAN的方法，但是文中发现这样确实会稳定GAN的训练，但是同时会栖牲生成图片的质量。</p>
+<h2 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h2><ul>
+<li>研究表明按<strong>8的倍数增加批大小</strong>可以将当前最佳的<strong>IS提高46%</strong>。</li>
+</ul>
+<p>研究者假设这是由于每个批量覆盖了更多的模式，为生成器和鉴别器都提供了更好的梯度信息。</p>
+<p>这种扩扆带来的值得注意的副作用是，模型以更少的迭代次数达到了更好的性能，但变得不稳定并且遭遇了完全的训练崩溃。</p>
+<p>因此在实验中，研究者在崩溃刚好发生之后立刻停止训练，并从之前保存的检查点进行结果报告。</p>
+<ul>
+<li><strong>增加了每个层50%的宽度</strong>(通道数量)，进一步的<strong>21%的IS提升</strong>。</li>
+</ul>
+<p>生成器和鉴别器中的参数数量几乎翻倍。研究者假设这是由于模型相对于数据集复杂度的容量的增加。将深度翻倍，在ImageNet Based模型上，反而会降低性能。</p>
+<ul>
+<li>其他技巧</li>
+</ul>
+<ol>
+<li><p>截断技巧</p>
+<p>生成器的随机噪声输入一般使用正态分布或者均匀分布的随机数。</p>
+<p>本文采用了<strong>截断技术</strong>，对正态分布的随机数进行截断处理，实验发现这种方法的<strong>结果最好</strong>。</p>
+<blockquote>
+<p>对此的直观解释是，如果网络的随机噪声输入的随机数变动范围越大，生成的样本在标准模板上的变动就越大，因此样本的多样性就越强，但真实性可能会降低。</p>
+<p>首先用截断态分布N（0，1）随机数产生噪声向量Z，具体做法是如果随机数超出一定范围，则重新采样，使得其落在这个区间里。</p>
+<p>这种做法称为截断技巧：向量Z的模超过某一指定阈值的随机数进行重釆样，这样可以提高单个样本的质量，但代价是降低了样本的多样性。</p>
+</blockquote>
+</li>
+</ol>
+<h2 id="实验后分析"><a href="#实验后分析" class="headerlink" title="实验后分析"></a>实验后分析</h2><ul>
+<li>生成器的不稳定性</li>
+</ul>
+<p>本文着重对小规模时稳定，大规模时不稳定的问题进行分析。</p>
+<p>实验中发现，权重矩阵的前3个奇异值σ0，σ1，σ2蘊含的信息最丰富。</p>
+<p>在训练中，G的大部分层的谱范数都是正常的，但有一些是病态的，这些谱范数随着训练的进行不断的增长，最后爆炸，导致训练坍塌。</p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><ol>
+<li>本文证明了将GAN用于多类自然图像生成任务时，<strong>加大模型的规模</strong>可以显著的提高生成的图像的质量，对生成的样本的<strong>真实性和多样性</strong>都是如此。</li>
+<li>通过使用一些技巧，本文提出的方法的性能较之前的方法有了大度的提高。</li>
+<li>另外，还分析了大规模GAN在训练时的机制，用它们的权重矩阵的奇异值来刻画它们的稳定性。</li>
+<li>讨论了稳定性和性能即生成的图像的质量之间的相互作用和影响</li>
+</ol>
+<p>参考链接：</p>
+<p>百度论文复现课程：<a href="https://aistudio.baidu.com/aistudio/education/group/info/1340" target="_blank" rel="noopener">https://aistudio.baidu.com/aistudio/education/group/info/1340</a></p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="https://racleray.github.io/2020/08/04/Large-scale-GAN-training-for-high-fidelity-natural-image-synthesis/" data-id="ckdikyl7w00005k2f26hzf7wc" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gan/" rel="tag">gan</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+    
+<ul id="article-nav" class="nav nav-pills nav-justified">
+  
+  <li role="presentation">
+    <a href="/2020/07/08/C-Project%E4%BD%BF%E7%94%A8%E5%A4%96%E9%83%A8%E5%BA%93/" id="article-nav-older" class="article-nav-link-wrap">
+      <i class="fa fa-chevron-left pull-left"></i>
+      <span class="article-nav-link-title">C++ Project使用外部库</span>
+    </a>
+  </li>
+  
+  
+</ul>
+
+
+  
 </article>
 
-  
-  
-    </div></section>
-  
 
 
+
+
+<script>
+  var tocEx = function(el){
+    var toc = document.querySelector(el), content = toc.innerHTML;
+    content = content.replace('<!-- toc -->', '<div class="toc"><b>文章目录</b>').replace('<!-- tocstop -->', '</div>');
+    toc.innerHTML = content;
+  }('.entry');
+</script>
 
 
         </div>
