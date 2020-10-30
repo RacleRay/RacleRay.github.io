@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>hadoop+spark环境配置 | Racle</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="单节点Hadoop 1.安装JDK 2.设定 SSH无密码登入 3.下载安装Hadoop 4.设定Hadoop环境变数 5.修改Hadoop组态设定档 6.建立与格式化HDFS 目录 7.启动Hadoop 8.开启Hadoop Resource­ManagerWeb接口 9.NameNode HDFS Web接口   多节点Hadoop 1复制Single Node Cluster到data">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hadoop+spark环境配置">
+<meta property="og:url" content="https://racleray.github.io/2020/10/30/hadoop-spark%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/index.html">
+<meta property="og:site_name" content="Racle">
+<meta property="og:description" content="单节点Hadoop 1.安装JDK 2.设定 SSH无密码登入 3.下载安装Hadoop 4.设定Hadoop环境变数 5.修改Hadoop组态设定档 6.建立与格式化HDFS 目录 7.启动Hadoop 8.开启Hadoop Resource­ManagerWeb接口 9.NameNode HDFS Web接口   多节点Hadoop 1复制Single Node Cluster到data">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://racleray.github.io/images/pic/hadoop-spark%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE_pic/image-20201029171626529.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/hadoop-spark%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE_pic/image-20201029172711979.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/hadoop-spark%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE_pic/image-20201030010622615.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/hadoop-spark%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE_pic/image-20201030010705348.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/hadoop-spark%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE_pic/image-20201030010732578.png">
+<meta property="article:published_time" content="2020-10-30T08:56:36.000Z">
+<meta property="article:modified_time" content="2020-10-30T09:01:34.540Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="spark">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://racleray.github.io/images/pic/hadoop-spark%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE_pic/image-20201029171626529.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Racle" type="application/atom+xml">
+  
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous">
+
+  
+<link rel="stylesheet" href="/css/styles.css">
+
+  
+
+<meta name="generator" content="Hexo 4.2.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-inverse">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-menu-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="main-menu-navbar">
+      <ul class="nav navbar-nav">
+        
+          <li><a class=""
+                 href="/index.html">Home</a></li>
+        
+          <li><a class=""
+                 href="/archives/">Archives</a></li>
+        
+          <li><a class=""
+                 href="https://github.com/RacleRay">Github</a></li>
+        
+      </ul>
+
+      <!--
+      <ul class="nav navbar-nav navbar-right">
+        
+          <li><a href="/atom.xml" title="RSS Feed"><i class="fa fa-rss"></i></a></li>
+        
+      </ul>
+      -->
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+  <div class="container">
+    <div class="blog-header">
+  <h1 class="blog-title">Racle</h1>
+  
+    <p class="lead blog-description">Recording</p>
+  
+</div>
+
+    <div class="row">
+        <div class="col-sm-8 blog-main">
+          <article id="post-hadoop-spark环境配置" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 class="article-title" itemprop="name">
+      hadoop+spark环境配置
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2020/10/30/hadoop-spark%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" class="article-date"><time datetime="2020-10-30T08:56:36.000Z" itemprop="datePublished">2020-10-30</time></a>
+</div>
+
+    
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Tools/">Tools</a>
+  </div>
+
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- TOC -->
+
+<ul>
+<li><a href="#单节点hadoop">单节点Hadoop</a><ul>
+<li><a href="#1安装jdk"><strong>1.安装JDK</strong></a></li>
+<li><a href="#2设定-ssh无密码登入"><strong>2.设定 SSH无密码登入</strong></a></li>
+<li><a href="#3下载安装hadoop"><strong>3.下载安装Hadoop</strong></a></li>
+<li><a href="#4设定hadoop环境变数"><strong>4.设定Hadoop环境变数</strong></a></li>
+<li><a href="#5修改hadoop组态设定档"><strong>5.修改Hadoop组态设定档</strong></a></li>
+<li><a href="#6建立与格式化hdfs-目录"><strong>6.建立与格式化HDFS 目录</strong></a></li>
+<li><a href="#7启动hadoop"><strong>7.启动Hadoop</strong></a></li>
+<li><a href="#8开启hadoop-resourcemanagerweb接口"><strong>8.开启Hadoop Resource­ManagerWeb接口</strong></a></li>
+<li><a href="#9namenode-hdfs-web接口"><strong>9.NameNode HDFS Web接口</strong></a></li>
+</ul>
+</li>
+<li><a href="#多节点hadoop">多节点Hadoop</a><ul>
+<li><a href="#1复制single-node-cluster到data1">1复制Single Node Cluster到data1</a></li>
+<li><a href="#2设定data1伺服器">2设定data1伺服器</a></li>
+<li><a href="#3复制data1伺服器至data2data3master">3复制data1伺服器至data2、data3、master</a></li>
+<li><a href="#4设定data2data3伺服器">4设定data2、data3伺服器</a></li>
+<li><a href="#5设定master伺服器">5设定master伺服器</a></li>
+<li><a href="#6-master连线至data1data2data3建立hdfs目录">6 master连线至data1、data2、data3建立HDFS目录</a></li>
+<li><a href="#7建立与格式化namenode-hdfs目录">7建立与格式化NameNode HDFS目录</a></li>
+<li><a href="#8启动hadoop-multi-node-cluster">8启动Hadoop Multi Node cluster</a></li>
+<li><a href="#9开启hadoop-resource-manager-web介面">9开启Hadoop Resource-Manager Web介面</a></li>
+<li><a href="#10开启namenodeweb介面">10开启NameNodeWeb介面</a></li>
+</ul>
+</li>
+<li><a href="#常用命令">常用命令</a></li>
+<li><a href="#pyspark">pyspark</a><ul>
+<li><a href="#scale">scale</a></li>
+<li><a href="#spark">spark</a></li>
+<li><a href="#测试">测试</a></li>
+</ul>
+</li>
+</ul>
+<!-- /TOC -->
+<a id="more"></a>
+
+
+<h3 id="单节点Hadoop"><a href="#单节点Hadoop" class="headerlink" title="单节点Hadoop"></a>单节点Hadoop</h3><h4 id="1-安装JDK"><a href="#1-安装JDK" class="headerlink" title="1.安装JDK"></a><strong>1.安装JDK</strong></h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line"></span><br><span class="line">sudo apt-get install default-jdk</span><br><span class="line"></span><br><span class="line">java -version</span><br></pre></td></tr></table></figure>
+
+<p>查看安装路径</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">update-alternatives --display java</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="2-设定-SSH无密码登入"><a href="#2-设定-SSH无密码登入" class="headerlink" title="2.设定 SSH无密码登入"></a><strong>2.设定 SSH无密码登入</strong></h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install ssh</span><br><span class="line"></span><br><span class="line">sudo apt-get install rsync</span><br><span class="line"></span><br><span class="line">ssh-keygen -t dsa -P &#39;&#39; -f ~&#x2F;.ssh&#x2F;id_dsa</span><br><span class="line">ll ~&#x2F;.ssh</span><br></pre></td></tr></table></figure>
+
+<p>为了无密码登录本机，加入公匙到许可证文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat ~&#x2F;.ssh&#x2F;id_dsa.pub &gt;&gt; ~&#x2F;.ssh&#x2F;authorized_keys</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart sshd.service</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="3-下载安装Hadoop"><a href="#3-下载安装Hadoop" class="headerlink" title="3.下载安装Hadoop"></a><strong>3.下载安装Hadoop</strong></h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">wget https:&#x2F;&#x2F;www.apache.org&#x2F;dyn&#x2F;closer.cgi&#x2F;hadoop&#x2F;common&#x2F;hadoop-2.9.2&#x2F;hadoop-2.9.2.tar.gz</span><br><span class="line"></span><br><span class="line">sudo tar -zxvf hadoop-2.9.2.tar.gz</span><br><span class="line"></span><br><span class="line">sudo mv hadoop-2.9.2 &#x2F;usr&#x2F;local&#x2F;hadoop</span><br><span class="line"></span><br><span class="line">ll &#x2F;usr&#x2F;local&#x2F;hadoop</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="4-设定Hadoop环境变数"><a href="#4-设定Hadoop环境变数" class="headerlink" title="4.设定Hadoop环境变数"></a><strong>4.设定Hadoop环境变数</strong></h4><p>修改~/.bashrc</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit ~&#x2F;.bashrc</span><br></pre></td></tr></table></figure>
+
+<p>输入下列内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">export JAVA_HOME&#x3D;&#x2F;usr&#x2F;lib&#x2F;jvm&#x2F;java-8-openjdk-amd64</span><br><span class="line"></span><br><span class="line">export HADOOP_HOME&#x3D;&#x2F;usr&#x2F;local&#x2F;hadoop</span><br><span class="line">export PATH&#x3D;$PATH:$HADOOP_HOME&#x2F;bin</span><br><span class="line">export PATH&#x3D;$PATH:$HADOOP_HOME&#x2F;sbin</span><br><span class="line"></span><br><span class="line">export HADOOP_MAPRED_HOME&#x3D;$HADOOP_HOME</span><br><span class="line">export HADOOP_COMMON_HOME&#x3D;$HADOOP_HOME</span><br><span class="line">export HADOOP_HDFS_HOME&#x3D;$HADOOP_HOME</span><br><span class="line">export YARN_HOME&#x3D;$HADOOP_HOME</span><br><span class="line"></span><br><span class="line">export HADOOP_COMMON_LIB_NATIVE_DIR&#x3D;$HADOOP_HOME&#x2F;lib&#x2F;native</span><br><span class="line">export HADOOP_OPTS&#x3D;&quot;-Djava.library.path&#x3D;$HADOOP_HOME&#x2F;lib&quot;</span><br><span class="line">export JAVA_LIBRARY_PATH&#x3D;$HADOOP_HOME&#x2F;lib&#x2F;native:$JAVA_LIBRARY_PATH</span><br></pre></td></tr></table></figure>
+
+<p>让~/.bashrc修改生效</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source ~&#x2F;.bashrc</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="5-修改Hadoop组态设定档"><a href="#5-修改Hadoop组态设定档" class="headerlink" title="5.修改Hadoop组态设定档"></a><strong>5.修改Hadoop组态设定档</strong></h4><p>Step1 修改hadoop-env.sh配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit &#x2F;usr&#x2F;local&#x2F;hadoop&#x2F;etc&#x2F;hadoop&#x2F;hadoop-env.sh</span><br></pre></td></tr></table></figure>
+
+<p>输入下列内容:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export JAVA_HOME&#x3D;&#x2F;usr&#x2F;lib&#x2F;jvm&#x2F;java-8-openjdk-amd64</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Step2 修改core-site.xml，设置HDFS名称</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit &#x2F;usr&#x2F;local&#x2F;hadoop&#x2F;etc&#x2F;hadoop&#x2F;core-site.xml</span><br></pre></td></tr></table></figure>
+
+<p>在之间，输入下列内容:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;configuration&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">	&lt;name&gt;fs.default.name&lt;&#x2F;name&gt;</span><br><span class="line">	&lt;value&gt;hdfs:&#x2F;&#x2F;localhost:9000&lt;&#x2F;value&gt;</span><br><span class="line">&lt;&#x2F;property&gt;</span><br><span class="line">&lt;&#x2F;configuration&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Step3 修改yarn-site.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit &#x2F;usr&#x2F;local&#x2F;hadoop&#x2F;etc&#x2F;hadoop&#x2F;yarn-site.xml</span><br></pre></td></tr></table></figure>
+
+<p>在之间，输入下列内容:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">	&lt;name&gt;yarn.nodemanager.aux-services&lt;&#x2F;name&gt; </span><br><span class="line">	&lt;value&gt;mapreduce_shuffle&lt;&#x2F;value&gt; </span><br><span class="line">&lt;&#x2F;property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">	&lt;name&gt;yarn.nodemanager.aux-services.mapreduce.shuffle.class&lt;&#x2F;name&gt;</span><br><span class="line">    &lt;value&gt;org.apache.hadoop.mapred.ShuffleHandler&lt;&#x2F;value&gt;</span><br><span class="line">&lt;&#x2F;property&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Step4 修改mapred-site.xml，监控Map和reduce程序的JobTracker</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo cp &#x2F;usr&#x2F;local&#x2F;hadoop&#x2F;etc&#x2F;hadoop&#x2F;mapred-site.xml.template &#x2F;usr&#x2F;local&#x2F;hadoop&#x2F;etc&#x2F;hadoop&#x2F;mapred-site.xml</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit &#x2F;usr&#x2F;local&#x2F;hadoop&#x2F;etc&#x2F;hadoop&#x2F;mapred-site.xml</span><br></pre></td></tr></table></figure>
+
+<p>在之间，输入下列内容:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">	&lt;name&gt;mapreduce.framework.name&lt;&#x2F;name&gt; </span><br><span class="line">	&lt;value&gt;yarn&lt;&#x2F;value&gt; </span><br><span class="line">&lt;&#x2F;property&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Step5 修改hdfs-site.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit &#x2F;usr&#x2F;local&#x2F;hadoop&#x2F;etc&#x2F;hadoop&#x2F;hdfs-site.xml</span><br></pre></td></tr></table></figure>
+
+<p>在之间，输入下列内容: dfs.replication设置blocks在其他节点的备份数量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">	&lt;name&gt;dfs.replication&lt;&#x2F;name&gt; </span><br><span class="line">	&lt;value&gt;3&lt;&#x2F;value&gt; </span><br><span class="line">&lt;&#x2F;property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">	&lt;name&gt;dfs.namenode.name.dir&lt;&#x2F;name&gt; </span><br><span class="line">	&lt;value&gt;file:&#x2F;usr&#x2F;local&#x2F;hadoop&#x2F;hadoop_data&#x2F;hdfs&#x2F;namenode&lt;&#x2F;value&gt; </span><br><span class="line">&lt;&#x2F;property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">	&lt;name&gt;dfs.datanode.data.dir&lt;&#x2F;name&gt; </span><br><span class="line">	&lt;value&gt;file:&#x2F;usr&#x2F;local&#x2F;hadoop&#x2F;hadoop_data&#x2F;hdfs&#x2F;datanode&lt;&#x2F;value&gt; </span><br><span class="line">&lt;&#x2F;property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;dfs.http.address&lt;&#x2F;name&gt;</span><br><span class="line">  &lt;value&gt;0.0.0.0:50070&lt;&#x2F;value&gt;</span><br><span class="line">&lt;&#x2F;property&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h4 id="6-建立与格式化HDFS-目录"><a href="#6-建立与格式化HDFS-目录" class="headerlink" title="6.建立与格式化HDFS 目录"></a><strong>6.建立与格式化HDFS 目录</strong></h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir -p &#x2F;usr&#x2F;local&#x2F;hadoop&#x2F;hadoop_data&#x2F;hdfs&#x2F;namenode</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir -p &#x2F;usr&#x2F;local&#x2F;hadoop&#x2F;hadoop_data&#x2F;hdfs&#x2F;datanode</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chown ray:ray -R &#x2F;usr&#x2F;local&#x2F;hadoop</span><br></pre></td></tr></table></figure>
+
+<p>chown要根据当前用户名进行修改</p>
+<p>格式化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop namenode -format</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="7-启动Hadoop"><a href="#7-启动Hadoop" class="headerlink" title="7.启动Hadoop"></a><strong>7.启动Hadoop</strong></h4><p>启动start-dfs.sh，再启动 start-yarn.sh</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">start-dfs.sh</span><br><span class="line"></span><br><span class="line">start-yarn.sh</span><br></pre></td></tr></table></figure>
+
+<p>或<br>启动全部</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">start-all.sh</span><br></pre></td></tr></table></figure>
+
+<p>查看目前所执行的行程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps</span><br></pre></td></tr></table></figure>
+
+
+
+<p>stop-dfs.sh</p>
+<p>stop-yarn.sh</p>
+<p>stop-all.sh</p>
+<h4 id="8-开启Hadoop-Resource­ManagerWeb接口"><a href="#8-开启Hadoop-Resource­ManagerWeb接口" class="headerlink" title="8.开启Hadoop Resource­ManagerWeb接口"></a><strong>8.开启Hadoop Resource­ManagerWeb接口</strong></h4><p>Hadoop Resource­Manager Web接口网址<br><a href="http://localhost:8088/" target="_blank" rel="noopener">http://localhost:8088/</a></p>
+<p><img src="/images/pic/hadoop-spark%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE_pic/image-20201029171626529.png" alt="image"></p>
+<h4 id="9-NameNode-HDFS-Web接口"><a href="#9-NameNode-HDFS-Web接口" class="headerlink" title="9.NameNode HDFS Web接口"></a><strong>9.NameNode HDFS Web接口</strong></h4><p>开启HDFS Web UI网址<br><a href="http://localhost:50070/" target="_blank" rel="noopener">http://localhost:50070/</a></p>
+<p><img src="/images/pic/hadoop-spark%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE_pic/image-20201029172711979.png" alt="image"></p>
+<h3 id="多节点Hadoop"><a href="#多节点Hadoop" class="headerlink" title="多节点Hadoop"></a>多节点Hadoop</h3><ul>
+<li>由多台电脑组成:有一台主要的电脑master，在HDFS担任NameNode角色，在MapReduce2(YARN)担任ResourceManager角色</li>
+<li>有多台的电脑data1、data2、data3，在HDFS担任DataNode角色，在MapReduce2(YARN)担任NodeManager角色 </li>
+</ul>
+<p>Hadoop Multi NodeCluster规划，整理如下表格:</p>
+<table>
+<thead>
+<tr>
+<th><strong>伺服器名称</strong></th>
+<th><strong>IP</strong></th>
+<th><strong>HDFS</strong></th>
+<th><strong>YARN</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>master</strong></td>
+<td>192.168.0.100</td>
+<td>NameNode</td>
+<td>ResourceManager</td>
+</tr>
+<tr>
+<td>data1</td>
+<td>192.168.0.101</td>
+<td>DataNode</td>
+<td>NodeManager</td>
+</tr>
+<tr>
+<td>data2</td>
+<td>192.168.0.102</td>
+<td>DataNode</td>
+<td>NodeManager</td>
+</tr>
+<tr>
+<td>data3</td>
+<td>192.168.0.103</td>
+<td>DataNode</td>
+<td>NodeManager</td>
+</tr>
+</tbody></table>
+<h4 id="1复制Single-Node-Cluster到data1"><a href="#1复制Single-Node-Cluster到data1" class="headerlink" title="1复制Single Node Cluster到data1"></a>1复制Single Node Cluster到data1</h4><p>将之前所建立的Single Node Cluster VirtualBox hadoop虚拟机器复制到data1</p>
+<h4 id="2设定data1伺服器"><a href="#2设定data1伺服器" class="headerlink" title="2设定data1伺服器"></a>2设定data1伺服器</h4><p>编辑网路设定档设定固定IP</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit &#x2F;etc&#x2F;network&#x2F;interfaces</span><br></pre></td></tr></table></figure>
+
+<p>输入下列内容 : </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># interfaces(5) file used by ifup(8) and ifdown(8)</span><br><span class="line"></span><br><span class="line">auto lo</span><br><span class="line">iface lo inet loopback</span><br><span class="line"></span><br><span class="line">auto eth0</span><br><span class="line">iface eth0 inet static</span><br><span class="line">address 192.168.0.101</span><br><span class="line">netmask 255.255.255.0</span><br><span class="line">network 192.168.0.0</span><br><span class="line">gateway 192.168.0.1</span><br><span class="line">dns-nameservers 192.168.0.1</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim &#x2F;etc&#x2F;NetworkManager&#x2F;NetworkManager.conf</span><br></pre></td></tr></table></figure>
+
+<p> 将<code>managed=false</code>修改成<code>managed=true</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service network-manager restart</span><br></pre></td></tr></table></figure>
+
+<p>重启</p>
+<p>设定hostname</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit &#x2F;etc&#x2F;hostname</span><br></pre></td></tr></table></figure>
+
+<p>输入下列内容:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data1</span><br></pre></td></tr></table></figure>
+
+<p> 设定hosts档案</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit &#x2F;etc&#x2F;hosts</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1 localhost</span><br><span class="line">127.0.1.1 hadoop</span><br><span class="line"></span><br><span class="line">192.168.0.100 master</span><br><span class="line">192.168.0.101 data1</span><br><span class="line">192.168.0.102 data2</span><br><span class="line">192.168.0.103 data3</span><br><span class="line"># The following lines are desirable for IPv6 capable hosts</span><br><span class="line">::1 ip6-localhost ip6-loopback</span><br><span class="line">fe00::0 ip6-localnet</span><br><span class="line">ff00::0 ip6-mcastprefix</span><br><span class="line">ff02::1 ip6-allnodes</span><br><span class="line">ff02::2 ip6-allrouters</span><br></pre></td></tr></table></figure>
+
+<p>修改core-site.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit &#x2F;usr&#x2F;local&#x2F;hadoop&#x2F;etc&#x2F;hadoop&#x2F;core-site.xml</span><br></pre></td></tr></table></figure>
+
+<p>在之间，输入下列内容:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">	&lt;name&gt;fs.default.name&lt;&#x2F;name&gt; </span><br><span class="line">	&lt;value&gt;hdfs:&#x2F;&#x2F;master:9000&lt;&#x2F;value&gt; </span><br><span class="line">&lt;&#x2F;property&gt;</span><br></pre></td></tr></table></figure>
+
+<p>修改yarn-site.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit &#x2F;usr&#x2F;local&#x2F;hadoop&#x2F;etc&#x2F;hadoop&#x2F;yarn-site.xml</span><br></pre></td></tr></table></figure>
+
+<p>在之间，输入下列内容:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">	&lt;name&gt;yarn.resourcemanager.resource-tracker.address&lt;&#x2F;name&gt; </span><br><span class="line">	&lt;value&gt;master:8025&lt;&#x2F;value&gt; </span><br><span class="line">&lt;&#x2F;property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">	&lt;name&gt;yarn.resourcemanager.scheduler.address&lt;&#x2F;name&gt; </span><br><span class="line">	&lt;value&gt;master:8030&lt;&#x2F;value&gt; </span><br><span class="line">&lt;&#x2F;property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">	&lt;name&gt;yarn.resourcemanager.address&lt;&#x2F;name&gt; </span><br><span class="line">	&lt;value&gt;master:8050&lt;&#x2F;value&gt; </span><br><span class="line">&lt;&#x2F;property&gt;</span><br></pre></td></tr></table></figure>
+
+<p>修改mapred-site.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit &#x2F;usr&#x2F;local&#x2F;hadoop&#x2F;etc&#x2F;hadoop &#x2F;mapred-site.xml</span><br></pre></td></tr></table></figure>
+
+<p>在之间，输入下列内容:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">	&lt;name&gt;mapred.job.tracker&lt;&#x2F;name&gt; </span><br><span class="line">	&lt;value&gt;master:54311&lt;&#x2F;value&gt; </span><br><span class="line">&lt;&#x2F;property&gt;</span><br></pre></td></tr></table></figure>
+
+<p>修改hdfs-site.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit &#x2F;usr&#x2F;local&#x2F;hadoop&#x2F;etc&#x2F;hadoop&#x2F;hdfs-site.xml</span><br></pre></td></tr></table></figure>
+
+<p>在之间，输入下列内容:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">	&lt;name&gt;dfs.replication&lt;&#x2F;name&gt; </span><br><span class="line">	&lt;value&gt;3&lt;&#x2F;value&gt; </span><br><span class="line">&lt;&#x2F;property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">	&lt;name&gt;dfs.datanode.data.dir&lt;&#x2F;name&gt; </span><br><span class="line">	&lt;value&gt;file:&#x2F;usr&#x2F;local&#x2F;hadoop&#x2F;hadoop_data&#x2F;hdfs&#x2F;datanode&lt;&#x2F;value&gt; </span><br><span class="line">&lt;&#x2F;property&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="3复制data1伺服器至data2、data3、master"><a href="#3复制data1伺服器至data2、data3、master" class="headerlink" title="3复制data1伺服器至data2、data3、master"></a>3复制data1伺服器至data2、data3、master</h4><h4 id="4设定data2、data3伺服器"><a href="#4设定data2、data3伺服器" class="headerlink" title="4设定data2、data3伺服器"></a>4设定data2、data3伺服器</h4><p>设定data2固定IP</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit &#x2F;etc&#x2F;network&#x2F;interfaces</span><br></pre></td></tr></table></figure>
+
+<p>输入下列内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># interfaces(5) file used by ifup(8) and ifdown(8)</span><br><span class="line">auto lo</span><br><span class="line">iface lo inet loopback</span><br><span class="line"></span><br><span class="line">auto eth0</span><br><span class="line">iface eth0 inet static</span><br><span class="line">address 192.168.0.102</span><br><span class="line">netmask 255.255.255.0</span><br><span class="line">network 192.168.0.0</span><br><span class="line">gateway 192.168.0.1</span><br><span class="line">dns-nameservers 192.168.0.1</span><br></pre></td></tr></table></figure>
+
+<p>设定hostname</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit &#x2F;etc&#x2F;hostname</span><br></pre></td></tr></table></figure>
+
+<p>输入下列内容:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data2</span><br></pre></td></tr></table></figure>
+
+
+
+<p>设定data3固定IP</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit &#x2F;etc&#x2F;network&#x2F;interfaces</span><br></pre></td></tr></table></figure>
+
+<p>输入下列内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># interfaces(5) file used by ifup(8) and ifdown(8)</span><br><span class="line">auto lo</span><br><span class="line">iface lo inet loopback</span><br><span class="line"></span><br><span class="line">auto eth0</span><br><span class="line">iface eth0 inet static</span><br><span class="line">address 192.168.0.103</span><br><span class="line">netmask 255.255.255.0</span><br><span class="line">network 192.168.0.0</span><br><span class="line">gateway 192.168.0.1</span><br><span class="line">dns-nameservers 192.168.0.1</span><br></pre></td></tr></table></figure>
+
+<p>设定hostname</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit &#x2F;etc&#x2F;hostname</span><br></pre></td></tr></table></figure>
+
+<p>输入下列内容:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data3</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="5设定master伺服器"><a href="#5设定master伺服器" class="headerlink" title="5设定master伺服器"></a>5设定master伺服器</h4><p>设定master固定IP</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit &#x2F;etc&#x2F;network&#x2F;interfaces</span><br></pre></td></tr></table></figure>
+
+<p>输入下列内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># interfaces(5) file used by ifup(8) and ifdown(8)</span><br><span class="line">auto lo</span><br><span class="line">iface lo inet loopback</span><br><span class="line"></span><br><span class="line">auto eth0</span><br><span class="line">iface eth0 inet static</span><br><span class="line">address 192.168.0.100</span><br><span class="line">netmask 255.255.255.0</span><br><span class="line">network 192.168.0.0</span><br><span class="line">gateway 192.168.0.1</span><br><span class="line">dns-nameservers 192.168.0.1</span><br></pre></td></tr></table></figure>
+
+<p>设定hostname</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit &#x2F;etc&#x2F;hostname</span><br></pre></td></tr></table></figure>
+
+<p>输入下列内容:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">master</span><br></pre></td></tr></table></figure>
+
+
+
+<p>修改hdfs-site.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit &#x2F;usr&#x2F;local&#x2F;hadoop&#x2F;etc&#x2F;hadoop&#x2F;hdfs-site.xml</span><br></pre></td></tr></table></figure>
+
+<p>在之间，输入下列内容:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">	&lt;name&gt;dfs.replication&lt;&#x2F;name&gt; </span><br><span class="line">	&lt;value&gt;3&lt;&#x2F;value&gt; </span><br><span class="line">&lt;&#x2F;property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">	&lt;name&gt;dfs.namenode.data.dir&lt;&#x2F;name&gt; </span><br><span class="line">	&lt;value&gt;file:&#x2F;usr&#x2F;local&#x2F;hadoop&#x2F;hadoop_data&#x2F;hdfs&#x2F;namenode&lt;&#x2F;value&gt; </span><br><span class="line">&lt;&#x2F;property&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>设定master档案</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit &#x2F;usr&#x2F;local&#x2F;hadoop&#x2F;etc&#x2F;hadoop&#x2F;master</span><br></pre></td></tr></table></figure>
+
+<p>输入下列内容: </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">master</span><br></pre></td></tr></table></figure>
+
+
+
+<p>设定slaves档案</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit &#x2F;usr&#x2F;local&#x2F;hadoop&#x2F;etc&#x2F;hadoop&#x2F;slaves</span><br></pre></td></tr></table></figure>
+
+<p>输入下列内容: </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">data1</span><br><span class="line">data2</span><br><span class="line">data3</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="6-master连线至data1、data2、data3建立HDFS目录"><a href="#6-master连线至data1、data2、data3建立HDFS目录" class="headerlink" title="6 master连线至data1、data2、data3建立HDFS目录"></a>6 master连线至data1、data2、data3建立HDFS目录</h4><p>master SSH连线至data1并建立HDFS目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ssh data1</span><br><span class="line"></span><br><span class="line"># 删除hdfs目录</span><br><span class="line">sudo rm -rf &#x2F;usr&#x2F;local&#x2F;hadoop&#x2F;hadoop_data&#x2F;hdfs</span><br><span class="line"></span><br><span class="line"># 创建datanode目录</span><br><span class="line">sudo mkdir -p &#x2F;usr&#x2F;local&#x2F;hadoop&#x2F;hadoop_data&#x2F;hdfs&#x2F;datanode</span><br><span class="line"></span><br><span class="line"># 更改所有者为当前用户</span><br><span class="line">sudo chown ray:ray -R &#x2F;usr&#x2F;local&#x2F;hadoop</span><br></pre></td></tr></table></figure>
+
+<p>回到master端</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exit</span><br></pre></td></tr></table></figure>
+
+
+
+<p>master SSH连线至data2并建立HDFS目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ssh data2</span><br><span class="line"></span><br><span class="line"># 删除hdfs目录</span><br><span class="line">sudo rm -rf &#x2F;usr&#x2F;local&#x2F;hadoop&#x2F;hadoop_data&#x2F;hdfs</span><br><span class="line"></span><br><span class="line"># 创建datanode目录</span><br><span class="line">sudo mkdir -p &#x2F;usr&#x2F;local&#x2F;hadoop&#x2F;hadoop_data&#x2F;hdfs&#x2F;datanode</span><br><span class="line"></span><br><span class="line"># 更改所有者为当前用户</span><br><span class="line">sudo chown ray:ray -R &#x2F;usr&#x2F;local&#x2F;hadoop</span><br></pre></td></tr></table></figure>
+
+<p>回到master端</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exit</span><br></pre></td></tr></table></figure>
+
+
+
+<p>master SSH连线至data3并建立HDFS目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ssh data3</span><br><span class="line"></span><br><span class="line"># 删除hdfs目录</span><br><span class="line">sudo rm -rf &#x2F;usr&#x2F;local&#x2F;hadoop&#x2F;hadoop_data&#x2F;hdfs</span><br><span class="line"></span><br><span class="line"># 创建datanode目录</span><br><span class="line">sudo mkdir -p &#x2F;usr&#x2F;local&#x2F;hadoop&#x2F;hadoop_data&#x2F;hdfs&#x2F;datanode</span><br><span class="line"></span><br><span class="line"># 更改所有者为当前用户</span><br><span class="line">sudo chown ray:ray -R &#x2F;usr&#x2F;local&#x2F;hadoop</span><br></pre></td></tr></table></figure>
+
+<p>回到master端</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exit</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="7建立与格式化NameNode-HDFS目录"><a href="#7建立与格式化NameNode-HDFS目录" class="headerlink" title="7建立与格式化NameNode HDFS目录"></a>7建立与格式化NameNode HDFS目录</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 删除hdfs目录</span><br><span class="line">sudo rm -rf &#x2F;usr&#x2F;local&#x2F;hadoop&#x2F;hadoop_data&#x2F;hdfs</span><br><span class="line"></span><br><span class="line"># 创建datanode目录</span><br><span class="line">sudo mkdir -p &#x2F;usr&#x2F;local&#x2F;hadoop&#x2F;hadoop_data&#x2F;hdfs&#x2F;namenode</span><br><span class="line"></span><br><span class="line"># 更改所有者为当前用户</span><br><span class="line">sudo chown ray:ray -R &#x2F;usr&#x2F;local&#x2F;hadoop</span><br></pre></td></tr></table></figure>
+
+<p>格式化NameNode HDFS目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop namenode -format</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="8启动Hadoop-Multi-Node-cluster"><a href="#8启动Hadoop-Multi-Node-cluster" class="headerlink" title="8启动Hadoop Multi Node cluster"></a>8启动Hadoop Multi Node cluster</h4><p>启动start-dfs.sh，再启动 start-yarn.sh</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">start-dfs.sh</span><br><span class="line"></span><br><span class="line">start-yarn.sh</span><br></pre></td></tr></table></figure>
+
+<p>或<br>启动全部</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">start-all.sh</span><br></pre></td></tr></table></figure>
+
+<p>查看目前所执行的行程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps</span><br></pre></td></tr></table></figure>
+
+<p>停止</p>
+<p>stop-dfs.sh</p>
+<p>stop-yarn.sh</p>
+<p>stop-all.sh</p>
+<h4 id="9开启Hadoop-Resource-Manager-Web介面"><a href="#9开启Hadoop-Resource-Manager-Web介面" class="headerlink" title="9开启Hadoop Resource-Manager Web介面"></a>9开启Hadoop Resource-Manager Web介面</h4><p><a href="http://master:8088/" target="_blank" rel="noopener">http://master:8088/</a></p>
+<p><img src="/images/pic/hadoop-spark%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE_pic/image-20201030010622615.png" alt="image"></p>
+<h4 id="10开启NameNodeWeb介面"><a href="#10开启NameNodeWeb介面" class="headerlink" title="10开启NameNodeWeb介面"></a>10开启NameNodeWeb介面</h4><p>HDFS Web UI网址<br><a href="http://master:50070/" target="_blank" rel="noopener">http://master:50070/</a></p>
+<p><img src="/images/pic/hadoop-spark%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE_pic/image-20201030010705348.png" alt="image"></p>
+<p><img src="/images/pic/hadoop-spark%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE_pic/image-20201030010732578.png" alt="image"></p>
+<h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -mkdir</span><br><span class="line">hadoop fs -ls</span><br><span class="line">hadoop fs -copyFromLocal # 复制到hdfs，提醒有重名</span><br><span class="line">hadoop fs -put   # 复制到hdfs，但是直接覆盖重名</span><br><span class="line">hadoop fs -cat</span><br><span class="line">hadoop fs -copyToLocal  # 复制到本地，提醒有重名</span><br><span class="line">hadoop fs -get   # 复制到本地，但是直接覆盖重名</span><br><span class="line">hadoop fs -cp</span><br><span class="line">hadoop fs -rm</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="pyspark"><a href="#pyspark" class="headerlink" title="pyspark"></a>pyspark</h3><h4 id="scale"><a href="#scale" class="headerlink" title="scale"></a>scale</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tar xvf scala-2.11.12.tgz</span><br><span class="line"></span><br><span class="line">sudo mv scala-2.11.12 &#x2F;usr&#x2F;local&#x2F;scala</span><br><span class="line"></span><br><span class="line">sudo gedit .bashrc</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 写入</span><br><span class="line">export SCALA_HOME&#x3D;&#x2F;usr&#x2F;local&#x2F;scala</span><br><span class="line">export PATH&#x3D;$PATH:$SCALA_HOME&#x2F;bin</span><br></pre></td></tr></table></figure>
+
+<h4 id="spark"><a href="#spark" class="headerlink" title="spark"></a>spark</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tar xvf spark-2.4.7-bin-without-hadoop.tgz </span><br><span class="line">sudo mv spark-2.4.7-bin-without-hadoop &#x2F;usr&#x2F;local&#x2F;spark</span><br><span class="line">sudo gedit .bashrc</span><br></pre></td></tr></table></figure>
+
+<p>写入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export SPARK_HOME&#x3D;&#x2F;usr&#x2F;local&#x2F;spark</span><br><span class="line">export PATH&#x3D;$PATH:$SPARK_HOME&#x2F;bin:$SPARK_HOME&#x2F;sbin</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source .bashrc</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;usr&#x2F;local&#x2F;spark&#x2F;</span><br><span class="line">cp .&#x2F;conf&#x2F;spark-env.sh.template .&#x2F;conf&#x2F;spark-env.sh</span><br><span class="line"></span><br><span class="line">sudo gedit .&#x2F;conf&#x2F;spark-env.sh</span><br></pre></td></tr></table></figure>
+
+<p>写入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">export SPARK_DIST_CLASSPATH&#x3D;$(&#x2F;usr&#x2F;local&#x2F;hadoop&#x2F;bin&#x2F;hadoop classpath)</span><br><span class="line">export HADOOP_CONF_DIR&#x3D;&#x2F;usr&#x2F;local&#x2F;hadoop&#x2F;etc&#x2F;hadoop</span><br><span class="line"></span><br><span class="line">export PYSPARK_PYTHON&#x3D;&#x2F;usr&#x2F;bin&#x2F;python3</span><br><span class="line">export PYSPARK_DRIVER_PYTHON&#x3D;&#x2F;usr&#x2F;bin&#x2F;ipython3</span><br><span class="line"># 在notebook中运行pyspark</span><br><span class="line"># export PYSPARK_DRIVER_PYTHON_OPTS&#x3D;&quot;notebook&quot;</span><br></pre></td></tr></table></figure>
+
+<p>使用HDFS中文件时，先要启动Hadoop</p>
+<h4 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h4><p>master机器上</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd ~</span><br><span class="line">mkdir wordcount&#x2F;input -p</span><br><span class="line">cp &#x2F;usr&#x2F;local&#x2F;hadoop&#x2F;LICENSE.txt ~&#x2F;wordcount&#x2F;input</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">start-all.sh</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -mkdir -p &#x2F;user&#x2F;ray&#x2F;wordcount&#x2F;input</span><br><span class="line">cd ~&#x2F;wordcount&#x2F;input</span><br><span class="line">hadoop fs -copyFromLocal LICENSE.txt &#x2F;user&#x2F;ray&#x2F;wordcount&#x2F;input</span><br><span class="line">hadoop fs -ls &#x2F;user&#x2F;ray&#x2F;wordcount&#x2F;input</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="https://racleray.github.io/2020/10/30/hadoop-spark%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" data-id="ckgw12r30000lfg2f6qwvgb84" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spark/" rel="tag">spark</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+    
+<ul id="article-nav" class="nav nav-pills nav-justified">
+  
+  <li role="presentation">
+    <a href="/2020/10/19/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9Cnormalization/" id="article-nav-older" class="article-nav-link-wrap">
+      <i class="fa fa-chevron-left pull-left"></i>
+      <span class="article-nav-link-title">神经网络normalization</span>
+    </a>
+  </li>
+  
+  
+</ul>
+
+
+  
+</article>
+
+
+
+
+
+<script>
+  var tocEx = function(el){
+    var toc = document.querySelector(el), content = toc.innerHTML;
+    content = content.replace('<!-- toc -->', '<div class="toc"><b>文章目录</b>').replace('<!-- tocstop -->', '</div>');
+    toc.innerHTML = content;
+  }('.entry');
+</script>
+
+
+        </div>
+        <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+          
+  <div class="sidebar-module sidebar-module-inset">
+  <h4>About</h4>
+  <p><a href="https://github.com/RacleRay" target="_blank" rel="noopener">Github Link</a>.<br>Email:969232057@qq.com.</p>
+
+</div>
+
+
+  
+  <div class="sidebar-module">
+    <h4>Categories</h4>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/categories/Notes/">Notes</a><span class="sidebar-module-list-count">23</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/categories/Tools/">Tools</a><span class="sidebar-module-list-count">4</span></li></ul>
+  </div>
+
+
+
+  
+  <div class="sidebar-module">
+    <h4>Tags</h4>
+    <ul class="sidebar-module-list" itemprop="keywords"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/CNN/" rel="tag">CNN</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Docker/" rel="tag">Docker</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Fairseq/" rel="tag">Fairseq</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/KenLM/" rel="tag">KenLM</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Language-Model/" rel="tag">Language Model</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Linux/" rel="tag">Linux</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/NVIDIA-Container-Toolkit/" rel="tag">NVIDIA Container Toolkit</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/RNN/" rel="tag">RNN</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Smoothing/" rel="tag">Smoothing</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/attention/" rel="tag">attention</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/baseline/" rel="tag">baseline</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/basic/" rel="tag">basic</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/basics/" rel="tag">basics</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/bleu/" rel="tag">bleu</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/" rel="tag">c++</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/capsule/" rel="tag">capsule</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/cdssm/" rel="tag">cdssm</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/chinese-process/" rel="tag">chinese process</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/classification/" rel="tag">classification</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/cnn/" rel="tag">cnn</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/deep-learning/" rel="tag">deep learning</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/doc2vec/" rel="tag">doc2vec</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/dssm/" rel="tag">dssm</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/english-process/" rel="tag">english process</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/evaluation/" rel="tag">evaluation</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/fastText/" rel="tag">fastText</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/fine-grained/" rel="tag">fine-grained</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/gan/" rel="tag">gan</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/git/" rel="tag">git</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/lda/" rel="tag">lda</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/library/" rel="tag">library</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/machine-learning/" rel="tag">machine learning</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/normalization/" rel="tag">normalization</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/pretrained-LM/" rel="tag">pretrained LM</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/" rel="tag">python</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/rasa/" rel="tag">rasa</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/regex/" rel="tag">regex</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/representation/" rel="tag">representation</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/retireval/" rel="tag">retireval</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/rouge/" rel="tag">rouge</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/sentence-embedding/" rel="tag">sentence embedding</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/seq2seq/" rel="tag">seq2seq</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/simple-notes/" rel="tag">simple notes</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/spark/" rel="tag">spark</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/text-similarity/" rel="tag">text similarity</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/transformer/" rel="tag">transformer</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tutorial/" rel="tag">tutorial</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/visual-text/" rel="tag">visual text</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/w2v/" rel="tag">w2v</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/word2vec/" rel="tag">word2vec</a><span class="sidebar-module-list-count">1</span></li></ul>
+  </div>
+
+
+
+  
+  <div class="sidebar-module">
+    <h4>Tag Cloud</h4>
+    <p class="tagcloud">
+      <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Fairseq/" style="font-size: 10px;">Fairseq</a> <a href="/tags/KenLM/" style="font-size: 10px;">KenLM</a> <a href="/tags/Language-Model/" style="font-size: 10px;">Language Model</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/NVIDIA-Container-Toolkit/" style="font-size: 10px;">NVIDIA Container Toolkit</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/Smoothing/" style="font-size: 10px;">Smoothing</a> <a href="/tags/attention/" style="font-size: 10px;">attention</a> <a href="/tags/baseline/" style="font-size: 10px;">baseline</a> <a href="/tags/basic/" style="font-size: 20px;">basic</a> <a href="/tags/basics/" style="font-size: 10px;">basics</a> <a href="/tags/bleu/" style="font-size: 10px;">bleu</a> <a href="/tags/c/" style="font-size: 10px;">c++</a> <a href="/tags/capsule/" style="font-size: 10px;">capsule</a> <a href="/tags/cdssm/" style="font-size: 10px;">cdssm</a> <a href="/tags/chinese-process/" style="font-size: 10px;">chinese process</a> <a href="/tags/classification/" style="font-size: 20px;">classification</a> <a href="/tags/cnn/" style="font-size: 10px;">cnn</a> <a href="/tags/deep-learning/" style="font-size: 10px;">deep learning</a> <a href="/tags/doc2vec/" style="font-size: 10px;">doc2vec</a> <a href="/tags/dssm/" style="font-size: 10px;">dssm</a> <a href="/tags/english-process/" style="font-size: 10px;">english process</a> <a href="/tags/evaluation/" style="font-size: 10px;">evaluation</a> <a href="/tags/fastText/" style="font-size: 20px;">fastText</a> <a href="/tags/fine-grained/" style="font-size: 10px;">fine-grained</a> <a href="/tags/gan/" style="font-size: 10px;">gan</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/lda/" style="font-size: 10px;">lda</a> <a href="/tags/library/" style="font-size: 10px;">library</a> <a href="/tags/machine-learning/" style="font-size: 10px;">machine learning</a> <a href="/tags/normalization/" style="font-size: 10px;">normalization</a> <a href="/tags/pretrained-LM/" style="font-size: 10px;">pretrained LM</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/rasa/" style="font-size: 10px;">rasa</a> <a href="/tags/regex/" style="font-size: 10px;">regex</a> <a href="/tags/representation/" style="font-size: 20px;">representation</a> <a href="/tags/retireval/" style="font-size: 10px;">retireval</a> <a href="/tags/rouge/" style="font-size: 10px;">rouge</a> <a href="/tags/sentence-embedding/" style="font-size: 10px;">sentence embedding</a> <a href="/tags/seq2seq/" style="font-size: 20px;">seq2seq</a> <a href="/tags/simple-notes/" style="font-size: 10px;">simple notes</a> <a href="/tags/spark/" style="font-size: 10px;">spark</a> <a href="/tags/text-similarity/" style="font-size: 20px;">text similarity</a> <a href="/tags/transformer/" style="font-size: 10px;">transformer</a> <a href="/tags/tutorial/" style="font-size: 10px;">tutorial</a> <a href="/tags/visual-text/" style="font-size: 10px;">visual text</a> <a href="/tags/w2v/" style="font-size: 10px;">w2v</a> <a href="/tags/word2vec/" style="font-size: 10px;">word2vec</a>
+    </p>
+  </div>
+
+
+  
+  <div class="sidebar-module">
+    <h4>Archives</h4>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2020/10/">十月 2020</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2020/08/">八月 2020</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2020/07/">七月 2020</a><span class="sidebar-module-list-count">25</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2020/04/">四月 2020</a><span class="sidebar-module-list-count">1</span></li></ul>
+  </div>
+
+
+
+  
+  <div class="sidebar-module">
+    <h4>Recents</h4>
+    <ul class="sidebar-module-list">
+      
+        <li>
+          <a href="/2020/10/30/hadoop-spark%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">hadoop+spark环境配置</a>
+        </li>
+      
+        <li>
+          <a href="/2020/10/19/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9Cnormalization/">神经网络normalization</a>
+        </li>
+      
+        <li>
+          <a href="/2020/08/04/Large-scale-GAN-training-for-high-fidelity-natural-image-synthesis/">Large scale GAN training for high fidelity natural image synthesis</a>
+        </li>
+      
+        <li>
+          <a href="/2020/07/08/C-Project%E4%BD%BF%E7%94%A8%E5%A4%96%E9%83%A8%E5%BA%93/">C++ Project使用外部库</a>
+        </li>
+      
+        <li>
+          <a href="/2020/07/07/CapsuleNet/">CapsuleNet</a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+
+        </div>
+    </div>
+  </div>
+  <footer class="blog-footer">
+  <div class="container">
+    <div id="footer-info" class="inner">
+      &copy; 2020 江左时雨<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+  
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" integrity="sha384-8gBf6Y4YYq7Jx97PIqmTwLPin4hxIzQw5aDmUg/DDhul9fFpbbLcLh3nTIIDJKhx" crossorigin="anonymous"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>
