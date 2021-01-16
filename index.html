@@ -115,50 +115,27 @@
 
     <div class="article-entry" itemprop="articleBody">
       
-        <a id="more"></a>
+        <!-- TOC -->
 
-<p>在text generation模型预测时，如果我们总是抽取最有可能的单词，标准语言模型训练目标会容易陷入“I don’t know. I don’t know. I don’t know.” 这种循环中。</p>
-<p>所以有了sample based generation方法。但是，它有一个潜在问题：</p>
-<blockquote>
-<p>假如依照logit softmax生成的分布进行sample，假设有60%的词的概率极低以至于基本不会被选择，但是这60%的词的总的CDF占了30%，这意味着模型预测方向可能有30%的概率偏离了“正确”的方向。</p>
-<p>而如果是在预测前期发生偏离，那么由于错误向后预测的累积，直接导致了预测的效果变差。</p>
-</blockquote>
-<p>已有论文研究发现，经常被使用的Beam search方法，其生成效果和人类的表达有着一定的gap。</p>
-<img src="../../../Code/Research_Papers/PretrainedLM/pic/语言模型--Sample_pic/image-20210102130824216.png" alt="image-20210102130824216" style="zoom:40%;" />
-
-<p>[^]: Humans often choose words that surprise language models (Holtzman et al 2019) <a href="https://arxiv.org/abs/1904.09751" target="_blank" rel="noopener">https://arxiv.org/abs/1904.09751</a></p>
-<p>解决方法：temperature sampling和top k sampling.</p>
-<h3 id="Temperature-sampling"><a href="#Temperature-sampling" class="headerlink" title="Temperature sampling"></a><strong>Temperature</strong> <strong>sampling</strong></h3><blockquote>
-<p>借鉴热力学中现象，温度越高，则低energy的状态出现的概率会增加。</p>
-</blockquote>
-<p>以logits作为“energy”，在进行softmax之前，除以temperature。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> torch</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a = torch.tensor([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4.</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>F.softmax(a, dim=<span class="number">0</span>)</span><br><span class="line">tensor([<span class="number">0.0321</span>, <span class="number">0.0871</span>, <span class="number">0.2369</span>, <span class="number">0.6439</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>F.softmax(a/<span class="number">.5</span>, dim=<span class="number">0</span>)</span><br><span class="line">tensor([<span class="number">0.0021</span>, <span class="number">0.0158</span>, <span class="number">0.1171</span>, <span class="number">0.8650</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>F.softmax(a/<span class="number">1.5</span>, dim=<span class="number">0</span>)</span><br><span class="line">tensor([<span class="number">0.0708</span>, <span class="number">0.1378</span>, <span class="number">0.2685</span>, <span class="number">0.5229</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>F.softmax(a/<span class="number">1e-6</span>, dim=<span class="number">0</span>)</span><br><span class="line">tensor([<span class="number">0.</span>, <span class="number">0.</span>, <span class="number">0.</span>, <span class="number">1.</span>])</span><br></pre></td></tr></table></figure>
-
-<p>NOTE：<strong>temperature越大，分布越趋向均匀</strong></p>
-<h3 id="Top-k-sampling"><a href="#Top-k-sampling" class="headerlink" title="Top k sampling"></a><strong>Top k</strong> <strong>sampling</strong></h3><p>Top k sampling是指根据概率进行排序将第k个token以下的概率都归零。</p>
-<p>但是存在一个问题：某些时候，分布较均匀，可以选择的token大于k；某些时候，分布较集中，可以选择的token小于k。</p>
-<p>直接导致了预测错误的概率增大。</p>
-<h3 id="Top-p-sampling（nucleus-sampling）"><a href="#Top-p-sampling（nucleus-sampling）" class="headerlink" title="Top p sampling（nucleus sampling）"></a><strong>Top p</strong> <strong>sampling</strong>（<strong>nucleus sampling</strong>）</h3><p>1，按概率sort预测分布；</p>
-<p>2，计算CDF；</p>
-<p>3，将CDF大于某个设定p值之后的logit值，设为一个很大的负值；</p>
-<p>4，softmax，之后进行采样。</p>
-<p>这样就能动态的改变可选择的token数量，且错误概率相对降低。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">top_k_top_p_filtering</span><span class="params">(logits, top_k=<span class="number">0</span>, top_p=<span class="number">0.0</span>, filter_value=-float<span class="params">(<span class="string">'Inf'</span>)</span>)</span>:</span></span><br><span class="line">    <span class="string">""" Filter a distribution of logits using top-k and/or nucleus (top-p) filtering</span></span><br><span class="line"><span class="string">        Args:</span></span><br><span class="line"><span class="string">            logits: logits distribution shape (..., vocabulary size)</span></span><br><span class="line"><span class="string">            top_k &gt;0: keep only top k tokens with highest probability (top-k filtering).</span></span><br><span class="line"><span class="string">            top_p &gt;0.0: keep the top tokens with cumulative probability &gt;= top_p (nucleus filtering).</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    top_k = min(top_k, logits.size(<span class="number">-1</span>))  <span class="comment"># Safety check</span></span><br><span class="line">    <span class="keyword">if</span> top_k &gt; <span class="number">0</span>:</span><br><span class="line">        <span class="comment"># Remove all tokens with a probability less than the last token of the top-k</span></span><br><span class="line">        indices_to_remove = logits &lt; torch.topk(logits, top_k)[<span class="number">0</span>][..., <span class="number">-1</span>, <span class="literal">None</span>]</span><br><span class="line">        logits[indices_to_remove] = filter_value</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> top_p &gt; <span class="number">0.0</span>:</span><br><span class="line">        sorted_logits, sorted_indices = torch.sort(logits, descending=<span class="literal">True</span>)</span><br><span class="line">        cumulative_probs = torch.cumsum(F.softmax(sorted_logits, dim=<span class="number">-1</span>), dim=<span class="number">-1</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Remove tokens with cumulative probability above the threshold</span></span><br><span class="line">        sorted_indices_to_remove = cumulative_probs &gt;= top_p</span><br><span class="line">        <span class="comment"># Shift the indices to the right to keep also the first token above the threshold</span></span><br><span class="line">        sorted_indices_to_remove[..., <span class="number">1</span>:] = sorted_indices_to_remove[..., :<span class="number">-1</span>].clone()</span><br><span class="line">        sorted_indices_to_remove[..., <span class="number">0</span>] = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        indices_to_remove = torch.zeros_like(logits, dtype=torch.uint8).scatter_(</span><br><span class="line">            dim=<span class="number">-1</span>, index=sorted_indices, src=sorted_indices_to_remove )</span><br><span class="line">        logits[indices_to_remove] = filter_value</span><br><span class="line">    <span class="keyword">return</span> logits</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="End"><a href="#End" class="headerlink" title="End"></a>End</h3><p>虽然有这些方法来改进模型生成的效果，但是这些仅仅是模型的“补丁”。如何提高模型本身的性能，如何让模型能够直接生成多样性的、更“人类”的语句？emmm…</p>
-
+<ul>
+<li><a href="#temperature-sampling"><strong>Temperature</strong> <strong>sampling</strong></a></li>
+<li><a href="#top-k-sampling"><strong>Top k</strong> <strong>sampling</strong></a></li>
+<li><a href="#top-p-samplingnucleus-sampling"><strong>Top p</strong> <strong>sampling</strong>（<strong>nucleus sampling</strong>）</a></li>
+<li><a href="#end">End</a></li>
+</ul>
+<!-- /TOC -->
+        
+          <p class="article-more-link">
+            <a class="btn btn-primary" href="/2021/01/16/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8BSampling%E6%96%B9%E6%B3%95/#more">Read More</a>
+          </p>
+        
       
     </div>
 
     
-      
-
-    
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2021/01/16/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8BSampling%E6%96%B9%E6%B3%95/" data-id="ckjzwcm3000008g2f4ksha25v" class="article-share-link">
+      <a data-url="https://racleray.github.io/2021/01/16/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8BSampling%E6%96%B9%E6%B3%95/" data-id="ckjzwlbgw002i682fg16lg8ot" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -242,7 +219,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2021/01/12/jupytext-and-nbdev/" data-id="ckju197gt0014pw2f77zs19kq" class="article-share-link">
+      <a data-url="https://racleray.github.io/2021/01/12/jupytext-and-nbdev/" data-id="ckjzwlbg70019682f1idf4zbs" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -313,7 +290,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/11/30/%E8%B4%9D%E5%8F%B6%E6%96%AF%E8%B6%85%E5%8F%82%E6%95%B0%E6%90%9C%E7%B4%A2/" data-id="ckju197ho002fpw2f05zg8c00" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/11/30/%E8%B4%9D%E5%8F%B6%E6%96%AF%E8%B6%85%E5%8F%82%E6%95%B0%E6%90%9C%E7%B4%A2/" data-id="ckjzwlbgx002k682fae9011oj" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -383,7 +360,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/11/18/CRF-SimpleNote/" data-id="ckju197g10005pw2feq867prh" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/11/18/CRF-SimpleNote/" data-id="ckjzwlbfl0009682fdp2ybr8q" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -479,7 +456,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/10/30/hadoop-spark%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" data-id="ckju197gq000zpw2f4jqf9faw" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/10/30/hadoop-spark%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" data-id="ckjzwlbg40012682f9i3y541u" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -550,7 +527,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/10/19/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9Cnormalization/" data-id="ckju197hh0025pw2fbqbpb8wv" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/10/19/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9Cnormalization/" data-id="ckjzwlbgt002a682faxad3z0a" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -619,7 +596,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/08/04/Large-scale-GAN-training-for-high-fidelity-natural-image-synthesis/" data-id="ckju197gc000fpw2f58dack3q" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/08/04/Large-scale-GAN-training-for-high-fidelity-natural-image-synthesis/" data-id="ckjzwlbft000k682fhesq9ktb" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -685,7 +662,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/07/08/C-Project%E4%BD%BF%E7%94%A8%E5%A4%96%E9%83%A8%E5%BA%93/" data-id="ckju197fw0002pw2fg93hhzxe" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/07/08/C-Project%E4%BD%BF%E7%94%A8%E5%A4%96%E9%83%A8%E5%BA%93/" data-id="ckjzwlbfk0007682fbonice1e" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -766,7 +743,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/07/07/CapsuleNet/" data-id="ckju197g30006pw2f6cu52pyj" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/07/07/CapsuleNet/" data-id="ckjzwlbfp000d682f11b40srr" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -835,7 +812,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/07/07/A-SENTENCE-EMBEDDINGS-Baseline/" data-id="ckju197fq0000pw2f2qixems3" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/07/07/A-SENTENCE-EMBEDDINGS-Baseline/" data-id="ckjzwlbe50000682fbbcpg3pp" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       

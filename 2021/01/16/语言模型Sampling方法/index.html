@@ -5,21 +5,21 @@
   
   <title>语言模型Sampling方法 | Racle</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="在text generation模型预测时，如果我们总是抽取最有可能的单词，标准语言模型训练目标会容易陷入“I don’t know. I don’t know. I don’t know.” 这种循环中。 所以有了sample based generation方法。但是，它有一个潜在问题：  假如依照logit softmax生成的分布进行sample，假设有60%的词的概率极低以至于基本不">
+  <meta name="description" content="Temperature sampling Top k sampling Top p sampling（nucleus sampling） End">
 <meta property="og:type" content="article">
 <meta property="og:title" content="语言模型Sampling方法">
 <meta property="og:url" content="https://racleray.github.io/2021/01/16/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8BSampling%E6%96%B9%E6%B3%95/index.html">
 <meta property="og:site_name" content="Racle">
-<meta property="og:description" content="在text generation模型预测时，如果我们总是抽取最有可能的单词，标准语言模型训练目标会容易陷入“I don’t know. I don’t know. I don’t know.” 这种循环中。 所以有了sample based generation方法。但是，它有一个潜在问题：  假如依照logit softmax生成的分布进行sample，假设有60%的词的概率极低以至于基本不">
+<meta property="og:description" content="Temperature sampling Top k sampling Top p sampling（nucleus sampling） End">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://racleray.github.io/2021/Code/Research_Papers/PretrainedLM/pic/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B--Sample_pic/image-20210102130824216.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B--Sample_pic/image-20210102130824216.png">
 <meta property="article:published_time" content="2021-01-16T15:57:25.053Z">
-<meta property="article:modified_time" content="2021-01-16T15:59:25.180Z">
+<meta property="article:modified_time" content="2021-01-16T16:06:29.511Z">
 <meta property="article:author" content="江左时雨">
 <meta property="article:tag" content="Language Model">
 <meta property="article:tag" content="Sampling">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://racleray.github.io/2021/Code/Research_Papers/PretrainedLM/pic/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B--Sample_pic/image-20210102130824216.png">
+<meta name="twitter:image" content="https://racleray.github.io/images/pic/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B--Sample_pic/image-20210102130824216.png">
   
     <link rel="alternate" href="/atom.xml" title="Racle" type="application/atom+xml">
   
@@ -119,7 +119,16 @@
 
     <div class="article-entry" itemprop="articleBody">
       
-        <a id="more"></a>
+        <!-- TOC -->
+
+<ul>
+<li><a href="#temperature-sampling"><strong>Temperature</strong> <strong>sampling</strong></a></li>
+<li><a href="#top-k-sampling"><strong>Top k</strong> <strong>sampling</strong></a></li>
+<li><a href="#top-p-samplingnucleus-sampling"><strong>Top p</strong> <strong>sampling</strong>（<strong>nucleus sampling</strong>）</a></li>
+<li><a href="#end">End</a></li>
+</ul>
+<!-- /TOC -->
+<a id="more"></a>
 
 <p>在text generation模型预测时，如果我们总是抽取最有可能的单词，标准语言模型训练目标会容易陷入“I don’t know. I don’t know. I don’t know.” 这种循环中。</p>
 <p>所以有了sample based generation方法。但是，它有一个潜在问题：</p>
@@ -128,7 +137,7 @@
 <p>而如果是在预测前期发生偏离，那么由于错误向后预测的累积，直接导致了预测的效果变差。</p>
 </blockquote>
 <p>已有论文研究发现，经常被使用的Beam search方法，其生成效果和人类的表达有着一定的gap。</p>
-<img src="../../../Code/Research_Papers/PretrainedLM/pic/语言模型--Sample_pic/image-20210102130824216.png" alt="image-20210102130824216" style="zoom:40%;" />
+<img src="/images/pic/语言模型--Sample_pic/image-20210102130824216.png" alt="image-20210102130824216" style="zoom:40%;" />
 
 <p>[^]: Humans often choose words that surprise language models (Holtzman et al 2019) <a href="https://arxiv.org/abs/1904.09751" target="_blank" rel="noopener">https://arxiv.org/abs/1904.09751</a></p>
 <p>解决方法：temperature sampling和top k sampling.</p>
@@ -162,7 +171,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2021/01/16/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8BSampling%E6%96%B9%E6%B3%95/" data-id="ckjzwcm3000008g2f4ksha25v" class="article-share-link">
+      <a data-url="https://racleray.github.io/2021/01/16/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8BSampling%E6%96%B9%E6%B3%95/" data-id="ckjzwlbgw002i682fg16lg8ot" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
