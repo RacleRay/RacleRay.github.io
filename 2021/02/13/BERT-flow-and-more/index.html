@@ -3,28 +3,33 @@
 <head>
   <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
   
-  <title>NLG常用评价指标 | Racle</title>
+  <title>BERT-flow and more | Racle</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="NLG常用评价指标 BLEU ROUGE METEOR CIDEr SPICE 翻译和图像描述的区别 简单总结">
+  <meta name="description" content="论文: On the Sentence Embeddings from Pre-trained Language Models Info: Brief Summary: Outline: Main Thought: Key sentences: 1. 语义相似度与BERT预训练的关系 2. 问题所在 3. 可逆变换到standard Gaussian latent space 4. Lexi">
 <meta property="og:type" content="article">
-<meta property="og:title" content="NLG常用评价指标">
-<meta property="og:url" content="https://racleray.github.io/2020/07/07/NLG%E5%B8%B8%E7%94%A8%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/index.html">
+<meta property="og:title" content="BERT-flow and more">
+<meta property="og:url" content="https://racleray.github.io/2021/02/13/BERT-flow-and-more/index.html">
 <meta property="og:site_name" content="Racle">
-<meta property="og:description" content="NLG常用评价指标 BLEU ROUGE METEOR CIDEr SPICE 翻译和图像描述的区别 简单总结">
+<meta property="og:description" content="论文: On the Sentence Embeddings from Pre-trained Language Models Info: Brief Summary: Outline: Main Thought: Key sentences: 1. 语义相似度与BERT预训练的关系 2. 问题所在 3. 可逆变换到standard Gaussian latent space 4. Lexi">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://racleray.github.io/images/pic/NLG%E4%BB%BB%E5%8A%A1%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87_pic/image-20200707135951108.png">
-<meta property="og:image" content="https://racleray.github.io/images/pic/NLG%E4%BB%BB%E5%8A%A1%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87_pic/image-20200707140257831.png">
-<meta property="og:image" content="https://racleray.github.io/images/pic/NLG%E4%BB%BB%E5%8A%A1%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87_pic/image-20200707140642773.png">
-<meta property="og:image" content="https://racleray.github.io/images/pic/NLG%E4%BB%BB%E5%8A%A1%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87_pic/image-20200707141607255.png">
-<meta property="og:image" content="https://racleray.github.io/images/pic/NLG%E4%BB%BB%E5%8A%A1%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87_pic/image-20200707142452030.png">
-<meta property="article:published_time" content="2020-07-07T06:30:48.000Z">
-<meta property="article:modified_time" content="2020-07-07T06:35:53.402Z">
+<meta property="og:image" content="https://racleray.github.io/images/pic/BERT-flow%20and%20more_pic/image-20210113230557038.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/BERT-flow%20and%20more_pic/image-20210116231825051.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/BERT-flow%20and%20more_pic/image-20210116232216359.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/BERT-flow%20and%20more_pic/image-20210116232538391.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/BERT-flow%20and%20more_pic/image-20210116234831917.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/BERT-flow%20and%20more_pic/image-20210120014758397.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/BERT-flow%20and%20more_pic/image-20210120014921100.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/BERT-flow%20and%20more_pic/image-20210120015103566.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/BERT-flow%20and%20more_pic/image-20210120015440557.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/BERT-flow%20and%20more_pic/image-20210212231503716.png">
+<meta property="article:published_time" content="2021-02-12T16:10:19.000Z">
+<meta property="article:modified_time" content="2021-02-12T16:16:26.701Z">
 <meta property="article:author" content="江左时雨">
-<meta property="article:tag" content="bleu">
-<meta property="article:tag" content="rouge">
-<meta property="article:tag" content="evaluation">
+<meta property="article:tag" content="sentence embedding">
+<meta property="article:tag" content="bert">
+<meta property="article:tag" content="nlp">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://racleray.github.io/images/pic/NLG%E4%BB%BB%E5%8A%A1%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87_pic/image-20200707135951108.png">
+<meta name="twitter:image" content="https://racleray.github.io/images/pic/BERT-flow%20and%20more_pic/image-20210113230557038.png">
   
     <link rel="alternate" href="/atom.xml" title="Racle" type="application/atom+xml">
   
@@ -94,13 +99,13 @@
 
     <div class="row">
         <div class="col-sm-8 blog-main">
-          <article id="post-NLG常用评价指标" class="article article-type-post" itemscope itemprop="blogPost">
+          <article id="post-BERT-flow-and-more" class="article article-type-post" itemscope itemprop="blogPost">
 
   <header class="article-header">
     
   
     <h1 class="article-title" itemprop="name">
-      NLG常用评价指标
+      BERT-flow and more
     </h1>
   
 
@@ -109,7 +114,7 @@
 
   <div class="article-meta">
     <div class="article-datetime">
-  <a href="/2020/07/07/NLG%E5%B8%B8%E7%94%A8%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/" class="article-date"><time datetime="2020-07-07T06:30:48.000Z" itemprop="datePublished">2020-07-07</time></a>
+  <a href="/2021/02/13/BERT-flow-and-more/" class="article-date"><time datetime="2021-02-12T16:10:19.000Z" itemprop="datePublished">2021-02-13</time></a>
 </div>
 
     
@@ -127,14 +132,21 @@
         <!-- TOC -->
 
 <ul>
-<li><a href="#nlg常用评价指标">NLG常用评价指标</a><ul>
-<li><a href="#bleu">BLEU</a></li>
-<li><a href="#rouge">ROUGE</a></li>
-<li><a href="#meteor">METEOR</a></li>
-<li><a href="#cider">CIDEr</a></li>
-<li><a href="#spice">SPICE</a></li>
-<li><a href="#翻译和图像描述的区别">翻译和图像描述的区别</a><ul>
-<li><a href="#简单总结">简单总结</a></li>
+<li><a href="#论文-on-the-sentence-embeddings-from-pre-trained-language-models">论文: On the Sentence Embeddings from Pre-trained Language Models</a><ul>
+<li><a href="#info">Info:</a></li>
+<li><a href="#brief-summary">Brief Summary:</a></li>
+<li><a href="#outline">Outline:</a></li>
+<li><a href="#main-thought">Main Thought:</a><ul>
+<li><a href="#key-sentences">Key sentences:</a></li>
+<li><a href="#1-语义相似度与bert预训练的关系">1. 语义相似度与BERT预训练的关系</a></li>
+<li><a href="#2-问题所在">2. 问题所在</a></li>
+<li><a href="#3-可逆变换到standard-gaussian-latent-space">3. 可逆变换到standard Gaussian latent space</a></li>
+<li><a href="#4-lexical-similarity在不同模型中的规律实验">4. Lexical Similarity在不同模型中的规律实验</a></li>
+</ul>
+</li>
+<li><a href="#confusion">Confusion:</a><ul>
+<li><a href="#正交标准化标准化协方差矩阵">正交标准化？标准化协方差矩阵？</a></li>
+<li><a href="#实现细节">实现细节</a></li>
 </ul>
 </li>
 </ul>
@@ -143,101 +155,124 @@
 <!-- /TOC -->
 <a id="more"></a>
 
-<h1 id="NLG常用评价指标"><a href="#NLG常用评价指标" class="headerlink" title="NLG常用评价指标"></a>NLG常用评价指标</h1><p>客观评价指标 – BLEU – ROUGE – METEOR – CIDEr</p>
-<p>主观评价指标 – 流畅度 – 相关性 – 助盲性</p>
-<p>这些指标原先都是用来度量机器翻译结果质量的，并且被证明可以很好的反应待评测翻译结果的准确性，并且与人类对待评测翻译结果的评价存在强相关</p>
-<hr>
-<h3 id="BLEU"><a href="#BLEU" class="headerlink" title="BLEU"></a>BLEU</h3><p><a href="https://aclanthology.info/pdf/P/P02/P02-1040.pdf" target="_blank" rel="noopener">文献</a></p>
-<blockquote>
-<p>只看中准确率的指标，就是说更加关心候选译文里的多少 n-gram 是对的（即在参考译文里出现了），而不在乎召回率（参考译文里有哪些 n-gram 在候选译文中没出现）</p>
-<p>基于准确率，BLEU 得分越高越好</p>
-</blockquote>
-<p>BLEU 是最早提出的机器翻译评价指标，是所有文本评价指标的源头。BLEU的全名为：bilingual evaluation understudy，即：双语互译质量评估辅助工具。</p>
-<p>BLEU 的大意是比较候选译文和参考译文里的 n-gram（实践中从 unigram 取到 4-gram） 重合程度，重合程度越高就认为译文质量越高。选不同长度的 n-gram 是因为，unigram 的准确率可以用于衡量单词翻译的准确性，更高阶的 n-gram 的准确率可以用来衡量句子的流畅性。</p>
-<p>BLEU 原论文建议大家的测试集里给每个句子配备 4 条参考译文，这样就可以减小语言多样性带来的影响（然而现在很多机器翻译的测试集都是只有 1 条译文，尴尬= =）</p>
-<p>brevity penalty 来惩罚候选译文过短的情况（候选译文过短在机器翻译中往往意味着漏翻，也就是低召回率）</p>
-<p>现在还是普遍认为 BLEU 指标偏向于较短的翻译结果（brevity penalty 没有想象中那么强）</p>
-<p>优点很明显：方便、快速、结果有参考价值 　</p>
-<p>缺点也不少，主要有：</p>
-<ul>
-<li>不考虑语言表达（语法）上的准确性；</li>
-<li>测评精度会受常用词的干扰；</li>
-<li>短译句的测评精度有时会较高；</li>
-<li>没有考虑同义词或相似表达的情况，可能会导致合理翻译被否定；</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> nltk.translate.bleu_score <span class="keyword">import</span> sentence_bleu</span><br><span class="line"></span><br><span class="line">reference = [[<span class="string">'this'</span>, <span class="string">'is'</span>, <span class="string">'a'</span>, <span class="string">'test'</span>], [<span class="string">'this'</span>, <span class="string">'is'</span> <span class="string">'test'</span>]]</span><br><span class="line">candidate = [<span class="string">'this'</span>, <span class="string">'is'</span>, <span class="string">'a'</span>, <span class="string">'test'</span>]</span><br><span class="line"></span><br><span class="line">score = sentence_bleu(reference, candidate)</span><br><span class="line">print(score)</span><br></pre></td></tr></table></figure>
 
-<p>只能做到个大概判断，它的目标也只是给出一个快且不差自动评估解决方案</p>
-<p><img src="/images/pic/NLG%E4%BB%BB%E5%8A%A1%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87_pic/image-20200707135951108.png" alt="image"></p>
-<ul>
-<li>Hk(Ci) 表示Wk翻译选译文Ci中出现的次数，</li>
-<li>Hk(Sij) 表示Wk在标准答案Sij中出现的次数，</li>
-<li>maxi∈mhk(sij)表示某n-gram在多条标准答案中出现最多的次数，</li>
-<li>∑i∑kmin(hk(ci),maxj∈mhk(sij))表示取n-gram在翻译译文和标准答案中出现的最小次数。</li>
+<h1 id="论文-On-the-Sentence-Embeddings-from-Pre-trained-Language-Models"><a href="#论文-On-the-Sentence-Embeddings-from-Pre-trained-Language-Models" class="headerlink" title="论文: On the Sentence Embeddings from Pre-trained Language Models"></a>论文: On the Sentence Embeddings from Pre-trained Language Models</h1><p> Author:  Bohan Li, Hao Zhou, Junxian He, Mingxuan Wang, Yiming Yang, Lei Li</p>
+<p>Organization: ByteDance AI Lab; Language Technologies Institute, Carnegie Mellon University</p>
+<hr>
+<h2 id="Info"><a href="#Info" class="headerlink" title="Info:"></a>Info:</h2><ul>
+<li><p>类别:          BERT语义表示应用优化  </p>
+</li>
+<li><p>研究目标：将原本BERT训练模式下生成的语义表示的各向异性空间，通过设计的无监督方法，转化为各向同性的语义表示空间。</p>
+</li>
+<li><p>研究成果：结合Flow based model，使用无监督方式提升语义表示的效果。</p>
+</li>
+<li><p>存在的问题：按文章的思路，就是将BERT sentence embedding做一个转化，从非正交（orthogonal space）转化到正交的空间，以满足cos similarity适用的条件，以提高效果。但是一定需要Flow based 方法来实现吗？有没有更好的方法？</p>
+</li>
+<li><p>关键词：BERT；Flow based model；semantic similarity</p>
+</li>
 </ul>
-<p><strong>i为candidate的index</strong>；<strong>j为reference的index</strong>；<strong>k为n-gram的index</strong></p>
-<p><img src="/images/pic/NLG%E4%BB%BB%E5%8A%A1%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87_pic/image-20200707140257831.png" alt="image"></p>
 <hr>
-<h3 id="ROUGE"><a href="#ROUGE" class="headerlink" title="ROUGE"></a>ROUGE</h3><p><a href="http://www.aclweb.org/anthology/W04-1013" target="_blank" rel="noopener">文献</a></p>
-<blockquote>
-<p>ROUGE 和 BLEU 几乎一模一样，区别是 BLEU 计算准确率，而 ROUGE 计算召回率。</p>
+<h2 id="Brief-Summary"><a href="#Brief-Summary" class="headerlink" title="Brief Summary:"></a>Brief Summary:</h2><p>首先解释了直接基于BERT生成的sentence embedding为什么其语义表达能力较差，然后提出一种在不引入更多监督数据条件下，提升其语义表达能力的方法，flow based model。</p>
+<hr>
+<h2 id="Outline"><a href="#Outline" class="headerlink" title="Outline:"></a>Outline:</h2><ol>
+<li>搞清楚BERT-induced sentence embedding的空间有什么特性</li>
+<li>BERT-flow怎么设计的</li>
+<li>[来自苏剑林的质疑] BERT-flow？没必要那么复杂，BERT-whitening更优雅</li>
+</ol>
+<hr>
+<h2 id="Main-Thought"><a href="#Main-Thought" class="headerlink" title="Main Thought:"></a>Main Thought:</h2><p>首先是flow based model在干什么，这首先是一个生成网络（以下图片内容来自李宏毅老师课程）：</p>
+<img src="/images/pic/BERT-flow and more_pic/image-20210113230557038.png" alt="image-20210113230557038" style="zoom:40%;" />
+
+<p>这是一种直接在object function基础之上优化计算的方法，粗暴但是实现起来并不简单。直接从$\pi(z)$，由设计的网络$x=f(z)$，直接逼近data分布$p(x)$。原理如下：</p>
+<img src="/images/pic/BERT-flow and more_pic/image-20210116231825051.png" alt="image-20210116231825051" style="zoom:28%;" />
+
+<p>相应变量的微小变化，导致的面积变化是一致的。扩展到二维变量，其变化相乘变成了面积的$\Delta s$。而矩阵的行列式就表示二维空间中图像代表的面积，所以有以下推导：</p>
+<img src="/images/pic/BERT-flow and more_pic/image-20210116232216359.png" alt="image-20210116232216359" style="zoom:25%;" />
+
+<img src="/images/pic/BERT-flow and more_pic/image-20210116232538391.png" alt="image-20210116232538391" style="zoom:25%;" />
+
+<p>式中矩阵就是Jacobian matrix，自然得到：<br>$$<br>p(x’)=\pi(z’)|\frac{1}{det(J_f)}|<br>$$<br>那么由$z$的分布就可以求出$x$的分布。只是这个网络$G$的设计有一点麻烦，需要保证参数矩阵需要是逆变换不复杂且Jacobian matrix容易计算。因为：<br>$$<br>p(x’)=\pi(z’)|det(J_{G^{-1}})|<br>$$</p>
+<p>$$<br>z’=G^{-1}(x’)<br>$$</p>
+<p>都需要转化成与输入相关的函数（网络）。</p>
+<p>同时flow的网络设计，真的是有点低效，参数空间内将参数分组进行更新。</p>
+<img src="/images/pic/BERT-flow and more_pic/image-20210116234831917.png" alt="image-20210116234831917" style="zoom:25%;" />
+
+<p>如图，上下两部分不是同时更新，而是分步更新计算。</p>
+<h3 id="Key-sentences"><a href="#Key-sentences" class="headerlink" title="Key sentences:"></a>Key sentences:</h3><ol>
+<li>用BERT将一个句子编码成一个固定长度的向量，方法是计算BERT最后几层中context embeddings的平均值，或者在[CLS]标记的位置提取。一般前一种方法效果更好。但是在语义表示性能上还不及averaged GloVe embeddings方法。</li>
+</ol>
+<h3 id="1-语义相似度与BERT预训练的关系"><a href="#1-语义相似度与BERT预训练的关系" class="headerlink" title="1. 语义相似度与BERT预训练的关系"></a>1. 语义相似度与BERT预训练的关系</h3><p>首先，BERT将传统的auto regressive LM的目标，修改为masked predict：<br>$$<br>log(p(x_{1:T}))=\sum_{t=1}^{T}logp(x_t|context_t)<br>$$<br>变为：<br>$$<br>p(x_{masked}|context_{of\ masked})=\sum_{t=1}^{T}mask_t \times p(x_t|context_t)<br>$$<br>两者建立model的共同形式如下：<br>$$<br>p(x|context)=\frac{\exp(VectorFromNet_{context}^TEmbedding_x)}{\sum_{x’}\exp(VectorFromNet_{context}^TEmbedding_{x’})}<br>$$<br>这种表达形式的关键在$VectorFromNet_{context}^TEmbedding_x$，以下简单写作$h_c^Tw_x$。<a href="https://arxiv.org/abs/1711.03953" target="_blank" rel="noopener">这篇论文</a>证明了：<br>$$<br>h_c^Tw_x\approx\log p^*(x|c) + \lambda_c\<br>=PMI(x,c)+\log p(x)+\lambda_c<br>$$<br>PMI指point wise mutual information。这种共现特征通常可以捕捉到语义信息，只是在“word”层面而言。</p>
+<p>同时，$h_c$随着网路参数的更新而更新，不同的context在训练过程中相互影响，可视为一种高阶的high-order共现语义信息捕捉。</p>
+<h3 id="2-问题所在"><a href="#2-问题所在" class="headerlink" title="2. 问题所在"></a>2. 问题所在</h3><blockquote>
+<p>用BERT将一个句子编码成一个固定长度的向量，方法是计算BERT最后几层中context embeddings的平均值，或者在[CLS]标记的位置提取。一般前一种方法效果更好。但是在语义表示性能上还不及averaged GloVe embeddings方法。</p>
 </blockquote>
-<p>在 SMT（统计机器翻译）时代，机器翻译效果稀烂，需要同时评价翻译的准确度和流畅度；等到 NMT （神经网络机器翻译）出来以后，神经网络脑补能力极强，翻译出的结果都是通顺的，但是有时候容易瞎翻译，遗漏翻译</p>
-<p>不看流畅度只看召回率（参考译文里的 n-gram 有多少出现在了候选译文中）就好了，这样就能知道 NMT 系统到底有没有漏翻（这会导致低召回率）。</p>
+<p>为什么效果不及averaged GloVe embeddings？</p>
+<p>文章 <a href="https://arxiv.org/abs/1909.00512" target="_blank" rel="noopener">How Contextual are Contextualized Word Representations? Comparing the Geometry of BERT, ELMo, and GPT-2 Embeddings</a> 比较了预训练LM的word embedding，有如下结论：</p>
 <blockquote>
-<p>所以，ROUGE 适合评价 NMT，而不适用于 SMT，因为它不管候选译文流不流畅。</p>
+<ol>
+<li>Contextualized representations(模型每一层输出)在每一个非输入层都是各向异性的，即非标准正交空间；</li>
+<li>高层的各向异性更显著；</li>
+<li>高层的Contextualized representations更与context相关，不同context下的数值表示相差更大。同时不同词与context相关的相关程度不同，比如，stopwords与context的相关性会很大；</li>
+<li>不同模型的每一层输出间的相关性也不同：EMLo的低层和高层的输出更相似一些；BERT的低层和高层的输出变化较大，<strong>同时句子内词的表示会更接近，和其他句子中词的表示相对更差异化一些</strong>；GPT-2的输出不同，某一个输出与当前句子内的词的相似性和当前句子之外的词的相似性，是接近的。</li>
+</ol>
 </blockquote>
-<p><img src="/images/pic/NLG%E4%BB%BB%E5%8A%A1%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87_pic/image-20200707140642773.png" alt="image"></p>
-<p>分母是n-gram的个数，分子是参考摘要和自动摘要共有的n-gram的个数。ROUGE 得分越高越好</p>
+<p>BERT-flow文中给出的理由：</p>
+<ol>
+<li>词频差异使得低频词和高频词的学习程度不同，公式7可以作为一个依据；</li>
+<li>低频词的表示更偏稀疏，而高频词的表示更稠密。</li>
+</ol>
+<h3 id="3-可逆变换到standard-Gaussian-latent-space"><a href="#3-可逆变换到standard-Gaussian-latent-space" class="headerlink" title="3. 可逆变换到standard Gaussian latent space"></a>3. 可逆变换到standard Gaussian latent space</h3><p>借鉴Glow模型的实现方式，实现flow-based generative model。将BERT参数固定，只学习可逆变换的网络参数。只使用了add coupling layer，将1x1卷积变成直接permutation。</p>
+<img src="/images/pic/BERT-flow and more_pic/image-20210120014758397.png" alt="image-20210120014758397" style="zoom:30%;" />
+
+
+
+<img src="/images/pic/BERT-flow and more_pic/image-20210120014921100.png" alt="image-20210120014921100" style="zoom:33%;" />
+
+<p>求z为：</p>
+<img src="/images/pic/BERT-flow and more_pic/image-20210120015103566.png" alt="image-20210120015103566" style="zoom:33%;" />
+
+<p>以上将D维向量，分为两部分计算更新。同时z的先验为标准正态分布。那么</p>
+<img src="/images/pic/BERT-flow and more_pic/image-20210120015440557.png" alt="image-20210120015440557" style="zoom:70%;" />
+
+<p>$f^{-1}$和$J_{f^{-1}}$都是可以计算的，目标函数就可以表示。</p>
+<h3 id="4-Lexical-Similarity在不同模型中的规律实验"><a href="#4-Lexical-Similarity在不同模型中的规律实验" class="headerlink" title="4. Lexical Similarity在不同模型中的规律实验"></a>4. Lexical Similarity在不同模型中的规律实验</h3><p>论文通过一组简单的对比实验，得出以下结论：</p>
 <blockquote>
-<p>召回率是针对我们原来的样本而言的，它表示的是样本中的正例有多少被预测正确了。那也有两种可能，一种是把原来的正类预测成正类(TP)，另一种就是把原来的正类预测为负类(FN)</p>
-<p>精确率是针对我们预测结果而言的，它表示的是预测为正的样本中有多少是对的。那么预测为正就有两种可能了，一种就是把正类预测为正类(TP)，另一种就是把负类预测为正类(FP)</p>
+<p>BERT-Induced Similarity的与Lexical Similarity存在着过度的相关性。</p>
+<p>Flow-Induced Similarity 与Lexical Similarity的相关性较低。</p>
 </blockquote>
-<p>Rough-L: L即是LCS(longest common subsequence，最长公共子序列)的首字母，因为Rough-L使用了最长公共子序列。</p>
+<p>方法是通过Similarity与Edit distance的对应关系，实验结果如图：</p>
+<img src="/images/pic/BERT-flow and more_pic/image-20210212231503716.png" alt="image-20210212231503716" style="zoom:60%;" />
+
+
+
+
+
 <hr>
-<h3 id="METEOR"><a href="#METEOR" class="headerlink" title="METEOR"></a>METEOR</h3><p><a href="http://www.aclweb.org/anthology/W05-0909" target="_blank" rel="noopener">文献</a></p>
-<p>METEOR 大意是说有时候翻译模型翻译的结果是对的，只是碰巧跟参考译文没对上（比如用了一个同义词），于是用 WordNet 等知识源扩充了一下同义词集，同时考虑了单词的词形（词干相同的词也认为是部分匹配的，也应该给予一定的奖励，比如说把 likes 翻译成了 like</p>
-<p>在评价句子流畅性的时候，用了 chunk 的概念（候选译文和参考译文能够对齐的、空间排列上连续的单词形成一个 chunk，这个对齐算法是一个有点复杂的启发式 beam serach），chunk 的数目越少意味着每个 chunk 的平均长度越长，也就是说候选译文和参考译文的语序越一致</p>
-<p>缺点：</p>
-<ul>
-<li>有四个超参数 alpha, beta, gamma, delta，这些都是对着某个数据集调出来的（让算法的结果和人的主观评价尽可能一致，方法我记得是 grid search），参数一多听起来就不靠谱.</li>
-<li>另外需要有外部知识源（WordNet 等）来进行单词对齐，所以对于 WordNet 中不包含的语言，就没法用 METEOR 来评价了。</li>
-</ul>
-<p>使用 WordNet 计算特定的序列匹配，同义词，词根和词缀，释义之间的匹配关系，改善了BLEU的效果，使其跟人工判别共更强的相关性。</p>
-<p>同时考虑了准确率和召回率，METEOR 得分越高越好</p>
-<p><img src="/images/pic/NLG%E4%BB%BB%E5%8A%A1%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87_pic/image-20200707141607255.png" alt="image"></p>
-<hr>
-<h3 id="CIDEr"><a href="#CIDEr" class="headerlink" title="CIDEr"></a>CIDEr</h3><p><a href="https://www.cv-foundation.org/openaccess/content_cvpr_2015/papers/Vedantam_CIDEr_Consensus-Based_Image_2015_CVPR_paper.pdf" target="_blank" rel="noopener">文献</a></p>
-<p>Consensus-based image description evaluation，通过度量待评测语句与其他大部分人工描述之间的相似性来评价。</p>
-<blockquote>
-<p>这个指标的motivation之一是刚才提到的BLEU的一个缺点，就是对所有匹配上的词都同等对待，而实际上有些词应该更加重要。</p>
-</blockquote>
-<p>CIDEr-D 是修改版本，为的是让 CIDEr 对于 gaming 问题更加鲁棒。什么是 Gaming 问题？它是一种现象，就是一个句子经过人工判断得分很低，但是在自动计算标准中却得分很高的情况。为了避免这种情况，CIDEr-D 增加了截断（clipping）和基于长度的高斯惩罚</p>
-<p>CIDEr 是 BLEU 和向量空间模型的结合。它把每个句子看成文档，然后计算 <strong>TF-IDF</strong> 向量（只不过 term 是 n-gram 而不是单词）的余弦夹角，据此得到候选句子和参考句子的相似度，同样是不同长度的 n-gram 相似度取平均得到最终结果。优点是不同的 n-gram 随着 TF-IDF 的不同而有不同的权重，因为整个语料里更常见的 n-gram 包含了更小的信息量。</p>
-<hr>
-<h3 id="SPICE"><a href="#SPICE" class="headerlink" title="SPICE"></a>SPICE</h3><p><a href="https://link.springer.com/chapter/10.1007/978-3-319-46454-1_24" target="_blank" rel="noopener">SPICE</a></p>
-<p>SPICE 是专门设计出来用于 image caption 问题的。全称是 Semantic Propositional Image Caption Evaluation。前面四个方法都是基于 n-gram 计算的，SPICE 则不是。</p>
-<p>SPICE 使用基于图的语义表示来编码 caption 中的 objects, attributes 和 relationships。它先将待评价 caption 和参考 captions 用 Probabilistic Context-Free Grammar (PCFG) dependency parser parse 成 syntactic dependencies trees，然后用基于规则的方法把 dependency tree 映射成 scene graphs。最后计算待评价的 caption 中 objects, attributes 和 relationships 的 F-score 值。</p>
-<p><img src="/images/pic/NLG%E4%BB%BB%E5%8A%A1%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87_pic/image-20200707142452030.png" alt="image"></p>
-<hr>
-<h3 id="翻译和图像描述的区别"><a href="#翻译和图像描述的区别" class="headerlink" title="翻译和图像描述的区别"></a>翻译和图像描述的区别</h3><p>在机器翻译中，译文应该忠实于原文，所以同一句话的多条译文应该互为转述，包含同样的信息；而同一幅图的多条字幕则不一定互为转述，因为不同的字幕可以包含不同数量的图像细节，不管描述得比较详细还是比较粗糙都是正确的字幕。</p>
-<h2 id="简单总结"><a href="#简单总结" class="headerlink" title="简单总结"></a>简单总结</h2><p>NLG常用metrics：</p>
-<ul>
-<li>BLEU: ngram precision；长度类似</li>
-<li>ROUGE: ngram recall</li>
-<li>NIST/CIDEr: 降低频繁词的权重</li>
-<li>METEOR: 考虑同义词的F score；鼓励连续词匹配</li>
-<li>SPICE：匹配语法树与图像特征的F1</li>
-</ul>
-<p>其他：</p>
-<ul>
-<li>STM: 匹配语法树子树</li>
-<li>TER: 编辑的距离</li>
-<li>TERp: TER+同义替换</li>
-</ul>
-<p><a href="https://github.com/Maluuba/nlg-eval" target="_blank" rel="noopener">常用评测指标的开源实现</a></p>
-<p><a href="https://github.com/tylin/coco-caption" target="_blank" rel="noopener">MS COCO Caption Evaluation</a></p>
-<p><a href="https://gist.github.com/kracwarlock/c979b10433fe4ac9fb97" target="_blank" rel="noopener">COCO demo</a></p>
+<h2 id="Confusion"><a href="#Confusion" class="headerlink" title="Confusion:"></a>Confusion:</h2><h3 id="正交标准化？标准化协方差矩阵？"><a href="#正交标准化？标准化协方差矩阵？" class="headerlink" title="正交标准化？标准化协方差矩阵？"></a>正交标准化？标准化协方差矩阵？</h3><p>求一个线性变换$W$使得BERT输出的向量矩阵成一个标准化的矩阵。直接达到正交化的目的，是否也是可行？</p>
+<p>首先求原始协方差矩阵：<br>$$<br>\mu=\frac{1}{N}\sum_{k=1}^Nxi\</p>
+<p>\Sigma=\frac{1}{N}\sum_{k=1}^N(x_i-\mu)^T(x_i-\mu)<br>$$<br>变换$W$满足：<br>$$<br>W^T\Sigma W=I<br>$$<br>$\Sigma$为一个正交对称矩阵。对其SVD，有如下关系：<br>$$<br>\Sigma=U\Lambda U^T=(W^{-1})^TW^{-1}<br>$$<br>得到变换$W$为：<br>$$<br>W=U\sqrt{\Lambda^{-1}}<br>$$<br><a href="https://spaces.ac.cn/archives/8069" target="_blank" rel="noopener">作者</a>实验的结果显示，该方法简洁，且效果与flow模型相差无几。</p>
+<p>作者称该方法为BERT-whitening。</p>
+<p>核心代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">compute_w_bias</span><span class="params">(vecs, n_components)</span>:</span></span><br><span class="line">    vecs = np.concatenate(vecs, axis=<span class="number">0</span>)</span><br><span class="line">    mu = vecs.mean(axis=<span class="number">0</span>, keepdims=<span class="literal">True</span>)</span><br><span class="line">    cov = np.cov(vecs.T)</span><br><span class="line">    u, s, vh = np.linalg.svd(cov)</span><br><span class="line">    W = np.np.dot(u, np.diag(<span class="number">1</span>/np.sqrt(s)))</span><br><span class="line">    <span class="keyword">return</span> W[:, :n_components], -mu</span><br></pre></td></tr></table></figure>
+
+<p>标准化</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">transform_and_normalize</span><span class="params">(vecs, kernel=None, bias=None)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> (kernel <span class="keyword">is</span> <span class="literal">None</span> <span class="keyword">or</span> bias <span class="keyword">is</span> <span class="literal">None</span>):</span><br><span class="line">        vecs = (vecs + bias).dot(kernel)</span><br><span class="line">    <span class="keyword">return</span> vecs / (vecs**<span class="number">2</span>).sum(axis=<span class="number">1</span>, keepdims=<span class="literal">True</span>)**<span class="number">0.5</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h3><ol>
+<li>大语料计算内存问题？</li>
+</ol>
+<p>句子向量均值、协方差递归计算<br>$$<br>\mu_{n+1}=\frac{n}{n+1}\mu_n+\frac{1}{n+1}x_{n+1}<br>$$</p>
+<p>$$<br>\Sigma_{n+1}=\frac{n}{n+1}\Sigma_n+\frac{1}{n+1}(x_{n+1}-\mu)^T(x_{n+1}-\mu)<br>$$</p>
+<ol start="2">
+<li>BERT模型在任务数据上，先微调</li>
+</ol>
+<p>论文中先在任务数据上微调，比如先进行情感分类任务，再用来计算句子向量。</p>
+<ol start="3">
+<li>flow做不到的简单的句子向量降维</li>
+</ol>
+<p>SVD中直接取$W$前n个维度，即PCA，得到降维的结果。该结果将更具任务语境特征的维度提取出来。不仅提升了句子向量间相似度的速度，还可能提升预测的效果。</p>
 
       
     </div>
@@ -248,12 +283,12 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/07/07/NLG%E5%B8%B8%E7%94%A8%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/" data-id="ckl2hug7v000mgg2f2puu2bkp" class="article-share-link">
+      <a data-url="https://racleray.github.io/2021/02/13/BERT-flow-and-more/" data-id="ckl2hug760001gg2fa9x18ov0" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bleu/" rel="tag">bleu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/evaluation/" rel="tag">evaluation</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/rouge/" rel="tag">rouge</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bert/" rel="tag">bert</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nlp/" rel="tag">nlp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sentence-embedding/" rel="tag">sentence embedding</a></li></ul>
 
 
     </footer>
@@ -263,19 +298,12 @@
 <ul id="article-nav" class="nav nav-pills nav-justified">
   
   <li role="presentation">
-    <a href="/2020/07/07/seq2seq/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2021/01/16/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8BSampling%E6%96%B9%E6%B3%95/" id="article-nav-older" class="article-nav-link-wrap">
       <i class="fa fa-chevron-left pull-left"></i>
-      <span class="article-nav-link-title">seq2seq</span>
+      <span class="article-nav-link-title">语言模型Sampling方法</span>
     </a>
   </li>
   
-  
-  <li role="presentation">
-    <a href="/2020/07/07/Fairseq-Notes/" id="article-nav-newer" class="article-nav-link-wrap">
-      <span class="article-nav-link-title">Fairseq Notes</span>
-      <i class="fa fa-chevron-right pull-right"></i>
-    </a>
-  </li>
   
 </ul>
 
