@@ -23,7 +23,7 @@
 <meta property="og:image" content="https://racleray.github.io/images/pic/BERT-flow%20and%20more_pic/image-20210120015440557.png">
 <meta property="og:image" content="https://racleray.github.io/images/pic/BERT-flow%20and%20more_pic/image-20210212231503716.png">
 <meta property="article:published_time" content="2021-02-12T16:10:19.000Z">
-<meta property="article:modified_time" content="2021-02-12T16:26:22.470Z">
+<meta property="article:modified_time" content="2021-02-12T16:32:54.675Z">
 <meta property="article:author" content="江左时雨">
 <meta property="article:tag" content="sentence embedding">
 <meta property="article:tag" content="bert">
@@ -181,26 +181,26 @@
 </ol>
 <hr>
 <h2 id="Main-Thought"><a href="#Main-Thought" class="headerlink" title="Main Thought:"></a>Main Thought:</h2><p>首先是flow based model在干什么，这首先是一个生成网络（以下图片内容来自李宏毅老师课程）：</p>
-<img src="/images/pic/BERT-flow and more_pic/image-20210113230557038.png" alt="image-20210113230557038" style="zoom:40%;" />
+<img src="/images/pic/BERT-flow and more_pic/image-20210113230557038.png" alt="" style="zoom:40%;" />
 
 <p>这是一种直接在object function基础之上优化计算的方法，粗暴但是实现起来并不简单。直接从$\pi(z)$，由设计的网络$x=f(z)$，直接逼近data分布$p(x)$。原理如下：</p>
-<img src="/images/pic/BERT-flow and more_pic/image-20210116231825051.png" alt="image-20210116231825051" style="zoom:28%;" />
+<img src="/images/pic/BERT-flow and more_pic/image-20210116231825051.png" alt="" style="zoom:28%;" />
 
 <p>相应变量的微小变化，导致的面积变化是一致的。扩展到二维变量，其变化相乘变成了面积的$\Delta s$。而矩阵的行列式就表示二维空间中图像代表的面积，所以有以下推导：</p>
-<img src="/images/pic/BERT-flow and more_pic/image-20210116232216359.png" alt="image-20210116232216359" style="zoom:25%;" />
+<img src="/images/pic/BERT-flow and more_pic/image-20210116232216359.png" alt="" style="zoom:25%;" />
 
-<img src="/images/pic/BERT-flow and more_pic/image-20210116232538391.png" alt="image-20210116232538391" style="zoom:25%;" />
+<img src="/images/pic/BERT-flow and more_pic/image-20210116232538391.png" alt="" style="zoom:25%;" />
 
-<p>式中矩阵就是Jacobian matrix，自然得到：<br>    $p(x’)=\pi(z’)|\frac{1}{det(J_f)}|$<br>那么由$z$的分布就可以求出$x$的分布。只是这个网络$G$的设计有一点麻烦，需要保证参数矩阵需要是逆变换不复杂且Jacobian matrix容易计算。因为：<br>    $p(x’)=\pi(z’)|det(J_{G^{-1}})|$</p>
-<pre><code>$z&apos;=G^{-1}(x&apos;)$</code></pre><p>都需要转化成与输入相关的函数（网络）。</p>
+<p>式中矩阵就是Jacobian matrix，自然得到：<br>        $p(x’)=\pi(z’)|\frac{1}{det(J_f)}|$<br>那么由$z$的分布就可以求出$x$的分布。只是这个网络$G$的设计有一点麻烦，需要保证参数矩阵需要是逆变换不复杂且Jacobian matrix容易计算。因为：<br>        $p(x’)=\pi(z’)|det(J_{G^{-1}})|$<br>以及<br>        $z’=G^{-1}(x’)$</p>
+<p>都需要转化成与输入相关的函数（网络）。</p>
 <p>同时flow的网络设计，真的是有点低效，参数空间内将参数分组进行更新。</p>
-<img src="/images/pic/BERT-flow and more_pic/image-20210116234831917.png" alt="image-20210116234831917" style="zoom:25%;" />
+<img src="/images/pic/BERT-flow and more_pic/image-20210116234831917.png" alt="" style="zoom:25%;" />
 
 <p>如图，上下两部分不是同时更新，而是分步更新计算。</p>
 <h3 id="Key-sentences"><a href="#Key-sentences" class="headerlink" title="Key sentences:"></a>Key sentences:</h3><ol>
 <li>用BERT将一个句子编码成一个固定长度的向量，方法是计算BERT最后几层中context embeddings的平均值，或者在[CLS]标记的位置提取。一般前一种方法效果更好。但是在语义表示性能上还不及averaged GloVe embeddings方法。</li>
 </ol>
-<h3 id="1-语义相似度与BERT预训练的关系"><a href="#1-语义相似度与BERT预训练的关系" class="headerlink" title="1. 语义相似度与BERT预训练的关系"></a>1. 语义相似度与BERT预训练的关系</h3><p>首先，BERT将传统的auto regressive LM的目标，修改为masked predict：<br>    $log(p(x_{1:T}))=\sum_{t=1}^{T}logp(x_t|context_t)$<br>变为：<br>    $p(x_{masked}|context_{of\ masked})=\sum_{t=1}^{T}mask_t \times p(x_t|context_t)$<br>两者建立model的共同形式如下：<br>    $p(x|context)=\frac{\exp(VectorFromNet_{context}^TEmbedding_x)}{\sum_{x’}\exp(VectorFromNet_{context}^TEmbedding_{x’})}$<br>这种表达形式的关键在$VectorFromNet_{context}^TEmbedding_x$，以下简单写作$h_c^Tw_x$。<a href="https://arxiv.org/abs/1711.03953" target="_blank" rel="noopener">这篇论文</a>证明了：<br>    $h_c^Tw_x\approx\log p^*(x|c) + \lambda_c=PMI(x,c)+\log p(x)+\lambda_c$<br>PMI指point wise mutual information。这种共现特征通常可以捕捉到语义信息，只是在“word”层面而言。</p>
+<h3 id="1-语义相似度与BERT预训练的关系"><a href="#1-语义相似度与BERT预训练的关系" class="headerlink" title="1. 语义相似度与BERT预训练的关系"></a>1. 语义相似度与BERT预训练的关系</h3><p>首先，BERT将传统的auto regressive LM的目标，修改为masked predict：<br>        $log(p(x_{1:T}))=\sum_{t=1}^{T}logp(x_t|context_t)$<br>变为：<br>        $p(x_{masked}|context_{of\ masked})=\sum_{t=1}^{T}mask_t \times p(x_t|context_t)$<br>两者建立model的共同形式如下：<br>        $p(x|context)=\frac{\exp(VectorFromNet_{context}^TEmbedding_x)}{\sum_{x’}\exp(VectorFromNet_{context}^TEmbedding_{x’})}$<br>这种表达形式的关键在$VectorFromNet_{context}^TEmbedding_x$，以下简单写作$h_c^Tw_x$。<a href="https://arxiv.org/abs/1711.03953" target="_blank" rel="noopener">这篇论文</a>证明了：<br>        $h_c^Tw_x\approx\log p^*(x|c) + \lambda_c=PMI(x,c)+\log p(x)+\lambda_c$<br>PMI指point wise mutual information。这种共现特征通常可以捕捉到语义信息，只是在“word”层面而言。</p>
 <p>同时，$h_c$随着网路参数的更新而更新，不同的context在训练过程中相互影响，可视为一种高阶的high-order共现语义信息捕捉。</p>
 <h3 id="2-问题所在"><a href="#2-问题所在" class="headerlink" title="2. 问题所在"></a>2. 问题所在</h3><blockquote>
 <p>用BERT将一个句子编码成一个固定长度的向量，方法是计算BERT最后几层中context embeddings的平均值，或者在[CLS]标记的位置提取。一般前一种方法效果更好。但是在语义表示性能上还不及averaged GloVe embeddings方法。</p>
@@ -221,17 +221,17 @@
 <li>低频词的表示更偏稀疏，而高频词的表示更稠密。</li>
 </ol>
 <h3 id="3-可逆变换到standard-Gaussian-latent-space"><a href="#3-可逆变换到standard-Gaussian-latent-space" class="headerlink" title="3. 可逆变换到standard Gaussian latent space"></a>3. 可逆变换到standard Gaussian latent space</h3><p>借鉴Glow模型的实现方式，实现flow-based generative model。将BERT参数固定，只学习可逆变换的网络参数。只使用了add coupling layer，将1x1卷积变成直接permutation。</p>
-<img src="/images/pic/BERT-flow and more_pic/image-20210120014758397.png" alt="image-20210120014758397" style="zoom:30%;" />
+<img src="/images/pic/BERT-flow and more_pic/image-20210120014758397.png" alt="" style="zoom:30%;" />
 
 
 
-<img src="/images/pic/BERT-flow and more_pic/image-20210120014921100.png" alt="image-20210120014921100" style="zoom:33%;" />
+<img src="/images/pic/BERT-flow and more_pic/image-20210120014921100.png" alt="" style="zoom:33%;" />
 
 <p>求z为：</p>
-<img src="/images/pic/BERT-flow and more_pic/image-20210120015103566.png" alt="image-20210120015103566" style="zoom:33%;" />
+<img src="/images/pic/BERT-flow and more_pic/image-20210120015103566.png" alt="" style="zoom:33%;" />
 
 <p>以上将D维向量，分为两部分计算更新。同时z的先验为标准正态分布。那么</p>
-<img src="/images/pic/BERT-flow and more_pic/image-20210120015440557.png" alt="image-20210120015440557" style="zoom:70%;" />
+<img src="/images/pic/BERT-flow and more_pic/image-20210120015440557.png" alt="" style="zoom:70%;" />
 
 <p>$f^{-1}$和$J_{f^{-1}}$都是可以计算的，目标函数就可以表示。</p>
 <h3 id="4-Lexical-Similarity在不同模型中的规律实验"><a href="#4-Lexical-Similarity在不同模型中的规律实验" class="headerlink" title="4. Lexical Similarity在不同模型中的规律实验"></a>4. Lexical Similarity在不同模型中的规律实验</h3><p>论文通过一组简单的对比实验，得出以下结论：</p>
@@ -240,16 +240,13 @@
 <p>Flow-Induced Similarity 与Lexical Similarity的相关性较低。</p>
 </blockquote>
 <p>方法是通过Similarity与Edit distance的对应关系，实验结果如图：</p>
-<img src="/images/pic/BERT-flow and more_pic/image-20210212231503716.png" alt="image-20210212231503716" style="zoom:60%;" />
-
-
+<img src="/images/pic/BERT-flow and more_pic/image-20210212231503716.png" alt="" style="zoom:60%;" />
 
 
 
 <hr>
 <h2 id="Confusion"><a href="#Confusion" class="headerlink" title="Confusion:"></a>Confusion:</h2><h3 id="正交标准化？标准化协方差矩阵？"><a href="#正交标准化？标准化协方差矩阵？" class="headerlink" title="正交标准化？标准化协方差矩阵？"></a>正交标准化？标准化协方差矩阵？</h3><p>求一个线性变换$W$使得BERT输出的向量矩阵成一个标准化的矩阵。直接达到正交化的目的，是否也是可行？</p>
-<p>首先求原始协方差矩阵：<br>    $\mu=\frac{1}{N}\sum_{k=1}^Nxi$</p>
-<pre><code>$\Sigma=\frac{1}{N}\sum_{k=1}^N(x_i-\mu)^T(x_i-\mu)$</code></pre><p>变换$W$满足：<br>    $W^T\Sigma W=I$<br>    $\Sigma$为一个正交对称矩阵。对其SVD，有如下关系：<br>    $\Sigma=U\Lambda U^T=(W^{-1})^TW^{-1}$<br>得到变换$W$为：<br>$W=U\sqrt{\Lambda^{-1}}$<br><a href="https://spaces.ac.cn/archives/8069" target="_blank" rel="noopener">作者</a>实验的结果显示，该方法简洁，且效果与flow模型相差无几。</p>
+<p>首先求原始协方差矩阵：<br>        $\mu=\frac{1}{N}\sum_{k=1}^Nxi$<br>那么<br>        $\Sigma=\frac{1}{N}\sum_{k=1}^N(x_i-\mu)^T(x_i-\mu)$<br>变换$W$满足：<br>        $W^T\Sigma W=I$<br>其中$\Sigma$为一个正交对称矩阵。对其SVD，有如下关系：<br>        $\Sigma=U\Lambda U^T=(W^{-1})^TW^{-1}$<br>得到变换$W$为：<br>        $W=U\sqrt{\Lambda^{-1}}$<br><a href="https://spaces.ac.cn/archives/8069" target="_blank" rel="noopener">作者</a>实验的结果显示，该方法简洁，且效果与flow模型相差无几。</p>
 <p>作者称该方法为BERT-whitening。</p>
 <p>核心代码：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">compute_w_bias</span><span class="params">(vecs, n_components)</span>:</span></span><br><span class="line">    vecs = np.concatenate(vecs, axis=<span class="number">0</span>)</span><br><span class="line">    mu = vecs.mean(axis=<span class="number">0</span>, keepdims=<span class="literal">True</span>)</span><br><span class="line">    cov = np.cov(vecs.T)</span><br><span class="line">    u, s, vh = np.linalg.svd(cov)</span><br><span class="line">    W = np.np.dot(u, np.diag(<span class="number">1</span>/np.sqrt(s)))</span><br><span class="line">    <span class="keyword">return</span> W[:, :n_components], -mu</span><br></pre></td></tr></table></figure>
@@ -262,8 +259,8 @@
 <h3 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h3><ol>
 <li>大语料计算内存问题？</li>
 </ol>
-<p>句子向量均值、协方差递归计算<br>    $\mu_{n+1}=\frac{n}{n+1}\mu_n+\frac{1}{n+1}x_{n+1}$</p>
-<pre><code>$\Sigma_{n+1}=\frac{n}{n+1}\Sigma_n+\frac{1}{n+1}(x_{n+1}-\mu)^T(x_{n+1}-\mu)$</code></pre><ol start="2">
+<p>句子向量均值递归计算<br>    $\mu_{n+1}=\frac{n}{n+1}\mu_n+\frac{1}{n+1}x_{n+1}$<br>协方差递归计算<br>    $\Sigma_{n+1}=\frac{n}{n+1}\Sigma_n+\frac{1}{n+1}(x_{n+1}-\mu)^T(x_{n+1}-\mu)$</p>
+<ol start="2">
 <li>BERT模型在任务数据上，先微调</li>
 </ol>
 <p>论文中先在任务数据上微调，比如先进行情感分类任务，再用来计算句子向量。</p>
@@ -281,7 +278,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2021/02/13/BERT-flow-and-more/" data-id="ckl2i6zm400004s2f50ujd17x" class="article-share-link">
+      <a data-url="https://racleray.github.io/2021/02/13/BERT-flow-and-more/" data-id="ckl2if9m70001uk2f63z66meh" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
