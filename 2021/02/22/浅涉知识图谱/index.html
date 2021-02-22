@@ -3,14 +3,14 @@
 <head>
   <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
   
-  <title>浅涉知识图谱.md | Racle</title>
+  <title>浅涉知识图谱 | Racle</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="基本概念 SPO相关 SPO的背后 RDFS&#x2F;OWL     命名实体识别 概率图方法 HMM HMM的缺陷   MEMM最大熵马尔可夫模型 CRF CRF相对于HMM的优点 CRF的缺点     实体连接 关系分类简介 基于统计的方法 神经网络方法 半监督 Bootstrapping 远程监督     知识表示Embedding TransE TransH TransR   问答应用 基于">
+  <meta name="description" content="基本概念 SPO相关 SPO的背后 RDFS&#x2F;OWL     命名实体识别 概率图方法 HMM HMM的缺陷   MEMM最大熵马尔可夫模型 CRF CRF相对于HMM的优点 CRF的缺点     实体连接 关系分类简介 基于统计的方法 神经网络方法 半监督 Bootstrapping 远程监督     知识表示Embedding TransE TransH TransR TransD">
 <meta property="og:type" content="article">
-<meta property="og:title" content="浅涉知识图谱.md">
-<meta property="og:url" content="https://racleray.github.io/2021/02/22/%E6%B5%85%E6%B6%89%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1-md/index.html">
+<meta property="og:title" content="浅涉知识图谱">
+<meta property="og:url" content="https://racleray.github.io/2021/02/22/%E6%B5%85%E6%B6%89%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/index.html">
 <meta property="og:site_name" content="Racle">
-<meta property="og:description" content="基本概念 SPO相关 SPO的背后 RDFS&#x2F;OWL     命名实体识别 概率图方法 HMM HMM的缺陷   MEMM最大熵马尔可夫模型 CRF CRF相对于HMM的优点 CRF的缺点     实体连接 关系分类简介 基于统计的方法 神经网络方法 半监督 Bootstrapping 远程监督     知识表示Embedding TransE TransH TransR   问答应用 基于">
+<meta property="og:description" content="基本概念 SPO相关 SPO的背后 RDFS&#x2F;OWL     命名实体识别 概率图方法 HMM HMM的缺陷   MEMM最大熵马尔可夫模型 CRF CRF相对于HMM的优点 CRF的缺点     实体连接 关系分类简介 基于统计的方法 神经网络方法 半监督 Bootstrapping 远程监督     知识表示Embedding TransE TransH TransR TransD">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222102729592.png">
 <meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222104606060.png">
@@ -42,11 +42,13 @@
 <meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222175610493.png">
 <meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222175643271.png">
 <meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222175711668.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222215144407.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222215235285.png">
 <meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222181049264.png">
 <meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222211314387.png">
 <meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222211327917.png">
 <meta property="article:published_time" content="2021-02-22T13:16:40.000Z">
-<meta property="article:modified_time" content="2021-02-22T13:25:27.926Z">
+<meta property="article:modified_time" content="2021-02-22T14:02:30.678Z">
 <meta property="article:author" content="江左时雨">
 <meta property="article:tag" content="ner">
 <meta property="article:tag" content="TransE">
@@ -123,13 +125,13 @@
 
     <div class="row">
         <div class="col-sm-8 blog-main">
-          <article id="post-浅涉知识图谱-md" class="article article-type-post" itemscope itemprop="blogPost">
+          <article id="post-浅涉知识图谱" class="article article-type-post" itemscope itemprop="blogPost">
 
   <header class="article-header">
     
   
     <h1 class="article-title" itemprop="name">
-      浅涉知识图谱.md
+      浅涉知识图谱
     </h1>
   
 
@@ -138,7 +140,7 @@
 
   <div class="article-meta">
     <div class="article-datetime">
-  <a href="/2021/02/22/%E6%B5%85%E6%B6%89%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1-md/" class="article-date"><time datetime="2021-02-22T13:16:40.000Z" itemprop="datePublished">2021-02-22</time></a>
+  <a href="/2021/02/22/%E6%B5%85%E6%B6%89%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/" class="article-date"><time datetime="2021-02-22T13:16:40.000Z" itemprop="datePublished">2021-02-22</time></a>
 </div>
 
     
@@ -193,6 +195,7 @@
 <li><a href="#transe">TransE</a></li>
 <li><a href="#transh">TransH</a></li>
 <li><a href="#transr">TransR</a></li>
+<li><a href="#transd">TransD</a></li>
 </ul>
 </li>
 <li><a href="#问答应用">问答应用</a><ul>
@@ -444,6 +447,12 @@
 
 <img src="/images/pic/知识图谱整理_pic/image-20210222175711668.png" alt="" style="zoom:67%;" />
 
+<h4 id="TransD"><a href="#TransD" class="headerlink" title="TransD"></a>TransD</h4><p>TransR同样有它的问题，首先对于一种关系，它的头实体和尾实体使用同样的变换矩阵映射到关系空间，而头实体和尾实体往往是完全不同类的实体，也应该使用不同的方法进行映射。</p>
+<p>TransD模型对每个实体或关系使用两个向量进行表示，一个向量表示语义，另一个（用下表p表示）用来构建映射矩阵。</p>
+<img src="/images/pic/知识图谱整理_pic/image-20210222215144407.png" alt="" style="zoom:40%;" />
+
+<img src="/images/pic/知识图谱整理_pic/image-20210222215235285.png" alt="" style="zoom:40%;" />
+
 
 
 <h2 id="问答应用"><a href="#问答应用" class="headerlink" title="问答应用"></a>问答应用</h2><h4 id="基于知识图谱的问答KBQA"><a href="#基于知识图谱的问答KBQA" class="headerlink" title="基于知识图谱的问答KBQA"></a>基于知识图谱的问答KBQA</h4><p>基本流程：</p>
@@ -473,7 +482,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2021/02/22/%E6%B5%85%E6%B6%89%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1-md/" data-id="cklgmlj17002sxk2f61mb86eh" class="article-share-link">
+      <a data-url="https://racleray.github.io/2021/02/22/%E6%B5%85%E6%B6%89%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/" data-id="cklgngrse004um42f1hxgh4z3" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -563,7 +572,7 @@
     <ul class="sidebar-module-list">
       
         <li>
-          <a href="/2021/02/22/%E6%B5%85%E6%B6%89%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1-md/">浅涉知识图谱.md</a>
+          <a href="/2021/02/22/%E6%B5%85%E6%B6%89%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/">浅涉知识图谱</a>
         </li>
       
         <li>
