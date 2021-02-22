@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>浅涉知识图谱.md | Racle</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="基本概念 SPO相关 SPO的背后 RDFS&#x2F;OWL     命名实体识别 概率图方法 HMM HMM的缺陷   MEMM最大熵马尔可夫模型 CRF CRF相对于HMM的优点 CRF的缺点     实体连接 关系分类简介 基于统计的方法 神经网络方法 半监督 Bootstrapping 远程监督     知识表示Embedding TransE TransH TransR   问答应用 基于">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅涉知识图谱.md">
+<meta property="og:url" content="https://racleray.github.io/2021/02/22/%E6%B5%85%E6%B6%89%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1-md/index.html">
+<meta property="og:site_name" content="Racle">
+<meta property="og:description" content="基本概念 SPO相关 SPO的背后 RDFS&#x2F;OWL     命名实体识别 概率图方法 HMM HMM的缺陷   MEMM最大熵马尔可夫模型 CRF CRF相对于HMM的优点 CRF的缺点     实体连接 关系分类简介 基于统计的方法 神经网络方法 半监督 Bootstrapping 远程监督     知识表示Embedding TransE TransH TransR   问答应用 基于">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222102729592.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222104606060.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222104900473.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222104922327.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222105818725.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222110635113.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222111734674.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222111814599.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222112025305.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222155638939.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222160002751.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222161015601.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222161949260.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222163809742.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222163856084.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222163946006.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222164236336.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222171941078.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222172633928.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222174150117.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222174400473.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222174449957.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222174524289.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222174739168.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222175358133.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222175435542.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222175455866.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222175610493.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222175643271.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222175711668.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222181049264.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222211314387.png">
+<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222211327917.png">
+<meta property="article:published_time" content="2021-02-22T13:16:40.000Z">
+<meta property="article:modified_time" content="2021-02-22T13:25:27.926Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="ner">
+<meta property="article:tag" content="TransE">
+<meta property="article:tag" content="knowledge graph">
+<meta property="article:tag" content="relation extraction">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://racleray.github.io/images/pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222102729592.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Racle" type="application/atom+xml">
+  
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous">
+
+  
+<link rel="stylesheet" href="/css/styles.css">
+
+  
+
+<meta name="generator" content="Hexo 4.2.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav class="navbar navbar-inverse">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-menu-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="main-menu-navbar">
+      <ul class="nav navbar-nav">
+        
+          <li><a class=""
+                 href="/index.html">Home</a></li>
+        
+          <li><a class=""
+                 href="/archives/">Archives</a></li>
+        
+          <li><a class=""
+                 href="https://github.com/RacleRay">Github</a></li>
+        
+      </ul>
+
+      <!--
+      <ul class="nav navbar-nav navbar-right">
+        
+          <li><a href="/atom.xml" title="RSS Feed"><i class="fa fa-rss"></i></a></li>
+        
+      </ul>
+      -->
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+  <div class="container">
+    <div class="blog-header">
+  <h1 class="blog-title">Racle</h1>
+  
+    <p class="lead blog-description">Recording</p>
+  
+</div>
+
+    <div class="row">
+        <div class="col-sm-8 blog-main">
+          <article id="post-浅涉知识图谱-md" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 class="article-title" itemprop="name">
+      浅涉知识图谱.md
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2021/02/22/%E6%B5%85%E6%B6%89%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1-md/" class="article-date"><time datetime="2021-02-22T13:16:40.000Z" itemprop="datePublished">2021-02-22</time></a>
+</div>
+
+    
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Notes/">Notes</a>
+  </div>
+
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- TOC -->
+
+<ul>
+<li><a href="#基本概念">基本概念</a><ul>
+<li><a href="#spo相关">SPO相关</a><ul>
+<li><a href="#spo的背后">SPO的背后</a></li>
+<li><a href="#rdfsowl">RDFS/OWL</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#命名实体识别">命名实体识别</a><ul>
+<li><a href="#概率图方法">概率图方法</a></li>
+<li><a href="#hmm">HMM</a><ul>
+<li><a href="#hmm的缺陷">HMM的缺陷</a></li>
+</ul>
+</li>
+<li><a href="#memm最大熵马尔可夫模型">MEMM最大熵马尔可夫模型</a></li>
+<li><a href="#crf">CRF</a><ul>
+<li><a href="#crf相对于hmm的优点">CRF相对于HMM的优点</a></li>
+<li><a href="#crf的缺点">CRF的缺点</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#实体连接">实体连接</a></li>
+<li><a href="#关系分类简介">关系分类简介</a><ul>
+<li><a href="#基于统计的方法">基于统计的方法</a></li>
+<li><a href="#神经网络方法">神经网络方法</a></li>
+<li><a href="#半监督">半监督</a><ul>
+<li><a href="#bootstrapping">Bootstrapping</a></li>
+<li><a href="#远程监督">远程监督</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#知识表示embedding">知识表示Embedding</a><ul>
+<li><a href="#transe">TransE</a></li>
+<li><a href="#transh">TransH</a></li>
+<li><a href="#transr">TransR</a></li>
+</ul>
+</li>
+<li><a href="#问答应用">问答应用</a><ul>
+<li><a href="#基于知识图谱的问答kbqa">基于知识图谱的问答KBQA</a></li>
+<li><a href="#基于知识表示的问答keqa">基于知识表示的问答KEQA</a></li>
+</ul>
+</li>
+</ul>
+<!-- /TOC -->
+<a id="more"></a>
+
+<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><blockquote>
+<p>“A knowledge graph consists of a set of interconnected typed entities and their attributes.”</p>
+</blockquote>
+<p>知识图谱由一些相互连接的实体和他们的属性构成的。 是由一条条知识组成，每条知识表示为一个 SPO 三元组</p>
+<p>技术体系简图：</p>
+<img src="/images/pic/知识图谱整理_pic/image-20210222102729592.png" alt="" style="zoom:67%;" />
+
+<h3 id="SPO相关"><a href="#SPO相关" class="headerlink" title="SPO相关"></a>SPO相关</h3><p>SPO三元组：（实体，关系，实体），（实体，属性，字面量）</p>
+<p>构建的难点之一就是，Schema设计。</p>
+<blockquote>
+<p>设计知识图谱的结构，要构建哪些类别的实体，实体有什么属性，实体间有什么关系，关系有什么属性</p>
+</blockquote>
+<h4 id="SPO的背后"><a href="#SPO的背后" class="headerlink" title="SPO的背后"></a>SPO的背后</h4><p>RDF(Resource Description Framework)，即资源描述框架，其本质是一个数据模型（Data Model）。RDF形式上表示为SPO三元组。</p>
+<p>RDF由节点和边组成，节点表示实体/资源、属性，边则表示了实体和实体之间的关系以及实体和属性的关系。</p>
+<p>RDF的表达能力有限，无法区分类和对象，也无法定义和描述类的关系/属性。就是不能反映一个 类 的特征信息。</p>
+<h4 id="RDFS-OWL"><a href="#RDFS-OWL" class="headerlink" title="RDFS/OWL"></a>RDFS/OWL</h4><p>用来描述RDF数据。RDFS/OWL序列化方式和RDF没什么不同，其实在表现形式上，它们就是RDF。</p>
+<p>RDFS，即“Resource Description Framework Schema”，是最基础的模式语言。定义了类，将类进行抽象。</p>
+<p>RDFS的表达能力还是相当有限，因此提出了OWL，Web Ontology Language。我们也可以把OWL当做是RDFS的一个扩展，其添加了额外的预定义词汇。</p>
+<p>owl区分数据属性和对象属性（对象属性表示实体和实体之间的关系）。</p>
+<p>OWL 使用场景：本体结构中有大量相互链接的类和属性，设计者想用自动推理机得到里面复杂的关系。需要结合基于规则的推理引擎（rule-based reasoning engine）的场合。</p>
+<h2 id="命名实体识别"><a href="#命名实体识别" class="headerlink" title="命名实体识别"></a>命名实体识别</h2><h4 id="概率图方法"><a href="#概率图方法" class="headerlink" title="概率图方法"></a>概率图方法</h4><p>有向图</p>
+<img src="/images/pic/知识图谱整理_pic/image-20210222104606060.png" alt="" style="zoom:67%;" />
+
+<p>⽆向图</p>
+<blockquote>
+<p>概率⽆无向图模型，⼜称为⻢马尔可夫随机场</p>
+<p>它假设随机场中任意⼀一个结点的赋值，仅仅和它的邻结点的取值有关，和不不相邻的结点的取值无关。⽆向图G中任何两个结点均有边连接的结点⼦集称为团。</p>
+<p>若C是⽆向图的⼀个团，且不能再加进任何一个G的结点使其成为更大的⼀个团，则此C为最⼤团。</p>
+<p>联合概率可以表示为其最大团C 随机变量的函数的乘积。</p>
+</blockquote>
+<img src="/images/pic/知识图谱整理_pic/image-20210222104900473.png" alt="" style="zoom:67%;" />
+
+<img src="/images/pic/知识图谱整理_pic/image-20210222104922327.png" alt="" style="zoom:67%;" />
+
+<blockquote>
+<p>成对⻢马尔可夫性：没有直连边的任意两个节点是独立的。</p>
+<p>局部⻢马尔可夫性：给定直连节点时，中心节点和其他节点条件独立。</p>
+<p>全局⻢马尔可夫性：给定一个节点集合将全集划分为两个独立集合时，两个点集的任意子集，是相互独立的。</p>
+</blockquote>
+<h4 id="HMM"><a href="#HMM" class="headerlink" title="HMM"></a>HMM</h4><p>HMM是⽤用于描述由隐藏的状态序列列和显性 的观测序列列组合⽽而成的双重随机过程。</p>
+<img src="/images/pic/知识图谱整理_pic/image-20210222105818725.png" alt="" style="zoom:67%;" />
+
+<p>通过可观测到的数据，预测不不可观测到的状态数据。</p>
+<blockquote>
+<p>HMM的假设⼀：⻢马尔可夫性假设。当前时刻的状态值，仅依赖于前 ⼀时刻的状态值，⽽不依赖于更早时刻的状态值。</p>
+<p>HMM的假设⼆：⻬次性假设。状态转移概率矩阵与时间⽆关。即所 有时刻共享同⼀个状态转移矩阵。</p>
+<p>HMM的假设三：观测独⽴立性假设。当前时刻的观察值，仅依赖于当 前时刻的状态值。</p>
+</blockquote>
+<p>此处的问题是，预测隐状态序列（假设模型参数已经学习得到）。实例演示：</p>
+<blockquote>
+<p>已知：</p>
+<p>状态值集合：{晴天，阴天，⾬雨天}；观测值集合：{宅，打球}；</p>
+<p>过去状态值序列：{晴晴晴阴⾬雨晴}；对应观测值序列：{球宅宅球宅宅}；</p>
+<p>从历史数据学习，已得到模型参数为：</p>
+<img src="/images/pic/知识图谱整理_pic/image-20210222110635113.png" alt="" style="zoom:40%;" />
+
+<p>求当观测序列是{宅球宅}，最有可能的天⽓状况序列？（动态规划求解概率最⼤大路路径）</p>
+<p>求解过程：</p>
+<blockquote>
+<p>定义: </p>
+<p>定义在时刻t状态为i的所有单个路径（i1，i2，… it )中的概率最大值为</p>
+<img src="/images/pic/知识图谱整理_pic/image-20210222111734674.png" alt="" style="zoom:67%;" />
+
+<p>t+1时刻的最大概率:</p>
+<img src="/images/pic/知识图谱整理_pic/image-20210222111814599.png" alt="" style="zoom:67%;" />
+
+<p>再定义⼀个变量，⽤来回溯最⼤路径：在时刻t状态i的所有单个路径（i1，i2，，， it-1,it)中，概率最⼤的路路径第t-1个节点为（在t时刻选出上一个时刻的最优路径）：</p>
+<img src="/images/pic/知识图谱整理_pic/image-20210222112025305.png" alt="" style="zoom:67%;" />
+</blockquote>
+<p>计算第一天</p>
+<p>$\delta_1$（雨天）= $\pi$(雨天) * B(雨天，宅) = 0.28</p>
+<p>$\delta_1$（阴天）= $\pi$(阴天) * B(阴天，宅) = 0.16</p>
+<p>$\delta_1$（晴天）= $\pi$(晴天) * B(晴天，宅) = 0.1</p>
+<p>第二天</p>
+<p>$\delta_2$（雨天）= $\max$( [$\delta_1$(雨天) *  A(雨天，雨天)，<br>                                  $\delta_1$(阴天) *  A(阴天，雨天)，<br>                                  $\delta_1$(晴天) *  A(晴天，雨天)])  * B(雨天，打球) = 0.042</p>
+<p>​        前一时刻选择，雨天</p>
+<p>$\delta_2$（阴天）= $\max$( [$\delta_1$(雨天) *  A(雨天，阴天)，<br>                                  $\delta_1$(阴天) *  A(阴天，阴天)，<br>                                  $\delta_1$(晴天) *  A(晴天，阴天)])  * B(阴天，打球) = 0.0504</p>
+<p>​        前一时刻选择，雨天</p>
+<p>$\delta_2$（晴天）= $\max$( [$\delta_1$(雨天) *  A(雨天，晴天)，<br>                                  $\delta_1$(阴天) *  A(阴天，晴天)，<br>                                  $\delta_1$(晴天) *  A(晴天，晴天)])  * B(晴天，打球) = 0.028</p>
+<p>​        前一时刻选择，雨天</p>
+<p>第三天</p>
+<p>$\delta_3$（雨天）= $\max$( [$\delta_2$(雨天) *  A(雨天，雨天)，<br>                                  $\delta_2$(阴天) *  A(阴天，雨天)，<br>                                  $\delta_2$(晴天) *  A(晴天，雨天)])  * B(雨天，打球) = 0.0147</p>
+<p>​        前一时刻选择，雨天</p>
+<p>$\delta_3$（阴天）= $\max$( [$\delta_2$(雨天) *  A(雨天，阴天)，<br>                                  $\delta_2$(阴天) *  A(阴天，阴天)，<br>                                  $\delta_2$(晴天) *  A(晴天，阴天)])  * B(阴天，打球) = 0.01008</p>
+<p>​        前一时刻选择，阴天</p>
+<p>$\delta_3$（晴天）= $\max$( [$\delta_2$(雨天) *  A(雨天，晴天)，<br>                                  $\delta_2$(阴天) *  A(阴天，晴天)，<br>                                  $\delta_2$(晴天) *  A(晴天，晴天)])  * B(晴天，打球) = 0.00756</p>
+<p>​        前一时刻选择，阴天</p>
+<p>最后，选择t3时刻最大路径，雨天。回溯结果为，{雨天，雨天，雨天}</p>
+</blockquote>
+<h5 id="HMM的缺陷"><a href="#HMM的缺陷" class="headerlink" title="HMM的缺陷"></a>HMM的缺陷</h5><ul>
+<li>⻢尔可夫性（有限历史性）：实际上在NLP领域的文本数据，很多词语都是有⻓依赖的。</li>
+<li>齐次性：序列列不同位置的状态转移矩阵可能会有所变化，即位置信息会影响预测结果。</li>
+<li>观测独立性：观测值和观测值（字与字）之间是有相关性的。</li>
+<li>单向图：只与前序状态有关，和后续状态无关。在NLP任务中，上下文的信息都是必须的。</li>
+<li>标记偏置Label Bias：若状态A能够向N种状态转移，状态B能够向M种状态转移。若N&lt;&lt;M，则预测序列更有可能选择状态A，因为A的局部转移概率较大</li>
+</ul>
+<h4 id="MEMM最大熵马尔可夫模型"><a href="#MEMM最大熵马尔可夫模型" class="headerlink" title="MEMM最大熵马尔可夫模型"></a>MEMM最大熵马尔可夫模型</h4><p>解决了观测独立问题，但是依然存在标记偏置。</p>
+<p>最大熵（熵：分布的不确定性）：</p>
+<blockquote>
+<p>“无知比错误更可取，一个什么都不相信的人比一个相信错误的人离真理更近”</p>
+</blockquote>
+<p>找到最优分布中，最偏向 uniform 的结果，即为最大熵的目标。</p>
+<blockquote>
+<p>H（x）=–∑x log x是凸函数</p>
+</blockquote>
+<p>最大熵模型的likeliihood形式为：</p>
+<img src="/images/pic/知识图谱整理_pic/image-20210222155638939.png" alt="" style="zoom:80%;" />
+
+<p>求导之后可以发现：</p>
+<img src="/images/pic/知识图谱整理_pic/image-20210222160002751.png" alt="" style="zoom:60%;" />
+
+<p>MEMM：</p>
+<img src="/images/pic/知识图谱整理_pic/image-20210222161015601.png" alt="" style="zoom:67%;" />
+
+<p>根据历史状态序列，预测当前状态，每一时间步，预测一个状态。</p>
+<h4 id="CRF"><a href="#CRF" class="headerlink" title="CRF"></a>CRF</h4><img src="/images/pic/知识图谱整理_pic/image-20210222161949260.png" alt="" style="zoom:67%;" />
+
+<p>在给定随机变量序列X的情况下，随机变量Y的条件概率分布P(Y|X)构成条件随机场，即满⾜足马尔可夫性： </p>
+<p>P(Yi| X,Y1,Y2,…Yn) = P(Yi| X,Yi−1,Yi+1) </p>
+<p>则称P(Y|X)为线性链条件随机场。</p>
+<p>传统的CRF定义如下：</p>
+<p>特征函数分为两类</p>
+<ul>
+<li>只和当前节点有关</li>
+</ul>
+<img src="/images/pic/知识图谱整理_pic/image-20210222163809742.png" alt="" style="zoom:60%;" />
+
+<ul>
+<li>只和当前节点和上⼀个节点有关，局部特征函数</li>
+</ul>
+<img src="/images/pic/知识图谱整理_pic/image-20210222163856084.png" alt="" style="zoom:67%;" />
+
+<p>linear-CRF由 tk, λk, sl, µl 共同决定</p>
+<img src="/images/pic/知识图谱整理_pic/image-20210222163946006.png" alt="" style="zoom:67%;" />
+
+<p>i – 表示从0到T的序列位置；k, l – 表示自定义的特征函数编号。</p>
+<p>在深度学习中使用时，用深度模型代替特征函数：</p>
+<img src="/images/pic/知识图谱整理_pic/image-20210222164236336.png" alt="" style="zoom:80%;" />
+
+
+
+<h5 id="CRF相对于HMM的优点"><a href="#CRF相对于HMM的优点" class="headerlink" title="CRF相对于HMM的优点"></a>CRF相对于HMM的优点</h5><ol>
+<li>规避了马尔可夫性，能够获取长文本的远距离依赖的信息</li>
+<li>规避了齐次性，并且序列的 位置信息会影响预测出的状态序列</li>
+<li>规避了观测独立性，观测值之间的相关性信息能够被提取</li>
+<li>不是单向图，而是无向图，能够充分提取上下文信息作为特 征</li>
+<li>改善了标记偏置Label Bias问题</li>
+<li>CRF的思路是利用多个特征，对状态序列进行预测。HMM 的表现形式使他无法使⽤多个复杂特征</li>
+</ol>
+<h5 id="CRF的缺点"><a href="#CRF的缺点" class="headerlink" title="CRF的缺点"></a>CRF的缺点</h5><ol>
+<li>CRF训练代价大、复杂度高</li>
+<li>需要人为构造特征函数，特征工程对CRF模型的影响很大</li>
+</ol>
+<h2 id="实体连接"><a href="#实体连接" class="headerlink" title="实体连接"></a>实体连接</h2><p>候选实体生成： 根据输入文本中检测出的实体mention集合M，从给定知识图谱中找到可能属于M的候选实体集合m</p>
+<p>候选实体排序： 负责对候选实体集合m中多个候选实体打分的排序， 并输出得分最高的候选实体，作为实体链接结果</p>
+<h2 id="关系分类简介"><a href="#关系分类简介" class="headerlink" title="关系分类简介"></a>关系分类简介</h2><p>关系抽取: 从一个句子中判断两个entity是否有关系，一般是一个二分类问题，指定某种关系 关系分类: 一般是判断一个句子中两个entity是哪种关系，属于多分类问题。</p>
+<blockquote>
+<p>标注工具: BRAT</p>
+<p>BRAT是一个基于web的文本标注工具，主要用于对文本的结构化标注，用BRAT生成的标注结果能够把无结构化的原始文本结构化，供计算机处理。利用该工具可以方便的获得各项NLP任务需要的标 注语料。</p>
+</blockquote>
+<p>方法：</p>
+<ul>
+<li>基于规则的方法——人工模板</li>
+<li>基于规则的方法——基于统计的方法</li>
+<li>基于监督学习的方法——CNN/RNN</li>
+<li>基于监督学习的方法——PCNN</li>
+<li>半监督学习的方法——自举</li>
+<li>半监督学习的方法——远程监督</li>
+</ul>
+<h4 id="基于统计的方法"><a href="#基于统计的方法" class="headerlink" title="基于统计的方法"></a>基于统计的方法</h4><ol>
+<li>输入关系集合中的一个</li>
+<li>搜索一组实体对，满足关系</li>
+<li>输入实体对，搜索包含实体对的句子，保存</li>
+<li>将保存句子中的实体对，使用同一类关系模版替换</li>
+<li>计算成功替换，模版匹配正确的比例，即概率，作为模版的得分（置信度）。留下得分高的模版</li>
+</ol>
+<h4 id="神经网络方法"><a href="#神经网络方法" class="headerlink" title="神经网络方法"></a>神经网络方法</h4><p>输入embedding，可加上相对位置embedding，训练分类器。</p>
+<p>PCNN的<strong>Piecewise Convolutional</strong>，只是使用Piecewise max pooling，从实体所在位置处，分段进行pooling。</p>
+<img src="/images/pic/知识图谱整理_pic/image-20210222171941078.png" alt="" style="zoom:50%;" />
+
+<h4 id="半监督"><a href="#半监督" class="headerlink" title="半监督"></a>半监督</h4><h5 id="Bootstrapping"><a href="#Bootstrapping" class="headerlink" title="Bootstrapping"></a>Bootstrapping</h5><ol>
+<li><p>创建空的列表；</p>
+</li>
+<li><p>使用精心选择的种子初始化列表；</p>
+</li>
+<li><p>利用列表中的内容从训练语料库中查找更多内容；</p>
+</li>
+<li><p>给那些新发现的内容打分；把得分最高的内容加到列表中。</p>
+</li>
+<li><p>重复步骤3和4，直到达到最大迭代次数或者其它停止条件为止。</p>
+</li>
+</ol>
+<p>Snowball优化了部分的细节</p>
+<p>定义pattern 成为*&lt;left, tag1, middle, tag2, right&gt;*; tuples 为 &lt;tag1 , tag2&gt;</p>
+<img src="/images/pic/知识图谱整理_pic/image-20210222172633928.png" alt="" style="zoom:70%;" />
+
+<p>生成新pattern时，评估其与已有pattern的相似性，取一个阈值之上的，加入pattern集合。</p>
+<p>tuples要经过可信度计算，选择可信度高的留下，计算方法看<a href="http://www.mathcs.emory.edu/~eugene/papers/dl00.pdf" target="_blank" rel="noopener">论文</a>或者<a href="https://zhuanlan.zhihu.com/p/101058270" target="_blank" rel="noopener">blog</a>吧。</p>
+<h5 id="远程监督"><a href="#远程监督" class="headerlink" title="远程监督"></a>远程监督</h5><p>将已有的知识对应到丰富的非结构化语料中从而生成大量的训练数据。知识来源：人工标注、现有的知识库、特定的语句结构。</p>
+<p>Distant supervised 会产生有大量噪音或者被错误标注的数据，直接使用supervised的方法进行关系分 类，效果很差。</p>
+<h2 id="知识表示Embedding"><a href="#知识表示Embedding" class="headerlink" title="知识表示Embedding"></a>知识表示Embedding</h2><h4 id="TransE"><a href="#TransE" class="headerlink" title="TransE"></a>TransE</h4><p>TransE，⼀种将实体与关系嵌⼊到低维向量空间中的简单模型 。该模型已经成为了知识 图谱向量化表示的 baseline，并衍⽣出不同的变体。原理简述：</p>
+<img src="/images/pic/知识图谱整理_pic/image-20210222174150117.png" alt="" style="zoom:60%;" />
+
+<p>h，t为实体向量，r为关系向量。</p>
+<p>以L2 距离为例，梯度的计算相对⽐较简单，⽬标函数变为</p>
+<img src="/images/pic/知识图谱整理_pic/image-20210222174400473.png" alt="" style="zoom:50%;" />
+
+<p>求解导数：</p>
+<img src="/images/pic/知识图谱整理_pic/image-20210222174449957.png" alt="" style="zoom:50%;" />
+
+<img src="/images/pic/知识图谱整理_pic/image-20210222174524289.png" alt="" style="zoom:50%;" />
+
+<p>完整算法：</p>
+<img src="/images/pic/知识图谱整理_pic/image-20210222174739168.png" alt="" style="zoom:67%;" />
+
+<p>评测方法：</p>
+<blockquote>
+<p>在测试时，以⼀个三元组为例，⽤语料中所有实体替换当前三元组的头实体计算距离d(h ′+l,t)，将结果按升序排序，⽤正确三元组 的排名情况来评估学习效果（同理对尾实体这样做）。(若替换到在训练集中的三元组，可以选择 删掉)</p>
+</blockquote>
+<blockquote>
+<p>度量标准选择hits@10和mean rank，前者代表  命中前10的次数/总查询次数，后者代表  正确结果排名之和/总查询次数</p>
+</blockquote>
+<p>训练速度快、易于实现。另外，可以将word2vec和TransE一起融合训练，此处不作展开。</p>
+<h4 id="TransH"><a href="#TransH" class="headerlink" title="TransH"></a>TransH</h4><p>虽然 TransE 模型具有训练速度快、易于实现等优点，但是它不能够解决多对⼀和⼀对多关系的问题。以<br>多对⼀关系为例，固定 r 和 t，TransE 模型为了满⾜三⻆闭包关系，训练出来的头节点的向量会很相似。⽽TransH是⼀种将头尾节点映射到关系平⾯的模型，能够很好地解决这⼀问题。</p>
+<p>对于多对⼀关系，TransH 不在严格要求 h+r-l=0，⽽是只需要保证头结点和尾节点在关系平 ⾯上的投影在⼀条直线上即可。</p>
+<img src="/images/pic/知识图谱整理_pic/image-20210222175358133.png" alt="" style="zoom:67%;" />
+
+
+
+<img src="/images/pic/知识图谱整理_pic/image-20210222175435542.png" alt="" style="zoom:70%;" />
+
+<img src="/images/pic/知识图谱整理_pic/image-20210222175455866.png" alt="" style="zoom:67%;" />
+
+<h4 id="TransR"><a href="#TransR" class="headerlink" title="TransR"></a>TransR</h4><p>TransE 和 TransH 都假设实体和关系嵌⼊在相同的空间中。然⽽，⼀个实体是多种属性的综合体，不同关 系对应实体的不同属性，即头尾节点和关系可能不在⼀个向量空间中。</p>
+<img src="/images/pic/知识图谱整理_pic/image-20210222175610493.png" alt="" style="zoom:67%;" />
+
+<img src="/images/pic/知识图谱整理_pic/image-20210222175643271.png" alt="" style="zoom:67%;" />
+
+<img src="/images/pic/知识图谱整理_pic/image-20210222175711668.png" alt="" style="zoom:67%;" />
+
+
+
+<h2 id="问答应用"><a href="#问答应用" class="headerlink" title="问答应用"></a>问答应用</h2><h4 id="基于知识图谱的问答KBQA"><a href="#基于知识图谱的问答KBQA" class="headerlink" title="基于知识图谱的问答KBQA"></a>基于知识图谱的问答KBQA</h4><p>基本流程：</p>
+<p>⾃然语⾔查询–&gt;意图识别(Intention Recognition)–&gt;实体链指(Entity Linking)+关系识别(Relation Detection) –&gt;<br>查询语句拼装(Query Construction)–&gt;返回结果选择(Answering Selection) </p>
+<blockquote>
+<p>意图识别(Intention Recognition)：预先准备好意图模板，可以通过相似度来匹配，也可以通过机器学习⾥的<br>分类问题来解决，这个是所有问答系统都要⾯临的问题。 </p>
+<p>实体链指(Entity Linking)+关系识别(Relation Detection)：将查询语句中出现的实体和关系映射到知识图谱⾥，本质是⼀个NER问题，只是需要将NER结果进⼀步链接到图谱。 </p>
+<p>查询语句拼装(Query Construction)：需要根据底层知识图谱的查询语⾔，拼装成对应的query来查询(sparq<br>等)，最简单的⽅法就是预先定义好查询模板，根据之前解析出来的<strong>(意图，实体，关系)</strong>填进模板查询即可。 </p>
+<p>返回结果选择(Answering Selection)：图谱查询之后的结果可能存在多个，需要选择⼀个最合适的答案，可 以预先指定排序规则去选择答案。</p>
+</blockquote>
+<p>参考：</p>
+<p>[^1]: Entity Linking: Finding Extracted Entities in a Knowledge Base<br>[^2]: Improved Neural Relation Detection for Knowledge Base Question Answering</p>
+<p>实例：<a href="https://github.com/beader/tianchi_nl2sql" target="_blank" rel="noopener">NL2SQL比赛第三名方案</a>，待学习</p>
+<h4 id="基于知识表示的问答KEQA"><a href="#基于知识表示的问答KEQA" class="headerlink" title="基于知识表示的问答KEQA"></a>基于知识表示的问答KEQA</h4><p><a href="http://research.baidu.com/Public/uploads/5c1c9a58317b3.pdf" target="_blank" rel="noopener">KEQA</a></p>
+<img src="/images/pic/知识图谱整理_pic/image-20210222181049264.png" alt="" style="zoom:80%;" />
+
+<p>KEQA的目标不是直接推断头部实体和谓词，而是联合恢复知识图嵌入空间中问题的头部实体、谓词和尾部实体表示(eh, p, et)。分别训练两个模型，一个学习 谓词p 和 实体e 的表示，一个识别问题中到的Head实体。如下面两个图所示。</p>
+<img src="/images/pic/知识图谱整理_pic/image-20210222211314387.png" alt="" style="zoom:67%;" />
+
+<img src="/images/pic/知识图谱整理_pic/image-20210222211327917.png" alt="" style="zoom:67%;" />
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="https://racleray.github.io/2021/02/22/%E6%B5%85%E6%B6%89%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1-md/" data-id="cklgmlj17002sxk2f61mb86eh" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TransE/" rel="tag">TransE</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/knowledge-graph/" rel="tag">knowledge graph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ner/" rel="tag">ner</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/relation-extraction/" rel="tag">relation extraction</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+    
+<ul id="article-nav" class="nav nav-pills nav-justified">
+  
+  <li role="presentation">
+    <a href="/2021/02/20/%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB%E6%A8%A1%E5%9E%8B%E4%B8%8E%E7%AD%96%E7%95%A52020/" id="article-nav-older" class="article-nav-link-wrap">
+      <i class="fa fa-chevron-left pull-left"></i>
+      <span class="article-nav-link-title">实体识别模型与策略2020</span>
+    </a>
+  </li>
+  
+  
+</ul>
+
+
+  
+</article>
+
+
+
+
+
+<script>
+  var tocEx = function(el){
+    var toc = document.querySelector(el), content = toc.innerHTML;
+    content = content.replace('<!-- toc -->', '<div class="toc"><b>文章目录</b>').replace('<!-- tocstop -->', '</div>');
+    toc.innerHTML = content;
+  }('.entry');
+</script>
+
+
+        </div>
+        <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+          
+  <div class="sidebar-module sidebar-module-inset">
+  <h4>About</h4>
+  <p><a href="https://github.com/RacleRay" target="_blank" rel="noopener">Github Link</a>.<br>Email:969232057@qq.com.</p>
+
+</div>
+
+
+  
+  <div class="sidebar-module">
+    <h4>Categories</h4>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/categories/Notes/">Notes</a><span class="sidebar-module-list-count">29</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/categories/Tools/">Tools</a><span class="sidebar-module-list-count">5</span></li></ul>
+  </div>
+
+
+
+  
+  <div class="sidebar-module">
+    <h4>Tags</h4>
+    <ul class="sidebar-module-list" itemprop="keywords"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/CNN/" rel="tag">CNN</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Docker/" rel="tag">Docker</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Fairseq/" rel="tag">Fairseq</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/KenLM/" rel="tag">KenLM</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Language-Model/" rel="tag">Language Model</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Linux/" rel="tag">Linux</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/NVIDIA-Container-Toolkit/" rel="tag">NVIDIA Container Toolkit</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/RNN/" rel="tag">RNN</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Sampling/" rel="tag">Sampling</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Smoothing/" rel="tag">Smoothing</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/TransE/" rel="tag">TransE</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/attention/" rel="tag">attention</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/baseline/" rel="tag">baseline</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/basic/" rel="tag">basic</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/basics/" rel="tag">basics</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/bert/" rel="tag">bert</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/bleu/" rel="tag">bleu</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/c/" rel="tag">c++</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/capsule/" rel="tag">capsule</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/cdssm/" rel="tag">cdssm</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/chinese-process/" rel="tag">chinese process</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/classification/" rel="tag">classification</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/cnn/" rel="tag">cnn</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/crf/" rel="tag">crf</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/deep-learning/" rel="tag">deep learning</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/doc2vec/" rel="tag">doc2vec</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/dssm/" rel="tag">dssm</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/english-process/" rel="tag">english process</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/evaluation/" rel="tag">evaluation</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/fastText/" rel="tag">fastText</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/fine-grained/" rel="tag">fine-grained</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/flat/" rel="tag">flat</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/gan/" rel="tag">gan</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/git/" rel="tag">git</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/jupyter/" rel="tag">jupyter</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/knowledge-graph/" rel="tag">knowledge graph</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/lda/" rel="tag">lda</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/library/" rel="tag">library</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/machine-learning/" rel="tag">machine learning</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/methodology/" rel="tag">methodology</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/ner/" rel="tag">ner</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/nlp/" rel="tag">nlp</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/normalization/" rel="tag">normalization</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/pretrained-LM/" rel="tag">pretrained LM</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/python/" rel="tag">python</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/rasa/" rel="tag">rasa</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/regex/" rel="tag">regex</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/relation-extraction/" rel="tag">relation extraction</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/representation/" rel="tag">representation</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/retireval/" rel="tag">retireval</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/rouge/" rel="tag">rouge</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/sentence-embedding/" rel="tag">sentence embedding</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/seq2seq/" rel="tag">seq2seq</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/simple-notes/" rel="tag">simple notes</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/spark/" rel="tag">spark</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/text-similarity/" rel="tag">text similarity</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tools/" rel="tag">tools</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/transformer/" rel="tag">transformer</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/tutorial/" rel="tag">tutorial</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/visual-text/" rel="tag">visual text</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/w2v/" rel="tag">w2v</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/word2vec/" rel="tag">word2vec</a><span class="sidebar-module-list-count">1</span></li></ul>
+  </div>
+
+
+
+  
+  <div class="sidebar-module">
+    <h4>Tag Cloud</h4>
+    <p class="tagcloud">
+      <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Fairseq/" style="font-size: 10px;">Fairseq</a> <a href="/tags/KenLM/" style="font-size: 10px;">KenLM</a> <a href="/tags/Language-Model/" style="font-size: 20px;">Language Model</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/NVIDIA-Container-Toolkit/" style="font-size: 10px;">NVIDIA Container Toolkit</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/Sampling/" style="font-size: 10px;">Sampling</a> <a href="/tags/Smoothing/" style="font-size: 10px;">Smoothing</a> <a href="/tags/TransE/" style="font-size: 10px;">TransE</a> <a href="/tags/attention/" style="font-size: 10px;">attention</a> <a href="/tags/baseline/" style="font-size: 10px;">baseline</a> <a href="/tags/basic/" style="font-size: 20px;">basic</a> <a href="/tags/basics/" style="font-size: 10px;">basics</a> <a href="/tags/bert/" style="font-size: 10px;">bert</a> <a href="/tags/bleu/" style="font-size: 10px;">bleu</a> <a href="/tags/c/" style="font-size: 10px;">c++</a> <a href="/tags/capsule/" style="font-size: 10px;">capsule</a> <a href="/tags/cdssm/" style="font-size: 10px;">cdssm</a> <a href="/tags/chinese-process/" style="font-size: 10px;">chinese process</a> <a href="/tags/classification/" style="font-size: 20px;">classification</a> <a href="/tags/cnn/" style="font-size: 10px;">cnn</a> <a href="/tags/crf/" style="font-size: 10px;">crf</a> <a href="/tags/deep-learning/" style="font-size: 10px;">deep learning</a> <a href="/tags/doc2vec/" style="font-size: 10px;">doc2vec</a> <a href="/tags/dssm/" style="font-size: 10px;">dssm</a> <a href="/tags/english-process/" style="font-size: 10px;">english process</a> <a href="/tags/evaluation/" style="font-size: 10px;">evaluation</a> <a href="/tags/fastText/" style="font-size: 20px;">fastText</a> <a href="/tags/fine-grained/" style="font-size: 10px;">fine-grained</a> <a href="/tags/flat/" style="font-size: 10px;">flat</a> <a href="/tags/gan/" style="font-size: 10px;">gan</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/jupyter/" style="font-size: 10px;">jupyter</a> <a href="/tags/knowledge-graph/" style="font-size: 10px;">knowledge graph</a> <a href="/tags/lda/" style="font-size: 10px;">lda</a> <a href="/tags/library/" style="font-size: 10px;">library</a> <a href="/tags/machine-learning/" style="font-size: 20px;">machine learning</a> <a href="/tags/methodology/" style="font-size: 10px;">methodology</a> <a href="/tags/ner/" style="font-size: 20px;">ner</a> <a href="/tags/nlp/" style="font-size: 20px;">nlp</a> <a href="/tags/normalization/" style="font-size: 10px;">normalization</a> <a href="/tags/pretrained-LM/" style="font-size: 10px;">pretrained LM</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/rasa/" style="font-size: 10px;">rasa</a> <a href="/tags/regex/" style="font-size: 10px;">regex</a> <a href="/tags/relation-extraction/" style="font-size: 10px;">relation extraction</a> <a href="/tags/representation/" style="font-size: 20px;">representation</a> <a href="/tags/retireval/" style="font-size: 10px;">retireval</a> <a href="/tags/rouge/" style="font-size: 10px;">rouge</a> <a href="/tags/sentence-embedding/" style="font-size: 20px;">sentence embedding</a> <a href="/tags/seq2seq/" style="font-size: 20px;">seq2seq</a> <a href="/tags/simple-notes/" style="font-size: 10px;">simple notes</a> <a href="/tags/spark/" style="font-size: 10px;">spark</a> <a href="/tags/text-similarity/" style="font-size: 20px;">text similarity</a> <a href="/tags/tools/" style="font-size: 10px;">tools</a> <a href="/tags/transformer/" style="font-size: 10px;">transformer</a> <a href="/tags/tutorial/" style="font-size: 10px;">tutorial</a> <a href="/tags/visual-text/" style="font-size: 10px;">visual text</a> <a href="/tags/w2v/" style="font-size: 10px;">w2v</a> <a href="/tags/word2vec/" style="font-size: 10px;">word2vec</a>
+    </p>
+  </div>
+
+
+  
+  <div class="sidebar-module">
+    <h4>Archives</h4>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2021/02/">二月 2021</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2021/01/">一月 2021</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2020/11/">十一月 2020</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2020/10/">十月 2020</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2020/08/">八月 2020</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2020/07/">七月 2020</a><span class="sidebar-module-list-count">25</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2020/04/">四月 2020</a><span class="sidebar-module-list-count">1</span></li></ul>
+  </div>
+
+
+
+  
+  <div class="sidebar-module">
+    <h4>Recents</h4>
+    <ul class="sidebar-module-list">
+      
+        <li>
+          <a href="/2021/02/22/%E6%B5%85%E6%B6%89%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1-md/">浅涉知识图谱.md</a>
+        </li>
+      
+        <li>
+          <a href="/2021/02/20/%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB%E6%A8%A1%E5%9E%8B%E4%B8%8E%E7%AD%96%E7%95%A52020/">实体识别模型与策略2020</a>
+        </li>
+      
+        <li>
+          <a href="/2021/02/13/BERT-flow-and-more/">BERT-flow and more</a>
+        </li>
+      
+        <li>
+          <a href="/2021/01/16/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8BSampling%E6%96%B9%E6%B3%95/">语言模型Sampling方法</a>
+        </li>
+      
+        <li>
+          <a href="/2021/01/12/jupytext-and-nbdev/">jupytext and nbdev</a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+
+        </div>
+    </div>
+  </div>
+  <footer class="blog-footer">
+  <div class="container">
+    <div id="footer-info" class="inner">
+      &copy; 2021 江左时雨<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+  
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" integrity="sha384-8gBf6Y4YYq7Jx97PIqmTwLPin4hxIzQw5aDmUg/DDhul9fFpbbLcLh3nTIIDJKhx" crossorigin="anonymous"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>
