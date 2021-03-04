@@ -85,6 +85,241 @@
         <div class="col-sm-8 blog-main">
           
   
+    <article id="post-语言模型Sampling方法" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/03/04/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8BSampling%E6%96%B9%E6%B3%95/">语言模型Sampling方法</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2021/03/04/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8BSampling%E6%96%B9%E6%B3%95/" class="article-date"><time datetime="2021-03-04T13:31:47.190Z" itemprop="datePublished">2021-03-04</time></a>
+</div>
+
+    
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Notes/">Notes</a>
+  </div>
+
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- TOC -->
+
+<ul>
+<li><a href="#temperature-sampling"><strong>Temperature</strong> <strong>sampling</strong></a></li>
+<li><a href="#top-k-sampling"><strong>Top k</strong> <strong>sampling</strong></a></li>
+<li><a href="#top-p-samplingnucleus-sampling"><strong>Top p</strong> <strong>sampling</strong>（<strong>nucleus sampling</strong>）</a></li>
+<li><a href="#end">End</a></li>
+</ul>
+<!-- /TOC -->
+        
+          <p class="article-more-link">
+            <a class="btn btn-primary" href="/2021/03/04/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8BSampling%E6%96%B9%E6%B3%95/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+
+    
+
+    <footer class="article-footer">
+      <a data-url="https://racleray.github.io/2021/03/04/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8BSampling%E6%96%B9%E6%B3%95/" data-id="cklv3q09s002wxg2fhflyao16" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Language-Model/" rel="tag">Language Model</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Sampling/" rel="tag">Sampling</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+
+
+  
+    <article id="post-实体识别模型与策略2020" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/03/04/%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB%E6%A8%A1%E5%9E%8B%E4%B8%8E%E7%AD%96%E7%95%A52020/">实体识别模型与策略2020</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2021/03/04/%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB%E6%A8%A1%E5%9E%8B%E4%B8%8E%E7%AD%96%E7%95%A52020/" class="article-date"><time datetime="2021-03-04T13:31:47.157Z" itemprop="datePublished">2021-03-04</time></a>
+</div>
+
+    
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Notes/">Notes</a>
+  </div>
+
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- TOC -->
+
+<ul>
+<li><a href="#模型">模型</a><ul>
+<li><a href="#flat">FLAT</a><ul>
+<li><a href="#设计适应lattice结构的模型">设计适应Lattice结构的模型</a></li>
+<li><a href="#flat-1">FLAT</a></li>
+<li><a href="#relative-position-encoding-of-spans">Relative Position Encoding of Spans</a></li>
+</ul>
+</li>
+<li><a href="#bert">BERT</a></li>
+<li><a href="#crf">CRF</a></li>
+<li><a href="#mrc">MRC</a></li>
+<li><a href="#simple-lexicon">Simple-Lexicon</a></li>
+</ul>
+</li>
+<li><a href="#策略">策略</a><ul>
+<li><a href="#positive-unlabeled-learning----pu-learning">Positive-unlabeled learning – PU Learning</a></li>
+<li><a href="#fgm">FGM</a></li>
+<li><a href="#swa">SWA</a></li>
+</ul>
+</li>
+</ul>
+<!-- /TOC -->
+        
+          <p class="article-more-link">
+            <a class="btn btn-primary" href="/2021/03/04/%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB%E6%A8%A1%E5%9E%8B%E4%B8%8E%E7%AD%96%E7%95%A52020/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+
+    
+
+    <footer class="article-footer">
+      <a data-url="https://racleray.github.io/2021/03/04/%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB%E6%A8%A1%E5%9E%8B%E4%B8%8E%E7%AD%96%E7%95%A52020/" data-id="cklv3q097001pxg2f8yvmc87d" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/flat/" rel="tag">flat</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/methodology/" rel="tag">methodology</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ner/" rel="tag">ner</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+
+
+  
+    <article id="public-jupytext-and-nbdev" class="article article-type-public" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/03/04/jupytext-and-nbdev/">jupytext and nbdev</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2021/03/04/jupytext-and-nbdev/" class="article-date"><time datetime="2021-03-04T13:31:47.132Z" itemprop="datePublished">2021-03-04</time></a>
+</div>
+
+    
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Tools/">Tools</a>
+  </div>
+
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- TOC -->
+
+<ul>
+<li><a href="#jupytext">Jupytext</a><ul>
+<li><a href="#界面点击操作">界面点击操作</a></li>
+<li><a href="#命令行操作">命令行操作</a></li>
+<li><a href="#支持文件格式">支持文件格式</a></li>
+</ul>
+</li>
+<li><a href="#nbdev开发">NBDEV开发</a><ul>
+<li><a href="#step-1-新建git">step 1 新建git</a></li>
+<li><a href="#step-2-编辑settingsini">step 2 编辑settings.ini</a></li>
+<li><a href="#step-3-安装git_hooks">step 3 安装git_hooks</a></li>
+<li><a href="#step-4-编辑代码">step 4 编辑代码</a></li>
+<li><a href="#step-5-nbdev_build_lib">step 5 nbdev_build_lib</a></li>
+<li><a href="#step-6-编写index文件">step 6 编写index文件</a></li>
+<li><a href="#step-7-生成docs文档">step 7 生成docs文档</a></li>
+<li><a href="#step-8-上传git">step 8 上传git</a></li>
+<li><a href="#step-9-bug">step 9 bug</a></li>
+<li><a href="#optional-step-10-发布pypi">optional step 10 发布pypi</a></li>
+<li><a href="#附-其他事项">附 其他事项</a></li>
+</ul>
+</li>
+</ul>
+<!-- /TOC -->
+        
+          <p class="article-more-link">
+            <a class="btn btn-primary" href="/2021/03/04/jupytext-and-nbdev/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+
+    
+
+    <footer class="article-footer">
+      <a data-url="https://racleray.github.io/2021/03/04/jupytext-and-nbdev/" data-id="cklv3q08z0018xg2f85vcfqc6" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jupyter/" rel="tag">jupyter</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/tools/" rel="tag">tools</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+
+
+  
     <article id="post-字符串匹配从KMP到AC自动机" class="article article-type-post" itemscope itemprop="blogPost">
 
   <header class="article-header">
@@ -141,7 +376,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2021/02/27/%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8C%B9%E9%85%8D%E4%BB%8EKMP%E5%88%B0AC%E8%87%AA%E5%8A%A8%E6%9C%BA/" data-id="ckltlvseu001t7c2f9spl3quh" class="article-share-link">
+      <a data-url="https://racleray.github.io/2021/02/27/%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8C%B9%E9%85%8D%E4%BB%8EKMP%E5%88%B0AC%E8%87%AA%E5%8A%A8%E6%9C%BA/" data-id="cklv3q095001mxg2fctwr2b8i" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -225,7 +460,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2021/02/24/%E6%B5%85%E6%B6%89python%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/" data-id="ckltlvsfv004f7c2fbr239s0u" class="article-share-link">
+      <a data-url="https://racleray.github.io/2021/02/24/%E6%B5%85%E6%B6%89python%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/" data-id="cklv3q09l002ixg2f2mtr81kj" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -298,7 +533,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2021/02/24/%E6%9C%89%E7%94%A8%E7%9A%84python-package/" data-id="ckltlvsg800547c2fhvftbwo0" class="article-share-link">
+      <a data-url="https://racleray.github.io/2021/02/24/%E6%9C%89%E7%94%A8%E7%9A%84python-package/" data-id="cklv3q09k002gxg2f98iugl2d" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -407,95 +642,12 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2021/02/22/%E6%B5%85%E6%B6%89%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/" data-id="ckltlvsfz004p7c2ffu4jea09" class="article-share-link">
+      <a data-url="https://racleray.github.io/2021/02/22/%E6%B5%85%E6%B6%89%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/" data-id="cklv3q09n002lxg2f7rorb5vm" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TransE/" rel="tag">TransE</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/knowledge-graph/" rel="tag">knowledge graph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ner/" rel="tag">ner</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/relation-extraction/" rel="tag">relation extraction</a></li></ul>
-
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-
-
-  
-    <article id="post-实体识别模型与策略2020" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <header class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/02/20/%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB%E6%A8%A1%E5%9E%8B%E4%B8%8E%E7%AD%96%E7%95%A52020/">实体识别模型与策略2020</a>
-    </h1>
-  
-
-
-  </header>
-
-  <div class="article-meta">
-    <div class="article-datetime">
-  <a href="/2021/02/20/%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB%E6%A8%A1%E5%9E%8B%E4%B8%8E%E7%AD%96%E7%95%A52020/" class="article-date"><time datetime="2021-02-20T14:49:35.555Z" itemprop="datePublished">2021-02-20</time></a>
-</div>
-
-    
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Notes/">Notes</a>
-  </div>
-
-
-  </div>
-  <div class="article-inner">
-
-    <div class="article-entry" itemprop="articleBody">
-      
-        <!-- TOC -->
-
-<ul>
-<li><a href="#模型">模型</a><ul>
-<li><a href="#flat">FLAT</a><ul>
-<li><a href="#设计适应lattice结构的模型">设计适应Lattice结构的模型</a></li>
-<li><a href="#flat-1">FLAT</a></li>
-<li><a href="#relative-position-encoding-of-spans">Relative Position Encoding of Spans</a></li>
-</ul>
-</li>
-<li><a href="#bert">BERT</a></li>
-<li><a href="#crf">CRF</a></li>
-<li><a href="#mrc">MRC</a></li>
-<li><a href="#simple-lexicon">Simple-Lexicon</a></li>
-</ul>
-</li>
-<li><a href="#策略">策略</a><ul>
-<li><a href="#positive-unlabeled-learning----pu-learning">Positive-unlabeled learning – PU Learning</a></li>
-<li><a href="#fgm">FGM</a></li>
-<li><a href="#swa">SWA</a></li>
-</ul>
-</li>
-</ul>
-<!-- /TOC -->
-        
-          <p class="article-more-link">
-            <a class="btn btn-primary" href="/2021/02/20/%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB%E6%A8%A1%E5%9E%8B%E4%B8%8E%E7%AD%96%E7%95%A52020/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-
-    
-
-    <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2021/02/20/%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB%E6%A8%A1%E5%9E%8B%E4%B8%8E%E7%AD%96%E7%95%A52020/" data-id="ckltlvser001m7c2f4ov758at" class="article-share-link">
-        <i class="fa fa-share"></i> Share
-      </a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/flat/" rel="tag">flat</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/methodology/" rel="tag">methodology</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ner/" rel="tag">ner</a></li></ul>
 
 
     </footer>
@@ -573,164 +725,12 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2021/02/13/BERT-flow-and-more/" data-id="ckltlvsdl00017c2faoj547cj" class="article-share-link">
+      <a data-url="https://racleray.github.io/2021/02/13/BERT-flow-and-more/" data-id="cklv3q0860002xg2fgqxad0mz" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bert/" rel="tag">bert</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nlp/" rel="tag">nlp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sentence-embedding/" rel="tag">sentence embedding</a></li></ul>
-
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-
-
-  
-    <article id="post-语言模型Sampling方法" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <header class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/16/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8BSampling%E6%96%B9%E6%B3%95/">语言模型Sampling方法</a>
-    </h1>
-  
-
-
-  </header>
-
-  <div class="article-meta">
-    <div class="article-datetime">
-  <a href="/2021/01/16/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8BSampling%E6%96%B9%E6%B3%95/" class="article-date"><time datetime="2021-01-16T15:57:25.053Z" itemprop="datePublished">2021-01-16</time></a>
-</div>
-
-    
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Notes/">Notes</a>
-  </div>
-
-
-  </div>
-  <div class="article-inner">
-
-    <div class="article-entry" itemprop="articleBody">
-      
-        <!-- TOC -->
-
-<ul>
-<li><a href="#temperature-sampling"><strong>Temperature</strong> <strong>sampling</strong></a></li>
-<li><a href="#top-k-sampling"><strong>Top k</strong> <strong>sampling</strong></a></li>
-<li><a href="#top-p-samplingnucleus-sampling"><strong>Top p</strong> <strong>sampling</strong>（<strong>nucleus sampling</strong>）</a></li>
-<li><a href="#end">End</a></li>
-</ul>
-<!-- /TOC -->
-        
-          <p class="article-more-link">
-            <a class="btn btn-primary" href="/2021/01/16/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8BSampling%E6%96%B9%E6%B3%95/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-
-    
-
-    <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2021/01/16/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8BSampling%E6%96%B9%E6%B3%95/" data-id="ckltlvsg700507c2fakama1rb" class="article-share-link">
-        <i class="fa fa-share"></i> Share
-      </a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Language-Model/" rel="tag">Language Model</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Sampling/" rel="tag">Sampling</a></li></ul>
-
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-
-
-  
-    <article id="public-jupytext-and-nbdev" class="article article-type-public" itemscope itemprop="blogPost">
-
-  <header class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/12/jupytext-and-nbdev/">jupytext and nbdev</a>
-    </h1>
-  
-
-
-  </header>
-
-  <div class="article-meta">
-    <div class="article-datetime">
-  <a href="/2021/01/12/jupytext-and-nbdev/" class="article-date"><time datetime="2021-01-12T13:17:12.590Z" itemprop="datePublished">2021-01-12</time></a>
-</div>
-
-    
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Tools/">Tools</a>
-  </div>
-
-
-  </div>
-  <div class="article-inner">
-
-    <div class="article-entry" itemprop="articleBody">
-      
-        <!-- TOC -->
-
-<ul>
-<li><a href="#jupytext">Jupytext</a><ul>
-<li><a href="#界面点击操作">界面点击操作</a></li>
-<li><a href="#命令行操作">命令行操作</a></li>
-<li><a href="#支持文件格式">支持文件格式</a></li>
-</ul>
-</li>
-<li><a href="#nbdev开发">NBDEV开发</a><ul>
-<li><a href="#step-1-新建git">step 1 新建git</a></li>
-<li><a href="#step-2-编辑settingsini">step 2 编辑settings.ini</a></li>
-<li><a href="#step-3-安装git_hooks">step 3 安装git_hooks</a></li>
-<li><a href="#step-4-编辑代码">step 4 编辑代码</a></li>
-<li><a href="#step-5-nbdev_build_lib">step 5 nbdev_build_lib</a></li>
-<li><a href="#step-6-编写index文件">step 6 编写index文件</a></li>
-<li><a href="#step-7-生成docs文档">step 7 生成docs文档</a></li>
-<li><a href="#step-8-上传git">step 8 上传git</a></li>
-<li><a href="#step-9-bug">step 9 bug</a></li>
-<li><a href="#optional-step-10-发布pypi">optional step 10 发布pypi</a></li>
-<li><a href="#附-其他事项">附 其他事项</a></li>
-</ul>
-</li>
-</ul>
-<!-- /TOC -->
-        
-          <p class="article-more-link">
-            <a class="btn btn-primary" href="/2021/01/12/jupytext-and-nbdev/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-
-    
-
-    <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2021/01/12/jupytext-and-nbdev/" data-id="ckltlvsg1004s7c2fdr4jerk8" class="article-share-link">
-        <i class="fa fa-share"></i> Share
-      </a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jupyter/" rel="tag">jupyter</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/tools/" rel="tag">tools</a></li></ul>
 
 
     </footer>
@@ -796,7 +796,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/11/30/%E8%B4%9D%E5%8F%B6%E6%96%AF%E8%B6%85%E5%8F%82%E6%95%B0%E6%90%9C%E7%B4%A2/" data-id="ckltlvsg6004x7c2fbx5qerg6" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/11/30/%E8%B4%9D%E5%8F%B6%E6%96%AF%E8%B6%85%E5%8F%82%E6%95%B0%E6%90%9C%E7%B4%A2/" data-id="cklv3q09t0030xg2f3g5c987g" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -866,7 +866,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/11/18/CRF-SimpleNote/" data-id="ckltlvsec000t7c2fhei94ft1" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/11/18/CRF-SimpleNote/" data-id="cklv3q08c0007xg2f7iishsa6" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -930,7 +930,7 @@
   
   <div class="sidebar-module">
     <h4>Archives</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2021/02/">二月 2021</a><span class="sidebar-module-list-count">6</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2021/01/">一月 2021</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2020/11/">十一月 2020</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2020/10/">十月 2020</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2020/08/">八月 2020</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2020/07/">七月 2020</a><span class="sidebar-module-list-count">25</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2020/04/">四月 2020</a><span class="sidebar-module-list-count">1</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2021/03/">三月 2021</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2021/02/">二月 2021</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2020/11/">十一月 2020</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2020/10/">十月 2020</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2020/08/">八月 2020</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2020/07/">七月 2020</a><span class="sidebar-module-list-count">25</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2020/04/">四月 2020</a><span class="sidebar-module-list-count">1</span></li></ul>
   </div>
 
 
@@ -941,23 +941,23 @@
     <ul class="sidebar-module-list">
       
         <li>
+          <a href="/2021/03/04/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8BSampling%E6%96%B9%E6%B3%95/">语言模型Sampling方法</a>
+        </li>
+      
+        <li>
+          <a href="/2021/03/04/%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB%E6%A8%A1%E5%9E%8B%E4%B8%8E%E7%AD%96%E7%95%A52020/">实体识别模型与策略2020</a>
+        </li>
+      
+        <li>
+          <a href="/2021/03/04/jupytext-and-nbdev/">jupytext and nbdev</a>
+        </li>
+      
+        <li>
           <a href="/2021/02/27/%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8C%B9%E9%85%8D%E4%BB%8EKMP%E5%88%B0AC%E8%87%AA%E5%8A%A8%E6%9C%BA/">字符串匹配从KMP到AC自动机</a>
         </li>
       
         <li>
           <a href="/2021/02/24/%E6%B5%85%E6%B6%89python%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F/">浅涉python与分布式</a>
-        </li>
-      
-        <li>
-          <a href="/2021/02/24/%E6%9C%89%E7%94%A8%E7%9A%84python-package/">有用的python package</a>
-        </li>
-      
-        <li>
-          <a href="/2021/02/22/%E6%B5%85%E6%B6%89%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/">浅涉知识图谱</a>
-        </li>
-      
-        <li>
-          <a href="/2021/02/20/%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB%E6%A8%A1%E5%9E%8B%E4%B8%8E%E7%AD%96%E7%95%A52020/">实体识别模型与策略2020</a>
         </li>
       
     </ul>
@@ -993,8 +993,40 @@
 
 
 
-<script src="/js/script.js"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<script src="/js/script.js"></script>
 
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 </body>
 </html>
