@@ -5,12 +5,12 @@
   
   <title>CRF--SimpleNote | Racle</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Motivation CRF loss in Deep Learning 最佳路径导出Viterbi   对比MEMM">
+  <meta name="description" content="Motivation CRF loss in Deep Learning  最佳路径导出Viterbi  对比MEMM">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CRF--SimpleNote">
 <meta property="og:url" content="https://racleray.github.io/2020/11/18/CRF-SimpleNote/index.html">
 <meta property="og:site_name" content="Racle">
-<meta property="og:description" content="Motivation CRF loss in Deep Learning 最佳路径导出Viterbi   对比MEMM">
+<meta property="og:description" content="Motivation CRF loss in Deep Learning  最佳路径导出Viterbi  对比MEMM">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://racleray.github.io/images/pic/CRF--SimpleNote_pic/image-20201118151443920.png">
 <meta property="og:image" content="https://racleray.github.io/images/pic/CRF--SimpleNote_pic/image-20201118152037905.png">
@@ -134,26 +134,24 @@
     <div class="article-entry" itemprop="articleBody">
       
         <!-- TOC -->
-
 <ul>
 <li><a href="#motivation">Motivation</a></li>
-<li><a href="#crf-loss-in-deep-learning">CRF loss in Deep Learning</a><ul>
+<li><a href="#crf-loss-in-deep-learning">CRF loss in Deep Learning</a>
+<ul>
 <li><a href="#最佳路径导出viterbi">最佳路径导出Viterbi</a></li>
-</ul>
-</li>
+</ul></li>
 <li><a href="#对比memm">对比MEMM</a></li>
 </ul>
 <!-- /TOC -->
-
 <a id="more"></a>
-
-<h2 id="Motivation"><a href="#Motivation" class="headerlink" title="Motivation"></a>Motivation</h2><p>标注输出不仅仅是简单的分类，而是具有一定关联规律的标注输出。CRF正是输出这种结构化结果的一种算法。</p>
+<h2 id="motivation">Motivation</h2>
+<p>标注输出不仅仅是简单的分类，而是具有一定关联规律的标注输出。CRF正是输出这种结构化结果的一种算法。</p>
 <p>结合HMM（状态转移和状态释放）和最大熵模型（log linear model建模特征函数，寻找最优的条件概率），在MEMM的基础上，建立隐变量X的概率无向图解决了MEMM的局部归一化问题。</p>
-<h2 id="CRF-loss-in-Deep-Learning"><a href="#CRF-loss-in-Deep-Learning" class="headerlink" title="CRF loss in Deep Learning"></a>CRF loss in Deep Learning</h2><p>loss的优化目标是使得模型输出的最优路径和groud truth路径尽量接近。即，最大化最优路径概率。</p>
-<img src="/images/pic/CRF--SimpleNote_pic/image-20201118151443920.png" alt="" style="zoom:50%;" />
-
+<h2 id="crf-loss-in-deep-learning">CRF loss in Deep Learning</h2>
+<p>loss的优化目标是使得模型输出的最优路径和groud truth路径尽量接近。即，最大化最优路径概率。</p>
+<p><img src="/images/pic/CRF--SimpleNote_pic/image-20201118151443920.png" alt="" style="zoom:50%;" /></p>
 <p>最优路径概率定义为，</p>
-<p><img src="/images/pic/CRF--SimpleNote_pic/image-20201118152037905.png" alt=""></p>
+<p><img src="/images/pic/CRF--SimpleNote_pic/image-20201118152037905.png" /></p>
 <p>在CRF loss中，Pi通过两组变量求得，Emission Score和Transition Score（传统CRF中的特征函数）。</p>
 <blockquote>
 <p>Emission Score：对应神经网络输出的hidden state。可视为每一步输出标签的分类概率分布预测，每一步输出维度为[#tags, 1]。</p>
@@ -161,42 +159,43 @@
 </blockquote>
 <p>两者在深度模型中都是作为权重变量来优化学习的。</p>
 <p>深度模型中的优化目标实际实现为：</p>
-<img src="/images/pic/CRF--SimpleNote_pic/image-20201118153139040.png" alt="" style="zoom:67%;" />
-
+<p><img src="/images/pic/CRF--SimpleNote_pic/image-20201118153139040.png" alt="" style="zoom:67%;" /></p>
 <p>分子计算可以简单计算发现，就是当前路径的Emission Score和Transition Score沿路径之和。计算难点在于分母，可以通过递归实现其多分支结构计算。</p>
 <p>递归过程：</p>
 <blockquote>
 <p>维护两个记录列表：<strong>obs和 previous</strong>。<strong>previous</strong>存储了之前步骤的结果，<strong>obs</strong>代表当前状态可能的输出选择。</p>
 <p>以step 0到step 1为例：</p>
-<p><img src="/images/pic/CRF--SimpleNote_pic/image-20201118155354383.png" alt=""></p>
+<p><img src="/images/pic/CRF--SimpleNote_pic/image-20201118155354383.png" /></p>
 <blockquote>
 <p>扩展到#tags维度，沿着1轴，和transition matrix同维度</p>
-<p><img src="/images/pic/CRF--SimpleNote_pic/image-20201118155435068.png" alt=""></p>
-<p><img src="/images/pic/CRF--SimpleNote_pic/image-20201118155940735.png" alt=""></p>
-<p><img src="/images/pic/CRF--SimpleNote_pic/image-20201118160009190.png" alt=""></p>
+<p><img src="/images/pic/CRF--SimpleNote_pic/image-20201118155435068.png" /></p>
+<p><img src="/images/pic/CRF--SimpleNote_pic/image-20201118155940735.png" /></p>
+<p><img src="/images/pic/CRF--SimpleNote_pic/image-20201118160009190.png" /></p>
 <p>对score的每一列取指数，求和，在取对数，得到新的previous</p>
-<p><img src="/images/pic/CRF--SimpleNote_pic/image-20201118160226783.png" alt=""></p>
+<p><img src="/images/pic/CRF--SimpleNote_pic/image-20201118160226783.png" /></p>
 <p>递归计算，直到达到最后一个时间步。</p>
 </blockquote>
-<p><img src="/images/pic/CRF--SimpleNote_pic/image-20201118160412587.png" alt=""></p>
+<p><img src="/images/pic/CRF--SimpleNote_pic/image-20201118160412587.png" /></p>
 <p>求得分母</p>
 </blockquote>
-<h3 id="最佳路径导出Viterbi"><a href="#最佳路径导出Viterbi" class="headerlink" title="最佳路径导出Viterbi"></a>最佳路径导出Viterbi</h3><p>动态规划算法，过程类似loss中求分母的部分，但是状态转移方程（动态规划）不同。</p>
+<h3 id="最佳路径导出viterbi">最佳路径导出Viterbi</h3>
+<p>动态规划算法，过程类似loss中求分母的部分，但是状态转移方程（动态规划）不同。</p>
 <blockquote>
 <p>同样以step 0到step 1为例：</p>
-<p><img src="/images/pic/CRF--SimpleNote_pic/image-20201118155354383.png" alt=""></p>
+<p><img src="/images/pic/CRF--SimpleNote_pic/image-20201118155354383.png" /></p>
 <p>扩展到#tags维度，沿着1轴，和transition matrix同维度</p>
-<p><img src="/images/pic/CRF--SimpleNote_pic/image-20201118155435068.png" alt=""></p>
-<p><img src="/images/pic/CRF--SimpleNote_pic/image-20201118155940735.png" alt=""></p>
-<p><img src="/images/pic/CRF--SimpleNote_pic/image-20201118160009190.png" alt=""></p>
+<p><img src="/images/pic/CRF--SimpleNote_pic/image-20201118155435068.png" /></p>
+<p><img src="/images/pic/CRF--SimpleNote_pic/image-20201118155940735.png" /></p>
+<p><img src="/images/pic/CRF--SimpleNote_pic/image-20201118160009190.png" /></p>
 <p>previous保存的累计最优得分状态变化为：</p>
-<p><img src="/images/pic/CRF--SimpleNote_pic/image-20201118161201957.png" alt=""></p>
+<p><img src="/images/pic/CRF--SimpleNote_pic/image-20201118161201957.png" /></p>
 <p>然后保存这一轮状态转移中，不同step 0状态下对应的最优得分，以及最优得分对应的step 1最优状态。即，保存两个列表，在下一次转移时，将最优得分和对应的最优状态append到结果中。</p>
 </blockquote>
 <p>根据最后一步的最优得分，回溯重构出最优路径。</p>
-<h2 id="对比MEMM"><a href="#对比MEMM" class="headerlink" title="对比MEMM"></a>对比MEMM</h2><p>虽然CRF在MEMM的基础上，建立隐变量X的概率无向图解决了MEMM的局部归一化问题。但是，并不是说MEMM的结果就一定崩塌。</p>
+<h2 id="对比memm">对比MEMM</h2>
+<p>虽然CRF在MEMM的基础上，建立隐变量X的概率无向图解决了MEMM的局部归一化问题。但是，并不是说MEMM的结果就一定崩塌。</p>
 <p>MEMM的一个明显的特点是实现简单、速度快，因为它只需要每一步单独执行softmax，所以MEMM是完全可以并行的，速度跟直接逐步Softmax基本一样。</p>
-<p><img src="/images/pic/CRF--SimpleNote_pic/image-20201118161937684.png" alt=""></p>
+<p><img src="/images/pic/CRF--SimpleNote_pic/image-20201118161937684.png" /></p>
 <p>它的每一步计算，不需要整个序列的信息计算分母，而是依赖于上一步的状态。</p>
 
       
@@ -208,7 +207,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/11/18/CRF-SimpleNote/" data-id="ckm4nxegv0007vk2fb9eu369s" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/11/18/CRF-SimpleNote/" data-id="ckm4od80500061s2fhitpfdz3" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -254,7 +253,6 @@
     toc.innerHTML = content;
   }('.entry');
 </script>
-
 
         </div>
         <div class="col-sm-3 col-sm-offset-1 blog-sidebar">

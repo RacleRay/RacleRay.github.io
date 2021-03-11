@@ -5,12 +5,12 @@
   
   <title>文本分类advanced | Racle</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="细粒度分类 数据处理 模型 Seq2Seq Aspect Based Sentiment Analysis   模型训练">
+  <meta name="description" content="细粒度分类  数据处理 模型  Seq2Seq Aspect Based Sentiment Analysis  模型训练">
 <meta property="og:type" content="article">
 <meta property="og:title" content="文本分类advanced">
 <meta property="og:url" content="https://racleray.github.io/2020/07/07/%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BBadvanced/index.html">
 <meta property="og:site_name" content="Racle">
-<meta property="og:description" content="细粒度分类 数据处理 模型 Seq2Seq Aspect Based Sentiment Analysis   模型训练">
+<meta property="og:description" content="细粒度分类  数据处理 模型  Seq2Seq Aspect Based Sentiment Analysis  模型训练">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://racleray.github.io/images/Advanced.assets/image-20200525164408186.png">
 <meta property="og:image" content="https://racleray.github.io/images/Advanced.assets/image-20200525162258823.png">
@@ -122,30 +122,30 @@
     <div class="article-entry" itemprop="articleBody">
       
         <!-- TOC -->
-
 <ul>
-<li><a href="#细粒度分类">细粒度分类</a><ul>
+<li><a href="#细粒度分类">细粒度分类</a>
+<ul>
 <li><a href="#数据处理">数据处理</a></li>
-<li><a href="#模型">模型</a><ul>
+<li><a href="#模型">模型</a>
+<ul>
 <li><a href="#seq2seq">Seq2Seq</a></li>
 <li><a href="#aspect-based-sentiment-analysis">Aspect Based Sentiment Analysis</a></li>
-</ul>
-</li>
+</ul></li>
 <li><a href="#模型训练">模型训练</a></li>
-</ul>
-</li>
+</ul></li>
 </ul>
 <!-- /TOC -->
 <a id="more"></a>
-
-<h2 id="细粒度分类"><a href="#细粒度分类" class="headerlink" title="细粒度分类"></a>细粒度分类</h2><blockquote>
+<h2 id="细粒度分类">细粒度分类</h2>
+<blockquote>
 <p><strong>多标签问题</strong>，每一个类别标签训练一个分类器，忽略了不同类别标签间的联系。</p>
 <p><strong>多任务学习</strong>，特征提取阶段共享参数，最后几层单独输出。优点是考虑了不同任务间的联系，有联系的类别标签可以一块训练，对不均衡的样本数据有增强作用。</p>
 <p><strong>Seq2Seq</strong>，把多标签的预测问题看成了一个序列到序列的学习，这样既考虑了标签之间的联系，又可以处理大量标签的问题。</p>
 <p><strong>Aspect Based</strong>，当有每种Aspect（可理解为主题）相关信息，且每个样本属于特定的Aspect。需要根据属于识别Aspect和分类。</p>
 </blockquote>
-<h3 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h3><p>可选项有</p>
-<ol>
+<h3 id="数据处理">数据处理</h3>
+<p>可选项有</p>
+<ol type="1">
 <li>明显噪声处理，例如全篇标点符号，繁体转简体等。</li>
 <li>分词器选择与自定义词典扩充。使用word2vec初始化时，训练词向量的词表和模型使用的词表一致（分词器不要混用）。</li>
 <li>分词与分字特征可分别利用，训练不同模型集成。</li>
@@ -153,7 +153,7 @@
 <li>EDA：同义词替换，随机删除、交换位置等。翻译效果不稳定。</li>
 </ol>
 <p>不平衡数据：</p>
-<ol>
+<ol type="1">
 <li>上采样：罕见类数据随机打乱作为扩充。同义词替换，随机删除、交换位置等扩充。使用扩充数据时，不要连续使用增强后的数据，可以相隔一两个epoch使用。</li>
 <li>下采样，数据利用率不高。</li>
 <li>标签权重加入loss计算。实际效果是，不一定带来提高，尤其是复杂的分类任务，但可选。</li>
@@ -161,35 +161,43 @@
 <li>focal loss。损失计算偏向于没有正确分类的输出修正（理论上）。</li>
 </ol>
 <p>使用预训练特征提取器时（EMLo，BERT类）：</p>
-<ol>
+<ol type="1">
 <li>使用外部相似预料进行模型pretrain。</li>
 <li>长度有限制的模型，可以尝试随机删除句子。（观测数据，如果开头和结尾重要，就删中间部分）</li>
 </ol>
-<h3 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h3><ul>
+<h3 id="模型">模型</h3>
+<ul>
 <li>Bi-GRU + Multi Capsule</li>
 <li>Bi-GRU + Multi ResNet</li>
 <li>HAN + Attention</li>
 <li>Transformer Encoder + Convolutional</li>
 </ul>
-<h4 id="Seq2Seq"><a href="#Seq2Seq" class="headerlink" title="Seq2Seq"></a>Seq2Seq</h4><p>解码器三种思路：</p>
-<ol>
+<h4 id="seq2seq">Seq2Seq</h4>
+<p>解码器三种思路：</p>
+<ol type="1">
 <li>使用LSTM（或其他）每一步（#不同种类标签数）的output表示不同种类标签的预测输出</li>
 <li>Beam Search尽量好的输出预测序列（只是在inference阶段使用）。</li>
-<li>Global Embedding（在训练阶段使用），类似Beam Search：<ul>
-<li><img src="/images/Advanced.assets/image-20200525164408186.png" alt="image"></li>
+<li>Global Embedding（在训练阶段使用），类似Beam Search：
+<ul>
+<li><img src="/images/Advanced.assets/image-20200525164408186.png" title="fig:" alt="image" /></li>
 <li>y为预测标签分布（output softmax后的输出），e为每一步（#每一种标签）的output；g为global embedding的输出，代替LSTM的hidden state，进行序列解码任务。</li>
 <li>【SGM: Sequence Generation Model for Multi-Label Classification】</li>
-</ul>
-</li>
+</ul></li>
 </ol>
-<h4 id="Aspect-Based-Sentiment-Analysis"><a href="#Aspect-Based-Sentiment-Analysis" class="headerlink" title="Aspect Based Sentiment Analysis"></a>Aspect Based Sentiment Analysis</h4><p>抽取content特征，Aspect信息，使用各种方法attention到和输出label相关的信息。比如：</p>
-<p><img src="/images/Advanced.assets/image-20200525162258823.png" alt="image"></p>
+<h4 id="aspect-based-sentiment-analysis">Aspect Based Sentiment Analysis</h4>
+<p>抽取content特征，Aspect信息，使用各种方法attention到和输出label相关的信息。比如：</p>
+<figure>
+<img src="/images/Advanced.assets/image-20200525162258823.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
 <p>【Capsule Network with Interactive Attention for Aspect-Level Sentiment Classification】</p>
 <p>另一种思路，树形（层级搜索）：</p>
-<p><img src="/images/Advanced.assets/image-20200525170827900.png" alt="image"></p>
+<figure>
+<img src="/images/Advanced.assets/image-20200525170827900.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
 <p>上图中加入aspect信息到输入层</p>
-<h3 id="模型训练"><a href="#模型训练" class="headerlink" title="模型训练"></a>模型训练</h3><ol>
-<li>Warm up：学习率先增加，然后减小。线性增加即可。也可以使用one cycle fitting，让学习率在一个epoch内，线性增加到一个较大值，然后线性减小为初始的较小学习率。绘制loss–lr曲线图，摘到loss的变化较大处的lr的十分之一。【A DISCIPLINED APPROACH TO NEURAL NETWORK HYPER-PARAMETERS: PART 1 – LEARNING RATE, BATCH SIZE, MOMENTUM, AND WEIGHT DECAY】</li>
+<h3 id="模型训练">模型训练</h3>
+<ol type="1">
+<li>Warm up：学习率先增加，然后减小。线性增加即可。也可以使用one cycle fitting，让学习率在一个epoch内，线性增加到一个较大值，然后线性减小为初始的较小学习率。绘制loss--lr曲线图，摘到loss的变化较大处的lr的十分之一。【A DISCIPLINED APPROACH TO NEURAL NETWORK HYPER-PARAMETERS: PART 1 – LEARNING RATE, BATCH SIZE, MOMENTUM, AND WEIGHT DECAY】</li>
 <li>找到合适学习率后（实验）， 将模型迭代足够多次（loss可能在一段时间不降之后，突然下降），保留验证正确率最高的模型。加载上一个最优模型，学习率设为当前1/10（实验），继续训练模型，保留验证正确率最高的模型。加载上一个最优模型，去掉正则化策略(dropout 等，如果有)，学习率再降低，训练到收敛。</li>
 <li>先调整学习率，再调整其他模型超参数。</li>
 <li>sequence模型，序列长度要选取合适。不损失太多信息。</li>
@@ -204,7 +212,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/07/07/%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BBadvanced/" data-id="ckm4nxei9001xvk2f6b921blo" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/07/07/%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BBadvanced/" data-id="ckm4od810001s1s2ffybr7og2" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -250,7 +258,6 @@
     toc.innerHTML = content;
   }('.entry');
 </script>
-
 
         </div>
         <div class="col-sm-3 col-sm-offset-1 blog-sidebar">

@@ -5,12 +5,12 @@
   
   <title>中文文本处理 | Racle</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="中文文本基本任务与处理 1.分词 最大匹配法   2.去停用词与N-gram 3.词性标注 4.句法依存分析 5.语义依存分析 6.语法解析 表达与存储 语法解析的算法 上下文无关语法（Context-Free Grammer） 概率分布的上下文无关语法（Probabilistic Context-Free Grammar）     7.命名实体识别   关键词抽取 常用包的使用 jieba">
+  <meta name="description" content="中文文本基本任务与处理  1.分词  最大匹配法  2.去停用词与N-gram 3.词性标注 4.句法依存分析 5.语义依存分析 6.语法解析  表达与存储 语法解析的算法  上下文无关语法（Context-Free Grammer） 概率分布的上下文无关语法（Probabilistic Context-Free Grammar）   7.命名实体识别">
 <meta property="og:type" content="article">
 <meta property="og:title" content="中文文本处理">
 <meta property="og:url" content="https://racleray.github.io/2020/07/06/%E4%B8%AD%E6%96%87%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86/index.html">
 <meta property="og:site_name" content="Racle">
-<meta property="og:description" content="中文文本基本任务与处理 1.分词 最大匹配法   2.去停用词与N-gram 3.词性标注 4.句法依存分析 5.语义依存分析 6.语法解析 表达与存储 语法解析的算法 上下文无关语法（Context-Free Grammer） 概率分布的上下文无关语法（Probabilistic Context-Free Grammar）     7.命名实体识别   关键词抽取 常用包的使用 jieba">
+<meta property="og:description" content="中文文本基本任务与处理  1.分词  最大匹配法  2.去停用词与N-gram 3.词性标注 4.句法依存分析 5.语义依存分析 6.语法解析  表达与存储 语法解析的算法  上下文无关语法（Context-Free Grammer） 概率分布的上下文无关语法（Probabilistic Context-Free Grammar）   7.命名实体识别">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://racleray.github.io/images/3-%E4%B8%AD%E6%96%87%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86.assets/image-20200229212113564.png">
 <meta property="og:image" content="https://racleray.github.io/images/3-%E4%B8%AD%E6%96%87%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86.assets/image-20200229201007335.png">
@@ -124,170 +124,180 @@
     <div class="article-entry" itemprop="articleBody">
       
         <!-- TOC -->
-
 <ul>
-<li><a href="#中文文本基本任务与处理">中文文本基本任务与处理</a><ul>
-<li><a href="#1分词">1.分词</a><ul>
+<li><a href="#中文文本基本任务与处理">中文文本基本任务与处理</a>
+<ul>
+<li><a href="#1分词">1.分词</a>
+<ul>
 <li><a href="#最大匹配法">最大匹配法</a></li>
-</ul>
-</li>
+</ul></li>
 <li><a href="#2去停用词与n-gram">2.去停用词与N-gram</a></li>
 <li><a href="#3词性标注">3.词性标注</a></li>
 <li><a href="#4句法依存分析">4.句法依存分析</a></li>
 <li><a href="#5语义依存分析">5.语义依存分析</a></li>
-<li><a href="#6语法解析">6.语法解析</a><ul>
+<li><a href="#6语法解析">6.语法解析</a>
+<ul>
 <li><a href="#表达与存储">表达与存储</a></li>
-<li><a href="#语法解析的算法">语法解析的算法</a><ul>
+<li><a href="#语法解析的算法">语法解析的算法</a>
+<ul>
 <li><a href="#上下文无关语法context-free-grammer">上下文无关语法（Context-Free Grammer）</a></li>
 <li><a href="#概率分布的上下文无关语法probabilistic-context-free-grammar">概率分布的上下文无关语法（Probabilistic Context-Free Grammar）</a></li>
-</ul>
-</li>
-</ul>
-</li>
+</ul></li>
+</ul></li>
 <li><a href="#7命名实体识别">7.命名实体识别</a></li>
-</ul>
-</li>
+</ul></li>
 <li><a href="#关键词抽取">关键词抽取</a></li>
 <li><a href="#常用包的使用">常用包的使用</a></li>
-<li><a href="#jieba">jieba</a><ul>
+<li><a href="#jieba">jieba</a>
+<ul>
 <li><a href="#基本分词函数与用法">基本分词函数与用法</a></li>
 <li><a href="#添加用户自定义字典"><strong>添加用户自定义字典</strong></a></li>
 <li><a href="#词性标注">词性标注</a></li>
-<li><a href="#关键词抽取-1">关键词抽取</a><ul>
+<li><a href="#关键词抽取-1">关键词抽取</a>
+<ul>
 <li><a href="#基于-tf-idf-算法的关键词抽取"><strong>基于 TF-IDF 算法的关键词抽取</strong></a></li>
 <li><a href="#基于-textrank-算法的关键词抽取"><strong>基于 TextRank 算法的关键词抽取</strong></a></li>
-</ul>
-</li>
-</ul>
-</li>
+</ul></li>
+</ul></li>
 </ul>
 <!-- /TOC -->
-
 <a id="more"></a>
-
-<h1 id="中文文本基本任务与处理"><a href="#中文文本基本任务与处理" class="headerlink" title="中文文本基本任务与处理"></a>中文文本基本任务与处理</h1><h2 id="1-分词"><a href="#1-分词" class="headerlink" title="1.分词"></a>1.分词</h2><p>中文和日文单纯从文本形态上无法区分具备独立含义的词（拉丁语系纯天然由空格分隔不同的word）。因此在很多中文任务中，我们需要做的第一个处理叫做<strong>分词</strong>。</p>
+<h1 id="中文文本基本任务与处理">中文文本基本任务与处理</h1>
+<h2 id="分词">1.分词</h2>
+<p>中文和日文单纯从文本形态上无法区分具备独立含义的词（拉丁语系纯天然由空格分隔不同的word）。因此在很多中文任务中，我们需要做的第一个处理叫做<strong>分词</strong>。</p>
 <ul>
-<li>​    主流的分词方法主要是<strong>基于词典匹配的分词方法(正向最大匹配法、逆向最大匹配法和双向匹配分词法等)</strong>和<strong>基于统计的分词方法(HMM、CRF、和深度学习)</strong>；‘</li>
-<li>​    主流的分词工具库包括 中科院计算所NLPIR、哈工大LTP、清华大学THULAC、Hanlp分词器、Python jieba工具库等。</li>
+<li>​ 主流的分词方法主要是<strong>基于词典匹配的分词方法(正向最大匹配法、逆向最大匹配法和双向匹配分词法等)</strong>和<strong>基于统计的分词方法(HMM、CRF、和深度学习)</strong>；‘</li>
+<li>​ 主流的分词工具库包括 中科院计算所NLPIR、哈工大LTP、清华大学THULAC、Hanlp分词器、Python jieba工具库等。</li>
 </ul>
-<h3 id="最大匹配法"><a href="#最大匹配法" class="headerlink" title="最大匹配法"></a>最大匹配法</h3><p>​    最大匹配是指以词典为依据，取词典中最长单词为第一个次取字数量的扫描串，在词典中进行扫描（为提升扫描效率，还可以跟据字数多少设计多个字典，然后根据字数分别从不同字典中进行扫描）。</p>
-<p>​    双向最大匹配法：正向最大匹配和逆向最大匹配两种算法都切一遍，然后根据大颗粒度词越多越好，非词典词和单字词越少越好的原则，选取其中一种分词结果输出。</p>
+<h3 id="最大匹配法">最大匹配法</h3>
+<p>​ 最大匹配是指以词典为依据，取词典中最长单词为第一个次取字数量的扫描串，在词典中进行扫描（为提升扫描效率，还可以跟据字数多少设计多个字典，然后根据字数分别从不同字典中进行扫描）。</p>
+<p>​ 双向最大匹配法：正向最大匹配和逆向最大匹配两种算法都切一遍，然后根据大颗粒度词越多越好，非词典词和单字词越少越好的原则，选取其中一种分词结果输出。</p>
 <blockquote>
 <p>“我们在野生动物园玩”</p>
-<p>​    - 正向最大匹配法：“我们/在野/生动/物/园/玩”，其中，单字字典词为2，非词典词为1。</p>
-<p>​    - 逆向最大匹配法：“我们/在/野生动物园/玩”，其中，单字字典词为2，非词典词为0。</p>
+<p>​ - 正向最大匹配法：“我们/在野/生动/物/园/玩”，其中，单字字典词为2，非词典词为1。</p>
+<p>​ - 逆向最大匹配法：“我们/在/野生动物园/玩”，其中，单字字典词为2，非词典词为0。</p>
 <blockquote>
-<p>​    非字典词：正向(1)&gt;逆向(0)（越少越好）<br>​    单字字典词：正向(2)=逆向(2)（越少越好）<br>​    总词数：正向(6)&gt;逆向(4)（越少越好）</p>
+<p>​ 非字典词：正向(1)&gt;逆向(0)（越少越好） ​ 单字字典词：正向(2)=逆向(2)（越少越好） ​ 总词数：正向(6)&gt;逆向(4)（越少越好）</p>
 </blockquote>
 <p>因此最终输出为逆向结果。</p>
 </blockquote>
-<h2 id="2-去停用词与N-gram"><a href="#2-去停用词与N-gram" class="headerlink" title="2.去停用词与N-gram"></a>2.去停用词与N-gram</h2><p>​    同英文</p>
-<h2 id="3-词性标注"><a href="#3-词性标注" class="headerlink" title="3.词性标注"></a>3.词性标注</h2><p>​    词性标注（part-of-speech tagging）,又称为词类标注或者简称标注，是指为分词结果中的每个单词标注一个正确的词性。</p>
-<p>​    在汉语中，词性标注比较简单，因为汉语词汇词性多变的情况比较少见，大多词语只有一个词性，或者出现频次最高的词性远远高于第二位的词性。</p>
-<h2 id="4-句法依存分析"><a href="#4-句法依存分析" class="headerlink" title="4.句法依存分析"></a>4.句法依存分析</h2><p>​    依存句法分析(Dependency Parsing, DP) 识别句子中的“主谓宾”、“定状补”这些语法成分，并分析各成分之间的关系。</p>
-<p><img src="/images/3-%E4%B8%AD%E6%96%87%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86.assets/image-20200229212113564.png" alt="image"></p>
-<p>​    依存句法分析标注关系(共14种) 及含义如下(哈工大开源包使用)：</p>
+<h2 id="去停用词与n-gram">2.去停用词与N-gram</h2>
+<p>​ 同英文</p>
+<h2 id="词性标注">3.词性标注</h2>
+<p>​ 词性标注（part-of-speech tagging）,又称为词类标注或者简称标注，是指为分词结果中的每个单词标注一个正确的词性。</p>
+<p>​ 在汉语中，词性标注比较简单，因为汉语词汇词性多变的情况比较少见，大多词语只有一个词性，或者出现频次最高的词性远远高于第二位的词性。</p>
+<h2 id="句法依存分析">4.句法依存分析</h2>
+<p>​ 依存句法分析(Dependency Parsing, DP) 识别句子中的“主谓宾”、“定状补”这些语法成分，并分析各成分之间的关系。</p>
+<figure>
+<img src="/images/3-中文文本处理.assets/image-20200229212113564.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​ 依存句法分析标注关系(共14种) 及含义如下(哈工大开源包使用)：</p>
 <table>
 <thead>
-<tr>
-<th align="left">关系类型</th>
-<th align="center">Tag</th>
-<th align="center">Description</th>
-<th align="center">Example</th>
+<tr class="header">
+<th style="text-align: left;">关系类型</th>
+<th style="text-align: center;">Tag</th>
+<th style="text-align: center;">Description</th>
+<th style="text-align: center;">Example</th>
 </tr>
 </thead>
-<tbody><tr>
-<td align="left">主谓关系</td>
-<td align="center">SBV</td>
-<td align="center">subject-verb</td>
-<td align="center">我送她一束花(我&lt;–送)</td>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">主谓关系</td>
+<td style="text-align: center;">SBV</td>
+<td style="text-align: center;">subject-verb</td>
+<td style="text-align: center;">我送她一束花(我&lt;–送)</td>
 </tr>
-<tr>
-<td align="left">动宾关系</td>
-<td align="center">VOB</td>
-<td align="center">直接宾语，verb-object</td>
-<td align="center">我送她一束花(送–&gt; 花)</td>
+<tr class="even">
+<td style="text-align: left;">动宾关系</td>
+<td style="text-align: center;">VOB</td>
+<td style="text-align: center;">直接宾语，verb-object</td>
+<td style="text-align: center;">我送她一束花(送–&gt; 花)</td>
 </tr>
-<tr>
-<td align="left">间宾关系</td>
-<td align="center">IOB</td>
-<td align="center">间接宾语，indirect-object</td>
-<td align="center">我送她一束花(送–&gt; 她)</td>
+<tr class="odd">
+<td style="text-align: left;">间宾关系</td>
+<td style="text-align: center;">IOB</td>
+<td style="text-align: center;">间接宾语，indirect-object</td>
+<td style="text-align: center;">我送她一束花(送–&gt; 她)</td>
 </tr>
-<tr>
-<td align="left">前置宾语</td>
-<td align="center">FOB</td>
-<td align="center">前置宾语，fronting-object</td>
-<td align="center">他什么书都读(书&lt;–读)</td>
+<tr class="even">
+<td style="text-align: left;">前置宾语</td>
+<td style="text-align: center;">FOB</td>
+<td style="text-align: center;">前置宾语，fronting-object</td>
+<td style="text-align: center;">他什么书都读(书&lt;–读)</td>
 </tr>
-<tr>
-<td align="left">兼语</td>
-<td align="center">DBL</td>
-<td align="center">double</td>
-<td align="center">他请我吃饭(请–&gt; 我)</td>
+<tr class="odd">
+<td style="text-align: left;">兼语</td>
+<td style="text-align: center;">DBL</td>
+<td style="text-align: center;">double</td>
+<td style="text-align: center;">他请我吃饭(请–&gt; 我)</td>
 </tr>
-<tr>
-<td align="left">定中关系</td>
-<td align="center">ATT</td>
-<td align="center">attribute</td>
-<td align="center">红苹果(红&lt;–苹果)</td>
+<tr class="even">
+<td style="text-align: left;">定中关系</td>
+<td style="text-align: center;">ATT</td>
+<td style="text-align: center;">attribute</td>
+<td style="text-align: center;">红苹果(红&lt;–苹果)</td>
 </tr>
-<tr>
-<td align="left">状中结构</td>
-<td align="center">ADV</td>
-<td align="center">adverbial</td>
-<td align="center">非常美丽(非常&lt;–美丽)</td>
+<tr class="odd">
+<td style="text-align: left;">状中结构</td>
+<td style="text-align: center;">ADV</td>
+<td style="text-align: center;">adverbial</td>
+<td style="text-align: center;">非常美丽(非常&lt;–美丽)</td>
 </tr>
-<tr>
-<td align="left">动补结构</td>
-<td align="center">CMP</td>
-<td align="center">complement</td>
-<td align="center">做完了作业(做–&gt; 完)</td>
+<tr class="even">
+<td style="text-align: left;">动补结构</td>
+<td style="text-align: center;">CMP</td>
+<td style="text-align: center;">complement</td>
+<td style="text-align: center;">做完了作业(做–&gt; 完)</td>
 </tr>
-<tr>
-<td align="left">并列关系</td>
-<td align="center">COO</td>
-<td align="center">coordinate</td>
-<td align="center">大山和大海(大山–&gt; 大海)</td>
+<tr class="odd">
+<td style="text-align: left;">并列关系</td>
+<td style="text-align: center;">COO</td>
+<td style="text-align: center;">coordinate</td>
+<td style="text-align: center;">大山和大海(大山–&gt; 大海)</td>
 </tr>
-<tr>
-<td align="left">介宾关系</td>
-<td align="center">POB</td>
-<td align="center">preposition-object</td>
-<td align="center">在贸易区内(在–&gt; 内)</td>
+<tr class="even">
+<td style="text-align: left;">介宾关系</td>
+<td style="text-align: center;">POB</td>
+<td style="text-align: center;">preposition-object</td>
+<td style="text-align: center;">在贸易区内(在–&gt; 内)</td>
 </tr>
-<tr>
-<td align="left">左附加关系</td>
-<td align="center">LAD</td>
-<td align="center">left adjunct</td>
-<td align="center">大山和大海(和&lt;–大海)</td>
+<tr class="odd">
+<td style="text-align: left;">左附加关系</td>
+<td style="text-align: center;">LAD</td>
+<td style="text-align: center;">left adjunct</td>
+<td style="text-align: center;">大山和大海(和&lt;–大海)</td>
 </tr>
-<tr>
-<td align="left">右附加关系</td>
-<td align="center">RAD</td>
-<td align="center">right adjunct</td>
-<td align="center">孩子们(孩子–&gt; 们)</td>
+<tr class="even">
+<td style="text-align: left;">右附加关系</td>
+<td style="text-align: center;">RAD</td>
+<td style="text-align: center;">right adjunct</td>
+<td style="text-align: center;">孩子们(孩子–&gt; 们)</td>
 </tr>
-<tr>
-<td align="left">独立结构</td>
-<td align="center">IS</td>
-<td align="center">independent structure</td>
-<td align="center">两个单句在结构上彼此独立</td>
+<tr class="odd">
+<td style="text-align: left;">独立结构</td>
+<td style="text-align: center;">IS</td>
+<td style="text-align: center;">independent structure</td>
+<td style="text-align: center;">两个单句在结构上彼此独立</td>
 </tr>
-<tr>
-<td align="left">核心关系</td>
-<td align="center">HED</td>
-<td align="center">head</td>
-<td align="center">指整个句子的核心</td>
+<tr class="even">
+<td style="text-align: left;">核心关系</td>
+<td style="text-align: center;">HED</td>
+<td style="text-align: center;">head</td>
+<td style="text-align: center;">指整个句子的核心</td>
 </tr>
-</tbody></table>
-<h2 id="5-语义依存分析"><a href="#5-语义依存分析" class="headerlink" title="5.语义依存分析"></a>5.语义依存分析</h2><p>​    Semantic Dependency Parsing, SDP，分析句子各个语言单位间的语义关联。</p>
-<p>​    使用语义依存刻画句子语义，好处在于不需要去抽象词汇本身，而是通过词汇所承受的语义框架来描述该词汇。</p>
-<p>​    语义依存分析目标是<strong>跨越句子表层句法结构的束缚</strong>，直接获取深层的语义信息。</p>
-<p>​    例如以下三个句子，用不同的表达方式表达了同一个语义信息，即张三实施了一个吃的动作，吃的动作是对苹果实施的。</p>
-<p><img src="/images/3-%E4%B8%AD%E6%96%87%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86.assets/image-20200229201007335.png" alt="image"></p>
-<p>​    语义依存分析<strong>不受句法结构的影响</strong>，将具有直接语义关联的语言单元直接连接依存弧并标记上相应的语义关系。</p>
-<p>​    语义依存关系分为三类，分别是</p>
+</tbody>
+</table>
+<h2 id="语义依存分析">5.语义依存分析</h2>
+<p>​ Semantic Dependency Parsing, SDP，分析句子各个语言单位间的语义关联。</p>
+<p>​ 使用语义依存刻画句子语义，好处在于不需要去抽象词汇本身，而是通过词汇所承受的语义框架来描述该词汇。</p>
+<p>​ 语义依存分析目标是<strong>跨越句子表层句法结构的束缚</strong>，直接获取深层的语义信息。</p>
+<p>​ 例如以下三个句子，用不同的表达方式表达了同一个语义信息，即张三实施了一个吃的动作，吃的动作是对苹果实施的。</p>
+<figure>
+<img src="/images/3-中文文本处理.assets/image-20200229201007335.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​ 语义依存分析<strong>不受句法结构的影响</strong>，将具有直接语义关联的语言单元直接连接依存弧并标记上相应的语义关系。</p>
+<p>​ 语义依存关系分为三类，分别是</p>
 <blockquote>
 <ul>
 <li>主要语义角色，每一种语义角色对应存在一个嵌套关系和反关系；</li>
@@ -295,37 +305,42 @@
 <li>语义依附标记，标记说话者语气等依附性信息。</li>
 </ul>
 </blockquote>
-<p>​    <a href="http://ltp.ai/demo.html，http://ltp.ai/docs/index.html：哈工大开源包网站" target="_blank" rel="noopener">http://ltp.ai/demo.html，http://ltp.ai/docs/index.html：哈工大开源包网站</a></p>
-<h2 id="6-语法解析"><a href="#6-语法解析" class="headerlink" title="6.语法解析"></a>6.语法解析</h2><p>​    句子可以用主语、谓语、宾语来表示。在自然语言的处理过程中，有许多应用场景都需要考虑句子的语法，因此研究语法解析变得非常重要。</p>
-<p>​    语法解析有两个主要的问题，其一是句子语法在计算机中的表达与存储方法，以及语料数据集；其二是语法解析的算法。</p>
-<h4 id="表达与存储"><a href="#表达与存储" class="headerlink" title="表达与存储"></a>表达与存储</h4><p>​    用树状结构图来表示</p>
-<img src="/images/3-中文文本处理.assets/image-20200224180805695.png" alt="image" style="zoom:67%;" />
-
-<p><img src="/images/3-%E4%B8%AD%E6%96%87%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86.assets/image-20200229211941735.png" alt="image"></p>
-<p>​    NP、VP、PP是名词、动词、介词短语（短语级别）；N、V、P分别是名词、动词、介词。</p>
-<h4 id="语法解析的算法"><a href="#语法解析的算法" class="headerlink" title="语法解析的算法"></a>语法解析的算法</h4><h5 id="上下文无关语法（Context-Free-Grammer）"><a href="#上下文无关语法（Context-Free-Grammer）" class="headerlink" title="上下文无关语法（Context-Free Grammer）"></a>上下文无关语法（Context-Free Grammer）</h5><p>​    为了生成句子的语法树，我们可以定义如下的一套上下文无关语法。</p>
+<p>​ http://ltp.ai/demo.html，http://ltp.ai/docs/index.html：哈工大开源包网站</p>
+<h2 id="语法解析">6.语法解析</h2>
+<p>​ 句子可以用主语、谓语、宾语来表示。在自然语言的处理过程中，有许多应用场景都需要考虑句子的语法，因此研究语法解析变得非常重要。</p>
+<p>​ 语法解析有两个主要的问题，其一是句子语法在计算机中的表达与存储方法，以及语料数据集；其二是语法解析的算法。</p>
+<h4 id="表达与存储">表达与存储</h4>
+<p>​ 用树状结构图来表示</p>
+<p><img src="/images/3-中文文本处理.assets/image-20200224180805695.png" alt="image" style="zoom:67%;" /></p>
+<figure>
+<img src="/images/3-中文文本处理.assets/image-20200229211941735.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​ NP、VP、PP是名词、动词、介词短语（短语级别）；N、V、P分别是名词、动词、介词。</p>
+<h4 id="语法解析的算法">语法解析的算法</h4>
+<h5 id="上下文无关语法context-free-grammer">上下文无关语法（Context-Free Grammer）</h5>
+<p>​ 为了生成句子的语法树，我们可以定义如下的一套上下文无关语法。</p>
 <blockquote>
-<p>•1）N表示一组非叶子节点的标注，例如{S、NP、VP、N…}</p>
-<p>•2）Σ表示一组叶子结点的标注，例如{我们、尊敬…}</p>
+<p>•1）N表示一组非叶子节点的标注，例如{S、NP、VP、N...}</p>
+<p>•2）Σ表示一组叶子结点的标注，例如{我们、尊敬...}</p>
 <p>•3）R表示一组规则，每条规则可以表示为</p>
-<img src="/images/3-中文文本处理.assets/image-20200229212501592.png" alt="image" style="zoom:67%;" />
-
+<p><img src="/images/3-中文文本处理.assets/image-20200229212501592.png" alt="image" style="zoom:67%;" /></p>
 <p>•4）S表示语法树开始的标注</p>
 </blockquote>
-<p>​    当给定一个句子时，我们便可以按照从左到右的顺序来解析语法。</p>
-<p>​    例如，句子the man sleeps就可以表示为(S (NP (DT the) (NN man)) (VP sleeps))。</p>
-<p>​    规则R示例如下：</p>
+<p>​ 当给定一个句子时，我们便可以按照从左到右的顺序来解析语法。</p>
+<p>​ 例如，句子the man sleeps就可以表示为(S (NP (DT the) (NN man)) (VP sleeps))。</p>
+<p>​ 规则R示例如下：</p>
 <blockquote>
-<p>S -&gt; NP VP<br>VP -&gt; V NP | V NP PP<br>PP -&gt; P NP</p>
+<p>S -&gt; NP VP VP -&gt; V NP | V NP PP PP -&gt; P NP</p>
 </blockquote>
 <blockquote>
-<p>V -&gt; “saw” | “ate”<br>NP -&gt; “John” | “Mary” | “Bob” | Det N | Det N PP<br>Det -&gt; “a” | “an” | “the” | “my”<br>N -&gt; “dog” | “cat” | “cookie” | “park”<br>P -&gt; “in” | “on” | “by” | “with”</p>
+<p>V -&gt; "saw" | "ate" NP -&gt; "John" | "Mary" | "Bob" | Det N | Det N PP Det -&gt; "a" | "an" | "the" | "my" N -&gt; "dog" | "cat" | "cookie" | "park" P -&gt; "in" | "on" | "by" | "with"</p>
 </blockquote>
-<h5 id="概率分布的上下文无关语法（Probabilistic-Context-Free-Grammar）"><a href="#概率分布的上下文无关语法（Probabilistic-Context-Free-Grammar）" class="headerlink" title="概率分布的上下文无关语法（Probabilistic Context-Free Grammar）"></a>概率分布的上下文无关语法（Probabilistic Context-Free Grammar）</h5><p>​    上下文无关的语法可以很容易的推导出一个句子的语法结构，但是缺点是推导出的结构可能存在<strong>二义性</strong>。</p>
-<p>​    由于语法的解析存在二义性，我们就需要找到一种方法从多种可能的语法树种找出最可能的一棵树。</p>
-<p>​    一种常见的方法既是PCFG （Probabilistic Context-Free Grammar）。除了常规的语法规则以外，我们还对每<strong>一条规则赋予了一个概率</strong>。对于每一棵生成的语法树，我们将其中所有规则的<strong>概率的乘积作为语法树的出现概率</strong>。</p>
-<p>​    分别计算每颗语法树的概率p(t)，出现概率最大的那颗语法树就是我们希望得到的结果，即<strong>argmax p(t)</strong>。</p>
-<p>​    <strong>训练算法</strong>：</p>
+<h5 id="概率分布的上下文无关语法probabilistic-context-free-grammar">概率分布的上下文无关语法（Probabilistic Context-Free Grammar）</h5>
+<p>​ 上下文无关的语法可以很容易的推导出一个句子的语法结构，但是缺点是推导出的结构可能存在<strong>二义性</strong>。</p>
+<p>​ 由于语法的解析存在二义性，我们就需要找到一种方法从多种可能的语法树种找出最可能的一棵树。</p>
+<p>​ 一种常见的方法既是PCFG （Probabilistic Context-Free Grammar）。除了常规的语法规则以外，我们还对每<strong>一条规则赋予了一个概率</strong>。对于每一棵生成的语法树，我们将其中所有规则的<strong>概率的乘积作为语法树的出现概率</strong>。</p>
+<p>​ 分别计算每颗语法树的概率p(t)，出现概率最大的那颗语法树就是我们希望得到的结果，即<strong>argmax p(t)</strong>。</p>
+<p>​ <strong>训练算法</strong>：</p>
 <blockquote>
 <p>算法依赖于CFG中对于N、Σ、R、S的定义以及PCFG中的p(x)。</p>
 <blockquote>
@@ -335,79 +350,75 @@
 <li>针对每个规则A -&gt; B，从语料库中估算p(x) = p(A -&gt; B) / p(A)</li>
 </ul>
 </blockquote>
-<p>​    在CFG的定义的基础上，重新定义一种叫Chomsky的语法格式。这种格式要求每条规则只能是X -&gt; Y1 Y2或者X -&gt; Y的格式。实际上Chomsky语法格式保证生产的语法树总是<strong>二叉树</strong>的格式，同时任意一棵语法树总是能够转化成Chomsky语法格式。</p>
+<p>​ 在CFG的定义的基础上，重新定义一种叫Chomsky的语法格式。这种格式要求每条规则只能是X -&gt; Y1 Y2或者X -&gt; Y的格式。实际上Chomsky语法格式保证生产的语法树总是<strong>二叉树</strong>的格式，同时任意一棵语法树总是能够转化成Chomsky语法格式。</p>
 </blockquote>
-<p>​    <strong>语法树预测算法</strong>：</p>
+<p>​ <strong>语法树预测算法</strong>：</p>
 <blockquote>
-<p>输入一个句子x1, x2, … , xn时，计算句子对应的语法树有两种方法：</p>
+<p>输入一个句子x1, x2, ... , xn时，计算句子对应的语法树有两种方法：</p>
 <ul>
-<li>第一种方法是暴力遍历的方法，每个单词x可能有m = len(N)种取值，句子长度是n，每种情况至少存在n个规则，所以在时间复杂度$O(mn^2)$的情况下，我们可以判断出所有可能的语法树并计算出最佳的那个。</li>
+<li>第一种方法是暴力遍历的方法，每个单词x可能有m = len(N)种取值，句子长度是n，每种情况至少存在n个规则，所以在时间复杂度<span class="math inline">\(O(mn^2)\)</span>的情况下，我们可以判断出所有可能的语法树并计算出最佳的那个。</li>
 <li>第二种方法当然是动态规划，我们定义w[i, j, X]是第i个单词至第j个单词由标注X来表示的最大概率。w[i, j, PP]代表的是继续往上一层递归时，只选择当前概率最大的组合方式。</li>
 </ul>
 </blockquote>
-<p>​    <strong>缺点</strong>：</p>
-<p>​    PCFG也有一些缺点，例如：1）缺乏词法信息；2）连续短语（如名词、介词）的处理等。但总体来讲它给语法解析提供了一种非常有效的实现方法。</p>
-<h2 id="7-命名实体识别"><a href="#7-命名实体识别" class="headerlink" title="7.命名实体识别"></a>7.命名实体识别</h2><p>​    从一段非结构化文本中找出相关实体（triplet中的主词和宾词），并标注出其位置以及类型，它是NLP领域中一些复杂任务（如<strong>关系抽取</strong>、<strong>信息检索</strong>、<strong>知识问答</strong>、<strong>知识图谱</strong>等）的基础。</p>
-<h1 id="关键词抽取"><a href="#关键词抽取" class="headerlink" title="关键词抽取"></a>关键词抽取</h1><p>​    文本关键词抽取，是对文本信息进行高度凝练的一种有效手段，通过3-5个词语准确概括文本的主题，帮助读者快速理解文本信息。是文本检索、文本摘要等许多下游文本挖掘任务的基础性和必要性的工作。</p>
-<h1 id="常用包的使用"><a href="#常用包的使用" class="headerlink" title="常用包的使用"></a><a href="https://github.com/RacleRay/NotesForBlogs/blob/master/basic/Jieba_StanfordNLP_Hanlp%E7%A4%BA%E4%BE%8B.html" target="_blank" rel="noopener">常用包的使用</a></h1><h1 id="jieba"><a href="#jieba" class="headerlink" title="jieba"></a>jieba</h1><h2 id="基本分词函数与用法"><a href="#基本分词函数与用法" class="headerlink" title="基本分词函数与用法"></a>基本分词函数与用法</h2><p>​    <strong>jieba.cut</strong> 以及 <strong>jieba.cut_for_search</strong> 返回的结构都是一个可迭代的 generator。</p>
-<p>​    <strong>jieba.lcut</strong>以及<strong>jieba.lcut_for_search</strong>直接返回 list</p>
-<h2 id="添加用户自定义字典"><a href="#添加用户自定义字典" class="headerlink" title="添加用户自定义字典"></a><strong>添加用户自定义字典</strong></h2><ul>
-<li><p>1.可以用jieba.load_userdict(file_name)加载用户字典</p>
-</li>
+<p>​ <strong>缺点</strong>：</p>
+<p>​ PCFG也有一些缺点，例如：1）缺乏词法信息；2）连续短语（如名词、介词）的处理等。但总体来讲它给语法解析提供了一种非常有效的实现方法。</p>
+<h2 id="命名实体识别">7.命名实体识别</h2>
+<p>​ 从一段非结构化文本中找出相关实体（triplet中的主词和宾词），并标注出其位置以及类型，它是NLP领域中一些复杂任务（如<strong>关系抽取</strong>、<strong>信息检索</strong>、<strong>知识问答</strong>、<strong>知识图谱</strong>等）的基础。</p>
+<h1 id="关键词抽取">关键词抽取</h1>
+<p>​ 文本关键词抽取，是对文本信息进行高度凝练的一种有效手段，通过3-5个词语准确概括文本的主题，帮助读者快速理解文本信息。是文本检索、文本摘要等许多下游文本挖掘任务的基础性和必要性的工作。</p>
+<h1 id="常用包的使用"><a href="https://github.com/RacleRay/NotesForBlogs/blob/master/basic/Jieba_StanfordNLP_Hanlp%E7%A4%BA%E4%BE%8B.html" target="_blank" rel="noopener">常用包的使用</a></h1>
+<h1 id="jieba">jieba</h1>
+<h2 id="基本分词函数与用法">基本分词函数与用法</h2>
+<p>​ <strong>jieba.cut</strong> 以及 <strong>jieba.cut_for_search</strong> 返回的结构都是一个可迭代的 generator。</p>
+<p>​ <strong>jieba.lcut</strong>以及<strong>jieba.lcut_for_search</strong>直接返回 list</p>
+<h2 id="添加用户自定义字典"><strong>添加用户自定义字典</strong></h2>
+<ul>
+<li><p>1.可以用jieba.load_userdict(file_name)加载用户字典</p></li>
 <li><p>2.少量的词汇可以自己用下面方法手动添加：</p>
 <ul>
-<li>用 add_word(word, freq=None, tag=None) 和 del_word(word) 在程序中动态修改词典用 </li>
+<li>用 add_word(word, freq=None, tag=None) 和 del_word(word) 在程序中动态修改词典用</li>
 <li>suggest_freq(segment, tune=True) 可调节单个词语的词频，使其能（或不能）被分出来。</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h2 id="词性标注"><a href="#词性标注" class="headerlink" title="词性标注"></a>词性标注</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> jieba.posseg <span class="keyword">as</span> pseg    <span class="comment"># .posseg模块</span></span><br><span class="line"></span><br><span class="line">words = pseg.cut()</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="关键词抽取-1"><a href="#关键词抽取-1" class="headerlink" title="关键词抽取"></a>关键词抽取</h2><h3 id="基于-TF-IDF-算法的关键词抽取"><a href="#基于-TF-IDF-算法的关键词抽取" class="headerlink" title="基于 TF-IDF 算法的关键词抽取"></a><strong>基于 TF-IDF 算法的关键词抽取</strong></h3><ul>
-<li>import jieba.analyse</li>
-</ul>
+<h2 id="词性标注-1">词性标注</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> jieba.posseg <span class="keyword">as</span> pseg    <span class="comment"># .posseg模块</span></span><br><span class="line"></span><br><span class="line">words = pseg.cut()</span><br></pre></td></tr></table></figure>
+<h2 id="关键词抽取-1">关键词抽取</h2>
+<h3 id="基于-tf-idf-算法的关键词抽取"><strong>基于 TF-IDF 算法的关键词抽取</strong></h3>
 <ul>
-<li>jieba.analyse.extract_tags(sentence, topK=20, withWeight=False, allowPOS=())<ul>
+<li><p>import jieba.analyse</p></li>
+<li><p>jieba.analyse.extract_tags(sentence, topK=20, withWeight=False, allowPOS=())</p>
+<ul>
 <li>sentence 为待提取的文本</li>
 <li>topK 为返回几个 TF/IDF 权重最大的关键词，默认值为 20</li>
 <li>withWeight 为是否一并返回关键词权重值，默认值为 False</li>
 <li>allowPOS 仅包括指定词性的词，默认值为空，即不筛选</li>
-</ul>
-</li>
-</ul>
-<ul>
+</ul></li>
 <li><p>自定义逆向文件频率（IDF）文本语料库</p>
 <ul>
-<li>用法： jieba.analyse.set_idf_path(file_name) # file_name为自定义语料库的路径<ul>
+<li>用法： jieba.analyse.set_idf_path(file_name) # file_name为自定义语料库的路径
+<ul>
 <li>自定义语料库示例见<a href="https://github.com/fxsjy/jieba/blob/master/extra_dict/idf.txt.big" target="_blank" rel="noopener">这里</a></li>
 <li>用法示例见<a href="https://github.com/fxsjy/jieba/blob/master/test/extract_tags_idfpath.py" target="_blank" rel="noopener">这里</a></li>
-</ul>
-</li>
-</ul>
-</li>
+</ul></li>
+</ul></li>
 <li><p>自定义停止词（Stop Words）文本语料库</p>
 <ul>
-<li>用法： jieba.analyse.set_stop_words(file_name) # file_name为自定义语料库的路径<ul>
+<li>用法： jieba.analyse.set_stop_words(file_name) # file_name为自定义语料库的路径
+<ul>
 <li>自定义语料库示例见<a href="https://github.com/fxsjy/jieba/blob/master/extra_dict/stop_words.txt" target="_blank" rel="noopener">这里</a></li>
 <li>用法示例见<a href="https://github.com/fxsjy/jieba/blob/master/test/extract_tags_stop_words.py" target="_blank" rel="noopener">这里</a></li>
-</ul>
-</li>
-</ul>
-</li>
+</ul></li>
+</ul></li>
 <li><p>关键词一并返回关键词权重值示例</p>
 <ul>
 <li>用法示例见<a href="https://github.com/fxsjy/jieba/blob/master/test/extract_tags_with_weight.py" target="_blank" rel="noopener">这里</a></li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h3 id="基于-TextRank-算法的关键词抽取"><a href="#基于-TextRank-算法的关键词抽取" class="headerlink" title="基于 TextRank 算法的关键词抽取"></a><strong>基于 TextRank 算法的关键词抽取</strong></h3><ul>
-<li><p>jieba.analyse.textrank(sentence, topK=20, withWeight=False, allowPOS=(‘ns’, ‘n’, ‘vn’, ‘v’)) 直接使用，接口相同，注意默认过滤词性。</p>
-</li>
+<h3 id="基于-textrank-算法的关键词抽取"><strong>基于 TextRank 算法的关键词抽取</strong></h3>
+<ul>
+<li><p>jieba.analyse.textrank(sentence, topK=20, withWeight=False, allowPOS=('ns', 'n', 'vn', 'v')) 直接使用，接口相同，注意默认过滤词性。</p></li>
 <li><p>jieba.analyse.TextRank() 新建自定义 TextRank 实例</p>
-<p>算法论文： <a href="http://web.eecs.umich.edu/~mihalcea/papers/mihalcea.emnlp04.pdf" target="_blank" rel="noopener">TextRank: Bringing Order into Texts</a></p>
-</li>
+<p>算法论文： <a href="http://web.eecs.umich.edu/~mihalcea/papers/mihalcea.emnlp04.pdf" target="_blank" rel="noopener">TextRank: Bringing Order into Texts</a></p></li>
 </ul>
 <p>基本思想:</p>
 <ul>
@@ -417,10 +428,8 @@
 </ul>
 <p>详解见<a href="https://github.com/RacleRay/NotesForBlogs/blob/master/basic/textrank.html" target="_blank" rel="noopener">textrank</a></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> jieba.analyse <span class="keyword">as</span> analyse</span><br><span class="line"></span><br><span class="line">analyse.textrank(lines, topK=<span class="number">20</span>, withWeight=<span class="literal">False</span>, allowPOS=(<span class="string">'ns'</span>, <span class="string">'n'</span>))</span><br></pre></td></tr></table></figure>
-
 <p>示例</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> jieba.analyse <span class="keyword">as</span> analyse</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line">df = pd.read_csv(<span class="string">"./data/file.csv"</span>, encoding=<span class="string">'utf-8'</span>)</span><br><span class="line">df = df.dropna()</span><br><span class="line">lines=df.content.values.tolist()</span><br><span class="line">content = <span class="string">""</span>.join(lines)  <span class="comment"># 一行输入</span></span><br><span class="line"></span><br><span class="line">print(analyse.textrank(content, topK=<span class="number">20</span>, withWeight=<span class="literal">False</span>, allowPOS=(<span class="string">'ns'</span>, <span class="string">'n'</span>, <span class="string">'vn'</span>, <span class="string">'v'</span>)))</span><br><span class="line">print(<span class="string">"-------------------------------------"</span>)</span><br><span class="line">print(analyse.textrank(content, topK=<span class="number">20</span>, withWeight=<span class="literal">False</span>, allowPOS=(<span class="string">'ns'</span>, <span class="string">'n'</span>)))</span><br></pre></td></tr></table></figure>
-
 
       
     </div>
@@ -431,7 +440,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/07/06/%E4%B8%AD%E6%96%87%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86/" data-id="ckm4nxei0001hvk2f98yafc3y" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/07/06/%E4%B8%AD%E6%96%87%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86/" data-id="ckm4od80t001d1s2f7lg54fu0" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -477,7 +486,6 @@
     toc.innerHTML = content;
   }('.entry');
 </script>
-
 
         </div>
         <div class="col-sm-3 col-sm-offset-1 blog-sidebar">

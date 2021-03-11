@@ -5,12 +5,12 @@
   
   <title>A SENTENCE EMBEDDINGS Baseline | Racle</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Info: Brief Summary: Main Thought: Method Notes:">
+  <meta name="description" content="Info: Brief Summary: Main Thought: Method Notes:">
 <meta property="og:type" content="article">
 <meta property="og:title" content="A SENTENCE EMBEDDINGS Baseline">
 <meta property="og:url" content="https://racleray.github.io/2020/07/07/A-SENTENCE-EMBEDDINGS-Baseline/index.html">
 <meta property="og:site_name" content="Racle">
-<meta property="og:description" content="Info: Brief Summary: Main Thought: Method Notes:">
+<meta property="og:description" content="Info: Brief Summary: Main Thought: Method Notes:">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://racleray.github.io/images/BASELINE%20%20FOR%20SENTENCE%20EMBEDDINGS.assets/image-20200504103138652.png">
 <meta property="og:image" content="https://racleray.github.io/images/BASELINE%20%20FOR%20SENTENCE%20EMBEDDINGS.assets/image-20200504102856357.png">
@@ -126,7 +126,6 @@
     <div class="article-entry" itemprop="articleBody">
       
         <!-- TOC -->
-
 <ul>
 <li><a href="#info">Info:</a></li>
 <li><a href="#brief-summary">Brief Summary:</a></li>
@@ -136,86 +135,93 @@
 </ul>
 <!-- /TOC -->
 <a id="more"></a>
-
 <p>论文<a href="https://openreview.net/pdf?id=SyK00v5xx" target="_blank" rel="noopener">《A SIMPLE BUT TOUGH-TO-BEAT BASELINE FOR SENTENCE EMBEDDINGS》</a></p>
-<h2 id="Info"><a href="#Info" class="headerlink" title="Info:"></a>Info:</h2><ul>
-<li>类别: [engineering  ;   pragmatic]</li>
-<li>研究目标<ul>
-<li>提升Towards universal paraphrastic sentence embeddings（John Wieting, Mohit Bansal, Kevin Gimpel, and Karen Livescu.  ）论文提出的监督学习方法，转而进行无监督学习。</li>
+<h2 id="info">Info:</h2>
+<ul>
+<li>类别: [engineering ; pragmatic]</li>
+<li>研究目标
+<ul>
+<li>提升Towards universal paraphrastic sentence embeddings（John Wieting, Mohit Bansal, Kevin Gimpel, and Karen Livescu. ）论文提出的监督学习方法，转而进行无监督学习。</li>
 <li>提升基于word embedding的句子向量的表现力。</li>
-</ul>
-</li>
-<li>研究成果：<ul>
+</ul></li>
+<li>研究成果：
+<ul>
 <li>completely unsupervised sentence embedding</li>
 <li>improves performance by about 10% to 30% in textual similarity tasks, and beats sophisticated supervised methods including RNN’s and LSTM’s.</li>
 <li>new “smoothing” terms that allow for words occurring out of context, as well as high probabilities for words like and, not in all contexts.</li>
-</ul>
-</li>
-<li>存在的问题：<ul>
+</ul></li>
+<li>存在的问题：
+<ul>
 <li>在sentiment相关任务上，效果一般，与LSTM相差较大。</li>
 <li>在下游任务为监督学习任务时，效果一般，没有LSTM、Skip-thought等方法有效。</li>
-</ul>
-</li>
+</ul></li>
 <li>关键词：sentence embedding，无监督学习</li>
 </ul>
-<h2 id="Brief-Summary"><a href="#Brief-Summary" class="headerlink" title="Brief Summary:"></a>Brief Summary:</h2><p>这项工作提供了一种简单的句子嵌入方法，基于随机游走模型生成句子文本(Arora et al.， 2016)。它简单且无监督，但在各种文本相似性任务上，它的性能明显优于基线，甚至可以击败一些复杂的监督方法，如RNN和LSTM模型。获得的embedding可以作为下游监督任务的特征，与复杂方法相比也能获得不错的结果。</p>
-<hr>
-<h2 id="Main-Thought"><a href="#Main-Thought" class="headerlink" title="Main Thought:"></a>Main Thought:</h2><p>简单且无监督的Sentence embeddings计算方法。</p>
+<h2 id="brief-summary">Brief Summary:</h2>
+<p>这项工作提供了一种简单的句子嵌入方法，基于随机游走模型生成句子文本(Arora et al.， 2016)。它简单且无监督，但在各种文本相似性任务上，它的性能明显优于基线，甚至可以击败一些复杂的监督方法，如RNN和LSTM模型。获得的embedding可以作为下游监督任务的特征，与复杂方法相比也能获得不错的结果。</p>
+<hr />
+<h2 id="main-thought">Main Thought:</h2>
+<p>简单且无监督的Sentence embeddings计算方法。</p>
 <ul>
 <li><p>在 textual similarity tasks上，当选取了合适参数，效果相比于词向量的简单平均、LSTM、Skip-thought等方法有一定提升。</p>
 <ul>
-<li><img src="/images/BASELINE%20%20FOR%20SENTENCE%20EMBEDDINGS.assets/image-20200504103138652.png" alt="image"></li>
+<li><img src="/images/BASELINE%20%20FOR%20SENTENCE%20EMBEDDINGS.assets/image-20200504103138652.png" title="fig:" alt="image" /></li>
 <li>上图b中，在不同的领域都是有用的。这对于无监督方法尤其重要，因为未标记的可用数据可以从目标应用程序的不同域中收集。</li>
-</ul>
-</li>
+</ul></li>
 <li><p>在下游任务为监督学习任务时，效果下降的原因</p>
 <ul>
-<li>这可能是因为similarity任务直接依靠余弦相似性, 这使得该方法倾向于removing the  common components(可视为一种去噪denoising)。</li>
+<li>这可能是因为similarity任务直接依靠余弦相似性, 这使得该方法倾向于removing the common components(可视为一种去噪denoising)。</li>
 <li>而在监督任务, 由于有一些标签的信息用于训练, 分类器可以挑出有用的components和忽视常见的components。</li>
-</ul>
-</li>
+</ul></li>
 <li><p>无视词序</p>
 <ul>
-<li><p>然而基于LSTM、RNN的结果表明，词序在similarity任务上是有作用的。本文方法忽视了次序，可以考虑两者结合。</p>
-</li>
-<li><p>忽略词序的方法，更能找到sentiment层面的信息。</p>
-</li>
+<li><p>然而基于LSTM、RNN的结果表明，词序在similarity任务上是有作用的。本文方法忽视了次序，可以考虑两者结合。</p></li>
+<li><p>忽略词序的方法，更能找到sentiment层面的信息。</p></li>
 <li><blockquote>
-<p><img src="/images/BASELINE%20%20FOR%20SENTENCE%20EMBEDDINGS.assets/image-20200504102856357.png" alt="image"></p>
-</blockquote>
-</li>
-</ul>
-</li>
+<figure>
+<img src="/images/BASELINE%20%20FOR%20SENTENCE%20EMBEDDINGS.assets/image-20200504102856357.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+</blockquote></li>
+</ul></li>
 <li><p>与Word2vec的联系</p>
 <ul>
-<li>Word2vec使用子采样（sub-sampling）技术对单词w进行下采样，概率与1 /√p（w）成正比，其中p（w）是单词w的边缘概率。这种启发式方法不仅可以加快训练速度，而且学习了更常见的单词表示形式。 </li>
+<li>Word2vec使用子采样（sub-sampling）技术对单词w进行下采样，概率与1 /√p（w）成正比，其中p（w）是单词w的边缘概率。这种启发式方法不仅可以加快训练速度，而且学习了更常见的单词表示形式。</li>
 <li>该文章模型中，对词向量进行隐式加权，因此在一些场景下可以更好的利用文档的统计信息。</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h2 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h2><ol>
+<h2 id="method">Method</h2>
+<ol type="1">
 <li>latent variable generative model for text</li>
 </ol>
-<p><img src="/images/BASELINE%20%20FOR%20SENTENCE%20EMBEDDINGS.assets/image-20200504105401942.png" alt="image"></p>
-<p>$c_t$为来自latent random walk的句子向量。使用MAP方法预测下一个（time t）生成的词的概率。</p>
-<ol start="2">
+<figure>
+<img src="/images/BASELINE%20%20FOR%20SENTENCE%20EMBEDDINGS.assets/image-20200504105401942.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p><span class="math inline">\(c_t\)</span>为来自latent random walk的句子向量。使用MAP方法预测下一个（time t）生成的词的概率。</p>
+<ol start="2" type="1">
 <li>Improved Random Walk model.</li>
 </ol>
-<p><img src="/images/BASELINE%20%20FOR%20SENTENCE%20EMBEDDINGS.assets/image-20200504105656662.png" alt="image"></p>
-<p>添加两个smooth项。$p(w)$: 即使单词的向量与$c_s$的内积非常低，单词也可能出现。$c_0$: 与语法相关的sentence向量校正项，保证最重要的向量维度处于主导地位。它提高了与$c_0$方向相近的单词在模型中表现出较高共现概率。</p>
-<ol start="3">
+<figure>
+<img src="/images/BASELINE%20%20FOR%20SENTENCE%20EMBEDDINGS.assets/image-20200504105656662.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>添加两个smooth项。<span class="math inline">\(p(w)\)</span>: 即使单词的向量与<span class="math inline">\(c_s\)</span>的内积非常低，单词也可能出现。<span class="math inline">\(c_0\)</span>: 与语法相关的sentence向量校正项，保证最重要的向量维度处于主导地位。它提高了与<span class="math inline">\(c_0\)</span>方向相近的单词在模型中表现出较高共现概率。</p>
+<ol start="3" type="1">
 <li>Computing the sentence embedding</li>
 </ol>
-<p>假设$Z$是一个常量</p>
-<p><img src="/images/BASELINE%20%20FOR%20SENTENCE%20EMBEDDINGS.assets/image-20200504111502500.png" alt="image"></p>
-<p>越常见的word $w$，权重$a/(p(w) +a)$就越小，可以使embedding专注于具有代表性的词。</p>
-<p>为了删去没有代表性的信息，计算$c_0$的方向为<img src="/images/BASELINE%20%20FOR%20SENTENCE%20EMBEDDINGS.assets/image-20200504112151856.png" alt="image">矩阵的第一个主成分（不进行 centralizing）。</p>
-<p><img src="/images/BASELINE%20%20FOR%20SENTENCE%20EMBEDDINGS.assets/image-20200504111108410.png" alt="image"></p>
-<h2 id="Notes"><a href="#Notes" class="headerlink" title="Notes:"></a>Notes:</h2><ol>
-<li>PMI: Pointwise Mutual Information<ol>
-<li>$PMI = log \frac{p(u, v)}{p(u)p(v)} = log \frac{n_{u}n_{v}}{n_un_v}$</li>
-</ol>
-</li>
+<p>假设<span class="math inline">\(Z\)</span>是一个常量</p>
+<figure>
+<img src="/images/BASELINE%20%20FOR%20SENTENCE%20EMBEDDINGS.assets/image-20200504111502500.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>越常见的word <span class="math inline">\(w\)</span>，权重<span class="math inline">\(a/(p(w) +a)\)</span>就越小，可以使embedding专注于具有代表性的词。</p>
+<p>为了删去没有代表性的信息，计算<span class="math inline">\(c_0\)</span>的方向为<img src="/images/BASELINE%20%20FOR%20SENTENCE%20EMBEDDINGS.assets/image-20200504112151856.png" alt="image" />矩阵的第一个主成分（不进行 centralizing）。</p>
+<figure>
+<img src="/images/BASELINE%20%20FOR%20SENTENCE%20EMBEDDINGS.assets/image-20200504111108410.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<h2 id="notes">Notes:</h2>
+<ol type="1">
+<li>PMI: Pointwise Mutual Information
+<ol type="1">
+<li><span class="math inline">\(PMI = log \frac{p(u, v)}{p(u)p(v)} = log \frac{n_{u}n_{v}}{n_un_v}\)</span></li>
+</ol></li>
 <li>pPMI = max(0,PMI): positive Pointwise Mutual Information</li>
 </ol>
 
@@ -228,7 +234,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/07/07/A-SENTENCE-EMBEDDINGS-Baseline/" data-id="ckm4nxegi0000vk2f971kc27f" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/07/07/A-SENTENCE-EMBEDDINGS-Baseline/" data-id="ckm4od7zt00001s2f77dp7yq1" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -274,7 +280,6 @@
     toc.innerHTML = content;
   }('.entry');
 </script>
-
 
         </div>
         <div class="col-sm-3 col-sm-offset-1 blog-sidebar">

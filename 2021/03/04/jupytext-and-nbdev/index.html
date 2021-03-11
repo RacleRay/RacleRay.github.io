@@ -5,12 +5,12 @@
   
   <title>jupytext and nbdev | Racle</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Jupytext 界面点击操作 命令行操作 支持文件格式   NBDEV开发 step 1 新建git step 2 编辑settings.ini step 3 安装git_hooks step 4 编辑代码 step 5 nbdev_build_lib step 6 编写index文件 step 7 生成docs文档 step 8 上传git step 9 bug optional ste">
+  <meta name="description" content="Jupytext  界面点击操作 命令行操作 支持文件格式  NBDEV开发  step 1 新建git step 2 编辑settings.ini step 3 安装git_hooks step 4 编辑代码 step 5 nbdev_build_lib step 6 编写index文件 step 7 生成docs文档 step 8 上传git step">
 <meta property="og:type" content="article">
 <meta property="og:title" content="jupytext and nbdev">
 <meta property="og:url" content="https://racleray.github.io/2021/03/04/jupytext-and-nbdev/index.html">
 <meta property="og:site_name" content="Racle">
-<meta property="og:description" content="Jupytext 界面点击操作 命令行操作 支持文件格式   NBDEV开发 step 1 新建git step 2 编辑settings.ini step 3 安装git_hooks step 4 编辑代码 step 5 nbdev_build_lib step 6 编写index文件 step 7 生成docs文档 step 8 上传git step 9 bug optional ste">
+<meta property="og:description" content="Jupytext  界面点击操作 命令行操作 支持文件格式  NBDEV开发  step 1 新建git step 2 编辑settings.ini step 3 安装git_hooks step 4 编辑代码 step 5 nbdev_build_lib step 6 编写index文件 step 7 生成docs文档 step 8 上传git step">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://racleray.github.io/images/pic/jupytext-and-nbdev_pic/image-20210112154512001.png">
 <meta property="og:image" content="https://racleray.github.io/images/pic/jupytext-and-nbdev_pic/image-20210112153908965.png">
@@ -141,15 +141,15 @@
     <div class="article-entry" itemprop="articleBody">
       
         <!-- TOC -->
-
 <ul>
-<li><a href="#jupytext">Jupytext</a><ul>
+<li><a href="#jupytext">Jupytext</a>
+<ul>
 <li><a href="#界面点击操作">界面点击操作</a></li>
 <li><a href="#命令行操作">命令行操作</a></li>
 <li><a href="#支持文件格式">支持文件格式</a></li>
-</ul>
-</li>
-<li><a href="#nbdev开发">NBDEV开发</a><ul>
+</ul></li>
+<li><a href="#nbdev开发">NBDEV开发</a>
+<ul>
 <li><a href="#step-1-新建git">step 1 新建git</a></li>
 <li><a href="#step-2-编辑settingsini">step 2 编辑settings.ini</a></li>
 <li><a href="#step-3-安装git_hooks">step 3 安装git_hooks</a></li>
@@ -161,200 +161,242 @@
 <li><a href="#step-9-bug">step 9 bug</a></li>
 <li><a href="#optional-step-10-发布pypi">optional step 10 发布pypi</a></li>
 <li><a href="#附-其他事项">附 其他事项</a></li>
-</ul>
-</li>
+</ul></li>
 </ul>
 <!-- /TOC -->
 <a id="more"></a>
-
-<h2 id="Jupytext"><a href="#Jupytext" class="headerlink" title="Jupytext"></a>Jupytext</h2><h3 id="界面点击操作"><a href="#界面点击操作" class="headerlink" title="界面点击操作"></a>界面点击操作</h3><p>当你 Pair 一种文件，保存时，会自动生成你 pair 关联的格式的文件。在其中一个文件修改的任何文本都会同步到两个文件中。</p>
+<h2 id="jupytext">Jupytext</h2>
+<h3 id="界面点击操作">界面点击操作</h3>
+<p>当你 Pair 一种文件，保存时，会自动生成你 pair 关联的格式的文件。在其中一个文件修改的任何文本都会同步到两个文件中。</p>
 <p>首先你有文件</p>
-<p><img src="/images/pic/jupytext-and-nbdev_pic/image-20210112154512001.png" alt=""></p>
+<p><img src="/images/pic/jupytext-and-nbdev_pic/image-20210112154512001.png" /></p>
 <p>然后，在jupyterlab中 ctrl + shift + c，选择pair的文件类型（jupyter notebook在功能菜单中找到）</p>
-<p><img src="/images/pic/jupytext-and-nbdev_pic/image-20210112153908965.png" alt=""></p>
+<p><img src="/images/pic/jupytext-and-nbdev_pic/image-20210112153908965.png" /></p>
 <p>然后，保存</p>
-<p><img src="/images/pic/jupytext-and-nbdev_pic/image-20210112154745542.png" alt=""></p>
+<p><img src="/images/pic/jupytext-and-nbdev_pic/image-20210112154745542.png" /></p>
 <p>关联成功。<strong>py文件可以在自己喜欢IDE环境编辑</strong>，ipynb文件可以同步展示。删除任意一个，都可以再次恢复。</p>
 <p>取消pair，则不会同步。（unpair 取消关联）</p>
-<p><img src="/images/pic/jupytext-and-nbdev_pic/image-20210112153940284.png" alt=""></p>
+<p><img src="/images/pic/jupytext-and-nbdev_pic/image-20210112153940284.png" /></p>
 <p>py文件中包含的 metadata 如下格式</p>
-<p><img src="/images/pic/jupytext-and-nbdev_pic/image-20210112154102238.png" alt=""> </p>
-<h3 id="命令行操作"><a href="#命令行操作" class="headerlink" title="命令行操作"></a>命令行操作</h3><p><img src="/images/pic/jupytext-and-nbdev_pic/image-20210112154207803.png" alt=""></p>
+<p><img src="/images/pic/jupytext-and-nbdev_pic/image-20210112154102238.png" /></p>
+<h3 id="命令行操作">命令行操作</h3>
+<p><img src="/images/pic/jupytext-and-nbdev_pic/image-20210112154207803.png" /></p>
 <p>Notebook to text</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jupytext --to markdown notebook.ipynb</span><br><span class="line">jupytext --to script notebook.ipynb</span><br></pre></td></tr></table></figure>
-
 <p>text to notebook</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jupytext --to notebook notebook.py</span><br><span class="line">jupytext --to notebook notebook.md</span><br></pre></td></tr></table></figure>
-
 <p>text to notebook and preserve outputs</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jupytext --to notebook --update notebook.py</span><br><span class="line">jupytext --to notebook --update notebook.md</span><br></pre></td></tr></table></figure>
-
-
-
 <p>命令行pair操作</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jupytext --set-formats ipynb,py:percent notebook.ipynb</span><br></pre></td></tr></table></figure>
-
 <p>同步paired notebooks，当在其他文件中修改后，同步到ipynb</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jupytext --sync notebook.ipynb</span><br></pre></td></tr></table></figure>
-
-
-
 <p>应用code style(flake8, black, isort)</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jupytext --pipe flake8 notebook.ipynb</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="支持文件格式"><a href="#支持文件格式" class="headerlink" title="支持文件格式"></a>支持文件格式</h3><p><img src="/images/pic/jupytext-and-nbdev_pic/image-20210112155906188.png" alt=""></p>
-<hr>
-<h2 id="NBDEV开发"><a href="#NBDEV开发" class="headerlink" title="NBDEV开发"></a>NBDEV开发</h2><h3 id="step-1-新建git"><a href="#step-1-新建git" class="headerlink" title="step 1 新建git"></a>step 1 新建git</h3><p>使用 <a href="https://github.com/fastai/nbdev_template" target="_blank" rel="noopener">the template</a> 创建一个github repo</p>
-<img src="/images/pic/jupytext_pic/image-20210112164201446.png" alt="image" style="zoom:50%;" />
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install nbdev</span><br></pre></td></tr></table></figure>
-
-<p>可选，使用git自带的服务器：在setting中</p>
-<img src="/images/pic/jupytext_pic/image-20210112164812568.png" alt="image" style="zoom:67%;" />
-
-<p>在edit中添加生成的网址</p>
-<img src="/images/pic/jupytext_pic/image-20210112165048834.png" alt="image" style="zoom:50%;" />
-
-
-
-<h3 id="step-2-编辑settings-ini"><a href="#step-2-编辑settings-ini" class="headerlink" title="step 2 编辑settings.ini"></a>step 2 编辑settings.ini</h3><p>编辑settings.ini （注意这里的lib_name就是生成的包名，所以有空格很不规范）。前面的个人相关信息基本都要取消注释，后面在git上创建网页展示环境要check。</p>
-<img src="/images/pic/jupytext_pic/image-20210112174117546.png" alt="image" style="zoom:80%;" />
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;RacleRay&#x2F;Hello_nbdev.git</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="step-3-安装git-hooks"><a href="#step-3-安装git-hooks" class="headerlink" title="step 3 安装git_hooks"></a>step 3 安装git_hooks</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nbdev_install_git_hooks</span><br></pre></td></tr></table></figure>
-
-<p>出现conflict错误时</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nbdev_fix_merge filename.ipynb</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="step-4-编辑代码"><a href="#step-4-编辑代码" class="headerlink" title="step 4 编辑代码"></a>step 4 编辑代码</h3><p>开始编辑ipynb文件</p>
-<img src="/images/pic/jupytext_pic/image-20210112170552588.png" alt="image" style="zoom:50%;" />
-
-<p>标记类别：</p>
+<h3 id="支持文件格式">支持文件格式</h3>
+<p><img src="/images/pic/jupytext-and-nbdev_pic/image-20210112155906188.png" /></p>
+<table style="width:6%;">
+<colgroup>
+<col style="width: 5%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>## NBDEV开发</td>
+</tr>
+<tr class="even">
+<td>### step 1 新建git</td>
+</tr>
+<tr class="odd">
+<td>使用 <a href="https://github.com/fastai/nbdev_template" target="_blank" rel="noopener">the template</a> 创建一个github repo</td>
+</tr>
+<tr class="even">
+<td><img src="/images/pic/jupytext_pic/image-20210112164201446.png" alt="image" style="zoom:50%;" /></td>
+</tr>
+<tr class="odd">
+<td><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install nbdev</span><br></pre></td></tr></table></figure></td>
+</tr>
+<tr class="even">
+<td>可选，使用git自带的服务器：在setting中</td>
+</tr>
+<tr class="odd">
+<td><img src="/images/pic/jupytext_pic/image-20210112164812568.png" alt="image" style="zoom:67%;" /></td>
+</tr>
+<tr class="even">
+<td>在edit中添加生成的网址</td>
+</tr>
+<tr class="odd">
+<td><img src="/images/pic/jupytext_pic/image-20210112165048834.png" alt="image" style="zoom:50%;" /></td>
+</tr>
+<tr class="even">
+<td>### step 2 编辑settings.ini</td>
+</tr>
+<tr class="odd">
+<td>编辑settings.ini （注意这里的lib_name就是生成的包名，所以有空格很不规范）。前面的个人相关信息基本都要取消注释，后面在git上创建网页展示环境要check。</td>
+</tr>
+<tr class="even">
+<td><img src="/images/pic/jupytext_pic/image-20210112174117546.png" alt="image" style="zoom:80%;" /></td>
+</tr>
+<tr class="odd">
+<td><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;RacleRay&#x2F;Hello_nbdev.git</span><br></pre></td></tr></table></figure></td>
+</tr>
+<tr class="even">
+<td>### step 3 安装git_hooks</td>
+</tr>
+<tr class="odd">
+<td><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nbdev_install_git_hooks</span><br></pre></td></tr></table></figure></td>
+</tr>
+<tr class="even">
+<td>出现conflict错误时</td>
+</tr>
+<tr class="odd">
+<td><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nbdev_fix_merge filename.ipynb</span><br></pre></td></tr></table></figure></td>
+</tr>
+<tr class="even">
+<td>### step 4 编辑代码</td>
+</tr>
+<tr class="odd">
+<td>开始编辑ipynb文件</td>
+</tr>
+<tr class="even">
+<td><img src="/images/pic/jupytext_pic/image-20210112170552588.png" alt="image" style="zoom:50%;" /></td>
+</tr>
+<tr class="odd">
+<td>标记类别：</td>
+</tr>
+<tr class="even">
+<td>- #default_exp <module name></td>
+</tr>
+<tr class="odd">
+<td>&gt; 对于新创建的 .ipynb，需要加入 <code>#default_exp target_module_name</code> &gt; &gt; 这会导出生成以下py文件 &gt; &gt; <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lib_name&#x2F;target_module_name.py</span><br></pre></td></tr></table></figure> &gt; &gt; lib_name与settings时，保持一致</td>
+</tr>
+<tr class="even">
+<td>- #export：效果如下</td>
+</tr>
+<tr class="odd">
+<td>&gt; <img src="/images/pic/jupytext_pic/image-20210112171518061.png" alt="image" style="zoom:80%;" /> &gt; &gt; 导出后显示如下 &gt; &gt; <img src="/images/pic/jupytext_pic/image-20210112171534844.png" alt="image" style="zoom:80%;" /> &gt; &gt; <strong>如果是类里面的方法</strong>，显示doc需要使用函数 show_doc &gt; &gt; <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> nbdev,showdoc <span class="keyword">import</span> show_doc</span><br></pre></td></tr></table></figure></td>
+</tr>
+<tr class="even">
+<td>- 不加标记会显示代码和输出</td>
+</tr>
+<tr class="odd">
+<td>&gt; <img src="/images/pic/jupytext_pic/image-20210112171703161.png" alt="image" style="zoom:80%;" /> &gt; &gt; 测试代码也可以写在这里，不代标记 &gt; &gt; <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">assert say_hello(&quot;Jeremy&quot;)&#x3D;&#x3D;&quot;Hello Jeremy!&quot;</span><br></pre></td></tr></table></figure></td>
+</tr>
+<tr class="even">
+<td>### step 5 nbdev_build_lib</td>
+</tr>
+<tr class="odd">
+<td><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nbdev_build_lib</span><br></pre></td></tr></table></figure></td>
+</tr>
+<tr class="even">
+<td>注意，发生keyError时，多半是settings.ini配置不完整</td>
+</tr>
+<tr class="odd">
+<td><img src="/images/pic/jupytext_pic/image-20210112173202161.png" alt="image" style="zoom:80%;" /></td>
+</tr>
+<tr class="even">
+<td>生成新的lib包文件夹及py文件</td>
+</tr>
+<tr class="odd">
+<td>core.py</td>
+</tr>
+<tr class="even">
+<td><img src="/images/pic/jupytext_pic/image-20210112173334030.png" alt="image" style="zoom:80%;" /></td>
+</tr>
+<tr class="odd">
+<td>### step 6 编写index文件</td>
+</tr>
+<tr class="even">
+<td>编辑index.ipnb</td>
+</tr>
+<tr class="odd">
+<td><img src="/images/pic/jupytext_pic/image-20210112174652843.png" alt="image" style="zoom:67%;" /></td>
+</tr>
+<tr class="even">
+<td>### step 7 生成docs文档</td>
+</tr>
+<tr class="odd">
+<td><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nbdev_build_docs</span><br></pre></td></tr></table></figure></td>
+</tr>
+<tr class="even">
+<td>生成HTML文档</td>
+</tr>
+<tr class="odd">
+<td>### step 8 上传git</td>
+</tr>
+<tr class="even">
+<td><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git add -A</span><br><span class="line">git status</span><br><span class="line">git commit -m &quot;test&quot;</span><br><span class="line">git push</span><br></pre></td></tr></table></figure></td>
+</tr>
+<tr class="odd">
+<td>### step 9 bug</td>
+</tr>
+<tr class="even">
+<td>检查 commits中的问题</td>
+</tr>
+<tr class="odd">
+<td><img src="/images/pic/jupytext_pic/image-20210112180905111.png" alt="image" style="zoom:80%;" /></td>
+</tr>
+<tr class="even">
+<td><img src="/images/pic/jupytext_pic/image-20210112180930480.png" alt="image" style="zoom:80%;" /></td>
+</tr>
+<tr class="odd">
+<td>没有设置keywords，在settings.ini中进行设置。</td>
+</tr>
+<tr class="even">
+<td><img src="/images/pic/jupytext_pic/image-20210112181936329.png" alt="image" style="zoom:60%;" /></td>
+</tr>
+<tr class="odd">
+<td>### optional step 10 发布pypi</td>
+</tr>
+<tr class="even">
+<td>上传到pypi</td>
+</tr>
+<tr class="odd">
+<td>1. 注册pypi</td>
+</tr>
+<tr class="even">
+<td>2. 在用户家目录下新建<code>~/.pypirc</code></td>
+</tr>
+<tr class="odd">
+<td><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[pypi]</span><br><span class="line">username &#x3D; your_pypi_username</span><br><span class="line">password &#x3D; your_pypi_password</span><br></pre></td></tr></table></figure></td>
+</tr>
+<tr class="even">
+<td>3. pip install twine</td>
+</tr>
+<tr class="odd">
+<td>4. make release</td>
+</tr>
+</tbody>
+</table>
+<h3 id="附-其他事项">附 其他事项</h3>
 <ul>
-<li>#default_exp <module name></li>
-</ul>
-<blockquote>
-<p>对于新创建的 .ipynb，需要加入 <code>#default_exp target_module_name</code></p>
-<p>这会导出生成以下py文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lib_name&#x2F;target_module_name.py</span><br></pre></td></tr></table></figure>
-
-<p>lib_name与settings时，保持一致</p>
-</blockquote>
-<ul>
-<li>#export：效果如下</li>
-</ul>
-<blockquote>
-<img src="/images/pic/jupytext_pic/image-20210112171518061.png" alt="image" style="zoom:80%;" />
-
-<p>导出后显示如下</p>
-<img src="/images/pic/jupytext_pic/image-20210112171534844.png" alt="image" style="zoom:80%;" />
-
-<p><strong>如果是类里面的方法</strong>，显示doc需要使用函数 show_doc</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> nbdev,showdoc <span class="keyword">import</span> show_doc</span><br></pre></td></tr></table></figure>
-</blockquote>
-<ul>
-<li>不加标记会显示代码和输出</li>
-</ul>
-<blockquote>
-<img src="/images/pic/jupytext_pic/image-20210112171703161.png" alt="image" style="zoom:80%;" />
-
-<p>测试代码也可以写在这里，不代标记</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">assert say_hello(&quot;Jeremy&quot;)&#x3D;&#x3D;&quot;Hello Jeremy!&quot;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<h3 id="step-5-nbdev-build-lib"><a href="#step-5-nbdev-build-lib" class="headerlink" title="step 5 nbdev_build_lib"></a>step 5 nbdev_build_lib</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nbdev_build_lib</span><br></pre></td></tr></table></figure>
-
-<p>注意，发生keyError时，多半是settings.ini配置不完整</p>
-<img src="/images/pic/jupytext_pic/image-20210112173202161.png" alt="image" style="zoom:80%;" />
-
-<p>生成新的lib包文件夹及py文件</p>
-<p>core.py</p>
-<img src="/images/pic/jupytext_pic/image-20210112173334030.png" alt="image" style="zoom:80%;" />
-
-
-
-<h3 id="step-6-编写index文件"><a href="#step-6-编写index文件" class="headerlink" title="step 6 编写index文件"></a>step 6 编写index文件</h3><p>编辑index.ipnb</p>
-<img src="/images/pic/jupytext_pic/image-20210112174652843.png" alt="image" style="zoom:67%;" />
-
-
-
-<h3 id="step-7-生成docs文档"><a href="#step-7-生成docs文档" class="headerlink" title="step 7 生成docs文档"></a>step 7 生成docs文档</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nbdev_build_docs</span><br></pre></td></tr></table></figure>
-
-<p>生成HTML文档</p>
-<h3 id="step-8-上传git"><a href="#step-8-上传git" class="headerlink" title="step 8 上传git"></a>step 8 上传git</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git add -A</span><br><span class="line">git status</span><br><span class="line">git commit -m &quot;test&quot;</span><br><span class="line">git push</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="step-9-bug"><a href="#step-9-bug" class="headerlink" title="step 9 bug"></a>step 9 bug</h3><p>检查 commits中的问题</p>
-<img src="/images/pic/jupytext_pic/image-20210112180905111.png" alt="image" style="zoom:80%;" />
-
-<img src="/images/pic/jupytext_pic/image-20210112180930480.png" alt="image" style="zoom:80%;" />
-
-<p>没有设置keywords，在settings.ini中进行设置。</p>
-<img src="/images/pic/jupytext_pic/image-20210112181936329.png" alt="image" style="zoom:60%;" />
-
-
-
-<h3 id="optional-step-10-发布pypi"><a href="#optional-step-10-发布pypi" class="headerlink" title="optional step 10 发布pypi"></a>optional step 10 发布pypi</h3><p>上传到pypi</p>
-<ol>
-<li><p>注册pypi</p>
-</li>
-<li><p>在用户家目录下新建<code>~/.pypirc</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[pypi]</span><br><span class="line">username &#x3D; your_pypi_username</span><br><span class="line">password &#x3D; your_pypi_password</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>pip install twine</p>
-</li>
-<li><p>make release</p>
-</li>
-</ol>
-<hr>
-<h3 id="附-其他事项"><a href="#附-其他事项" class="headerlink" title="附 其他事项"></a>附 其他事项</h3><ul>
 <li>安装包，同时同步所有在源码上的编辑</li>
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install -e .</span><br></pre></td></tr></table></figure>
-
 <ul>
 <li>可以将自己开发的包链接到python包路径下</li>
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s lib_path lib_name</span><br></pre></td></tr></table></figure>
-
 <ul>
 <li>autoreload</li>
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%load_ext autoreload</span><br><span class="line">%autoreload 2</span><br></pre></td></tr></table></figure>
-
 <ul>
 <li>在ipynb结尾添加以下代码，用以代替命令行nbdev_build_lib。</li>
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">from nbdev.export import notebook2script; notebook2script()</span><br></pre></td></tr></table></figure>
-
 <ul>
 <li><p>检查可读的notebook</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nbdev_read_nbs</span><br></pre></td></tr></table></figure>
-</li>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nbdev_read_nbs</span><br></pre></td></tr></table></figure></li>
 <li><p>检查可能造成merge conficts的文件，</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nbdev_clean_nbs</span><br></pre></td></tr></table></figure>
-
 <p>可能导致cleaned项不通过，此时用，然后再push</p>
-<img src="/images/pic/jupytext_pic/image-20210112210749768.png" alt="image" style="zoom:50%;" />
-</li>
-<li><p>检查notebook和已经导出的lib files之间的是否有差异 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nbdev_diff_nbs</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>运行notebooks中的测试 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nbdev_test_nbs</span><br></pre></td></tr></table></figure>
-
-
-
-</li>
+<p><img src="/images/pic/jupytext_pic/image-20210112210749768.png" alt="image" style="zoom:50%;" /></p></li>
+<li><p>检查notebook和已经导出的lib files之间的是否有差异</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nbdev_diff_nbs</span><br></pre></td></tr></table></figure></li>
+<li><p>运行notebooks中的测试</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nbdev_test_nbs</span><br></pre></td></tr></table></figure></li>
 </ul>
-<p><a href="https://nbdev.fast.ai/" target="_blank" rel="noopener">fastai文档</a> <a href="https://github.com/fastai/nbdev" target="_blank" rel="noopener">nbdev git</a> </p>
+<p><a href="https://nbdev.fast.ai/" target="_blank" rel="noopener">fastai文档</a> <a href="https://github.com/fastai/nbdev" target="_blank" rel="noopener">nbdev git</a></p>
 <p><a href="https://github.com/fastai/nbdev_template" target="_blank" rel="noopener">nbdev_template</a></p>
 
       
@@ -366,7 +408,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2021/03/04/jupytext-and-nbdev/" data-id="ckm4nxehw0019vk2ffyunhyul" class="article-share-link">
+      <a data-url="https://racleray.github.io/2021/03/04/jupytext-and-nbdev/" data-id="ckm4od80q00181s2f7ek07msw" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -412,7 +454,6 @@
     toc.innerHTML = content;
   }('.entry');
 </script>
-
 
         </div>
         <div class="col-sm-3 col-sm-offset-1 blog-sidebar">

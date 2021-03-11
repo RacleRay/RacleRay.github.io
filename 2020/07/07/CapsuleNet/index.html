@@ -5,12 +5,12 @@
   
   <title>CapsuleNet | Racle</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Motivation Vector inputs and outputs of a capsule max-pooling problem   Margin loss for digit existence CapsNet architecture Code Other capsules Text Graph 3D point cloud   Applications Problems Re">
+  <meta name="description" content="Motivation Vector inputs and outputs of a capsule  max-pooling problem  Margin loss for digit existence CapsNet architecture Code Other capsules  Text Graph 3D point cloud  Applicati">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CapsuleNet">
 <meta property="og:url" content="https://racleray.github.io/2020/07/07/CapsuleNet/index.html">
 <meta property="og:site_name" content="Racle">
-<meta property="og:description" content="Motivation Vector inputs and outputs of a capsule max-pooling problem   Margin loss for digit existence CapsNet architecture Code Other capsules Text Graph 3D point cloud   Applications Problems Re">
+<meta property="og:description" content="Motivation Vector inputs and outputs of a capsule  max-pooling problem  Margin loss for digit existence CapsNet architecture Code Other capsules  Text Graph 3D point cloud  Applicati">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://racleray.github.io/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110163026495.png">
 <meta property="og:image" content="https://racleray.github.io/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110155508014.png">
@@ -149,120 +149,161 @@
     <div class="article-entry" itemprop="articleBody">
       
         <!-- TOC -->
-
 <ul>
 <li><a href="#motivation">Motivation</a></li>
-<li><a href="#vector-inputs-and-outputs-of-a-capsule">Vector inputs and outputs of a capsule</a><ul>
+<li><a href="#vector-inputs-and-outputs-of-a-capsule">Vector inputs and outputs of a capsule</a>
+<ul>
 <li><a href="#max-pooling-problem">max-pooling problem</a></li>
-</ul>
-</li>
+</ul></li>
 <li><a href="#margin-loss-for-digit-existence">Margin loss for digit existence</a></li>
 <li><a href="#capsnet-architecture">CapsNet architecture</a></li>
 <li><a href="#code">Code</a></li>
-<li><a href="#other-capsules">Other capsules</a><ul>
+<li><a href="#other-capsules">Other capsules</a>
+<ul>
 <li><a href="#text">Text</a></li>
 <li><a href="#graph">Graph</a></li>
 <li><a href="#3d-point-cloud">3D point cloud</a></li>
-</ul>
-</li>
+</ul></li>
 <li><a href="#applications">Applications</a></li>
 <li><a href="#problems">Problems</a></li>
 <li><a href="#resources">Resources</a></li>
 </ul>
 <!-- /TOC -->
 <a id="more"></a>
-
-
 <p>一个 capsule 是一组神经元，capsule activity vector 表示特定类型的实体（例如对象或对象部分）的实例化参数。activity vector的长度来表示实体存在的概率，方向表示实例化参数。前一层capsule通过转换矩阵对下一层capsule的实例化参数进行预测。该网络相比于CNN，对于重叠的目标，识别效果更好且能分离出重叠目标。算法使用 iterative routing-by-agreement mechanism，高层级的capsule的activity vector的计算过程将接收低层capsule的计算结果。</p>
 <p>相比于CNN，Caps Net用vector-output capsules代替CNN的scalar-output feature detectors，并使用routing-by-agreement代替max-pooling</p>
-<h3 id="Motivation"><a href="#Motivation" class="headerlink" title="Motivation"></a>Motivation</h3><p>​    人的视觉系统通常之关注图像中很小部分的重要信息，这部分信息视觉系统通过高分辨率处理，而其他不重要的信息常常就忽略掉。</p>
-<p>​    处理这部分重要信息的模型，文章叫做single fixation。假设single fixation可以提取的信息不仅仅是某一个事物的特征，而是某一个类型的特征信息，并且在建模过程中忽略每一个fixation之间相互左右的规律。只要求模型解析出每一个single fixation。</p>
-<p>​    一个capsule代表图像中一个部分的目标信息，并且文章中提到“感知拥挤“的研究，来支撑 一个capsule只代表一个目标信息的合理性。</p>
-<p><img src="/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110163026495.png" alt="image"></p>
-<p>​    capsule可以代表目标的很多信息，文章将capsule输出vector的长度约束在1以内，代表存在概率；vector的方向代表目标的特征。</p>
-<p>​    capsule的学习的信息具有一种全局的相关性。这样可以解决以下的问题。CNN倾向于局部特征的检测，整体上的空间关系对其预测结果的影响较小。实际上不是人脸的照片，在此处都检测为正确。</p>
-<img src="/images/1-CapsuleNet和动态路由.assets/image-20191110155508014.png" alt="image" style="zoom:50%;" />
-
-<hr>
-<h3 id="Vector-inputs-and-outputs-of-a-capsule"><a href="#Vector-inputs-and-outputs-of-a-capsule" class="headerlink" title="Vector inputs and outputs of a capsule"></a>Vector inputs and outputs of a capsule</h3><p>​    根据长度代表出现概率的思路，文章提出了以下“激活函数”：<br><img src="/images/pic/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1_pic/image-20200707222128481.png" alt="image"></p>
-<p><img src="1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/1570955897796.png" alt=""></p>
-<p><img src="/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110170411374.png" alt="image"></p>
-<p>​    输出将确保short vectors长度趋于0，long vectors长度趋于1。角度代表的信息由矩阵变换和低层不同特征的向量加权求和得到。</p>
-<p>​    u来自低层级的capsule的输出。$c_{ij}$由iterative dynamic routing process计算。$b_{ij}$首先作为log先验概率初始化，在每一步迭代中更新概率。<br><img src="/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/1570956636011.png" alt=""><br><img src="/images/pic/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1_pic/image-20200707222554055.png" alt="image"><br>​    $c_{ij}$相当于CNN中max pooling干的事。感觉有点像attention，iterative attention。</p>
-<p><img src="/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110164629017.png" alt="image"></p>
-<p><img src="/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110164449384.png" alt="image"></p>
-<p>​    这种“routing-by-agreement”应该比通过max-pooling实现的非常原始的路由形式更加有效。后者可以使一层中的神经元忽略该层中除了最活跃的特征之外的所有特征。前者层层迭代，层层parsing，信息损失自然更少。</p>
-<p>​    之后，Hinton又提出了EM routing[Matrix capsules with EM routing. ICLR (2018)]。 通过计算Existence probability和概率分布完成不同层间的计算，简单示意图如下。<a href="https://github.com/yl-1993/Matrix-Capsules-EM-PyTorch" target="_blank" rel="noopener">code reference</a></p>
-<p><img src="/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110151624084.png" alt="image"></p>
-<h4 id="max-pooling-problem"><a href="#max-pooling-problem" class="headerlink" title="max-pooling problem"></a>max-pooling problem</h4><p>​    max-pooling还存在以下问题：</p>
-<ol>
-<li><p>甚至不能区分左和右</p>
-</li>
-<li><p>对rotation不敏感，不能学习到方向信息</p>
-</li>
-<li><p>一次只能‘看到’一个object</p>
-</li>
+<h3 id="motivation">Motivation</h3>
+<p>​ 人的视觉系统通常之关注图像中很小部分的重要信息，这部分信息视觉系统通过高分辨率处理，而其他不重要的信息常常就忽略掉。</p>
+<p>​ 处理这部分重要信息的模型，文章叫做single fixation。假设single fixation可以提取的信息不仅仅是某一个事物的特征，而是某一个类型的特征信息，并且在建模过程中忽略每一个fixation之间相互左右的规律。只要求模型解析出每一个single fixation。</p>
+<p>​ 一个capsule代表图像中一个部分的目标信息，并且文章中提到“感知拥挤“的研究，来支撑 一个capsule只代表一个目标信息的合理性。</p>
+<figure>
+<img src="/images/1-CapsuleNet和动态路由.assets/image-20191110163026495.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​ capsule可以代表目标的很多信息，文章将capsule输出vector的长度约束在1以内，代表存在概率；vector的方向代表目标的特征。</p>
+<p>​ capsule的学习的信息具有一种全局的相关性。这样可以解决以下的问题。CNN倾向于局部特征的检测，整体上的空间关系对其预测结果的影响较小。实际上不是人脸的照片，在此处都检测为正确。</p>
+<p><img src="/images/1-CapsuleNet和动态路由.assets/image-20191110155508014.png" alt="image" style="zoom:50%;" /></p>
+<hr />
+<h3 id="vector-inputs-and-outputs-of-a-capsule">Vector inputs and outputs of a capsule</h3>
+<p>​ 根据长度代表出现概率的思路，文章提出了以下“激活函数”： <img src="/images/pic/1-CapsuleNet和动态路由_pic/image-20200707222128481.png" alt="image" /></p>
+<p><img src="1-CapsuleNet和动态路由.assets/1570955897796.png" /></p>
+<figure>
+<img src="/images/1-CapsuleNet和动态路由.assets/image-20191110170411374.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​ 输出将确保short vectors长度趋于0，long vectors长度趋于1。角度代表的信息由矩阵变换和低层不同特征的向量加权求和得到。</p>
+<p>​ u来自低层级的capsule的输出。<span class="math inline">\(c_{ij}\)</span>由iterative dynamic routing process计算。<span class="math inline">\(b_{ij}\)</span>首先作为log先验概率初始化，在每一步迭代中更新概率。 <img src="/images/1-CapsuleNet和动态路由.assets/1570956636011.png" /> <img src="/images/pic/1-CapsuleNet和动态路由_pic/image-20200707222554055.png" alt="image" /> ​ <span class="math inline">\(c_{ij}\)</span>相当于CNN中max pooling干的事。感觉有点像attention，iterative attention。</p>
+<figure>
+<img src="/images/1-CapsuleNet和动态路由.assets/image-20191110164629017.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<figure>
+<img src="/images/1-CapsuleNet和动态路由.assets/image-20191110164449384.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​ 这种“routing-by-agreement”应该比通过max-pooling实现的非常原始的路由形式更加有效。后者可以使一层中的神经元忽略该层中除了最活跃的特征之外的所有特征。前者层层迭代，层层parsing，信息损失自然更少。</p>
+<p>​ 之后，Hinton又提出了EM routing[Matrix capsules with EM routing. ICLR (2018)]。 通过计算Existence probability和概率分布完成不同层间的计算，简单示意图如下。<a href="https://github.com/yl-1993/Matrix-Capsules-EM-PyTorch" target="_blank" rel="noopener">code reference</a></p>
+<figure>
+<img src="/images/1-CapsuleNet和动态路由.assets/image-20191110151624084.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<h4 id="max-pooling-problem">max-pooling problem</h4>
+<p>​ max-pooling还存在以下问题：</p>
+<ol type="1">
+<li><p>甚至不能区分左和右</p></li>
+<li><p>对rotation不敏感，不能学习到方向信息</p></li>
+<li><p>一次只能‘看到’一个object</p></li>
 <li><p>max-pooling只做到spatial invariance</p>
-<p>​     <img src="/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110163730310.png" alt="image"></p>
+<p>​ <img src="/images/1-CapsuleNet和动态路由.assets/image-20191110163730310.png" alt="image" /></p>
 <p>而不能做到spatial equivariance</p>
-<p><img src="/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110164114175.png" alt="image"></p>
+<figure>
+<img src="/images/1-CapsuleNet和动态路由.assets/image-20191110164114175.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
 <p>capsule net通过：</p>
-<p><img src="/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110165736553.png" alt="image"></p>
+<figure>
+<img src="/images/1-CapsuleNet和动态路由.assets/image-20191110165736553.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
 <p>计算下一层capsule经过W变换后的u，进行组合，得到不同的结果。错误的预测route被裁剪(pruned)，模型具有一定的spatial equivariance。</p>
-<p><img src="/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110170300458.png" alt="image"></p>
-</li>
+<figure>
+<img src="/images/1-CapsuleNet和动态路由.assets/image-20191110170300458.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure></li>
 </ol>
-<hr>
-<h3 id="Margin-loss-for-digit-existence"><a href="#Margin-loss-for-digit-existence" class="headerlink" title="Margin loss for digit existence"></a>Margin loss for digit existence</h3><p>​    分别对每个类别计算损失，同时注意只有capsule对应的部分出现某类目标，才计算损失。<br><img src="/images/pic/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1_pic/image-20200707222308871.png" alt="image"><br>​    $T_k$只有在class k出现的时候等于1。<br><img src="/images/pic/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1_pic/image-20200707222324475.png" alt="image"><br>​    $\lambda$是为了防止，限制vector长度后在训练开始阶段由于没有识别到目标导致的学习停滞问题，取0.5。总体存在性检测loss是所有类别capsule的损失之和。</p>
-<p>​    整体损失，还要加上capsule重构图像特征的损失。</p>
-<p><img src="/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110162131283.png" alt="image"></p>
-<hr>
-<h3 id="CapsNet-architecture"><a href="#CapsNet-architecture" class="headerlink" title="CapsNet architecture"></a>CapsNet architecture</h3><p><img src="/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/1570958302422.png" alt=""></p>
-<p><img src="/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110160905390.png" alt="image"></p>
-<p><img src="/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110161236308.png" alt="image"></p>
-<p>​    32个capsule，每个8维。</p>
-<p><img src="/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110161436562.png" alt="image"></p>
-<p>​    转换后，每个class capsule16维，不同而维度影响重构图像的不同特征。</p>
-<p>​    routing-by-agreement的迭代过程就是不同的route squash结果进行裁剪的过程，计算结果相差大的route逐渐被移除。</p>
-<p><img src="/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110171656945.png" alt="image"></p>
-<p>​    EM route则是计算primry结果和route squash结果分布的差异。</p>
-<p><img src="/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110172223944.png" alt="image"></p>
-<p>​    capsule输出vector的长度约束在1以内，代表存在概率；vector的方向代表目标的特征。</p>
-<p>​    其中每个capsule的转化矩阵都是独立的不同的，每个class对应一个capsule。</p>
-<p>​    A simple CapsNet with 3 layers. PrimaryCaps计算第一层capsules的输入， DigitCaps计算部分使用iterative dynamic routing，计算输出capsules。</p>
-<p><img src="/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/1570958488870.png" alt=""></p>
-<p>​    重构图像网络，采用训练好的DigitCaps，在此基础上训练重构网络，计算图像特征重构损失。只需要将true label的capsule提取出来进行重构计算即可。因此，多个数字重合的重构也能实现。</p>
-<hr>
-<h3 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h3><p>​    重要的网络构建代码如下，<a href="https://github.com/RacleRay/DeepLearningFoundation/tree/master/CapsNet" target="_blank" rel="noopener">完整代码</a></p>
-<p>​    Caps Net训练相对于CNN慢很多，并且只使用一层dynamic routing，参数量也更大，batch size相比CNN也要取得小一些，在相同条件下。</p>
-<p>​    网络收敛比较快，而且计算过程损失的变化相对稳定。下图为第一轮训练结果。</p>
-<p><img src="/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/1570988099970.png" alt=""></p>
-<p>​    第二轮计算结果</p>
-<p><img src="/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/1570988796272.png" alt=""></p>
-<p>​    相关layer定义，以下代码参考了 <a href="https://github.com/XifengGuo/CapsNet-Pytorch" target="_blank" rel="noopener">https://github.com/XifengGuo/CapsNet-Pytorch</a> ，<a href="https://github.com/naturomics/CapsNet-Tensorflow.git。" target="_blank" rel="noopener">https://github.com/naturomics/CapsNet-Tensorflow.git。</a> 在其上修改了写网络计算过程。</p>
+<hr />
+<h3 id="margin-loss-for-digit-existence">Margin loss for digit existence</h3>
+<p>​ 分别对每个类别计算损失，同时注意只有capsule对应的部分出现某类目标，才计算损失。 <img src="/images/pic/1-CapsuleNet和动态路由_pic/image-20200707222308871.png" alt="image" /> ​ <span class="math inline">\(T_k\)</span>只有在class k出现的时候等于1。 <img src="/images/pic/1-CapsuleNet和动态路由_pic/image-20200707222324475.png" alt="image" /> ​ <span class="math inline">\(\lambda\)</span>是为了防止，限制vector长度后在训练开始阶段由于没有识别到目标导致的学习停滞问题，取0.5。总体存在性检测loss是所有类别capsule的损失之和。</p>
+<p>​ 整体损失，还要加上capsule重构图像特征的损失。</p>
+<figure>
+<img src="/images/1-CapsuleNet和动态路由.assets/image-20191110162131283.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<hr />
+<h3 id="capsnet-architecture">CapsNet architecture</h3>
+<p><img src="/images/1-CapsuleNet和动态路由.assets/1570958302422.png" /></p>
+<figure>
+<img src="/images/1-CapsuleNet和动态路由.assets/image-20191110160905390.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<figure>
+<img src="/images/1-CapsuleNet和动态路由.assets/image-20191110161236308.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​ 32个capsule，每个8维。</p>
+<figure>
+<img src="/images/1-CapsuleNet和动态路由.assets/image-20191110161436562.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​ 转换后，每个class capsule16维，不同而维度影响重构图像的不同特征。</p>
+<p>​ routing-by-agreement的迭代过程就是不同的route squash结果进行裁剪的过程，计算结果相差大的route逐渐被移除。</p>
+<figure>
+<img src="/images/1-CapsuleNet和动态路由.assets/image-20191110171656945.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​ EM route则是计算primry结果和route squash结果分布的差异。</p>
+<figure>
+<img src="/images/1-CapsuleNet和动态路由.assets/image-20191110172223944.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​ capsule输出vector的长度约束在1以内，代表存在概率；vector的方向代表目标的特征。</p>
+<p>​ 其中每个capsule的转化矩阵都是独立的不同的，每个class对应一个capsule。</p>
+<p>​ A simple CapsNet with 3 layers. PrimaryCaps计算第一层capsules的输入， DigitCaps计算部分使用iterative dynamic routing，计算输出capsules。</p>
+<p><img src="/images/1-CapsuleNet和动态路由.assets/1570958488870.png" /></p>
+<p>​ 重构图像网络，采用训练好的DigitCaps，在此基础上训练重构网络，计算图像特征重构损失。只需要将true label的capsule提取出来进行重构计算即可。因此，多个数字重合的重构也能实现。</p>
+<hr />
+<h3 id="code">Code</h3>
+<p>​ 重要的网络构建代码如下，<a href="https://github.com/RacleRay/DeepLearningFoundation/tree/master/CapsNet" target="_blank" rel="noopener">完整代码</a></p>
+<p>​ Caps Net训练相对于CNN慢很多，并且只使用一层dynamic routing，参数量也更大，batch size相比CNN也要取得小一些，在相同条件下。</p>
+<p>​ 网络收敛比较快，而且计算过程损失的变化相对稳定。下图为第一轮训练结果。</p>
+<p><img src="/images/1-CapsuleNet和动态路由.assets/1570988099970.png" /></p>
+<p>​ 第二轮计算结果</p>
+<p><img src="/images/1-CapsuleNet和动态路由.assets/1570988796272.png" /></p>
+<p>​ 相关layer定义，以下代码参考了 https://github.com/XifengGuo/CapsNet-Pytorch ，https://github.com/naturomics/CapsNet-Tensorflow.git。 在其上修改了写网络计算过程。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br><span class="line"><span class="keyword">from</span> torch.autograd <span class="keyword">import</span> Variable</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">squash</span><span class="params">(inputs, axis=<span class="number">-1</span>)</span>:</span></span><br><span class="line">    <span class="string">"""capsule输出的激活函数"""</span></span><br><span class="line">    norm = torch.norm(inputs, dim=axis, keepdim=<span class="literal">True</span>)</span><br><span class="line">    scale = norm ** <span class="number">2</span> / (<span class="number">1</span> + norm ** <span class="number">2</span>) / (norm + <span class="number">1e-8</span>)</span><br><span class="line">    <span class="keyword">return</span> scale * inputs</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PrimaryCaps</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="string">"""计算第一层capsules的输入，转换成32*6*6个8维的capsule vector</span></span><br><span class="line"><span class="string">    in_channels：原文中256</span></span><br><span class="line"><span class="string">    out_channels：卷积后的通道数，原文中256</span></span><br><span class="line"><span class="string">    dim_caps: PrimaryCaps输出的每个capsule的维度</span></span><br><span class="line"><span class="string">    kernel_size：原文中9 * 9</span></span><br><span class="line"><span class="string">    stride：2</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, in_channels, out_channels, dim_caps, kernel_size, stride=<span class="number">1</span>, padding=<span class="number">0</span>)</span>:</span></span><br><span class="line">        super(PrimaryCaps, self).__init__()</span><br><span class="line">        self.dim_caps = dim_caps</span><br><span class="line">        self.conv2d = nn.Conv2d(in_channels,</span><br><span class="line">                                out_channels,</span><br><span class="line">                                kernel_size=kernel_size,</span><br><span class="line">                                stride=stride,</span><br><span class="line">                                padding=padding)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, input)</span>:</span></span><br><span class="line">        <span class="string">"""转换成32*6*6个8维的capsule vector, output size=[batch_size, num_caps, dim_caps]"""</span></span><br><span class="line">        output = self.conv2d(input)</span><br><span class="line">        output = output.view(input.size(<span class="number">0</span>), <span class="number">-1</span>, self.dim_caps)</span><br><span class="line">        <span class="keyword">return</span> squash(output)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DenseCaps</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="string">"""iterative dynamic routing计算capsule目标识别结果vector。</span></span><br><span class="line"><span class="string">    input size = [None, in_num_caps, in_dim_caps]，</span></span><br><span class="line"><span class="string">    output size = [None, out_num_caps, out_dim_caps]。</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    in_num_caps: 第一层的输入capsule数量，32*6*6</span></span><br><span class="line"><span class="string">    in_dim_caps：第一层的输入capsule维度，8</span></span><br><span class="line"><span class="string">    out_num_caps：iterative dynamic routing时及输出的capsule数量，10</span></span><br><span class="line"><span class="string">    out_dim_caps：iterative dynamic routing时及输出的capsule维度，16</span></span><br><span class="line"><span class="string">    iterations：dynamic routing轮次</span></span><br><span class="line"><span class="string">    weight：由32*6*6个8维的capsule vector计算10个16维的capsule vector的transform matrix，在每个[6 * 6]</span></span><br><span class="line"><span class="string">            单元内的capsule是共享权重的。</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, in_num_caps, in_dim_caps, out_num_caps, out_dim_caps, iterations=<span class="number">3</span>)</span>:</span></span><br><span class="line">        super(DenseCaps, self).__init__()</span><br><span class="line">        self.in_num_caps = in_num_caps</span><br><span class="line">        self.in_dim_caps = in_dim_caps</span><br><span class="line">        self.out_num_caps = out_num_caps</span><br><span class="line">        self.out_dim_caps = out_dim_caps</span><br><span class="line">        self.iterations = iterations</span><br><span class="line">        self.weight = nn.Parameter(<span class="number">0.01</span> * torch.randn(<span class="number">1</span>,</span><br><span class="line">                                                      in_num_caps,</span><br><span class="line">                                                      out_num_caps * out_dim_caps,</span><br><span class="line">                                                      in_dim_caps,</span><br><span class="line">                                                      <span class="number">1</span>))</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, u)</span>:</span></span><br><span class="line">        <span class="string">"""u_hat在不同layer的capsules之间传递，每层capsules只能是才c，b在更新。文中结构只接上了一层</span></span><br><span class="line"><span class="string">        dynamic routing capsules layer。"""</span></span><br><span class="line">        <span class="comment"># self.weight * u</span></span><br><span class="line">        <span class="comment">#     [1    , in_num_caps, out_num_caps * out_dim_caps, in_dim_caps, 1]</span></span><br><span class="line">        <span class="comment">#     [batch, in_num_caps, out_num_caps * out_dim_caps, in_dim_caps, 1]</span></span><br><span class="line">        <span class="comment"># =&gt;&gt; [batch, in_num_caps, out_num_caps * out_dim_caps, in_dim_caps, 1]</span></span><br><span class="line">        <span class="comment"># 按元素相乘，然后在reduce sum</span></span><br><span class="line">        u_hat = u[:, :, <span class="literal">None</span>, :, <span class="literal">None</span>]</span><br><span class="line">        u_hat = self.weight * u_hat.repeat(<span class="number">1</span>, <span class="number">1</span>, self.out_num_caps * self.out_dim_caps, <span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line">        u_hat = torch.sum(u_hat, dim=<span class="number">3</span>)</span><br><span class="line">        <span class="comment"># [batch, in_num_caps, out_num_caps, out_dim_caps]</span></span><br><span class="line">        u_hat = torch.squeeze(u_hat.view(<span class="number">-1</span>,</span><br><span class="line">                                         self.in_num_caps,</span><br><span class="line">                                         self.out_num_caps,</span><br><span class="line">                                         self.out_dim_caps,</span><br><span class="line">                                         <span class="number">1</span>))</span><br><span class="line">        u_hat_for_route = u_hat.detach()</span><br><span class="line"></span><br><span class="line">        <span class="comment"># coupling coefficient initialize</span></span><br><span class="line">        <span class="comment"># [batch, in_num_caps, out_num_caps]</span></span><br><span class="line">        b = Variable(torch.zeros(u.size(<span class="number">0</span>), self.in_num_caps, self.out_num_caps)).cuda()</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(self.iterations):</span><br><span class="line">            c = F.softmax(b, dim=<span class="number">2</span>)  <span class="comment"># [batch, in_num_caps, out_num_caps]</span></span><br><span class="line">            <span class="keyword">if</span> i &lt; self.iterations - <span class="number">1</span>:</span><br><span class="line">                <span class="comment"># u   [batch, in_num_caps, out_num_caps, out_dim_caps]</span></span><br><span class="line">                <span class="comment"># c   [batch, in_num_caps, out_num_caps, 1]</span></span><br><span class="line">                <span class="comment"># =&gt;&gt; [batch, 1, out_num_caps, out_dim_caps]</span></span><br><span class="line">                outputs = squash(torch.sum(torch.unsqueeze(c, <span class="number">3</span>) * u_hat_for_route, dim=<span class="number">1</span>, keepdims=<span class="literal">True</span>))</span><br><span class="line">                b = b + torch.sum(outputs * u_hat_for_route, dim=<span class="number">-1</span>)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="comment"># 此时进入bp计算</span></span><br><span class="line">                outputs = squash(torch.sum(torch.unsqueeze(c, <span class="number">3</span>) * u_hat, dim=<span class="number">1</span>, keepdims=<span class="literal">True</span>))</span><br><span class="line"></span><br><span class="line">        <span class="comment"># [batch, out_num_caps, out_dim_caps]</span></span><br><span class="line">        <span class="keyword">return</span> torch.squeeze(outputs, dim=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">caps_loss</span><span class="params">(y_true, y_pred, x, x_reconstruct, lamada)</span>:</span></span><br><span class="line">    <span class="string">"""Capsule loss = Margin loss + lamada * reconstruction loss.</span></span><br><span class="line"><span class="string">    y shape [batch, classes], x shape [batch, channels, height, width]"""</span></span><br><span class="line">    L = y_true * torch.clamp(<span class="number">0.9</span> - y_pred, min=<span class="number">0</span>) ** <span class="number">2</span> + \</span><br><span class="line">        <span class="number">0.5</span> * (<span class="number">1</span> - y_true) * torch.clamp(y_pred - <span class="number">0.1</span>, min=<span class="number">0</span>) ** <span class="number">2</span></span><br><span class="line"></span><br><span class="line">    L_margin = L.sum(dim=<span class="number">1</span>).mean()</span><br><span class="line">    L_recon = nn.MSELoss()(x_reconstruct, x)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> L_margin + lamada * L_recon</span><br></pre></td></tr></table></figure>
-
-<p>​    网络定义</p>
+<p>​ 网络定义</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br><span class="line"><span class="keyword">from</span> torch.autograd <span class="keyword">import</span> Variable</span><br><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> nn</span><br><span class="line"><span class="keyword">from</span> layers <span class="keyword">import</span> DenseCaps, PrimaryCaps</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CapsuleNet</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Input: (batch, channels, width, height)</span></span><br><span class="line"><span class="string">    Output:((batch, classes), (batch, channels, width, height))</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    input_size: [channels, width, height]</span></span><br><span class="line"><span class="string">    classes: number of classes</span></span><br><span class="line"><span class="string">    iterations：dynamic routing iterations</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, input_size, classes, iterations)</span>:</span></span><br><span class="line">        super(CapsuleNet, self).__init__()</span><br><span class="line">        self.input_size = input_size</span><br><span class="line">        self.classes = classes</span><br><span class="line">        self.iterations = iterations</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Layer 1: Just a conventional Conv2D layer</span></span><br><span class="line">        self.conv1 = nn.Conv2d(input_size[<span class="number">0</span>], <span class="number">256</span>, kernel_size=<span class="number">9</span>, stride=<span class="number">1</span>, padding=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Layer 2: Conv2D layer with `squash` activation, then reshape to [None, num_caps, dim_caps]</span></span><br><span class="line">        self.primarycaps = PrimaryCaps(<span class="number">256</span>, <span class="number">256</span>, <span class="number">8</span>, kernel_size=<span class="number">9</span>, stride=<span class="number">2</span>, padding=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Layer 3: Capsule layer. iterative dynamic routing.</span></span><br><span class="line">        self.digitcaps = DenseCaps(in_num_caps=<span class="number">32</span>*<span class="number">6</span>*<span class="number">6</span>, in_dim_caps=<span class="number">8</span>,</span><br><span class="line">                                      out_num_caps=classes, out_dim_caps=<span class="number">16</span>, iterations=iterations)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># reconstruction net</span></span><br><span class="line">        self.reconstructor = nn.Sequential(</span><br><span class="line">            nn.Linear(<span class="number">16</span>*classes, <span class="number">512</span>),</span><br><span class="line">            nn.ReLU(inplace=<span class="literal">True</span>),</span><br><span class="line">            nn.Linear(<span class="number">512</span>, <span class="number">1024</span>),</span><br><span class="line">            nn.ReLU(inplace=<span class="literal">True</span>),</span><br><span class="line">            nn.Linear(<span class="number">1024</span>, input_size[<span class="number">0</span>] * input_size[<span class="number">1</span>] * input_size[<span class="number">2</span>]),</span><br><span class="line">            nn.Sigmoid()</span><br><span class="line">        )</span><br><span class="line">        self.relu = nn.ReLU()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x, y=None)</span>:</span></span><br><span class="line">        x = self.relu(self.conv1(x))</span><br><span class="line">        x = self.primarycaps(x)</span><br><span class="line">        x = self.digitcaps(x)  <span class="comment"># [batch, out_num_caps, out_dim_caps]</span></span><br><span class="line">        length = x.norm(dim=<span class="number">-1</span>)  <span class="comment"># vector lenght代表存在概率 [batch, out_num_caps, 1]</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> y <span class="keyword">is</span> <span class="literal">None</span>:  <span class="comment"># during testing, no label given. create one-hot coding using `length`</span></span><br><span class="line">            index = length.max(dim=<span class="number">1</span>)[<span class="number">1</span>]</span><br><span class="line">            <span class="comment"># 将index处，更改为1</span></span><br><span class="line">            y = Variable(torch.zeros(length.size()).scatter_(<span class="number">1</span>, index.view(<span class="number">-1</span>, <span class="number">1</span>).cpu().data, <span class="number">1.</span>).cuda())</span><br><span class="line"></span><br><span class="line">        <span class="comment"># y[:, :, None]: mask</span></span><br><span class="line">        reconstruction = self.reconstructor((x * y[:, :, <span class="literal">None</span>]).view(x.size(<span class="number">0</span>), <span class="number">-1</span>))</span><br><span class="line">        <span class="comment"># 存在概率预测，重构图像像素</span></span><br><span class="line">        <span class="keyword">return</span> length, reconstruction.view(<span class="number">-1</span>, *self.input_size)</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="Other-capsules"><a href="#Other-capsules" class="headerlink" title="Other capsules"></a>Other capsules</h3><h4 id="Text"><a href="#Text" class="headerlink" title="Text"></a>Text</h4><p>​    使用capsule nets处理文本的简单架构[Investigating capsule networks with dynamic routing for text classification. EMNLP (2018)]，如下图所示。</p>
-<p><img src="/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110152353504.png" alt="image"></p>
-<h4 id="Graph"><a href="#Graph" class="headerlink" title="Graph"></a>Graph</h4><p>​    结合GNN的简单网络示意[Capsule Graph Neural Network. ICLR (2018)]。</p>
-<p><img src="/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110152747324.png" alt="image"></p>
-<h4 id="3D-point-cloud"><a href="#3D-point-cloud" class="headerlink" title="3D point cloud"></a>3D point cloud</h4><p>​    3D重构[3D Point-Capsule Networks. CVPR,  (2019)]</p>
-<p><img src="/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110152955662.png" alt="image"></p>
-<h3 id="Applications"><a href="#Applications" class="headerlink" title="Applications"></a>Applications</h3><p>​    Relation extraction，Adversary detection，Brain tumor classification，Classification of Breast Cancer.</p>
-<p>​    比如，Relation extraction方面的研究[Multi-labeled Relation Extraction with Attentive Capsule Network. AAAI (2018)]</p>
-<p><img src="/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110153704495.png" alt="image"></p>
-<p>​    [Attention-Based Capsule Networks with Dynamic Routing for Relation Extraction. EMNLP 2018]</p>
-<p><img src="/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110153837670.png" alt="image"></p>
-<h3 id="Problems"><a href="#Problems" class="headerlink" title="Problems"></a>Problems</h3><ol>
+<hr />
+<h3 id="other-capsules">Other capsules</h3>
+<h4 id="text">Text</h4>
+<p>​ 使用capsule nets处理文本的简单架构[Investigating capsule networks with dynamic routing for text classification. EMNLP (2018)]，如下图所示。</p>
+<figure>
+<img src="/images/1-CapsuleNet和动态路由.assets/image-20191110152353504.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<h4 id="graph">Graph</h4>
+<p>​ 结合GNN的简单网络示意[Capsule Graph Neural Network. ICLR (2018)]。</p>
+<figure>
+<img src="/images/1-CapsuleNet和动态路由.assets/image-20191110152747324.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<h4 id="d-point-cloud">3D point cloud</h4>
+<p>​ 3D重构[3D Point-Capsule Networks. CVPR, (2019)]</p>
+<figure>
+<img src="/images/1-CapsuleNet和动态路由.assets/image-20191110152955662.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<h3 id="applications">Applications</h3>
+<p>​ Relation extraction，Adversary detection，Brain tumor classification，Classification of Breast Cancer.</p>
+<p>​ 比如，Relation extraction方面的研究[Multi-labeled Relation Extraction with Attentive Capsule Network. AAAI (2018)]</p>
+<figure>
+<img src="/images/1-CapsuleNet和动态路由.assets/image-20191110153704495.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​ [Attention-Based Capsule Networks with Dynamic Routing for Relation Extraction. EMNLP 2018]</p>
+<figure>
+<img src="/images/1-CapsuleNet和动态路由.assets/image-20191110153837670.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<h3 id="problems">Problems</h3>
+<ol type="1">
 <li>Optimizing routing</li>
 <li>当存在较多class时，参数量很大</li>
 <li>不能驾驭大规模数据集</li>
 </ol>
-<h3 id="Resources"><a href="#Resources" class="headerlink" title="Resources"></a>Resources</h3><ol>
+<h3 id="resources">Resources</h3>
+<ol type="1">
 <li><a href="https://www.crcv.ucf.edu/cvpr2019-tutorial/resources.html" target="_blank" rel="noopener">CVPR2019 Tutorial</a></li>
 </ol>
 
@@ -275,7 +316,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/07/07/CapsuleNet/" data-id="ckm4nxegw0008vk2fgjs9gqug" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/07/07/CapsuleNet/" data-id="ckm4od80600071s2fc7goh9ft" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -321,7 +362,6 @@
     toc.innerHTML = content;
   }('.entry');
 </script>
-
 
         </div>
         <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
