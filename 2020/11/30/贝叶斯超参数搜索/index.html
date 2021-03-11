@@ -5,12 +5,12 @@
   
   <title>贝叶斯超参数搜索 | Racle</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="原理简述 Sequential Model-Based Optimization  Expected Improvement选择函数： Tree-structured Parzen Estimator (TPE)  工具">
+  <meta name="description" content="原理简述 Sequential Model-Based Optimization Expected Improvement选择函数： Tree-structured Parzen Estimator (TPE)   工具">
 <meta property="og:type" content="article">
 <meta property="og:title" content="贝叶斯超参数搜索">
 <meta property="og:url" content="https://racleray.github.io/2020/11/30/%E8%B4%9D%E5%8F%B6%E6%96%AF%E8%B6%85%E5%8F%82%E6%95%B0%E6%90%9C%E7%B4%A2/index.html">
 <meta property="og:site_name" content="Racle">
-<meta property="og:description" content="原理简述 Sequential Model-Based Optimization  Expected Improvement选择函数： Tree-structured Parzen Estimator (TPE)  工具">
+<meta property="og:description" content="原理简述 Sequential Model-Based Optimization Expected Improvement选择函数： Tree-structured Parzen Estimator (TPE)   工具">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://racleray.github.io/images/pic/%E8%B4%9D%E5%8F%B6%E6%96%AF%E8%B6%85%E5%8F%82%E6%95%B0%E6%90%9C%E7%B4%A2_pic/image-20201125225639541.png">
 <meta property="og:image" content="https://racleray.github.io/images/pic/%E8%B4%9D%E5%8F%B6%E6%96%AF%E8%B6%85%E5%8F%82%E6%95%B0%E6%90%9C%E7%B4%A2_pic/image-20201125233533906.png">
@@ -125,81 +125,95 @@
     <div class="article-entry" itemprop="articleBody">
       
         <!-- TOC -->
+
 <ul>
 <li><a href="#原理简述">原理简述</a></li>
-<li><a href="#sequential-model-based-optimization">Sequential Model-Based Optimization</a>
-<ul>
+<li><a href="#sequential-model-based-optimization">Sequential Model-Based Optimization</a><ul>
 <li><a href="#expected-improvement选择函数">Expected Improvement选择函数：</a></li>
 <li><a href="#tree-structured-parzen-estimator-tpe"><strong>Tree-structured Parzen Estimator (TPE)</strong></a></li>
-</ul></li>
+</ul>
+</li>
 <li><a href="#工具">工具</a></li>
 </ul>
 <!-- /TOC -->
+
 <a id="more"></a>
-<p><img src="/images/pic/贝叶斯超参数搜索_pic/image-20201125225639541.png" /></p>
+
+<p><img src="/images/pic/%E8%B4%9D%E5%8F%B6%E6%96%AF%E8%B6%85%E5%8F%82%E6%95%B0%E6%90%9C%E7%B4%A2_pic/image-20201125225639541.png" alt=""></p>
 <p><a href="http://proceedings.mlr.press/v28/bergstra13.pdf" target="_blank" rel="noopener">paper by Bergstra et al</a></p>
 <p>一句话概括Bayesian hyperparameter optimization：</p>
 <blockquote>
 <p>build a probability model of the objective function and use it to select the most promising hyperparameters to evaluate in the true objective function.</p>
 </blockquote>
 <p>常用算法：Sequential Model-Based Optimization (SMBO) with the Tree Parzen Estimator (TPE)</p>
-<h3 id="原理简述">原理简述</h3>
-<p>贝叶斯方法相较于随机搜索和网格搜索，是更高效的。随机搜索和网格搜索根本不关注过去的结果，而是继续在整个范围内搜索，即使最优答案(可能)很明显在一个小区域内。</p>
+<h3 id="原理简述"><a href="#原理简述" class="headerlink" title="原理简述"></a>原理简述</h3><p>贝叶斯方法相较于随机搜索和网格搜索，是更高效的。随机搜索和网格搜索根本不关注过去的结果，而是继续在整个范围内搜索，即使最优答案(可能)很明显在一个小区域内。</p>
 <p>与随机或网格搜索相反，贝叶斯方法跟踪过去的评估结果，建立形成一个概率模型，将超参数映射到目标函数上得分的概率。这个模型被称为目标函数的代理。代理模型（也叫做响应面）又相对更容易优化。</p>
 <p>运行过程为：</p>
 <blockquote>
-<ol type="1">
-<li><p>建立目标函数的替代概率模型，代理模型</p></li>
-<li><p>查找在代理上性能最佳的超参数</p></li>
-<li><p>将这些超参数应用于真正的目标函数</p></li>
-<li><p>更新包含新结果的代理模型</p></li>
-<li><p>重复步骤2-4，直到达到最大迭代次数或时间为止</p></li>
+<ol>
+<li><p>建立目标函数的替代概率模型，代理模型</p>
+</li>
+<li><p>查找在代理上性能最佳的超参数</p>
+</li>
+<li><p>将这些超参数应用于真正的目标函数</p>
+</li>
+<li><p>更新包含新结果的代理模型</p>
+</li>
+<li><p>重复步骤2-4，直到达到最大迭代次数或时间为止</p>
+</li>
 </ol>
 </blockquote>
 <p>贝叶斯推理的目的是通过在每次评估目标函数后不断地更新替代概率模型，从而获得更多的数据，减少错误。</p>
 <p>贝叶斯优化方法是有效的，因为它们有根据的选择了下一个超参数。 基本思想是：<strong>花更多的时间选择下一个超参数，以减少对目标函数的调用</strong>。 实际上，与在目标函数中花费的时间相比，选择下一个超参数所花费的时间是很少的。 通过评估从过去的结果看似更有希望的超参数，贝叶斯方法可以在更少的迭代中找到比随机搜索更好的模型设置。</p>
 <p>一个简单的解释如下图：</p>
-<p><img src="/images/pic/贝叶斯超参数搜索_pic/image-20201125233533906.png" alt="image-20201125233533906" style="zoom:50%;" /></p>
+<img src="/images/pic/贝叶斯超参数搜索_pic/image-20201125233533906.png" alt="image-20201125233533906" style="zoom:50%;" />
+
 <p>代理模型是粗黑线和器上线界细黑线组成的区域。红色虚线表示真实的目标函数。</p>
 <p>经过贝叶斯优化几轮迭代之后，得到：</p>
-<p><img src="/images/pic/贝叶斯超参数搜索_pic/image-20201125233807512.png" alt="image-20201125233807512" style="zoom:50%;" /></p>
+<img src="/images/pic/贝叶斯超参数搜索_pic/image-20201125233807512.png" alt="image-20201125233807512" style="zoom:50%;" />
+
 <p>代理模型逐渐趋近目标函数。</p>
-<h3 id="sequential-model-based-optimization">Sequential Model-Based Optimization</h3>
-<p>Sequential是指一个接一个地进行试验，每次都通过应用贝叶斯推理更新概率模型(代理)来获取更好的超参数。组成部分有：</p>
-<ol type="1">
-<li><p>要搜索的超参数域</p></li>
-<li><p>以超参数为输入并输出得分的目标函数</p></li>
-<li><p>目标函数的代理模型</p></li>
-<li><p>一个<strong>criteria</strong>（<strong>Selection Function</strong>），称为选择函数，用于评估从替代模型中下一步要选择的超参数</p></li>
-<li><p>该算法由（得分，超参数）对组成的历史记录，该历史对由算法用于更新代理模型</p></li>
+<h3 id="Sequential-Model-Based-Optimization"><a href="#Sequential-Model-Based-Optimization" class="headerlink" title="Sequential Model-Based Optimization"></a>Sequential Model-Based Optimization</h3><p>Sequential是指一个接一个地进行试验，每次都通过应用贝叶斯推理更新概率模型(代理)来获取更好的超参数。组成部分有： </p>
+<ol>
+<li><p>要搜索的超参数域</p>
+</li>
+<li><p>以超参数为输入并输出得分的目标函数</p>
+</li>
+<li><p>目标函数的代理模型</p>
+</li>
+<li><p>一个<strong>criteria</strong>（<strong>Selection Function</strong>），称为选择函数，用于评估从替代模型中下一步要选择的超参数</p>
+</li>
+<li><p>该算法由（得分，超参数）对组成的历史记录，该历史对由算法用于更新代理模型</p>
+</li>
 </ol>
 <p>代理模型的选择有：<a href="https://en.wikipedia.org/wiki/Gaussian_process" target="_blank" rel="noopener">Gaussian Processes</a>, <a href="http://aad.informatik.uni-freiburg.de/papers/13-GECCO-BBOB_SMAC.pdf" target="_blank" rel="noopener">Random Forest Regressions</a>, , Tree Parzen Estimators (TPE).</p>
 <p><strong>criteria</strong>常用Expected Improvement</p>
 <p>代理模型，也称为响应面，是利用以前的评估结果建立的目标函数的概率表示。</p>
-<h4 id="expected-improvement选择函数">Expected Improvement选择函数：</h4>
-<p><img src="/images/pic/贝叶斯超参数搜索_pic/image-20201126000440781.png" alt="image-20201126000440781" style="zoom:50%;" /></p>
-<p>y* -- 目标函数的阈值</p>
-<p>x -- 超参数组合的集合</p>
-<p>y -- 输入x超参数得到的目标函数真实返回值</p>
-<p>p(y | x) -- 代理模型输出的概率</p>
+<h4 id="Expected-Improvement选择函数："><a href="#Expected-Improvement选择函数：" class="headerlink" title="Expected Improvement选择函数："></a>Expected Improvement选择函数：</h4><img src="/images/pic/贝叶斯超参数搜索_pic/image-20201126000440781.png" alt="image-20201126000440781" style="zoom:50%;" />
+
+<p>y* – 目标函数的阈值</p>
+<p>x – 超参数组合的集合</p>
+<p>y – 输入x超参数得到的目标函数真实返回值</p>
+<p>p(y | x) – 代理模型输出的概率</p>
 <p>其目的是最大化关于x的Expected Improvement。</p>
 <p>如果p (y | x)在y &lt; y*处，都为零，则超参数x不会产生任何改进。</p>
 <p>如果积分为正，则意味着超参数x预期会产生比阈值更好的结果。</p>
-<h4 id="tree-structured-parzen-estimator-tpe"><strong>Tree-structured Parzen Estimator (TPE)</strong></h4>
-<p>使用贝叶斯公式，计算p(y | x)</p>
-<p><img src="/images/pic/贝叶斯超参数搜索_pic/image-20201126163323158.png" alt="image-20201126163323158" style="zoom:50%;" /></p>
+<h4 id="Tree-structured-Parzen-Estimator-TPE"><a href="#Tree-structured-Parzen-Estimator-TPE" class="headerlink" title="Tree-structured Parzen Estimator (TPE)"></a><strong>Tree-structured Parzen Estimator (TPE)</strong></h4><p>使用贝叶斯公式，计算p(y | x)</p>
+<img src="/images/pic/贝叶斯超参数搜索_pic/image-20201126163323158.png" alt="image-20201126163323158" style="zoom:50%;" />
+
 <p>p (x | y)，是给定目标函数得分的超参数的概率。</p>
-<p><img src="/images/pic/贝叶斯超参数搜索_pic/image-20201126163445388.png" alt="image-20201126163445388" style="zoom:50%;" /></p>
+<img src="/images/pic/贝叶斯超参数搜索_pic/image-20201126163445388.png" alt="image-20201126163445388" style="zoom:50%;" />
+
 <p>对超参数做了两种不同的分布:一种是目标函数的值小于阈值，l(x)，另一种是目标函数的值大于阈值，g(x)。</p>
 <p>结合SMBO以及一点直观的印象，我们希望从l(x)而不是从g(x)中得出x的值，因为这种分布只基于产生低于阈值得分的x的值。</p>
 <p>最终得到的Expected Improvement：</p>
-<p><img src="/images/pic/贝叶斯超参数搜索_pic/image-20201126163919181.png" alt="image-20201126163919181" style="zoom:50%;" /></p>
+<img src="/images/pic/贝叶斯超参数搜索_pic/image-20201126163919181.png" alt="image-20201126163919181" style="zoom:50%;" />
+
 <p>可以发现Expected Improvement和<em>l(x) / g(x)</em>的比值成反比。提高EI，正是需要从l(x)中多得到p (x | y)的值。</p>
 <p>该算法利用历史得分建立l(x)和g(x)，提出目标函数的概率模型，代理模型随着每次迭代而改进。</p>
-<h3 id="工具">工具</h3>
-<p><a href="https://github.com/JasperSnoek/spearmint" target="_blank" rel="noopener">Spearmint</a>， <a href="https://github.com/Yelp/MOE" target="_blank" rel="noopener">MOE</a> ： Gaussian Process (surrogate)</p>
+<h3 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h3><p><a href="https://github.com/JasperSnoek/spearmint" target="_blank" rel="noopener">Spearmint </a>， <a href="https://github.com/Yelp/MOE" target="_blank" rel="noopener">MOE</a> ： Gaussian Process (surrogate)</p>
 <p><a href="https://github.com/hyperopt/hyperopt" target="_blank" rel="noopener">Hyperopt</a> ：Tree-structured Parzen Estimator <a href="https://github.com/RacleRay/DeepLearningFoundation/blob/master/%E8%B6%85%E5%8F%82%E6%95%B0%E6%90%9C%E7%B4%A2.ipynb" target="_blank" rel="noopener">Notebook示例</a>，<a href="https://github.com/jaberg/hyperopt/wiki/FMin" target="_blank" rel="noopener">示例</a>，<a href="https://www.programcreek.com/python/example/98788/hyperopt.Trials" target="_blank" rel="noopener">示例</a></p>
-<p><a href="https://github.com/automl/SMAC3" target="_blank" rel="noopener">SMAC</a> ：Random Forest regression.</p>
+<p> <a href="https://github.com/automl/SMAC3" target="_blank" rel="noopener">SMAC</a> ：Random Forest regression. </p>
 <p>都使用Expected Improvement选择函数。</p>
 
       
@@ -211,7 +225,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/11/30/%E8%B4%9D%E5%8F%B6%E6%96%AF%E8%B6%85%E5%8F%82%E6%95%B0%E6%90%9C%E7%B4%A2/" data-id="ckm4nip50006r782f8bse997b" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/11/30/%E8%B4%9D%E5%8F%B6%E6%96%AF%E8%B6%85%E5%8F%82%E6%95%B0%E6%90%9C%E7%B4%A2/" data-id="ckm4nxeiv0031vk2fg4vb20e9" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       

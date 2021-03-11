@@ -5,12 +5,12 @@
   
   <title>Transformer Model | Racle</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1.Transformer模型  1.1 编码器 encoder 1.2 解码器 decoder 1.3 注意力机制 1.4 Multi-Head Attention 1.5 基于位置的前向神经网络（Position-wise Feed-Forward Networks） 1.6 词向量矩阵及Softmax层 1.7 位置编码（position embeddings） 1">
+  <meta name="description" content="1.Transformer模型 1.1 编码器 encoder 1.2 解码器 decoder 1.3 注意力机制 1.4 Multi-Head Attention 1.5 基于位置的前向神经网络（Position-wise Feed-Forward Networks） 1.6 词向量矩阵及Softmax层 1.7 位置编码（position embeddings） 1.8 Transfor">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Transformer Model">
 <meta property="og:url" content="https://racleray.github.io/2020/07/07/Transformer-Model/index.html">
 <meta property="og:site_name" content="Racle">
-<meta property="og:description" content="1.Transformer模型  1.1 编码器 encoder 1.2 解码器 decoder 1.3 注意力机制 1.4 Multi-Head Attention 1.5 基于位置的前向神经网络（Position-wise Feed-Forward Networks） 1.6 词向量矩阵及Softmax层 1.7 位置编码（position embeddings） 1">
+<meta property="og:description" content="1.Transformer模型 1.1 编码器 encoder 1.2 解码器 decoder 1.3 注意力机制 1.4 Multi-Head Attention 1.5 基于位置的前向神经网络（Position-wise Feed-Forward Networks） 1.6 词向量矩阵及Softmax层 1.7 位置编码（position embeddings） 1.8 Transfor">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://racleray.github.io/images/pic/attention.png">
 <meta property="og:image" content="https://racleray.github.io/images/pic/mha.png">
@@ -122,9 +122,9 @@
     <div class="article-entry" itemprop="articleBody">
       
         <!-- TOC -->
+
 <ul>
-<li><a href="#1transformer模型">1.Transformer模型</a>
-<ul>
+<li><a href="#1transformer模型">1.Transformer模型</a><ul>
 <li><a href="#11-编码器-encoder">1.1 编码器 encoder</a></li>
 <li><a href="#12-解码器-decoder">1.2 解码器 decoder</a></li>
 <li><a href="#13-注意力机制">1.3 注意力机制</a></li>
@@ -133,113 +133,119 @@
 <li><a href="#16-词向量矩阵及softmax层">1.6 词向量矩阵及Softmax层</a></li>
 <li><a href="#17-位置编码position-embeddings">1.7 位置编码（position embeddings）</a></li>
 <li><a href="#18-transformer-对比rnn及cnn">1.8 Transformer 对比RNN及CNN</a></li>
-</ul></li>
-<li><a href="#2-transformer模型的训练细节">2. Transformer模型的训练细节</a>
-<ul>
+</ul>
+</li>
+<li><a href="#2-transformer模型的训练细节">2. Transformer模型的训练细节</a><ul>
 <li><a href="#21-优化方法">2.1 优化方法</a></li>
 <li><a href="#22-正则化-regularization">2.2 正则化 Regularization</a></li>
 <li><a href="#23-label-smoothing">2.3 Label Smoothing</a></li>
-</ul></li>
+</ul>
+</li>
 <li><a href="#3-tranformer-code">3 Tranformer Code</a></li>
 </ul>
 <!-- /TOC -->
 <a id="more"></a>
-<h2 id="transformer模型">1.Transformer模型</h2>
-<p>​ 序列计算中，传统的RNN在预测下一个符号（token）的时候，会对以往的历史信息有很强的依赖，使得难以充分地并行化，也无法很好地加深网络的层级结构。</p>
-<p>​ 而对于传统的基于CNN的神经机器翻译模型，两个任意输入与输出位置的信号关联所需要的运算数量与它们的位置距离成正比，Facebook提出的CNN NMT 为线性增长。</p>
-<p>​ <mark>这两种常见的结构使得学习较远位置的依赖关系（long-term dependency）非常困难</mark>。</p>
-<p>​ 在 Transformer 中，两个任意输入的信号关联的开销会减少到一个固定的运算数量，使用 Multi-Head Attention 注意力机制可以完全脱离RNN及CNN的结构，只使用自注意机制（self-attention)，使得Transformer可以高效地并行化，并堆叠非常多层的深层网络。</p>
-<p>​ 自注意力（Self-attention），是一种涉及<mark>单序列不同位置的注意力机制</mark>，并能计算序列的表征。自注意力这种<mark>在序列内部执行 Attention 的方法可以视为搜索序列内部的隐藏关系</mark>，这种内部关系对于翻译以及序列任务的性能非常重要。</p>
-<h3 id="编码器-encoder">1.1 编码器 encoder</h3>
-<ul>
+
+<h2 id="1-Transformer模型"><a href="#1-Transformer模型" class="headerlink" title="1.Transformer模型"></a>1.Transformer模型</h2><p>​    序列计算中，传统的RNN在预测下一个符号（token）的时候，会对以往的历史信息有很强的依赖，使得难以充分地并行化，也无法很好地加深网络的层级结构。</p>
+<p>​    而对于传统的基于CNN的神经机器翻译模型，两个任意输入与输出位置的信号关联所需要的运算数量与它们的位置距离成正比，Facebook提出的CNN NMT 为线性增长。</p>
+<p>​    <span class="mark">这两种常见的结构使得学习较远位置的依赖关系（long-term dependency）非常困难</span>。</p>
+<p>​    在 Transformer 中，两个任意输入的信号关联的开销会减少到一个固定的运算数量，使用 Multi-Head Attention 注意力机制可以完全脱离RNN及CNN的结构，只使用自注意机制（self-attention)，使得Transformer可以高效地并行化，并堆叠非常多层的深层网络。</p>
+<p>​    自注意力（Self-attention），是一种涉及<span class="mark">单序列不同位置的注意力机制</span>，并能计算序列的表征。自注意力这种<span class="mark">在序列内部执行 Attention 的方法可以视为搜索序列内部的隐藏关系</span>，这种内部关系对于翻译以及序列任务的性能非常重要。</p>
+<h3 id="1-1-编码器-encoder"><a href="#1-1-编码器-encoder" class="headerlink" title="1.1 编码器 encoder"></a>1.1 编码器 encoder</h3><ul>
 <li><p>编码器encoder由6层结构一样的网络层组成，每一层有2个子层：</p>
 <ul>
-<li><p>第一个子层是multi-head self-attention Layer</p></li>
-<li><p>第二个子层是一个<mark>基于位置编码的全连接网络层</mark>（position-wise fully connected feed-forward network）</p></li>
+<li><p>第一个子层是multi-head self-attention Layer</p>
+</li>
+<li><p>第二个子层是一个<span class="mark">基于位置编码的全连接网络层</span>（position-wise fully connected feed-forward network）</p>
+</li>
 <li><p>会使用残差连接的方式，分别对每个子层的输入加到这个子层的输出上，然后再接一个Layer normalization的归一化层。</p>
-<p>​ <span class="math display">\[ \text{LayerNorm}(x+\text{Sublayer}(x)) \]</span></p></li>
-<li><p>所有的embedding及hidden state的维度都是512</p></li>
-</ul></li>
+<p>​    $$ \text{LayerNorm}(x+\text{Sublayer}(x)) $$</p>
+</li>
+<li><p>所有的embedding及hidden state的维度都是512 </p>
+</li>
 </ul>
-<h3 id="解码器-decoder">1.2 解码器 decoder</h3>
-<ul>
+</li>
+</ul>
+<h3 id="1-2-解码器-decoder"><a href="#1-2-解码器-decoder" class="headerlink" title="1.2 解码器 decoder"></a>1.2 解码器 decoder</h3><ul>
 <li><p>解码器decoder由6层结构一样的网络层组成，每一层除了跟encode人一样有2个子层以外，还有第3个子层</p>
 <ul>
 <li>第一个子层是multi-head self-attention Layer</li>
 <li>第二个子层是一个基于位置编码的全连接网络层（position-wise fully connected feed-forward network）</li>
 <li><font color='red'>第三个子层用于对encoder的输出向量进行multi-head attention</font></li>
-<li>同样的，会使用残差连接的方式，然后再接一个Layer normalization的归一化层。 <span class="math display">\[ \text{LayerNorm}(x+\text{Sublayer}(x))\\ \]</span></li>
+<li>同样的，会使用残差连接的方式，然后再接一个Layer normalization的归一化层。<br>$$ \text{LayerNorm}(x+\text{Sublayer}(x))\ $$</li>
 <li>decoder还需要将还没有生成的后续序列掩盖（masking），这样做是为了防止decoder在做self-attention的时候关注到后续还未生成的单词上去。</li>
-</ul></li>
 </ul>
-<h3 id="注意力机制">1.3 注意力机制</h3>
-<ul>
-<li>传统的注意力机制，也称为scaled Dot-Product Attention，可以看成是有一个询问的词（query），去跟一堆哈希表中的键值对（key-value pair）进行匹配，找到最相关的键（key），之后返回该键所对应的值（value）。通常的，如果只返回一个key所对应的value，称之为hard attention。如果对所有的key都计算一个相关系数，（也称之为attention weight），可以将所有key对应的value进行加权求和（weighted sum）这样的操作称之为soft attention。 <span class="math display">\[\text{Attention}(Q,K,V) = \text{softmax}\left({QK^T \over \sqrt{d_k}}\right)V\]</span></li>
-<li>其中所有的query和key都是维度为<span class="math inline">\(d_k\)</span>的向量，将这些向量分别叠在一起形成 <span class="math inline">\(Q\in\mathbb{R}^{|Q|\times d_k}, K\in\mathbb{R}^{|K|\times d_k}\)</span>的矩阵。</li>
-<li>所有的value都是维度为<span class="math inline">\(d_v\)</span>的向量，将这些向量叠在一起形成<span class="math inline">\(V\in\mathbb{R}^{|V|\times d_k}\)</span></li>
-<li>这里如果维度<span class="math inline">\(d_k\)</span>很大的时候，两个向量的乘积会变得很大，使得softmax会得到非常小的数值，所以会在这里除以<span class="math inline">\(\sqrt{d_k}\)</span>来抵消这个影响。 <img src="/images/pic/attention.png" /></li>
+</li>
 </ul>
-<h3 id="multi-head-attention">1.4 Multi-Head Attention</h3>
+<h3 id="1-3-注意力机制"><a href="#1-3-注意力机制" class="headerlink" title="1.3 注意力机制"></a>1.3 注意力机制</h3><ul>
+<li>传统的注意力机制，也称为scaled Dot-Product Attention，可以看成是有一个询问的词（query），去跟一堆哈希表中的键值对（key-value pair）进行匹配，找到最相关的键（key），之后返回该键所对应的值（value）。通常的，如果只返回一个key所对应的value，称之为hard attention。如果对所有的key都计算一个相关系数，（也称之为attention weight），可以将所有key对应的value进行加权求和（weighted sum）这样的操作称之为soft attention。<br>$$\text{Attention}(Q,K,V) = \text{softmax}\left({QK^T \over \sqrt{d_k}}\right)V$$</li>
+<li>其中所有的query和key都是维度为$d_k$的向量，将这些向量分别叠在一起形成 $Q\in\mathbb{R}^{|Q|\times d_k}, K\in\mathbb{R}^{|K|\times d_k}$的矩阵。</li>
+<li>所有的value都是维度为$d_v$的向量，将这些向量叠在一起形成$V\in\mathbb{R}^{|V|\times d_k}$</li>
+<li>这里如果维度$d_k$很大的时候，两个向量的乘积会变得很大，使得softmax会得到非常小的数值，所以会在这里除以$\sqrt{d_k}$来抵消这个影响。<br><img src="/images/pic/attention.png" alt=""></li>
+</ul>
+<h3 id="1-4-Multi-Head-Attention"><a href="#1-4-Multi-Head-Attention" class="headerlink" title="1.4 Multi-Head Attention"></a>1.4 Multi-Head Attention</h3><ul>
+<li><p>这里假设$Q,<del>K,</del>V\in \mathbb{R}^{d_\text{model}}$都在一个${d_\text{model}}$维度的空间中</p>
+</li>
+<li><p>使用h个不一样权重的线性映射函数$(QW^Q_i, KW^K_i, VW^V_i)$将Q, K, V分别映射到$d_k,<del>d_k,</del>d_v$空间中</p>
+</li>
+<li><p>对映射之后的Q, K, V 做h次attention，并将h个attention head连接在一起形成一个新的向量</p>
+</li>
+<li><p>最后再将这个向量映射到$d_\text{model}$空间，作为下一层的输入</p>
+<p>​    $$ \text{MultiHead}(Q,K,V) = \text{Concat}(\text{head}_1,\cdots, \text{head}_h) W^O \ \text{head}_i = \text{Attention}(QW^Q_i, KW^K_i, VW^V_i) $$</p>
+</li>
+<li><p>其中$W^Q_i\in \mathbb{R}^{d_\text{model}\times d_k}, W^K_i\in \mathbb{R}^{d_\text{model}\times d_k}, W^V_i\in \mathbb{R}^{d_\text{model}\times d_v}, W^O\in \mathbb{R}^{hd_v\times d_\text{model}}$, 常见的设置$h=8,d_k=d_v=d_\text{model}/h=64$</p>
+</li>
+<li><p>模型图<br><img src="/images/pic/mha.png" alt=""></p>
+</li>
+</ul>
 <ul>
-<li><p>这里假设<span class="math inline">\(Q,~K,~V\in \mathbb{R}^{d_\text{model}}\)</span>都在一个<span class="math inline">\({d_\text{model}}\)</span>维度的空间中</p></li>
-<li><p>使用h个不一样权重的线性映射函数<span class="math inline">\((QW^Q_i, KW^K_i, VW^V_i)\)</span>将Q, K, V分别映射到<span class="math inline">\(d_k,~d_k,~d_v\)</span>空间中</p></li>
-<li><p>对映射之后的Q, K, V 做h次attention，并将h个attention head连接在一起形成一个新的向量</p></li>
-<li><p>最后再将这个向量映射到<span class="math inline">\(d_\text{model}\)</span>空间，作为下一层的输入</p>
-<p>​ <span class="math display">\[ \text{MultiHead}(Q,K,V) = \text{Concat}(\text{head}_1,\cdots, \text{head}_h) W^O \\ \text{head}_i = \text{Attention}(QW^Q_i, KW^K_i, VW^V_i) \]</span></p></li>
-<li><p>其中<span class="math inline">\(W^Q_i\in \mathbb{R}^{d_\text{model}\times d_k}, W^K_i\in \mathbb{R}^{d_\text{model}\times d_k}, W^V_i\in \mathbb{R}^{d_\text{model}\times d_v}, W^O\in \mathbb{R}^{hd_v\times d_\text{model}}\)</span>, 常见的设置<span class="math inline">\(h=8,d_k=d_v=d_\text{model}/h=64\)</span></p></li>
-<li><p>模型图 <img src="/images/pic/mha.png" /></p></li>
 <li><p>应用</p>
 <ul>
-<li>将decoder上一个时刻的hidden state 作为query，将encoder的<mark>最顶层</mark>的所有输出的hidden state作为key和value，这样可以类似传统的attention机制一样去发现源语言单词与目标语言单词之间的联系</li>
+<li>将decoder上一个时刻的hidden state 作为query，将encoder的<span class="mark">最顶层</span>的所有输出的hidden state作为key和value，这样可以类似传统的attention机制一样去发现源语言单词与目标语言单词之间的联系</li>
 <li>encoder本身会对源语言单词进行multi-head self attention，其中query，key，value都是一样的，都是上一层中输出的单词的hidden state，<strong>每一个时刻计算出来的context vector都会作为该层输出的新的单词的hidden state，并作为下一层的输入</strong>。</li>
-<li><mark>decoder本身也会类似encoder一样去做self attention，不同的是，decoder只对左边已经生成的序列进行attention，对还没有生成的（右边的）序列掩盖（masking）</mark></li>
-</ul></li>
-<li><p>完整的模型图 <img src="/images/pic/transformer.png" /></p></li>
+<li><span class="mark">decoder本身也会类似encoder一样去做self attention，不同的是，decoder只对左边已经生成的序列进行attention，对还没有生成的（右边的）序列掩盖（masking）</span></li>
 </ul>
-<h3 id="基于位置的前向神经网络position-wise-feed-forward-networks">1.5 基于位置的前向神经网络（Position-wise Feed-Forward Networks）</h3>
-<ul>
-<li>对于encoder和decoder的每个attention层之后，<mark>还会在连接一个全连接的前向神经网络</mark>。这个网络包含了<mark>两个线性转换</mark>和中间加一个ReLU的激活函数 <span class="math display">\[FFN(x) =\max(0, xW_1+b_1) W_2+b_2\]</span></li>
-<li>这里每一层，都用不同的<span class="math inline">\(W_1,W_2,b_1,b_2\)</span>。</li>
+</li>
+<li><p>完整的模型图<br><img src="/images/pic/transformer.png" alt=""></p>
+</li>
 </ul>
-<h3 id="词向量矩阵及softmax层">1.6 词向量矩阵及Softmax层</h3>
-<ul>
-<li>这里使用常见的词向量矩阵，并encoder会把词向量映射到<span class="math inline">\(d_\text{model}\)</span>空间上，作为第一层的输入</li>
-<li>在做预测的时候，会将输出向量映射到一个词表大小的概率空间中，并使用softmax来归一化到一个<span class="math inline">\([0,1]\)</span>之间的概率值。</li>
+<h3 id="1-5-基于位置的前向神经网络（Position-wise-Feed-Forward-Networks）"><a href="#1-5-基于位置的前向神经网络（Position-wise-Feed-Forward-Networks）" class="headerlink" title="1.5 基于位置的前向神经网络（Position-wise Feed-Forward Networks）"></a>1.5 基于位置的前向神经网络（Position-wise Feed-Forward Networks）</h3><ul>
+<li>对于encoder和decoder的每个attention层之后，<span class="mark">还会在连接一个全连接的前向神经网络</span>。这个网络包含了<span class="mark">两个线性转换</span>和中间加一个ReLU的激活函数<br>$$FFN(x) =\max(0, xW_1+b_1) W_2+b_2$$</li>
+<li>这里每一层，都用不同的$W_1,W_2,b_1,b_2$。</li>
 </ul>
-<h3 id="位置编码position-embeddings">1.7 位置编码（position embeddings）</h3>
-<ul>
-<li><p>因为模型没有recurrence及convolution的操作，所以为了<mark>让模型能够分辨不同位置的单词</mark>，需要对单词的位置进行编码。</p>
-<p>​ <span class="math display">\[PE(pos, 2i)=\sin(pos/10000^{2i/d_\text{model}}) \\ PE(pos, 2i+1)=\cos(pos/10000^{2i/d_\text{model}})\]</span></p></li>
-<li><p><mark>pos是这个单词在句子中的位置</mark>，<mark>i是这个位置向量的第i个维度的编号</mark>。这样的波长形成了一个从<span class="math inline">\(2\pi\)</span>到<span class="math inline">\(1000\cdot 2\pi\)</span>的几何级数。这样会使得模型更容易学到相对距离，因为<span class="math inline">\(PE_{pos+k}\)</span>可以表示为<span class="math inline">\(PE_{pos}\)</span>的一个线性变化。</p></li>
+<h3 id="1-6-词向量矩阵及Softmax层"><a href="#1-6-词向量矩阵及Softmax层" class="headerlink" title="1.6 词向量矩阵及Softmax层"></a>1.6 词向量矩阵及Softmax层</h3><ul>
+<li>这里使用常见的词向量矩阵，并encoder会把词向量映射到$d_\text{model}$空间上，作为第一层的输入</li>
+<li>在做预测的时候，会将输出向量映射到一个词表大小的概率空间中，并使用softmax来归一化到一个$[0,1]$之间的概率值。</li>
 </ul>
-<h3 id="transformer-对比rnn及cnn">1.8 Transformer 对比RNN及CNN</h3>
-<ul>
-<li>发现RNN需要进行<span class="math inline">\(O(n)\)</span>个序列操作，而Transformer和CNN只需要<span class="math inline">\(O(1)\)</span>个</li>
-<li>CNN会形成一个层级结构，类似树状，<mark>所以任意两个单词到达的最大路径长度是</mark><span class="math inline">\(O(\log_k(n))\)</span></li>
-<li>如果self-attention只对该单词周围r个单词进行attention操作，可以得到restricted版本的self-attention， 这样可以减少每一层的计算复杂度，但未增加两个任意词之间到达的最长路径。 <img src="/images/pic/compare.png" /></li>
+<h3 id="1-7-位置编码（position-embeddings）"><a href="#1-7-位置编码（position-embeddings）" class="headerlink" title="1.7 位置编码（position embeddings）"></a>1.7 位置编码（position embeddings）</h3><ul>
+<li><p>因为模型没有recurrence及convolution的操作，所以为了<span class="mark">让模型能够分辨不同位置的单词</span>，需要对单词的位置进行编码。</p>
+<p>​    $$PE(pos, 2i)=\sin(pos/10000^{2i/d_\text{model}}) \ PE(pos, 2i+1)=\cos(pos/10000^{2i/d_\text{model}})$$</p>
+</li>
+<li><p><span class="mark">pos是这个单词在句子中的位置</span>，<span class="mark">i是这个位置向量的第i个维度的编号</span>。这样的波长形成了一个从$2\pi$到$1000\cdot 2\pi$的几何级数。这样会使得模型更容易学到相对距离，因为$PE_{pos+k}$可以表示为$PE_{pos}$的一个线性变化。</p>
+</li>
 </ul>
-<h2 id="transformer模型的训练细节">2. Transformer模型的训练细节</h2>
-<ol type="1">
+<h3 id="1-8-Transformer-对比RNN及CNN"><a href="#1-8-Transformer-对比RNN及CNN" class="headerlink" title="1.8 Transformer 对比RNN及CNN"></a>1.8 Transformer 对比RNN及CNN</h3><ul>
+<li>发现RNN需要进行$O(n)$个序列操作，而Transformer和CNN只需要$O(1)$个</li>
+<li>CNN会形成一个层级结构，类似树状，<span class="mark">所以任意两个单词到达的最大路径长度是</span>$O(\log_k(n))$</li>
+<li>如果self-attention只对该单词周围r个单词进行attention操作，可以得到restricted版本的self-attention， 这样可以减少每一层的计算复杂度，但未增加两个任意词之间到达的最长路径。<br><img src="/images/pic/compare.png" alt=""></li>
+</ul>
+<h2 id="2-Transformer模型的训练细节"><a href="#2-Transformer模型的训练细节" class="headerlink" title="2. Transformer模型的训练细节"></a>2. Transformer模型的训练细节</h2><ol>
 <li>优化方法</li>
-<li>正则化 （regularization）</li>
+<li>正则化 （regularization） </li>
 <li>label smoothing</li>
 </ol>
-<h3 id="优化方法">2.1 优化方法</h3>
-<ul>
-<li>Adam 优化方法，<span class="math inline">\(\beta_1=0.9, \beta_2=0.98, \epsilon=10^{-9}\)</span></li>
-<li>learning rate是随着训练的过程中，通过以下一个函数进行变化。一开始在前 warmup_steps个训练迭代中learning rate是线性增长的，往后随着步长的增加而下降。 一般会设置 warmup_steps = 4000 <span class="math display">\[lr = d_\text{model}^{-0.5} \cdot \min(\text{step_num}^{-0.5},\text{step_num}\cdot \text{warmup_steps}^{-1.5}) \]</span></li>
+<h3 id="2-1-优化方法"><a href="#2-1-优化方法" class="headerlink" title="2.1 优化方法"></a>2.1 优化方法</h3><ul>
+<li>Adam 优化方法，$\beta_1=0.9, \beta_2=0.98, \epsilon=10^{-9}$</li>
+<li>learning rate是随着训练的过程中，通过以下一个函数进行变化。一开始在前 warmup_steps个训练迭代中learning rate是线性增长的，往后随着步长的增加而下降。 一般会设置 warmup_steps = 4000<br>$$lr = d_\text{model}^{-0.5} \cdot \min(\text{step_num}^{-0.5},\text{step_num}\cdot \text{warmup_steps}^{-1.5}) $$</li>
 </ul>
-<h3 id="正则化-regularization">2.2 正则化 Regularization</h3>
-<ul>
-<li>对每一个子层的输出，在<mark>该子层的输出加上该子层的输入之前进行</mark>dropout</li>
-<li>对encoder及decoder，<mark>词向量和位置向量求和之后</mark>都进行dropout</li>
+<h3 id="2-2-正则化-Regularization"><a href="#2-2-正则化-Regularization" class="headerlink" title="2.2 正则化 Regularization"></a>2.2 正则化 Regularization</h3><ul>
+<li>对每一个子层的输出，在<span class="mark">该子层的输出加上该子层的输入之前进行</span>dropout</li>
+<li>对encoder及decoder，<span class="mark">词向量和位置向量求和之后</span>都进行dropout</li>
 </ul>
-<h3 id="label-smoothing">2.3 Label Smoothing</h3>
-<ul>
-<li>对于<mark>正确的标注label</mark>，在其one-hot表达上，<mark>加上一个均匀分布的向量</mark>，这个smoothing的数值是<span class="math inline">\(\epsilon_{ls}=0.1\)</span></li>
+<h3 id="2-3-Label-Smoothing"><a href="#2-3-Label-Smoothing" class="headerlink" title="2.3 Label Smoothing"></a>2.3 Label Smoothing</h3><ul>
+<li>对于<span class="mark">正确的标注label</span>，在其one-hot表达上，<span class="mark">加上一个均匀分布的向量</span>，这个smoothing的数值是$\epsilon_{ls}=0.1$</li>
 </ul>
-<h2 id="tranformer-code">3 Tranformer Code</h2>
-<p><a href="https://github.com/RacleRay/DeepLearningFoundation/blob/master/2.0-Transformer.ipynb" target="_blank" rel="noopener">TensorFlow transformer</a></p>
+<h2 id="3-Tranformer-Code"><a href="#3-Tranformer-Code" class="headerlink" title="3 Tranformer Code"></a>3 Tranformer Code</h2><p><a href="https://github.com/RacleRay/DeepLearningFoundation/blob/master/2.0-Transformer.ipynb" target="_blank" rel="noopener">TensorFlow transformer</a></p>
 <ul>
 <li><a href="https://github.com/tensorflow/models/tree/master/official/transformer" target="_blank" rel="noopener">官方代码</a></li>
 <li><a href="https://github.com/tensorflow/tensor2tensor/blob/master/tensor2tensor/models/transformer.py" target="_blank" rel="noopener">作者代码</a></li>
@@ -255,7 +261,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/07/07/Transformer-Model/" data-id="ckm4nip28000s782fe2vg4v2f" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/07/07/Transformer-Model/" data-id="ckm4nxehq000wvk2ff1xchtwv" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       

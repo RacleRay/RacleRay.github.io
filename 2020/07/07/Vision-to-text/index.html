@@ -5,12 +5,12 @@
   
   <title>Vision to text | Racle</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="VQA Notes  基于图像信息和文本信息匹配的VQA 基于注意力（attention）的VQA Stacked Attention  Image captioning  基本模型  图像编码  注意力机制 beam search 优化  目标识别  评估指标">
+  <meta name="description" content="VQA Notes 基于图像信息和文本信息匹配的VQA 基于注意力（attention）的VQA Stacked Attention   Image captioning 基本模型 图像编码 注意力机制 beam search 优化   目标识别   评估指标">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Vision to text">
 <meta property="og:url" content="https://racleray.github.io/2020/07/07/Vision-to-text/index.html">
 <meta property="og:site_name" content="Racle">
-<meta property="og:description" content="VQA Notes  基于图像信息和文本信息匹配的VQA 基于注意力（attention）的VQA Stacked Attention  Image captioning  基本模型  图像编码  注意力机制 beam search 优化  目标识别  评估指标">
+<meta property="og:description" content="VQA Notes 基于图像信息和文本信息匹配的VQA 基于注意力（attention）的VQA Stacked Attention   Image captioning 基本模型 图像编码 注意力机制 beam search 优化   目标识别   评估指标">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://racleray.github.io/images/VQA.assets/image-20200228220029800.png">
 <meta property="og:image" content="https://racleray.github.io/images/VQA.assets/image-20200228220726450.png">
@@ -125,117 +125,108 @@
     <div class="article-entry" itemprop="articleBody">
       
         <!-- TOC -->
+
 <ul>
-<li><a href="#vqa-notes">VQA Notes</a>
-<ul>
+<li><a href="#vqa-notes">VQA Notes</a><ul>
 <li><a href="#基于图像信息和文本信息匹配的vqa">基于图像信息和文本信息匹配的VQA</a></li>
 <li><a href="#基于注意力attention的vqa">基于注意力（attention）的VQA</a></li>
 <li><a href="#stacked-attention">Stacked Attention</a></li>
-</ul></li>
-<li><a href="#image-captioning">Image captioning</a>
-<ul>
-<li><a href="#基本模型">基本模型</a>
-<ul>
-<li><a href="#图像编码">图像编码</a>
-<ul>
+</ul>
+</li>
+<li><a href="#image-captioning">Image captioning</a><ul>
+<li><a href="#基本模型">基本模型</a><ul>
+<li><a href="#图像编码">图像编码</a><ul>
 <li><a href="#注意力机制">注意力机制</a></li>
 <li><a href="#beam-search-优化">beam search 优化</a></li>
-</ul></li>
+</ul>
+</li>
 <li><a href="#目标识别">目标识别</a></li>
-</ul></li>
+</ul>
+</li>
 <li><a href="#评估指标">评估指标</a></li>
-</ul></li>
+</ul>
+</li>
 </ul>
 <!-- /TOC -->
 <a id="more"></a>
+
+
 <p>视觉问答任务的定义是对于一张图片和一个跟这幅图片相关的问题，机器需要根据图片信息对问题进行回答。</p>
 <ul>
 <li>输入：一张图片和一个关于图片信息的问题，常见的问题形式有选择题，判断题</li>
 <li>输出：挑选出正确答案</li>
 </ul>
-<p>​ 视觉问答任务本质上是一个多模态的研究问题。这个任务需要我们结合自然语言处理（NLP）和计算机视觉（CV)的技术来进行回答。</p>
+<p>​    视觉问答任务本质上是一个多模态的研究问题。这个任务需要我们结合自然语言处理（NLP）和计算机视觉（CV)的技术来进行回答。</p>
 <ul>
-<li>自然语言处理（NLP）
-<ul>
+<li>自然语言处理（NLP）<ul>
 <li>举一个在NLP领域常见的基于文本的Q&amp;A问题：how many bridges are there in Paris?</li>
 <li>一个NLP Q&amp;A 系统需要首先识别出这是一个什么类型的问题，比如这里是一个“how many” 关于计数的问题，所以答案应该是一个数字。之后系统需要提取出哪个物体（object）需要机器去计数，比如这里是 “bridges“。最后需要我们提取出问题中的背景（context），比如这个问题计数的限定范围是在巴黎这个城市。</li>
 <li>当一个Q&amp;A系统分析完问题，系统需要根据知识库（knowledge base）去得到答案。</li>
-</ul></li>
-<li>机器视觉（CV)
-<ul>
-<li>VQA区别于传统的text QA在于搜索答案和推理部分都是基于图片的内容。所以系统需要进行目标检测（object detection），再进行分类（classification），之后系统需要对图片中物体之间的关系进行推理。</li>
-</ul></li>
 </ul>
-<h2 id="vqa-notes">VQA Notes</h2>
-<h3 id="基于图像信息和文本信息匹配的vqa">基于图像信息和文本信息匹配的VQA</h3>
-<p>通常，一个VQA系统包含了以下三个步骤：</p>
-<ol type="1">
+</li>
+<li>机器视觉（CV)<ul>
+<li>VQA区别于传统的text QA在于搜索答案和推理部分都是基于图片的内容。所以系统需要进行目标检测（object detection），再进行分类（classification），之后系统需要对图片中物体之间的关系进行推理。</li>
+</ul>
+</li>
+</ul>
+<h2 id="VQA-Notes"><a href="#VQA-Notes" class="headerlink" title="VQA Notes"></a>VQA Notes</h2><h3 id="基于图像信息和文本信息匹配的VQA"><a href="#基于图像信息和文本信息匹配的VQA" class="headerlink" title="基于图像信息和文本信息匹配的VQA"></a>基于图像信息和文本信息匹配的VQA</h3><p>通常，一个VQA系统包含了以下三个步骤：</p>
+<ol>
 <li>抽取问题特征</li>
 <li>抽取图片特征</li>
 <li>结合图片和问题特征去生成答案</li>
 </ol>
-<figure>
-<img src="/images/VQA.assets/image-20200228220029800.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
-<figure>
-<img src="/images/VQA.assets/image-20200228220726450.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
-<h3 id="基于注意力attention的vqa">基于注意力（attention）的VQA</h3>
-<p>​ VQA方案是使用位置注意力（spatial attention）去生成关于区域（region）的位置特征，并训练一个CNN网络。一般有两种方法去获得一张图片关于方位的区域。</p>
-<ol type="1">
+<p><img src="/images/VQA.assets/image-20200228220029800.png" alt="image"></p>
+<p><img src="/images/VQA.assets/image-20200228220726450.png" alt="image"></p>
+<h3 id="基于注意力（attention）的VQA"><a href="#基于注意力（attention）的VQA" class="headerlink" title="基于注意力（attention）的VQA"></a>基于注意力（attention）的VQA</h3><p>​    VQA方案是使用位置注意力（spatial attention）去生成关于区域（region）的位置特征，并训练一个CNN网络。一般有两种方法去获得一张图片关于方位的区域。</p>
+<ol>
 <li>划分成网格状（grid），并根据问题与图片特征去预测每一个网格的attention weight，将图片的CNN的feature通过加权求和的方式得到attention weighted feature，再通过attention weighted feature发现相对比较重要的区域</li>
 </ol>
-<p><img src="/images/VQA.assets/image-20200228220844530.png" alt="image" style="zoom:80%;" /></p>
-<ol start="2" type="1">
+<img src="/images/VQA.assets/image-20200228220844530.png" alt="image" style="zoom:80%;" />
+
+<ol start="2">
 <li>目标识别的方式生成很多bounding box。</li>
 </ol>
-<p><img src="/images/VQA.assets/image-20200228220942528.png" alt="image" style="zoom:80%;" /></p>
+<img src="/images/VQA.assets/image-20200228220942528.png" alt="image" style="zoom:80%;" />
+
 <p>根据生成的区域（region），使用问题去找到最相关的区域，并利用这些区域去生成答案。</p>
-<h3 id="stacked-attention">Stacked Attention</h3>
-<p>Stacked Attention，多次重复question-image attention。</p>
-<figure>
-<img src="/images/VQA.assets/image-20200228221149468.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
+<h3 id="Stacked-Attention"><a href="#Stacked-Attention" class="headerlink" title="Stacked Attention"></a>Stacked Attention</h3><p>Stacked Attention，多次重复question-image attention。</p>
+<p><img src="/images/VQA.assets/image-20200228221149468.png" alt="image"></p>
 <ul>
-<li>图片使用CNN 编码 <span class="math display">\[\phi = CNN(I)\]</span></li>
-<li>问题使用LSTM编码 <span class="math display">\[s= LSTM(E_q)\]</span></li>
-<li>Stacked Attention <span class="math display">\[\alpha_{c,l} \propto \exp F_c(s, \phi_l) ,~~  \sum_{l=1}^L \alpha_{c,l}=1, ~~ x_c = \sum_l \alpha_{c,l}\phi_l\]</span></li>
-<li>classifier, 其中G=[G_1, G_2, ..., G_M]是两层的全连接层 <span class="math display">\[P(a_i|I,q) \propto \exp G_i(x,s),~~ x=[x_1, x2,...,x_C]\]</span></li>
+<li>图片使用CNN 编码<br>$$\phi = CNN(I)$$</li>
+<li>问题使用LSTM编码<br>$$s= LSTM(E_q)$$</li>
+<li>Stacked Attention<br>$$\alpha_{c,l} \propto \exp F_c(s, \phi_l) ,<del>~  \sum_{l=1}^L \alpha_{c,l}=1, ~</del> x_c = \sum_l \alpha_{c,l}\phi_l$$</li>
+<li>classifier, 其中G=[G_1, G_2, …, G_M]是两层的全连接层<br>$$P(a_i|I,q) \propto \exp G_i(x,s),~~ x=[x_1, x2,…,x_C]$$</li>
 </ul>
-<h2 id="image-captioning">Image captioning</h2>
-<h3 id="基本模型">基本模型</h3>
-<p>​ 常见的image captioning 系统是由一个CNN+RNN的编码解码模型完成。类比一下machine translation系统，通常由一个RNN encoder + RNN decoder组成。</p>
-<h4 id="图像编码">图像编码</h4>
-<p>​ Vinyals et al. (2014) Show and Tell: A Neural Image Caption Generator 这篇文章将seq2seq模型中的LSTM encoder换成CNN encoder，用于提取图片的信息，得到一个固定长度的内容向量（context vector），之后通过一个RNN decoder，将信息使用文字的方式解码出来。</p>
-<p><img src="/images/Image_Captioning.assets/image-20200228213101616.png" alt="image" style="zoom:50%;" /></p>
-<p>​ 结合注意力机制 - Kelvin et al. (2014) Show, Attend and Tell: Neural Image Caption Generation with Visual Attention</p>
+<h2 id="Image-captioning"><a href="#Image-captioning" class="headerlink" title="Image captioning"></a>Image captioning</h2><h3 id="基本模型"><a href="#基本模型" class="headerlink" title="基本模型"></a>基本模型</h3><p>​    常见的image captioning 系统是由一个CNN+RNN的编码解码模型完成。类比一下machine translation系统，通常由一个RNN encoder + RNN decoder组成。</p>
+<h4 id="图像编码"><a href="#图像编码" class="headerlink" title="图像编码"></a>图像编码</h4><p>​    Vinyals et al. (2014) Show and Tell: A Neural Image Caption Generator 这篇文章将seq2seq模型中的LSTM encoder换成CNN encoder，用于提取图片的信息，得到一个固定长度的内容向量（context vector），之后通过一个RNN decoder，将信息使用文字的方式解码出来。</p>
+<img src="/images/Image_Captioning.assets/image-20200228213101616.png" alt="image" style="zoom:50%;" />
+
+<p>​    结合注意力机制 - Kelvin et al. (2014) Show, Attend and Tell: Neural Image Caption Generation with Visual Attention</p>
 <blockquote>
 <ul>
 <li>类比人看图说话：当人在解说一幅图片的时候，每预测一个字，会关注到图片上的不同位置。</li>
 <li>在解码器预测文字的时候，会关注到跟当前文字内容和图片最相关的位置。</li>
 </ul>
 </blockquote>
-<h5 id="注意力机制">注意力机制</h5>
-<ol type="1">
-<li>一张图片的卷积层中的向量有14x14=196个feature maps <span class="math inline">\(a_i, i=1...196\)</span>，每个feature map对应于每个图片中不同的高亮位置。</li>
-<li>注意力机制通过计算每个feature map与当前的hidden state计算两者之间的相关度，这里的hidden state <span class="math inline">\(h_{t-1}\)</span> 总结了已经生成的1到t-1个单词的内容。 <span class="math display">\[e_{ti}=f_{att}(a_i, h_{t-1}) \\ \alpha_{ti} = {\exp(e_{ti}) \over \sum_{k=1}^L \exp(e_{tk}) }\]</span></li>
-<li>之后通过加权求和得到注意力内容向量 <span class="math inline">\(\hat{z}_t\)</span>。 <span class="math display">\[\hat{z}_t=\phi(\{a_i\}, \{\alpha_i\})\]</span></li>
-<li>通过将196个feature maps求平均值去初始化LSTM中的 memory cell <span class="math inline">\(c_0, h_0\)</span></li>
-<li>根据图片及已经生成的部分单词，去预测下一个单词 <span class="math display">\[c_0 = f_{init,c}({1\over L} \sum_i^L a_i) \\ h_0 = f_{init,h}({1\over L} \sum_i^L a_i) \\  p(y_t|a, y_1^{t-1}) \propto \exp(L_o (E y_{t-1} + L_h h_t + L_z \hat{z}_t))\]</span></li>
+<h5 id="注意力机制"><a href="#注意力机制" class="headerlink" title="注意力机制"></a>注意力机制</h5><ol>
+<li>一张图片的卷积层中的向量有14x14=196个feature maps $a_i, i=1…196$，每个feature map对应于每个图片中不同的高亮位置。</li>
+<li>注意力机制通过计算每个feature map与当前的hidden state计算两者之间的相关度，这里的hidden state $h_{t-1}$ 总结了已经生成的1到t-1个单词的内容。<br>$$e_{ti}=f_{att}(a_i, h_{t-1}) \ \alpha_{ti} = {\exp(e_{ti}) \over \sum_{k=1}^L \exp(e_{tk}) }$$</li>
+<li>之后通过加权求和得到注意力内容向量 $\hat{z}_t$。<br>$$\hat{z}_t=\phi({a_i}, {\alpha_i})$$</li>
+<li>通过将196个feature maps求平均值去初始化LSTM中的 memory cell $c_0, h_0$ </li>
+<li>根据图片及已经生成的部分单词，去预测下一个单词<br>$$c_0 = f_{init,c}({1\over L} \sum_i^L a_i) \ h_0 = f_{init,h}({1\over L} \sum_i^L a_i) \  p(y_t|a, y_1^{t-1}) \propto \exp(L_o (E y_{t-1} + L_h h_t + L_z \hat{z}_t))$$</li>
 </ol>
 <p><a href="https://github.com/RacleRay/Have_Fun/tree/master/image_caption" target="_blank" rel="noopener">show attention and tell</a></p>
-<h5 id="beam-search-优化">beam search 优化</h5>
-<p>​ 每次预测下一个单词的时候，计算当前所有路径的log-likelihood并进行排序, 只保留log-likelihood 最大值的K个beams。</p>
-<h4 id="目标识别">目标识别</h4>
-<p>​ Fang et al 2014， From Captions to Visual Concepts and Back, 提供了另一个image caption系统的思路。</p>
-<ol type="1">
+<h5 id="beam-search-优化"><a href="#beam-search-优化" class="headerlink" title="beam search 优化"></a>beam search 优化</h5><p>​    每次预测下一个单词的时候，计算当前所有路径的log-likelihood并进行排序, 只保留log-likelihood 最大值的K个beams。</p>
+<h4 id="目标识别"><a href="#目标识别" class="headerlink" title="目标识别"></a>目标识别</h4><p>​    Fang et al 2014， From Captions to Visual Concepts and Back, 提供了另一个image caption系统的思路。</p>
+<ol>
 <li>预测文字： 使用一个CNN去做目标识别，并且根据bounding box生成可能出现的文字</li>
 <li>生成句子：通过一个统计语言模型，生成很多个可能的句子集合</li>
 <li>重新排序已经生成的句子： 通过学习一个Deep Multimodal Similarity Model （DMSM）去重新排序所有可能的句子集合，取最高分数的句子作为系统输出。</li>
 </ol>
-<p><img src="/images/Image_Captioning.assets/image-20200228213216469.png" alt="image" style="zoom:67%;" /></p>
-<h3 id="评估指标">评估指标</h3>
-<p>常见的image captioning 系统的评估指标使用的是</p>
+<img src="/images/Image_Captioning.assets/image-20200228213216469.png" alt="image" style="zoom:67%;" />
+
+
+<h3 id="评估指标"><a href="#评估指标" class="headerlink" title="评估指标"></a>评估指标</h3><p>常见的image captioning 系统的评估指标使用的是</p>
 <ul>
 <li>BLEU， 是常见的机器翻译系统的评估指标，计算的是一句预测的文字与人类标注的参考文字之间的n-gram 重合度（overlap）。</li>
 <li>METEOR， 也是常见的机器翻译系统的评估指标，其通过建立一个短语词表（phrase table），考虑了输出文本是否使用了相似短语。</li>
@@ -253,7 +244,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/07/07/Vision-to-text/" data-id="ckm4nip2b000x782fe0a96qrc" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/07/07/Vision-to-text/" data-id="ckm4nxehs000zvk2f73ox3kau" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       

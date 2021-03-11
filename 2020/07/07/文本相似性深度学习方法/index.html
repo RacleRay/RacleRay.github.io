@@ -5,12 +5,12 @@
   
   <title>文本相似性深度学习方法 | Racle</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Representation-based  InferSent DSSM(Deep Structured Semantic Model)  Word Hashing 模型 CDSSM Recurrent DSSM 评价指标  Cumulative Gain Discounted Cumulative Gain NDCG：normalized discounted">
+  <meta name="description" content="Representation-based InferSent DSSM(Deep Structured Semantic Model) Word Hashing 模型 CDSSM Recurrent DSSM 评价指标 Cumulative Gain Discounted Cumulative Gain NDCG：normalized discounted cumulative gain E">
 <meta property="og:type" content="article">
 <meta property="og:title" content="文本相似性深度学习方法">
 <meta property="og:url" content="https://racleray.github.io/2020/07/07/%E6%96%87%E6%9C%AC%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/index.html">
 <meta property="og:site_name" content="Racle">
-<meta property="og:description" content="Representation-based  InferSent DSSM(Deep Structured Semantic Model)  Word Hashing 模型 CDSSM Recurrent DSSM 评价指标  Cumulative Gain Discounted Cumulative Gain NDCG：normalized discounted">
+<meta property="og:description" content="Representation-based InferSent DSSM(Deep Structured Semantic Model) Word Hashing 模型 CDSSM Recurrent DSSM 评价指标 Cumulative Gain Discounted Cumulative Gain NDCG：normalized discounted cumulative gain E">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://racleray.github.io/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%A8%A1%E5%9E%8B.assets/image-20200229123435028.png">
 <meta property="og:image" content="https://racleray.github.io/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%A8%A1%E5%9E%8B.assets/image-20200229123457321.png">
@@ -148,207 +148,154 @@
     <div class="article-entry" itemprop="articleBody">
       
         <!-- TOC -->
+
 <ul>
-<li><a href="#representation-based">Representation-based</a>
-<ul>
+<li><a href="#representation-based">Representation-based</a><ul>
 <li><a href="#infersent">InferSent</a></li>
-<li><a href="#dssmdeep-structured-semantic-model">DSSM(Deep Structured Semantic Model)</a>
-<ul>
+<li><a href="#dssmdeep-structured-semantic-model">DSSM(Deep Structured Semantic Model)</a><ul>
 <li><a href="#word-hashing">Word Hashing</a></li>
 <li><a href="#模型">模型</a></li>
 <li><a href="#cdssm">CDSSM</a></li>
 <li><a href="#recurrent-dssm">Recurrent DSSM</a></li>
-<li><a href="#评价指标">评价指标</a>
-<ul>
+<li><a href="#评价指标">评价指标</a><ul>
 <li><a href="#cumulative-gain">Cumulative Gain</a></li>
 <li><a href="#discounted-cumulative-gain">Discounted Cumulative Gain</a></li>
 <li><a href="#ndcgnormalized-discounted-cumulative-gain">NDCG：normalized discounted cumulative gain</a></li>
 <li><a href="#example">Example</a></li>
-</ul></li>
-</ul></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a href="#dssm的其他应用">DSSM的其他应用</a></li>
-</ul></li>
-<li><a href="#interaction-based-matching">Interaction-based Matching</a>
-<ul>
-<li><a href="#drmmdeep-relevance-matching-model">DRMM：Deep Relevance Matching Model</a>
-<ul>
+</ul>
+</li>
+<li><a href="#interaction-based-matching">Interaction-based Matching</a><ul>
+<li><a href="#drmmdeep-relevance-matching-model">DRMM：Deep Relevance Matching Model</a><ul>
 <li><a href="#term-gating-network">Term Gating Network</a></li>
 <li><a href="#hinge-loss">Hinge loss</a></li>
-</ul></li>
-</ul></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 <!-- /TOC -->
 <a id="more"></a>
+
 <p>基于深度学习的语义匹配方法一般有两种类型：</p>
 <ul>
 <li>Representation-based Match：简单，速度快。</li>
 </ul>
-<p><img src="/images/深度学习相似性模型.assets/image-20200229123435028.png" alt="image" style="zoom:67%;" /></p>
+<img src="/images/深度学习相似性模型.assets/image-20200229123435028.png" alt="image" style="zoom:67%;" />
+
+
+
 <ul>
 <li>Interaction-based Match：计算相对复杂，参数空间也更大。</li>
 </ul>
-<p><img src="/images/深度学习相似性模型.assets/image-20200229123457321.png" alt="image" style="zoom:67%;" /></p>
-<h3 id="representation-based">Representation-based</h3>
-<p>Representation-based Match句子相似度计算的一般训练流程如下：</p>
-<ol type="1">
-<li><p>准备同义句数据集（比如，The Paraphrase Database，ParaNMT-50M）；</p></li>
+<img src="/images/深度学习相似性模型.assets/image-20200229123457321.png" alt="image" style="zoom:67%;" />
+
+
+<h3 id="Representation-based"><a href="#Representation-based" class="headerlink" title="Representation-based"></a>Representation-based</h3><p>Representation-based Match句子相似度计算的一般训练流程如下：</p>
+<ol>
+<li><p>准备同义句数据集（比如，The Paraphrase Database，ParaNMT-50M）；</p>
+</li>
 <li><p>选择模型结构（比如，Word Averaging，BiLSTM Averaging等）；</p>
 <ul>
 <li>Word Averaging模型：平均句子中的所有词向量作为句子语义的表达</li>
 <li>BiLSTM Averaging模型：合并前向和反向LSTM编码得到的隐向量作为句子语义的表达</li>
 <li>相对进阶一点的模型有InferSent，DSSM，CDSSM</li>
-</ul></li>
+</ul>
+</li>
 <li><p>选择负样本：</p>
 <ul>
-<li>从当前batch中寻找与当前句子意义（根据当前模型判断）最不相近 的句子。</li>
-<li>或者，Mega-batching：从更大的样本（合并多个mini batches）中寻找 意义较远的句子。</li>
-</ul></li>
+<li>从当前batch中寻找与当前句子意义（根据当前模型判断）最不相近<br>的句子。</li>
+<li>或者，Mega-batching：从更大的样本（合并多个mini batches）中寻找<br>意义较远的句子。</li>
+</ul>
+</li>
 <li><p>优化目标：hinge loss</p>
 <ul>
-<li><span class="math display">\[
-\begin{array}{l}
-\min _{W_{c}, W_{w}} \frac{1}{|S|}\left(\sum_{\left\langle s_{1}, s_{2}\right\rangle \in S} \max \left(0, \delta-\cos \left(g\left(s_{1}\right), g\left(s_{2}\right)\right)\right.\right. \\
-\left.+\cos \left(g\left(s_{1}\right), g\left(t_{1}\right)\right)\right)+\max \left(0, \delta-\cos \left(g\left(s_{1}\right), g\left(s_{2}\right)\right)\right. \\
-\left.\left.+\cos \left(g\left(s_{2}\right), g\left(t_{2}\right)\right)\right)\right)+\lambda_{c}\left\|W_{c}\right\|^{2}+\lambda_{w}\left\|W_{w_{\text {initial}}}-W_{w}\right\|^{2}
-\end{array}
-\]</span></li>
+<li>$$<br>\begin{array}{l}<br>\min <em>{W</em>{c}, W_{w}} \frac{1}{|S|}\left(\sum_{\left\langle s_{1}, s_{2}\right\rangle \in S} \max \left(0, \delta-\cos \left(g\left(s_{1}\right), g\left(s_{2}\right)\right)\right.\right. \<br>\left.+\cos \left(g\left(s_{1}\right), g\left(t_{1}\right)\right)\right)+\max \left(0, \delta-\cos \left(g\left(s_{1}\right), g\left(s_{2}\right)\right)\right. \<br>\left.\left.+\cos \left(g\left(s_{2}\right), g\left(t_{2}\right)\right)\right)\right)+\lambda_{c}\left|W_{c}\right|^{2}+\lambda_{w}\left|W_{w_{\text {initial}}}-W_{w}\right|^{2}<br>\end{array}<br>$$</li>
 </ul>
-<p>s之间正样本相似度要尽量接近<span class="math inline">\(\delta\)</span>，与负样本t之间相似度要尽量大。同时在正则化中加入词向量变化约束，计算之后的词向量不能和初始化使用的Glove（或其他）词向量相差过大。</p></li>
+<p>s之间正样本相似度要尽量接近$\delta$，与负样本t之间相似度要尽量大。同时在正则化中加入词向量变化约束，计算之后的词向量不能和初始化使用的Glove（或其他）词向量相差过大。</p>
+</li>
 </ol>
-<h4 id="infersent">InferSent</h4>
-<p>​ <a href="https://github.com/facebookresearch/InferSent" target="_blank" rel="noopener">InferSent Git</a></p>
-<p>​ 给定两个句子，预测两个句子之间的关系 (entailment隐含, contradiction互斥, neutral无关)，即预测三种概率。</p>
-<figure>
-<img src="/images/深度学习相似性模型.assets/image-20200229135253619.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
-<p>​ encoder作为语句特征的提取器。</p>
-<p>​ 训练时，若只为学习sentence representation，线性分类器也许会得到比较好的效果。为了达到更好的分类效果，可以采用更复杂的非线性分类器。</p>
-<h4 id="dssmdeep-structured-semantic-model">DSSM(Deep Structured Semantic Model)</h4>
-<p>​ 微软研究院使用，用户搜索的关键词和最终点开的网页标题组成的数据，训练相似度计算模型。DSSM将语句映射到语义空间的连续表示，计算相似性。</p>
-<h5 id="word-hashing">Word Hashing</h5>
-<p>• 用于解决单词表和out of vocabulary问题 • 把单词(e.g. good)前后加上# (#good#) • 然后取所有的trigram (#go, goo, ood, od#)，表示成bag of trigram 向量</p>
-<p>​ 原词表转换为了Compact representation，大小会变小，节省了空间。</p>
-<p>​ 对拼写错误有一定鲁棒性。</p>
-<p>​ 在大型NLP任务中可以轻松使用。</p>
-<h5 id="模型">模型</h5>
-<figure>
-<img src="/images/深度学习相似性模型.assets/image-20200229143653433.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
-<figure>
-<img src="/images/深度学习相似性模型.assets/image-20200229143732062.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
+<h4 id="InferSent"><a href="#InferSent" class="headerlink" title="InferSent"></a>InferSent</h4><p>​    <a href="https://github.com/facebookresearch/InferSent" target="_blank" rel="noopener">InferSent Git</a></p>
+<p>​    给定两个句子，预测两个句子之间的关系 (entailment隐含, contradiction互斥, neutral无关)，即预测三种概率。</p>
+<p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%A8%A1%E5%9E%8B.assets/image-20200229135253619.png" alt="image"></p>
+<p>​    encoder作为语句特征的提取器。</p>
+<p>​    训练时，若只为学习sentence representation，线性分类器也许会得到比较好的效果。为了达到更好的分类效果，可以采用更复杂的非线性分类器。</p>
+<h4 id="DSSM-Deep-Structured-Semantic-Model"><a href="#DSSM-Deep-Structured-Semantic-Model" class="headerlink" title="DSSM(Deep Structured Semantic Model)"></a>DSSM(Deep Structured Semantic Model)</h4><p>​    微软研究院使用，用户搜索的关键词和最终点开的网页标题组成的数据，训练相似度计算模型。DSSM将语句映射到语义空间的连续表示，计算相似性。</p>
+<h5 id="Word-Hashing"><a href="#Word-Hashing" class="headerlink" title="Word Hashing"></a>Word Hashing</h5><p>• 用于解决单词表和out of vocabulary问题<br>• 把单词(e.g. good)前后加上# (#good#)<br>• 然后取所有的trigram (#go, goo, ood, od#)，表示成bag of trigram 向量</p>
+<p>​    原词表转换为了Compact representation，大小会变小，节省了空间。</p>
+<p>​    对拼写错误有一定鲁棒性。</p>
+<p>​    在大型NLP任务中可以轻松使用。</p>
+<h5 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h5><p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%A8%A1%E5%9E%8B.assets/image-20200229143653433.png" alt="image"></p>
+<p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%A8%A1%E5%9E%8B.assets/image-20200229143732062.png" alt="image"></p>
 <p>训练目标：</p>
-<figure>
-<img src="/images/深度学习相似性模型.assets/image-20200229143907531.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
-<h5 id="cdssm">CDSSM</h5>
-<figure>
-<img src="/images/深度学习相似性模型.assets/image-20200229144239695.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
-<p>​ convolutional layer捕捉了局部上下文的含义。那么相同单词在不同上下文中的多义性，就可能通过模型捕捉。</p>
-<p>​ global pooling捕捉语句整体的意图。实验中，一般情况下max pooling能够较准确地提取出整体语义。</p>
-<h5 id="recurrent-dssm">Recurrent DSSM</h5>
-<figure>
-<img src="/images/深度学习相似性模型.assets/image-20200229145347251.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
-<p>​ 对比Seq2Seq，DSSM倾向于在语句语义空间内优化，而Seq2Seq更倾向于在word-level进行学习优化。</p>
-<h5 id="评价指标">评价指标</h5>
-<p>​ NDCG a measure of ranking quality.</p>
-<p>​ 两个基本假设：</p>
+<p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%A8%A1%E5%9E%8B.assets/image-20200229143907531.png" alt="image"></p>
+<h5 id="CDSSM"><a href="#CDSSM" class="headerlink" title="CDSSM"></a>CDSSM</h5><p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%A8%A1%E5%9E%8B.assets/image-20200229144239695.png" alt="image"></p>
+<p>​    convolutional layer捕捉了局部上下文的含义。那么相同单词在不同上下文中的多义性，就可能通过模型捕捉。</p>
+<p>​    global pooling捕捉语句整体的意图。实验中，一般情况下max pooling能够较准确地提取出整体语义。</p>
+<h5 id="Recurrent-DSSM"><a href="#Recurrent-DSSM" class="headerlink" title="Recurrent DSSM"></a>Recurrent DSSM</h5><p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%A8%A1%E5%9E%8B.assets/image-20200229145347251.png" alt="image"></p>
+<p>​    对比Seq2Seq，DSSM倾向于在语句语义空间内优化，而Seq2Seq更倾向于在word-level进行学习优化。</p>
+<h5 id="评价指标"><a href="#评价指标" class="headerlink" title="评价指标"></a>评价指标</h5><p>​    NDCG  a measure of ranking quality.</p>
+<p>​    两个基本假设：</p>
 <blockquote>
-<ol type="1">
+<ol>
 <li>相关度越高，排名越高。</li>
 <li>高度相关的排名高于部分相关，部分相关的排名高于无关。</li>
 </ol>
 </blockquote>
-<h6 id="cumulative-gain">Cumulative Gain</h6>
-<figure>
-<img src="/images/深度学习相似性模型.assets/image-20200229165603261.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
-<p>​ <span class="math inline">\(rel_i\)</span> -- 是相关度分数，比如，第i个结果高度相关为5分</p>
-<h6 id="discounted-cumulative-gain">Discounted Cumulative Gain</h6>
-<figure>
-<img src="/images/深度学习相似性模型.assets/image-20200229165802242.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
-<p>​ 对高度相关的结果出现在ranking靠后位置时，进行惩罚。</p>
-<p>​ 另一个形式为：</p>
-<figure>
-<img src="/images/深度学习相似性模型.assets/image-20200229170431528.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
-<p>​ 这个形式相对比较常用。</p>
-<h6 id="ndcgnormalized-discounted-cumulative-gain">NDCG：normalized discounted cumulative gain</h6>
-<figure>
-<img src="/images/深度学习相似性模型.assets/image-20200229170809101.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
-<figure>
-<img src="/images/深度学习相似性模型.assets/image-20200229170823985.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
-<h6 id="example">Example</h6>
-<p>​ 令0 -- 不相关，1，2 -- 不同程度部分相关，3 -- 高度相关。相关性算法排序了前6个结果，降序：</p>
-<figure>
-<img src="/images/深度学习相似性模型.assets/image-20200229171442666.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
-<p>​ 而用户数据中的相关性分数Ground Truth为，每个位置index代表一个语句：</p>
-<figure>
-<img src="/images/深度学习相似性模型.assets/image-20200229171550873.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
-<p>​ Cumulative Gain，简单相加：</p>
-<figure>
-<img src="/images/深度学习相似性模型.assets/image-20200229171747927.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
-<p>​ Discounted Cumulative Gain，DCG结果为：</p>
-<figure>
-<img src="/images/深度学习相似性模型.assets/image-20200229173915052.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
-<figure>
-<img src="/images/深度学习相似性模型.assets/image-20200229171915494.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
-<p>​ NDCG的IDCG，为期望的相关性排列顺序，即期望的最优输出：</p>
-<figure>
-<img src="/images/深度学习相似性模型.assets/image-20200229173842066.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
-<figure>
-<img src="/images/深度学习相似性模型.assets/image-20200229173931273.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
-<figure>
-<img src="/images/深度学习相似性模型.assets/image-20200229174016420.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
-<h4 id="dssm的其他应用">DSSM的其他应用</h4>
-<ol type="1">
-<li>训练word embedding：上下文与中心词的语义相似性
+<h6 id="Cumulative-Gain"><a href="#Cumulative-Gain" class="headerlink" title="Cumulative Gain"></a>Cumulative Gain</h6><p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%A8%A1%E5%9E%8B.assets/image-20200229165603261.png" alt="image"></p>
+<p>​    $rel_i$ – 是相关度分数，比如，第i个结果高度相关为5分</p>
+<h6 id="Discounted-Cumulative-Gain"><a href="#Discounted-Cumulative-Gain" class="headerlink" title="Discounted Cumulative Gain"></a>Discounted Cumulative Gain</h6><p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%A8%A1%E5%9E%8B.assets/image-20200229165802242.png" alt="image"></p>
+<p>​        对高度相关的结果出现在ranking靠后位置时，进行惩罚。</p>
+<p>​        另一个形式为：</p>
+<p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%A8%A1%E5%9E%8B.assets/image-20200229170431528.png" alt="image"></p>
+<p>​        这个形式相对比较常用。</p>
+<h6 id="NDCG：normalized-discounted-cumulative-gain"><a href="#NDCG：normalized-discounted-cumulative-gain" class="headerlink" title="NDCG：normalized discounted cumulative gain"></a>NDCG：normalized discounted cumulative gain</h6><p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%A8%A1%E5%9E%8B.assets/image-20200229170809101.png" alt="image"></p>
+<p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%A8%A1%E5%9E%8B.assets/image-20200229170823985.png" alt="image"></p>
+<h6 id="Example"><a href="#Example" class="headerlink" title="Example"></a>Example</h6><p>​    令0 – 不相关，1，2 – 不同程度部分相关，3 – 高度相关。相关性算法排序了前6个结果，降序：</p>
+<p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%A8%A1%E5%9E%8B.assets/image-20200229171442666.png" alt="image"></p>
+<p>​    而用户数据中的相关性分数Ground Truth为，每个位置index代表一个语句：</p>
+<p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%A8%A1%E5%9E%8B.assets/image-20200229171550873.png" alt="image"></p>
+<p>​    Cumulative Gain，简单相加：</p>
+<p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%A8%A1%E5%9E%8B.assets/image-20200229171747927.png" alt="image"></p>
+<p>​    Discounted Cumulative Gain，DCG结果为：</p>
+<p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%A8%A1%E5%9E%8B.assets/image-20200229173915052.png" alt="image"></p>
+<p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%A8%A1%E5%9E%8B.assets/image-20200229171915494.png" alt="image"></p>
+<p>​    NDCG的IDCG，为期望的相关性排列顺序，即期望的最优输出：</p>
+<p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%A8%A1%E5%9E%8B.assets/image-20200229173842066.png" alt="image"></p>
+<p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%A8%A1%E5%9E%8B.assets/image-20200229173931273.png" alt="image"></p>
+<p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%A8%A1%E5%9E%8B.assets/image-20200229174016420.png" alt="image"></p>
+<h4 id="DSSM的其他应用"><a href="#DSSM的其他应用" class="headerlink" title="DSSM的其他应用"></a>DSSM的其他应用</h4><ol>
+<li><p>训练word embedding：上下文与中心词的语义相似性</p>
 <ul>
-<li><img src="/images/深度学习相似性模型.assets/image-20200229174248220.png" alt="image" style="zoom:67%;" /></li>
-</ul></li>
-<li>Knowledge Base Embedding学习</li>
+<li><img src="/images/深度学习相似性模型.assets/image-20200229174248220.png" alt="image" style="zoom:67%;" />
+</li>
+</ul>
+</li>
+<li><p>Knowledge Base Embedding学习</p>
+</li>
 </ol>
-<p><img src="/images/深度学习相似性模型.assets/image-20200229174559343.png" alt="image" style="zoom:40%;" /></p>
-<ol start="3" type="1">
+<img src="/images/深度学习相似性模型.assets/image-20200229174559343.png" alt="image" style="zoom:40%;" />
+
+<ol start="3">
 <li>QA</li>
 </ol>
-<p><img src="/images/深度学习相似性模型.assets/image-20200229174710038.png" alt="image" style="zoom:50%;" /></p>
-<ol start="4" type="1">
+<img src="/images/深度学习相似性模型.assets/image-20200229174710038.png" alt="image" style="zoom:50%;" />
+
+<ol start="4">
 <li>Information Retrieval</li>
 <li>Contextual Entity Ranking</li>
 </ol>
-<h3 id="interaction-based-matching">Interaction-based Matching</h3>
-<h4 id="drmmdeep-relevance-matching-model">DRMM：Deep Relevance Matching Model</h4>
-<figure>
-<img src="/images/深度学习相似性模型.assets/image-20200229175747727.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
-<p>​ 输入网络的特征是处理过的，把matching分数转化为histogram统计特征：</p>
-<figure>
-<img src="/images/深度学习相似性模型.assets/image-20200229175856441.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
-<p>​ 即q的term与d计算cosinesimilarity，这里不是乘法，然后统计多个不同区间的相似度的统计分布。</p>
-<h5 id="term-gating-network">Term Gating Network</h5>
-<p>​ Term Gating Network用于计query中每个term的weight。</p>
-<figure>
-<img src="/images/深度学习相似性模型.assets/image-20200229180448787.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
-<h5 id="hinge-loss">Hinge loss</h5>
-<figure>
-<img src="/images/深度学习相似性模型.assets/image-20200229180545407.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
+<h3 id="Interaction-based-Matching"><a href="#Interaction-based-Matching" class="headerlink" title="Interaction-based Matching"></a>Interaction-based Matching</h3><h4 id="DRMM：Deep-Relevance-Matching-Model"><a href="#DRMM：Deep-Relevance-Matching-Model" class="headerlink" title="DRMM：Deep Relevance Matching Model"></a>DRMM：Deep Relevance Matching Model</h4><p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%A8%A1%E5%9E%8B.assets/image-20200229175747727.png" alt="image"></p>
+<p>​    输入网络的特征是处理过的，把matching分数转化为histogram统计特征：</p>
+<p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%A8%A1%E5%9E%8B.assets/image-20200229175856441.png" alt="image"></p>
+<p>​    即q的term与d计算cosinesimilarity，这里不是乘法，然后统计多个不同区间的相似度的统计分布。</p>
+<h5 id="Term-Gating-Network"><a href="#Term-Gating-Network" class="headerlink" title="Term Gating Network"></a>Term Gating Network</h5><p>​    Term Gating Network用于计query中每个term的weight。</p>
+<p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%A8%A1%E5%9E%8B.assets/image-20200229180448787.png" alt="image"></p>
+<h5 id="Hinge-loss"><a href="#Hinge-loss" class="headerlink" title="Hinge loss"></a>Hinge loss</h5><p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%A8%A1%E5%9E%8B.assets/image-20200229180545407.png" alt="image"></p>
 
       
     </div>
@@ -359,7 +306,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/07/07/%E6%96%87%E6%9C%AC%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/" data-id="ckm4nip320029782fcmea3zr7" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/07/07/%E6%96%87%E6%9C%AC%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/" data-id="ckm4nxeii002avk2f1memdpsk" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       

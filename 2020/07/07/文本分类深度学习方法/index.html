@@ -5,12 +5,12 @@
   
   <title>文本分类深度学习方法 | Racle</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="fastText  字符n-gram 层次 Softmax 分类  CNN RNN  LSTM GRU RCNN Quasi-RNN">
+  <meta name="description" content="fastText 字符n-gram 层次 Softmax 分类   CNN RNN LSTM GRU RCNN Quasi-RNN">
 <meta property="og:type" content="article">
 <meta property="og:title" content="文本分类深度学习方法">
 <meta property="og:url" content="https://racleray.github.io/2020/07/07/%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/index.html">
 <meta property="og:site_name" content="Racle">
-<meta property="og:description" content="fastText  字符n-gram 层次 Softmax 分类  CNN RNN  LSTM GRU RCNN Quasi-RNN">
+<meta property="og:description" content="fastText 字符n-gram 层次 Softmax 分类   CNN RNN LSTM GRU RCNN Quasi-RNN">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://racleray.github.io/images/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95.assets/image-20200226232701301.png">
 <meta property="og:image" content="https://racleray.github.io/images/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95.assets/image-20200227181258567.png">
@@ -137,26 +137,27 @@
     <div class="article-entry" itemprop="articleBody">
       
         <!-- TOC -->
+
 <ul>
-<li><a href="#fasttext">fastText</a>
-<ul>
+<li><a href="#fasttext">fastText</a><ul>
 <li><a href="#字符n-gram">字符n-gram</a></li>
 <li><a href="#层次-softmax-分类">层次 Softmax 分类</a></li>
-</ul></li>
+</ul>
+</li>
 <li><a href="#cnn">CNN</a></li>
-<li><a href="#rnn">RNN</a>
-<ul>
+<li><a href="#rnn">RNN</a><ul>
 <li><a href="#lstm">LSTM</a></li>
 <li><a href="#gru">GRU</a></li>
 <li><a href="#rcnn">RCNN</a></li>
 <li><a href="#quasi-rnn">Quasi-RNN</a></li>
-</ul></li>
+</ul>
+</li>
 </ul>
 <!-- /TOC -->
 <a id="more"></a>
-<h2 id="fasttext">fastText</h2>
-<p>​ <a href="https://github.com/facebookresearch/fastText/tree/master/python" target="_blank" rel="noopener">官方Git</a></p>
-<p>​ fastText是一种Facebook AI Research在16年开源的一个文本分类器。 其特点就是fast。相对于其它文本分类模型，如SVM，Logistic Regression和neural network等模型，fastText在保持分类效果的同时，大大缩短了训练时间。</p>
+
+<h2 id="fastText"><a href="#fastText" class="headerlink" title="fastText"></a>fastText</h2><p>​    <a href="https://github.com/facebookresearch/fastText/tree/master/python" target="_blank" rel="noopener">官方Git</a></p>
+<p>​    fastText是一种Facebook AI Research在16年开源的一个文本分类器。 其特点就是fast。相对于其它文本分类模型，如SVM，Logistic Regression和neural network等模型，fastText在保持分类效果的同时，大大缩短了训练时间。</p>
 <blockquote>
 <ul>
 <li><strong>适合大型数据+高效的训练速度</strong>：在使用标准多核CPU的情况下10分钟内处理超过10亿个词</li>
@@ -164,99 +165,66 @@
 <li>fastText专注于<strong>文本分类</strong>，在许多标准问题上有较好的表现（例如文本倾向性分析或标签预测）。</li>
 </ul>
 </blockquote>
-<p>​ fastText 模型输入一个词的序列（一段文本或者一句话)，输出这个词序列属于不同类别的概率。</p>
-<p>​ 序列中的词和词组组成特征向量，特征向量通过线性变换映射到中间层，中间层再映射到标签。 fastText <strong>在预测标签时使用了非线性激活函数</strong>，但在<strong>中间层不使用非线性激活函数</strong>。</p>
-<p>​ fastText 模型架构和 Word2Vec 中的 CBOW 模型很类似。不同之处在于，fastText 预测标签，而 CBOW 模型预测中间词。</p>
-<p>​ 基本框架：</p>
-<figure>
-<img src="/images/神经网络方法.assets/image-20200226232701301.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
-<h3 id="字符n-gram">字符n-gram</h3>
-<p>​ 将输入序列（一整句话，而不是CBOW的窗口输入），进行字符n-gram。n-gram一定程度上克服了CBOW这类bag of words模型无视了语序的缺点。</p>
-<p>​ 罕见词仍然可以被分解成字符n-gram。</p>
+<p>​    fastText 模型输入一个词的序列（一段文本或者一句话)，输出这个词序列属于不同类别的概率。</p>
+<p>​    序列中的词和词组组成特征向量，特征向量通过线性变换映射到中间层，中间层再映射到标签。 fastText <strong>在预测标签时使用了非线性激活函数</strong>，但在<strong>中间层不使用非线性激活函数</strong>。</p>
+<p>​     fastText 模型架构和 Word2Vec 中的 CBOW 模型很类似。不同之处在于，fastText 预测标签，而 CBOW 模型预测中间词。</p>
+<p>​    基本框架：</p>
+<p><img src="/images/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95.assets/image-20200226232701301.png" alt="image"></p>
+<h3 id="字符n-gram"><a href="#字符n-gram" class="headerlink" title="字符n-gram"></a>字符n-gram</h3><p>​    将输入序列（一整句话，而不是CBOW的窗口输入），进行字符n-gram。n-gram一定程度上克服了CBOW这类bag of words模型无视了语序的缺点。</p>
+<p>​    罕见词仍然可以被分解成字符n-gram。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">apple &gt;&gt;&gt; </span><br><span class="line">    “&lt;ap”, “app”, “ppl”, “ple”, “le&gt;”</span><br><span class="line">    &lt;表示前缀，&gt;表示后缀</span><br></pre></td></tr></table></figure>
-<p>​ 隐藏表征在不同类别所有分类器中进行共享，使得文本信息在不同类别中能够共同使用。</p>
-<h3 id="层次-softmax-分类">层次 Softmax 分类</h3>
-<p>​ 基本思想是使用树的层级结构替代扁平化的标准Softmax，使得在计算 P(y=j) 时，只需计算一条路径上的所有节点的概率值，无需在意其它的节点。</p>
-<p>​ 层次 Softmax的原理在文本表示笔记部分，在word2vec的优化部分进行了说明。</p>
-<p>​ 一般情况下，使用fastText进行文本分类的同时也会产生词的embedding，即embedding是fastText分类的产物。</p>
-<p>​ 用单词的embedding叠加获得的文档向量，词向量的重要特点就是<strong>向量的距离可以用来衡量单词间的语义相似程度</strong>，于是，在fastText模型中，这<strong>两段同类文本的向量应该是相似</strong>的。</p>
-<hr />
-<h2 id="cnn">CNN</h2>
-<figure>
-<img src="/images/神经网络方法.assets/image-20200227181258567.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
-<p>​ 卷积神经网络经常用来处理具有类似网格拓扑结构（grid-like topology）的数据。</p>
-<figure>
-<img src="/images/神经网络方法.assets/image-20200227181538048.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
-<p>​ 应用于文本处理很简单。</p>
-<h2 id="rnn">RNN</h2>
-<p><img src="/images/神经网络方法.assets/image-20200227181745278.png" alt="image" /> <span class="math display">\[
-h_t=f(x_t,h_{t-1})=\sigma(W_{xh}x_t+W_{hh}h_{t-1}+b_h)
-\]</span> ​ 其中<span class="math inline">\(W_{xh}\)</span>是输入到隐层的矩阵参数，<span class="math inline">\(W_{hh}\)</span>是隐层到隐层的矩阵参数，<span class="math inline">\(b_h\)</span>为隐层的偏置向量（bias）参数，<span class="math inline">\(\sigma\)</span>为<span class="math inline">\(sigmoid\)</span>函数。</p>
-<p>​ 一般提取最后一个时刻的隐层状态作为句子表示进而使用分类模型。</p>
-<h3 id="lstm">LSTM</h3>
-<p>​ LSTM增加了记忆单元𝑐、输入门𝑖、遗忘门𝑓及输出门𝑜。这些门及记忆单元组合起来大大提升了循环神经网络处理长序列数据的能力。</p>
+
+<p>​    隐藏表征在不同类别所有分类器中进行共享，使得文本信息在不同类别中能够共同使用。</p>
+<h3 id="层次-Softmax-分类"><a href="#层次-Softmax-分类" class="headerlink" title="层次 Softmax 分类"></a>层次 Softmax 分类</h3><p>​    基本思想是使用树的层级结构替代扁平化的标准Softmax，使得在计算 P(y=j) 时，只需计算一条路径上的所有节点的概率值，无需在意其它的节点。</p>
+<p>​    层次 Softmax的原理在文本表示笔记部分，在word2vec的优化部分进行了说明。</p>
+<p>​    一般情况下，使用fastText进行文本分类的同时也会产生词的embedding，即embedding是fastText分类的产物。</p>
+<p>​    用单词的embedding叠加获得的文档向量，词向量的重要特点就是<strong>向量的距离可以用来衡量单词间的语义相似程度</strong>，于是，在fastText模型中，这<strong>两段同类文本的向量应该是相似</strong>的。</p>
+<hr>
+<h2 id="CNN"><a href="#CNN" class="headerlink" title="CNN"></a>CNN</h2><p><img src="/images/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95.assets/image-20200227181258567.png" alt="image"></p>
+<p>​    卷积神经网络经常用来处理具有类似网格拓扑结构（grid-like topology）的数据。</p>
+<p><img src="/images/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95.assets/image-20200227181538048.png" alt="image"></p>
+<p>​    应用于文本处理很简单。</p>
+<h2 id="RNN"><a href="#RNN" class="headerlink" title="RNN"></a>RNN</h2><p><img src="/images/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95.assets/image-20200227181745278.png" alt="image"><br>$$<br>h_t=f(x_t,h_{t-1})=\sigma(W_{xh}x_t+W_{hh}h_{t-1}+b_h)<br>$$<br>​    其中$W_{xh}$是输入到隐层的矩阵参数，$W_{hh}$是隐层到隐层的矩阵参数，$b_h$为隐层的偏置向量（bias）参数，$\sigma$为$sigmoid$函数。</p>
+<p>​    一般提取最后一个时刻的隐层状态作为句子表示进而使用分类模型。</p>
+<h3 id="LSTM"><a href="#LSTM" class="headerlink" title="LSTM"></a>LSTM</h3><p>​    LSTM增加了记忆单元𝑐、输入门𝑖、遗忘门𝑓及输出门𝑜。这些门及记忆单元组合起来大大提升了循环神经网络处理长序列数据的能力。</p>
 <blockquote>
-<p><span class="math inline">\(i_t = \sigma{(W_{xi}x_t+W_{hi}h_{t-1}+b_i)}\)</span></p>
-<p>$ f_t = (W_{xf}x_t+W_{hf}h_{t-1}+b_f) $ $ c_t = f_tc_{t-1}+i_ttanh(W_{xc}x_t+W_{hc}h_{t-1}+b_c) $ $o_t = (W_{xo}x_t+W_{ho}h_{t-1}+b_o) $</p>
-<p>$ h_t = o_ttanh(c_t) $</p>
+<p>$i_t = \sigma{(W_{xi}x_t+W_{hi}h_{t-1}+b_i)}$</p>
+<p>$ f_t = \sigma(W_{xf}x_t+W_{hf}h_{t-1}+b_f) $<br>$ c_t = f_t\odot c_{t-1}+i_t\odot tanh(W_{xc}x_t+W_{hc}h_{t-1}+b_c) $<br>$o_t = \sigma(W_{xo}x_t+W_{ho}h_{t-1}+b_o) $</p>
+<p>$ h_t = o_t\odot tanh(c_t) $</p>
 </blockquote>
-<p>​ 其中，<span class="math inline">\(i_t, f_t, c_t, o_t\)</span>分别表示输入门，遗忘门，记忆单元及输出门的向量值，带角标的<span class="math inline">\(W\)</span>及<span class="math inline">\(b\)</span>为模型参数，<span class="math inline">\(tanh\)</span>为双曲正切函数，<span class="math inline">\(\odot\)</span><mark>表示逐元素（elementwise）的乘法操作</mark>。</p>
-<p>​ 输入门控制着新输入进入记忆单元<span class="math inline">\(c\)</span>的强度，遗忘门控制着记忆单元维持上一时刻值的强度，输出门控制着输出记忆单元的强度。</p>
-<p>​ 三种门的计算方式类似，但有着完全不同的参数，它们各自以不同的方式控制着记忆单元<span class="math inline">\(c\)</span>：</p>
-<figure>
-<img src="/images/神经网络方法.assets/image-20200227182547937.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
+<p>​    其中，$i_t, f_t, c_t, o_t$分别表示输入门，遗忘门，记忆单元及输出门的向量值，带角标的$W$及$b$为模型参数，$tanh$为双曲正切函数，$\odot$<span class="mark">表示逐元素（elementwise）的乘法操作</span>。</p>
+<p>​    输入门控制着新输入进入记忆单元$c$的强度，遗忘门控制着记忆单元维持上一时刻值的强度，输出门控制着输出记忆单元的强度。</p>
+<p>​    三种门的计算方式类似，但有着完全不同的参数，它们各自以不同的方式控制着记忆单元$c$：</p>
+<p><img src="/images/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95.assets/image-20200227182547937.png" alt="image"></p>
 <p>Forget Gate：</p>
-<figure>
-<img src="/images/神经网络方法.assets/image-20200229223725986.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
+<p><img src="/images/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95.assets/image-20200229223725986.png" alt="image"></p>
 <p>Input Gate：</p>
-<figure>
-<img src="/images/神经网络方法.assets/image-20200229223750280.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
+<p><img src="/images/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95.assets/image-20200229223750280.png" alt="image"></p>
 <p>更新Cell state：</p>
-<figure>
-<img src="/images/神经网络方法.assets/image-20200229223828649.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
+<p><img src="/images/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95.assets/image-20200229223828649.png" alt="image"></p>
 <p>Output Gate：</p>
-<figure>
-<img src="/images/神经网络方法.assets/image-20200229223856230.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
-<figure>
-<img src="/images/神经网络方法.assets/image-20200227182528708.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
-<p>​ 图中带有方块的线，没有在计算中直接公式求解，s即cell state，通过hidden state的计算，从而进行信息传递。详细内容查找神经网络笔记。</p>
-<p>​</p>
-<h3 id="gru">GRU</h3>
-<figure>
-<img src="/images/神经网络方法.assets/image-20200229223926779.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
+<p><img src="/images/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95.assets/image-20200229223856230.png" alt="image"></p>
+<p><img src="/images/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95.assets/image-20200227182528708.png" alt="image"></p>
+<p>​    图中带有方块的线，没有在计算中直接公式求解，s即cell state，通过hidden state的计算，从而进行信息传递。详细内容查找神经网络笔记。</p>
+<p>​    </p>
+<h3 id="GRU"><a href="#GRU" class="headerlink" title="GRU"></a>GRU</h3><p><img src="/images/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95.assets/image-20200229223926779.png" alt="image"></p>
 <ul>
 <li>将忘记门和输入门合并成为一个单一的更新门</li>
 <li>同时合并了数据单元状态和隐藏状态</li>
 <li>结构比LSTM的结构更加简单</li>
 </ul>
-<h3 id="rcnn">RCNN</h3>
-<figure>
-<img src="/images/神经网络方法.assets/image-20200227183731913.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
-<p>​ ​ 卷积层建立在一个BiRNN模型之上，通过正向和反向循环来构造一个单词的下文和上文，然后输入CNN，如下式： <img src="/images/pic/神经网络方法_pic/image-20200707005508194.png" alt="image" /></p>
+<h3 id="RCNN"><a href="#RCNN" class="headerlink" title="RCNN"></a>RCNN</h3><p><img src="/images/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95.assets/image-20200227183731913.png" alt="image"></p>
+<p>​    ​    卷积层建立在一个BiRNN模型之上，通过正向和反向循环来构造一个单词的下文和上文，然后输入CNN，如下式：<br><img src="/images/pic/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95_pic/image-20200707005508194.png" alt="image">    </p>
 <p>得到单词的上下文表示之后，用拼接的方式来表示这个单词，如下式：</p>
-<figure>
-<img src="/images/pic/神经网络方法_pic/image-20200707005602682.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
+<p><img src="/images/pic/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95_pic/image-20200707005602682.png" alt="image">    </p>
 <p>然后通过max pooling层和全连接层，得到最后的输出。这一部分相当于文本表示的学习。</p>
 <blockquote>
-<p>​ 将该词向量放入一个单层神经网络中，得到所谓的潜语义向量（latent semantic vector），这里卷积层的计算结束了，时间复杂度仍是O(n)。接下来进行池化层，这里采用max-pooling可以将向量中最大的特征提取出来，从而获取到整个文本的信息。池化过程时间复杂度也是O(n)，所以整个模型的时间复杂度是O(n)。得到文本特征向量之后，进行分类。</p>
+<p>​    将该词向量放入一个单层神经网络中，得到所谓的潜语义向量（latent semantic vector），这里卷积层的计算结束了，时间复杂度仍是O(n)。接下来进行池化层，这里采用max-pooling可以将向量中最大的特征提取出来，从而获取到整个文本的信息。池化过程时间复杂度也是O(n)，所以整个模型的时间复杂度是O(n)。得到文本特征向量之后，进行分类。</p>
 </blockquote>
-<h3 id="quasi-rnn">Quasi-RNN</h3>
-<p><img src="/images/神经网络方法.assets/image-20200314215708784.png" alt="image-20200314215708784" style="zoom:67%;" /></p>
-<p>​ 框图显示了QRNN的计算结构与典型值的比较LSTM和CNN架构。 红色表示卷积或矩阵乘法； 连续的块意味着这些计算可以并行进行。 蓝色表示无参数功能沿通道/特征维度并行运行的对象。 LSTM可以分解为（红色）线性块和（蓝色）element-wise部分，但每个时间步的计算仍取决于上一个时间步的结果。</p>
-<p>​ fo-Pool指的是以下公式，包括forget 和 output 的h计算方式 <img src="/images/pic/神经网络方法_pic/image-20200707005623708.png" alt="image" /><br />
-而上图中 <img src="/images/pic/神经网络方法_pic/image-20200707005656160.png" alt="image" /></p>
+<h3 id="Quasi-RNN"><a href="#Quasi-RNN" class="headerlink" title="Quasi-RNN"></a>Quasi-RNN</h3><img src="/images/神经网络方法.assets/image-20200314215708784.png" alt="image-20200314215708784" style="zoom:67%;" />
+
+<p>​    框图显示了QRNN的计算结构与典型值的比较LSTM和CNN架构。 红色表示卷积或矩阵乘法； 连续的块意味着这些计算可以并行进行。 蓝色表示无参数功能沿通道/特征维度并行运行的对象。 LSTM可以分解为（红色）线性块和（蓝色）element-wise部分，但每个时间步的计算仍取决于上一个时间步的结果。</p>
+<p>​    fo-Pool指的是以下公式，包括forget 和 output 的h计算方式<br><img src="/images/pic/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95_pic/image-20200707005623708.png" alt="image"><br>而上图中<br><img src="/images/pic/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95_pic/image-20200707005656160.png" alt="image">    </p>
 <p>被称为f-Pool，在原论文中这样定义。</p>
 
       
@@ -268,7 +236,7 @@ h_t=f(x_t,h_{t-1})=\sigma(W_{xh}x_t+W_{hh}h_{t-1}+b_h)
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/07/07/%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/" data-id="ckm4nip2w0024782fbozs8va9" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/07/07/%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/" data-id="ckm4nxeia0020vk2fafmwbq06" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       

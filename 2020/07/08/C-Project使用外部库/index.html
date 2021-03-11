@@ -5,12 +5,12 @@
   
   <title>C++ Project使用外部库 | Racle</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Static link Dynamic link">
+  <meta name="description" content="Static link Dynamic link">
 <meta property="og:type" content="article">
 <meta property="og:title" content="C++ Project使用外部库">
 <meta property="og:url" content="https://racleray.github.io/2020/07/08/C-Project%E4%BD%BF%E7%94%A8%E5%A4%96%E9%83%A8%E5%BA%93/index.html">
 <meta property="og:site_name" content="Racle">
-<meta property="og:description" content="Static link Dynamic link">
+<meta property="og:description" content="Static link Dynamic link">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://racleray.github.io/images/pic/C-Project%E4%BD%BF%E7%94%A8%E5%A4%96%E9%83%A8%E5%BA%93_pic/image-20200708131006645.png">
 <meta property="og:image" content="https://racleray.github.io/images/pic/C-Project%E4%BD%BF%E7%94%A8%E5%A4%96%E9%83%A8%E5%BA%93_pic/image-20200708131706674.png">
@@ -123,25 +123,25 @@
     <div class="article-entry" itemprop="articleBody">
       
         <!-- TOC -->
+
 <ul>
 <li><a href="#static-link">Static link</a></li>
 <li><a href="#dynamic-link">Dynamic link</a></li>
 </ul>
 <!-- /TOC -->
 <a id="more"></a>
-<h3 id="static-link">Static link</h3>
-<p>更快速，编译时会优化。在visual studio中需要添加header file和lib file路径。以GLFW库的使用为例</p>
-<p><img src="/images/pic/C-Project使用外部库_pic/image-20200708131006645.png" /></p>
+
+<h3 id="Static-link"><a href="#Static-link" class="headerlink" title="Static link"></a>Static link</h3><p>更快速，编译时会优化。在visual studio中需要添加header file和lib file路径。以GLFW库的使用为例</p>
+<p><img src="/images/pic/C-Project%E4%BD%BF%E7%94%A8%E5%A4%96%E9%83%A8%E5%BA%93_pic/image-20200708131006645.png" alt=""></p>
 <p>在project文件夹下新建Dependencies文件夹，将下载的 include 和 lib-vc2017 复制到文件夹下。</p>
 <p>添加 include 下的header file</p>
-<p><img src="/images/pic/C-Project使用外部库_pic/image-20200708131706674.png" /></p>
+<p><img src="/images/pic/C-Project%E4%BD%BF%E7%94%A8%E5%A4%96%E9%83%A8%E5%BA%93_pic/image-20200708131706674.png" alt=""></p>
 <p>添加lib file</p>
-<p><img src="/images/pic/C-Project使用外部库_pic/image-20200708132005000.png" /></p>
+<p><img src="/images/pic/C-Project%E4%BD%BF%E7%94%A8%E5%A4%96%E9%83%A8%E5%BA%93_pic/image-20200708132005000.png" alt=""></p>
 <p>添加目标static lib file到project。文件位于lib-vc2017文件夹下。</p>
-<p><img src="/images/pic/C-Project使用外部库_pic/image-20200708132324138.png" /></p>
-<h3 id="dynamic-link">Dynamic link</h3>
-<p>lib-vc2017文件夹下，还有glfw3dll.lib，这是动态链接需要导入的lib file。即替换上图中的glfw3.lib为glfw3dll.lib。</p>
-<p>但是需要注意，dll文件需要与可执行文件 xxx.exe 位于同一个文件夹下，在程序运行时动态链接。否则会报错。</p>
+<p><img src="/images/pic/C-Project%E4%BD%BF%E7%94%A8%E5%A4%96%E9%83%A8%E5%BA%93_pic/image-20200708132324138.png" alt=""></p>
+<h3 id="Dynamic-link"><a href="#Dynamic-link" class="headerlink" title="Dynamic link"></a>Dynamic link</h3><p>lib-vc2017文件夹下，还有glfw3dll.lib，这是动态链接需要导入的lib file。即替换上图中的glfw3.lib为glfw3dll.lib。</p>
+<p>但是需要注意，dll文件需要与可执行文件 xxx.exe 位于同一个文件夹下，在程序运行时动态链接。否则会报错。 </p>
 
       
     </div>
@@ -152,7 +152,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/07/08/C-Project%E4%BD%BF%E7%94%A8%E5%A4%96%E9%83%A8%E5%BA%93/" data-id="ckm4nip1t0005782f6cjrd35i" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/07/08/C-Project%E4%BD%BF%E7%94%A8%E5%A4%96%E9%83%A8%E5%BA%93/" data-id="ckm4nxegt0006vk2fala68drp" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       

@@ -5,12 +5,12 @@
   
   <title>语言模型Sampling方法 | Racle</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Temperature sampling Top k sampling Top p sampling（nucleus sampling） End">
+  <meta name="description" content="Temperature sampling Top k sampling Top p sampling（nucleus sampling） End">
 <meta property="og:type" content="article">
 <meta property="og:title" content="语言模型Sampling方法">
 <meta property="og:url" content="https://racleray.github.io/2021/03/04/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8BSampling%E6%96%B9%E6%B3%95/index.html">
 <meta property="og:site_name" content="Racle">
-<meta property="og:description" content="Temperature sampling Top k sampling Top p sampling（nucleus sampling） End">
+<meta property="og:description" content="Temperature sampling Top k sampling Top p sampling（nucleus sampling） End">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://racleray.github.io/images/pic/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B--Sample_pic/image-20210102130824216.png">
 <meta property="article:published_time" content="2021-03-04T13:31:47.190Z">
@@ -120,6 +120,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <!-- TOC -->
+
 <ul>
 <li><a href="#temperature-sampling"><strong>Temperature</strong> <strong>sampling</strong></a></li>
 <li><a href="#top-k-sampling"><strong>Top k</strong> <strong>sampling</strong></a></li>
@@ -128,6 +129,7 @@
 </ul>
 <!-- /TOC -->
 <a id="more"></a>
+
 <p>在text generation模型预测时，如果我们总是抽取最有可能的单词，标准语言模型训练目标会容易陷入“I don’t know. I don’t know. I don’t know.” 这种循环中。</p>
 <p>所以有了sample based generation方法。但是，它有一个潜在问题：</p>
 <blockquote>
@@ -135,29 +137,30 @@
 <p>而如果是在预测前期发生偏离，那么由于错误向后预测的累积，直接导致了预测的效果变差。</p>
 </blockquote>
 <p>已有论文研究发现，经常被使用的Beam search方法，其生成效果和人类的表达有着一定的gap。</p>
-<p><img src="/images/pic/语言模型--Sample_pic/image-20210102130824216.png" alt="image-20210102130824216" style="zoom:40%;" /></p>
-<p>[^]: Humans often choose words that surprise language models (Holtzman et al 2019) https://arxiv.org/abs/1904.09751</p>
+<img src="/images/pic/语言模型--Sample_pic/image-20210102130824216.png" alt="image-20210102130824216" style="zoom:40%;" />
+
+<p>[^]: Humans often choose words that surprise language models (Holtzman et al 2019) <a href="https://arxiv.org/abs/1904.09751" target="_blank" rel="noopener">https://arxiv.org/abs/1904.09751</a></p>
 <p>解决方法：temperature sampling和top k sampling.</p>
-<h3 id="temperature-sampling"><strong>Temperature</strong> <strong>sampling</strong></h3>
-<blockquote>
+<h3 id="Temperature-sampling"><a href="#Temperature-sampling" class="headerlink" title="Temperature sampling"></a><strong>Temperature</strong> <strong>sampling</strong></h3><blockquote>
 <p>借鉴热力学中现象，温度越高，则低energy的状态出现的概率会增加。</p>
 </blockquote>
 <p>以logits作为“energy”，在进行softmax之前，除以temperature。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> torch</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a = torch.tensor([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4.</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>F.softmax(a, dim=<span class="number">0</span>)</span><br><span class="line">tensor([<span class="number">0.0321</span>, <span class="number">0.0871</span>, <span class="number">0.2369</span>, <span class="number">0.6439</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>F.softmax(a/<span class="number">.5</span>, dim=<span class="number">0</span>)</span><br><span class="line">tensor([<span class="number">0.0021</span>, <span class="number">0.0158</span>, <span class="number">0.1171</span>, <span class="number">0.8650</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>F.softmax(a/<span class="number">1.5</span>, dim=<span class="number">0</span>)</span><br><span class="line">tensor([<span class="number">0.0708</span>, <span class="number">0.1378</span>, <span class="number">0.2685</span>, <span class="number">0.5229</span>])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>F.softmax(a/<span class="number">1e-6</span>, dim=<span class="number">0</span>)</span><br><span class="line">tensor([<span class="number">0.</span>, <span class="number">0.</span>, <span class="number">0.</span>, <span class="number">1.</span>])</span><br></pre></td></tr></table></figure>
+
 <p>NOTE：<strong>temperature越大，分布越趋向均匀</strong></p>
-<h3 id="top-k-sampling"><strong>Top k</strong> <strong>sampling</strong></h3>
-<p>Top k sampling是指根据概率进行排序将第k个token以下的概率都归零。</p>
+<h3 id="Top-k-sampling"><a href="#Top-k-sampling" class="headerlink" title="Top k sampling"></a><strong>Top k</strong> <strong>sampling</strong></h3><p>Top k sampling是指根据概率进行排序将第k个token以下的概率都归零。</p>
 <p>但是存在一个问题：某些时候，分布较均匀，可以选择的token大于k；某些时候，分布较集中，可以选择的token小于k。</p>
 <p>直接导致了预测错误的概率增大。</p>
-<h3 id="top-p-samplingnucleus-sampling"><strong>Top p</strong> <strong>sampling</strong>（<strong>nucleus sampling</strong>）</h3>
-<p>1，按概率sort预测分布；</p>
+<h3 id="Top-p-sampling（nucleus-sampling）"><a href="#Top-p-sampling（nucleus-sampling）" class="headerlink" title="Top p sampling（nucleus sampling）"></a><strong>Top p</strong> <strong>sampling</strong>（<strong>nucleus sampling</strong>）</h3><p>1，按概率sort预测分布；</p>
 <p>2，计算CDF；</p>
 <p>3，将CDF大于某个设定p值之后的logit值，设为一个很大的负值；</p>
 <p>4，softmax，之后进行采样。</p>
 <p>这样就能动态的改变可选择的token数量，且错误概率相对降低。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">top_k_top_p_filtering</span><span class="params">(logits, top_k=<span class="number">0</span>, top_p=<span class="number">0.0</span>, filter_value=-float<span class="params">(<span class="string">'Inf'</span>)</span>)</span>:</span></span><br><span class="line">    <span class="string">""" Filter a distribution of logits using top-k and/or nucleus (top-p) filtering</span></span><br><span class="line"><span class="string">        Args:</span></span><br><span class="line"><span class="string">            logits: logits distribution shape (..., vocabulary size)</span></span><br><span class="line"><span class="string">            top_k &gt;0: keep only top k tokens with highest probability (top-k filtering).</span></span><br><span class="line"><span class="string">            top_p &gt;0.0: keep the top tokens with cumulative probability &gt;= top_p (nucleus filtering).</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    top_k = min(top_k, logits.size(<span class="number">-1</span>))  <span class="comment"># Safety check</span></span><br><span class="line">    <span class="keyword">if</span> top_k &gt; <span class="number">0</span>:</span><br><span class="line">        <span class="comment"># Remove all tokens with a probability less than the last token of the top-k</span></span><br><span class="line">        indices_to_remove = logits &lt; torch.topk(logits, top_k)[<span class="number">0</span>][..., <span class="number">-1</span>, <span class="literal">None</span>]</span><br><span class="line">        logits[indices_to_remove] = filter_value</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> top_p &gt; <span class="number">0.0</span>:</span><br><span class="line">        sorted_logits, sorted_indices = torch.sort(logits, descending=<span class="literal">True</span>)</span><br><span class="line">        cumulative_probs = torch.cumsum(F.softmax(sorted_logits, dim=<span class="number">-1</span>), dim=<span class="number">-1</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Remove tokens with cumulative probability above the threshold</span></span><br><span class="line">        sorted_indices_to_remove = cumulative_probs &gt;= top_p</span><br><span class="line">        <span class="comment"># Shift the indices to the right to keep also the first token above the threshold</span></span><br><span class="line">        sorted_indices_to_remove[..., <span class="number">1</span>:] = sorted_indices_to_remove[..., :<span class="number">-1</span>].clone()</span><br><span class="line">        sorted_indices_to_remove[..., <span class="number">0</span>] = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        indices_to_remove = torch.zeros_like(logits, dtype=torch.uint8).scatter_(</span><br><span class="line">            dim=<span class="number">-1</span>, index=sorted_indices, src=sorted_indices_to_remove )</span><br><span class="line">        logits[indices_to_remove] = filter_value</span><br><span class="line">    <span class="keyword">return</span> logits</span><br></pre></td></tr></table></figure>
-<h3 id="end">End</h3>
-<p>虽然有这些方法来改进模型生成的效果，但是这些仅仅是模型的“补丁”。如何提高模型本身的性能，如何让模型能够直接生成多样性的、更“人类”的语句？emmm...</p>
+
+
+
+<h3 id="End"><a href="#End" class="headerlink" title="End"></a>End</h3><p>虽然有这些方法来改进模型生成的效果，但是这些仅仅是模型的“补丁”。如何提高模型本身的性能，如何让模型能够直接生成多样性的、更“人类”的语句？emmm…</p>
 
       
     </div>
@@ -168,7 +171,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2021/03/04/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8BSampling%E6%96%B9%E6%B3%95/" data-id="ckm4nip3d002v782feddu6iix" class="article-share-link">
+      <a data-url="https://racleray.github.io/2021/03/04/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8BSampling%E6%96%B9%E6%B3%95/" data-id="ckm4nxeir002svk2fdntv3ib3" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
