@@ -5,12 +5,12 @@
   
   <title>NLG常用评价指标 | Racle</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="NLG常用评价指标 BLEU ROUGE METEOR CIDEr SPICE 翻译和图像描述的区别 简单总结">
+  <meta name="description" content="NLG常用评价指标  BLEU ROUGE METEOR CIDEr SPICE 翻译和图像描述的区别 简单总结">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NLG常用评价指标">
 <meta property="og:url" content="https://racleray.github.io/2020/07/07/NLG%E5%B8%B8%E7%94%A8%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/index.html">
 <meta property="og:site_name" content="Racle">
-<meta property="og:description" content="NLG常用评价指标 BLEU ROUGE METEOR CIDEr SPICE 翻译和图像描述的区别 简单总结">
+<meta property="og:description" content="NLG常用评价指标  BLEU ROUGE METEOR CIDEr SPICE 翻译和图像描述的区别 简单总结">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://racleray.github.io/images/pic/NLG%E4%BB%BB%E5%8A%A1%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87_pic/image-20200707135951108.png">
 <meta property="og:image" content="https://racleray.github.io/images/pic/NLG%E4%BB%BB%E5%8A%A1%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87_pic/image-20200707140257831.png">
@@ -125,29 +125,27 @@
     <div class="article-entry" itemprop="articleBody">
       
         <!-- TOC -->
-
 <ul>
-<li><a href="#nlg常用评价指标">NLG常用评价指标</a><ul>
+<li><a href="#nlg常用评价指标">NLG常用评价指标</a>
+<ul>
 <li><a href="#bleu">BLEU</a></li>
 <li><a href="#rouge">ROUGE</a></li>
 <li><a href="#meteor">METEOR</a></li>
 <li><a href="#cider">CIDEr</a></li>
 <li><a href="#spice">SPICE</a></li>
-<li><a href="#翻译和图像描述的区别">翻译和图像描述的区别</a><ul>
+<li><a href="#翻译和图像描述的区别">翻译和图像描述的区别</a></li>
 <li><a href="#简单总结">简单总结</a></li>
-</ul>
-</li>
-</ul>
-</li>
+</ul></li>
 </ul>
 <!-- /TOC -->
 <a id="more"></a>
-
-<h1 id="NLG常用评价指标"><a href="#NLG常用评价指标" class="headerlink" title="NLG常用评价指标"></a>NLG常用评价指标</h1><p>客观评价指标 – BLEU – ROUGE – METEOR – CIDEr</p>
+<h1 id="nlg常用评价指标">NLG常用评价指标</h1>
+<p>客观评价指标 – BLEU – ROUGE – METEOR – CIDEr</p>
 <p>主观评价指标 – 流畅度 – 相关性 – 助盲性</p>
 <p>这些指标原先都是用来度量机器翻译结果质量的，并且被证明可以很好的反应待评测翻译结果的准确性，并且与人类对待评测翻译结果的评价存在强相关</p>
-<hr>
-<h3 id="BLEU"><a href="#BLEU" class="headerlink" title="BLEU"></a>BLEU</h3><p><a href="https://aclanthology.info/pdf/P/P02/P02-1040.pdf" target="_blank" rel="noopener">文献</a></p>
+<hr />
+<h3 id="bleu">BLEU</h3>
+<p><a href="https://aclanthology.info/pdf/P/P02/P02-1040.pdf" target="_blank" rel="noopener">文献</a></p>
 <blockquote>
 <p>只看中准确率的指标，就是说更加关心候选译文里的多少 n-gram 是对的（即在参考译文里出现了），而不在乎召回率（参考译文里有哪些 n-gram 在候选译文中没出现）</p>
 <p>基于准确率，BLEU 得分越高越好</p>
@@ -166,9 +164,10 @@
 <li>没有考虑同义词或相似表达的情况，可能会导致合理翻译被否定；</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> nltk.translate.bleu_score <span class="keyword">import</span> sentence_bleu</span><br><span class="line"></span><br><span class="line">reference = [[<span class="string">'this'</span>, <span class="string">'is'</span>, <span class="string">'a'</span>, <span class="string">'test'</span>], [<span class="string">'this'</span>, <span class="string">'is'</span> <span class="string">'test'</span>]]</span><br><span class="line">candidate = [<span class="string">'this'</span>, <span class="string">'is'</span>, <span class="string">'a'</span>, <span class="string">'test'</span>]</span><br><span class="line"></span><br><span class="line">score = sentence_bleu(reference, candidate)</span><br><span class="line">print(score)</span><br></pre></td></tr></table></figure>
-
 <p>只能做到个大概判断，它的目标也只是给出一个快且不差自动评估解决方案</p>
-<p><img src="/images/pic/NLG%E4%BB%BB%E5%8A%A1%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87_pic/image-20200707135951108.png" alt="image"></p>
+<figure>
+<img src="/images/pic/NLG任务评价指标_pic/image-20200707135951108.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
 <ul>
 <li>Hk(Ci) 表示Wk翻译选译文Ci中出现的次数，</li>
 <li>Hk(Sij) 表示Wk在标准答案Sij中出现的次数，</li>
@@ -176,9 +175,12 @@
 <li>∑i∑kmin(hk(ci),maxj∈mhk(sij))表示取n-gram在翻译译文和标准答案中出现的最小次数。</li>
 </ul>
 <p><strong>i为candidate的index</strong>；<strong>j为reference的index</strong>；<strong>k为n-gram的index</strong></p>
-<p><img src="/images/pic/NLG%E4%BB%BB%E5%8A%A1%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87_pic/image-20200707140257831.png" alt="image"></p>
-<hr>
-<h3 id="ROUGE"><a href="#ROUGE" class="headerlink" title="ROUGE"></a>ROUGE</h3><p><a href="http://www.aclweb.org/anthology/W04-1013" target="_blank" rel="noopener">文献</a></p>
+<figure>
+<img src="/images/pic/NLG任务评价指标_pic/image-20200707140257831.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<hr />
+<h3 id="rouge">ROUGE</h3>
+<p><a href="http://www.aclweb.org/anthology/W04-1013" target="_blank" rel="noopener">文献</a></p>
 <blockquote>
 <p>ROUGE 和 BLEU 几乎一模一样，区别是 BLEU 计算准确率，而 ROUGE 计算召回率。</p>
 </blockquote>
@@ -187,15 +189,18 @@
 <blockquote>
 <p>所以，ROUGE 适合评价 NMT，而不适用于 SMT，因为它不管候选译文流不流畅。</p>
 </blockquote>
-<p><img src="/images/pic/NLG%E4%BB%BB%E5%8A%A1%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87_pic/image-20200707140642773.png" alt="image"></p>
+<figure>
+<img src="/images/pic/NLG任务评价指标_pic/image-20200707140642773.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
 <p>分母是n-gram的个数，分子是参考摘要和自动摘要共有的n-gram的个数。ROUGE 得分越高越好</p>
 <blockquote>
 <p>召回率是针对我们原来的样本而言的，它表示的是样本中的正例有多少被预测正确了。那也有两种可能，一种是把原来的正类预测成正类(TP)，另一种就是把原来的正类预测为负类(FN)</p>
 <p>精确率是针对我们预测结果而言的，它表示的是预测为正的样本中有多少是对的。那么预测为正就有两种可能了，一种就是把正类预测为正类(TP)，另一种就是把负类预测为正类(FP)</p>
 </blockquote>
 <p>Rough-L: L即是LCS(longest common subsequence，最长公共子序列)的首字母，因为Rough-L使用了最长公共子序列。</p>
-<hr>
-<h3 id="METEOR"><a href="#METEOR" class="headerlink" title="METEOR"></a>METEOR</h3><p><a href="http://www.aclweb.org/anthology/W05-0909" target="_blank" rel="noopener">文献</a></p>
+<hr />
+<h3 id="meteor">METEOR</h3>
+<p><a href="http://www.aclweb.org/anthology/W05-0909" target="_blank" rel="noopener">文献</a></p>
 <p>METEOR 大意是说有时候翻译模型翻译的结果是对的，只是碰巧跟参考译文没对上（比如用了一个同义词），于是用 WordNet 等知识源扩充了一下同义词集，同时考虑了单词的词形（词干相同的词也认为是部分匹配的，也应该给予一定的奖励，比如说把 likes 翻译成了 like</p>
 <p>在评价句子流畅性的时候，用了 chunk 的概念（候选译文和参考译文能够对齐的、空间排列上连续的单词形成一个 chunk，这个对齐算法是一个有点复杂的启发式 beam serach），chunk 的数目越少意味着每个 chunk 的平均长度越长，也就是说候选译文和参考译文的语序越一致</p>
 <p>缺点：</p>
@@ -205,23 +210,31 @@
 </ul>
 <p>使用 WordNet 计算特定的序列匹配，同义词，词根和词缀，释义之间的匹配关系，改善了BLEU的效果，使其跟人工判别共更强的相关性。</p>
 <p>同时考虑了准确率和召回率，METEOR 得分越高越好</p>
-<p><img src="/images/pic/NLG%E4%BB%BB%E5%8A%A1%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87_pic/image-20200707141607255.png" alt="image"></p>
-<hr>
-<h3 id="CIDEr"><a href="#CIDEr" class="headerlink" title="CIDEr"></a>CIDEr</h3><p><a href="https://www.cv-foundation.org/openaccess/content_cvpr_2015/papers/Vedantam_CIDEr_Consensus-Based_Image_2015_CVPR_paper.pdf" target="_blank" rel="noopener">文献</a></p>
+<figure>
+<img src="/images/pic/NLG任务评价指标_pic/image-20200707141607255.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<hr />
+<h3 id="cider">CIDEr</h3>
+<p><a href="https://www.cv-foundation.org/openaccess/content_cvpr_2015/papers/Vedantam_CIDEr_Consensus-Based_Image_2015_CVPR_paper.pdf" target="_blank" rel="noopener">文献</a></p>
 <p>Consensus-based image description evaluation，通过度量待评测语句与其他大部分人工描述之间的相似性来评价。</p>
 <blockquote>
 <p>这个指标的motivation之一是刚才提到的BLEU的一个缺点，就是对所有匹配上的词都同等对待，而实际上有些词应该更加重要。</p>
 </blockquote>
 <p>CIDEr-D 是修改版本，为的是让 CIDEr 对于 gaming 问题更加鲁棒。什么是 Gaming 问题？它是一种现象，就是一个句子经过人工判断得分很低，但是在自动计算标准中却得分很高的情况。为了避免这种情况，CIDEr-D 增加了截断（clipping）和基于长度的高斯惩罚</p>
 <p>CIDEr 是 BLEU 和向量空间模型的结合。它把每个句子看成文档，然后计算 <strong>TF-IDF</strong> 向量（只不过 term 是 n-gram 而不是单词）的余弦夹角，据此得到候选句子和参考句子的相似度，同样是不同长度的 n-gram 相似度取平均得到最终结果。优点是不同的 n-gram 随着 TF-IDF 的不同而有不同的权重，因为整个语料里更常见的 n-gram 包含了更小的信息量。</p>
-<hr>
-<h3 id="SPICE"><a href="#SPICE" class="headerlink" title="SPICE"></a>SPICE</h3><p><a href="https://link.springer.com/chapter/10.1007/978-3-319-46454-1_24" target="_blank" rel="noopener">SPICE</a></p>
+<hr />
+<h3 id="spice">SPICE</h3>
+<p><a href="https://link.springer.com/chapter/10.1007/978-3-319-46454-1_24" target="_blank" rel="noopener">SPICE</a></p>
 <p>SPICE 是专门设计出来用于 image caption 问题的。全称是 Semantic Propositional Image Caption Evaluation。前面四个方法都是基于 n-gram 计算的，SPICE 则不是。</p>
 <p>SPICE 使用基于图的语义表示来编码 caption 中的 objects, attributes 和 relationships。它先将待评价 caption 和参考 captions 用 Probabilistic Context-Free Grammar (PCFG) dependency parser parse 成 syntactic dependencies trees，然后用基于规则的方法把 dependency tree 映射成 scene graphs。最后计算待评价的 caption 中 objects, attributes 和 relationships 的 F-score 值。</p>
-<p><img src="/images/pic/NLG%E4%BB%BB%E5%8A%A1%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87_pic/image-20200707142452030.png" alt="image"></p>
-<hr>
-<h3 id="翻译和图像描述的区别"><a href="#翻译和图像描述的区别" class="headerlink" title="翻译和图像描述的区别"></a>翻译和图像描述的区别</h3><p>在机器翻译中，译文应该忠实于原文，所以同一句话的多条译文应该互为转述，包含同样的信息；而同一幅图的多条字幕则不一定互为转述，因为不同的字幕可以包含不同数量的图像细节，不管描述得比较详细还是比较粗糙都是正确的字幕。</p>
-<h2 id="简单总结"><a href="#简单总结" class="headerlink" title="简单总结"></a>简单总结</h2><p>NLG常用metrics：</p>
+<figure>
+<img src="/images/pic/NLG任务评价指标_pic/image-20200707142452030.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<hr />
+<h3 id="翻译和图像描述的区别">翻译和图像描述的区别</h3>
+<p>在机器翻译中，译文应该忠实于原文，所以同一句话的多条译文应该互为转述，包含同样的信息；而同一幅图的多条字幕则不一定互为转述，因为不同的字幕可以包含不同数量的图像细节，不管描述得比较详细还是比较粗糙都是正确的字幕。</p>
+<h2 id="简单总结">简单总结</h2>
+<p>NLG常用metrics：</p>
 <ul>
 <li>BLEU: ngram precision；长度类似</li>
 <li>ROUGE: ngram recall</li>
@@ -248,7 +261,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/07/07/NLG%E5%B8%B8%E7%94%A8%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/" data-id="ckm4ldz6z001oac2f8rpa763n" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/07/07/NLG%E5%B8%B8%E7%94%A8%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/" data-id="ckm4mwmtt000sxw2f69w52lfs" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       

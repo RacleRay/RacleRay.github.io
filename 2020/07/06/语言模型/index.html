@@ -5,12 +5,12 @@
   
   <title>语言模型 | Racle</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="语言模型与应用 语言模型 选择N-gram的N N-gram语言模型应用 词性标注 垃圾邮件识别 N-gram方法在实际应用中有一些tricks   中文分词 机器翻译与语音识别   平滑技术 拉普拉斯平滑 Back-off方法 插值法 古德-图灵 卡茨退避法（折扣） Absolute discounting Kneser-Ney smoothing Modified Kneser-Ney">
+  <meta name="description" content="语言模型与应用  语言模型 选择N-gram的N N-gram语言模型应用  词性标注 垃圾邮件识别  N-gram方法在实际应用中有一些tricks  中文分词 机器翻译与语音识别  平滑技术  拉普拉斯平滑 Back-off方法 插值法 古德-图灵 卡茨退避法（折扣） Absolute discounting Kneser-Ney smoot">
 <meta property="og:type" content="article">
 <meta property="og:title" content="语言模型">
 <meta property="og:url" content="https://racleray.github.io/2020/07/06/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/index.html">
 <meta property="og:site_name" content="Racle">
-<meta property="og:description" content="语言模型与应用 语言模型 选择N-gram的N N-gram语言模型应用 词性标注 垃圾邮件识别 N-gram方法在实际应用中有一些tricks   中文分词 机器翻译与语音识别   平滑技术 拉普拉斯平滑 Back-off方法 插值法 古德-图灵 卡茨退避法（折扣） Absolute discounting Kneser-Ney smoothing Modified Kneser-Ney">
+<meta property="og:description" content="语言模型与应用  语言模型 选择N-gram的N N-gram语言模型应用  词性标注 垃圾邮件识别  N-gram方法在实际应用中有一些tricks  中文分词 机器翻译与语音识别  平滑技术  拉普拉斯平滑 Back-off方法 插值法 古德-图灵 卡茨退避法（折扣） Absolute discounting Kneser-Ney smoot">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://racleray.github.io/images/2-%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B.assets/image-20191204002247856.png">
 <meta property="og:image" content="https://racleray.github.io/images/2-%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B.assets/image-20191204002432034.png">
@@ -130,22 +130,23 @@
     <div class="article-entry" itemprop="articleBody">
       
         <!-- TOC -->
-
 <ul>
-<li><a href="#语言模型与应用">语言模型与应用</a><ul>
+<li><a href="#语言模型与应用">语言模型与应用</a>
+<ul>
 <li><a href="#语言模型">语言模型</a></li>
 <li><a href="#选择n-gram的n">选择N-gram的N</a></li>
-<li><a href="#n-gram语言模型应用">N-gram语言模型应用</a><ul>
+<li><a href="#n-gram语言模型应用">N-gram语言模型应用</a>
+<ul>
 <li><a href="#词性标注">词性标注</a></li>
-<li><a href="#垃圾邮件识别">垃圾邮件识别</a><ul>
+<li><a href="#垃圾邮件识别">垃圾邮件识别</a>
+<ul>
 <li><a href="#n-gram方法在实际应用中有一些tricks">N-gram方法在实际应用中有一些tricks</a></li>
-</ul>
-</li>
+</ul></li>
 <li><a href="#中文分词">中文分词</a></li>
 <li><a href="#机器翻译与语音识别">机器翻译与语音识别</a></li>
-</ul>
-</li>
-<li><a href="#平滑技术">平滑技术</a><ul>
+</ul></li>
+<li><a href="#平滑技术">平滑技术</a>
+<ul>
 <li><a href="#拉普拉斯平滑">拉普拉斯平滑</a></li>
 <li><a href="#back-off方法">Back-off方法</a></li>
 <li><a href="#插值法">插值法</a></li>
@@ -153,23 +154,18 @@
 <li><a href="#卡茨退避法折扣">卡茨退避法（折扣）</a></li>
 <li><a href="#absolute-discounting">Absolute discounting</a></li>
 <li><a href="#kneser-ney-smoothing">Kneser-Ney smoothing</a></li>
-<li><a href="#modified-kneser-ney-smoothing">Modified Kneser-Ney smoothing</a><ul>
+<li><a href="#modified-kneser-ney-smoothing">Modified Kneser-Ney smoothing</a></li>
 <li><a href="#kenlm工具构建语言模型">KenLM工具构建语言模型</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#神经语言预训练语言模型">神经语言预训练语言模型</a><ul>
+</ul></li>
+<li><a href="#神经语言预训练语言模型">神经语言预训练语言模型</a>
+<ul>
 <li><a href="#前馈神经网络模型fflm">前馈神经网络模型（FFLM）</a></li>
 <li><a href="#循环神经网络模型rnnlm"><strong>循环神经网络模型（RNNLM）</strong></a></li>
 <li><a href="#语言模型评估">语言模型评估</a></li>
-</ul>
-</li>
-</ul>
-</li>
+</ul></li>
+</ul></li>
 </ul>
 <!-- /TOC -->
-
 <a id="more"></a>
 <p>自然语言处理是关于计算机科学和语言学的交叉学科，常见的研究任务包括：</p>
 <ul>
@@ -188,46 +184,52 @@
 <li>OCR</li>
 <li>信息检索（Information Retrieval，IR）</li>
 </ul>
-<h1 id="语言模型与应用"><a href="#语言模型与应用" class="headerlink" title="语言模型与应用"></a>语言模型与应用</h1><p>​    上个世纪80年代后期，机器学习算法被引入到自然语言处理中，这要归功于不断提高的计算能力。</p>
-<p>​    研究主要集中在统计模型上，这种方法采用大规模的训练语料（corpus）对模型的参数进行自动的学习，和之前的<strong>基于规则的方法相比</strong>，这种方法更具鲁棒性。</p>
-<h2 id="语言模型"><a href="#语言模型" class="headerlink" title="语言模型"></a>语言模型</h2><p>​    语言模型简单来讲，就是计算一个句子的概率，更确切的说是计算组成这个句子一系列词语的概率。</p>
+<h1 id="语言模型与应用">语言模型与应用</h1>
+<p>​ 上个世纪80年代后期，机器学习算法被引入到自然语言处理中，这要归功于不断提高的计算能力。</p>
+<p>​ 研究主要集中在统计模型上，这种方法采用大规模的训练语料（corpus）对模型的参数进行自动的学习，和之前的<strong>基于规则的方法相比</strong>，这种方法更具鲁棒性。</p>
+<h2 id="语言模型">语言模型</h2>
+<p>​ 语言模型简单来讲，就是计算一个句子的概率，更确切的说是计算组成这个句子一系列词语的概率。</p>
 <p>对一句话𝑆=𝑥1,𝑥2,𝑥3,𝑥4,𝑥5,…,𝑥𝑛S=x1,x2,x3,x4,x5,…,xn而言，它的概率</p>
 <blockquote>
-<p>𝑃(𝑆)=𝑃(𝑥1,𝑥2,𝑥3,𝑥4,𝑥5,…,𝑥𝑛)=𝑃(𝑥1)𝑃(𝑥2|𝑥1)𝑃(𝑥3|𝑥1,𝑥2)…𝑃(𝑥𝑛|𝑥1,𝑥2,…,𝑥𝑛−1)</p>
+<p>𝑃(𝑆)=𝑃(𝑥1,𝑥2,𝑥3,𝑥4,𝑥5,…,𝑥𝑛)=𝑃(𝑥1)𝑃(𝑥2|𝑥1)𝑃(𝑥3|𝑥1,𝑥2)...𝑃(𝑥𝑛|𝑥1,𝑥2,...,𝑥𝑛−1)</p>
 </blockquote>
-<p>​    联合概率链规则公式考虑到了所有的词和词之间的依赖关系，但是非常复杂。使用<strong>马尔科夫假设（Markov Assumption）</strong>简化：下一个词的出现仅依赖于它前面的一个或几个词。</p>
-<p>​    二元语法（bigram，2-gram）:</p>
-<p>$P(x_1,x_2,x_3,x_4,x_5,x_6,x_7,x_8,x_9,x_{10})=P(x_1)P(x_2|x_1)P(x_3|x_2)P(x_4|x_3)..P(x_{10}|x_9)$</p>
-<p>​    三元语法（trigram，3-gram）:</p>
-<p>𝑃(𝑥1,𝑥2,𝑥3,𝑥4,𝑥5,𝑥6,𝑥7,𝑥8,𝑥9,𝑥10)=𝑃(𝑥1)𝑃(𝑥2|𝑥1)𝑃(𝑥3|𝑥1,𝑥2)𝑃(𝑥4|𝑥2,𝑥3)×…×𝑃(𝑥10|𝑥8,𝑥9)</p>
-<p>​    为什么叫“语言模型”？因为这是统计学意义上的模型，又跟语言相关，所以叫语言模型。统计模型指一系列分布，参数模型指一系列可用有限个参数表示的模型。语言模型就是一种参数模型，它的参数是矩阵的所有cell。</p>
-<h2 id="选择N-gram的N"><a href="#选择N-gram的N" class="headerlink" title="选择N-gram的N"></a>选择N-gram的N</h2><p>​    理论上，只要有足够大的语料，n越大越好，毕竟这样考虑的信息更多</p>
+<p>​ 联合概率链规则公式考虑到了所有的词和词之间的依赖关系，但是非常复杂。使用<strong>马尔科夫假设（Markov Assumption）</strong>简化：下一个词的出现仅依赖于它前面的一个或几个词。</p>
+<p>​ 二元语法（bigram，2-gram）:</p>
+<p><span class="math inline">\(P(x_1,x_2,x_3,x_4,x_5,x_6,x_7,x_8,x_9,x_{10})=P(x_1)P(x_2|x_1)P(x_3|x_2)P(x_4|x_3)..P(x_{10}|x_9)\)</span></p>
+<p>​ 三元语法（trigram，3-gram）:</p>
+<p>𝑃(𝑥1,𝑥2,𝑥3,𝑥4,𝑥5,𝑥6,𝑥7,𝑥8,𝑥9,𝑥10)=𝑃(𝑥1)𝑃(𝑥2|𝑥1)𝑃(𝑥3|𝑥1,𝑥2)𝑃(𝑥4|𝑥2,𝑥3)×...×𝑃(𝑥10|𝑥8,𝑥9)</p>
+<p>​ 为什么叫“语言模型”？因为这是统计学意义上的模型，又跟语言相关，所以叫语言模型。统计模型指一系列分布，参数模型指一系列可用有限个参数表示的模型。语言模型就是一种参数模型，它的参数是矩阵的所有cell。</p>
+<h2 id="选择n-gram的n">选择N-gram的N</h2>
+<p>​ 理论上，只要有足够大的语料，n越大越好，毕竟这样考虑的信息更多</p>
 <p>条件概率为统计计数：</p>
 <blockquote>
 <p>𝑃(“优惠”|“发票”,“点数”)= (“发票”,“点数”，“优惠”) 出现的次数 / (“发票”,“点数”)出现的次数</p>
 </blockquote>
-<ol>
+<ol type="1">
 <li>实际情况往往是训练语料很有限，很容易产生数据稀疏，不满足大数定律，算出来的概率失真。比如(“发票”,“点数”，“优惠”)在训练集中竟没有出现，就会导致零概率问题。</li>
 </ol>
 <blockquote>
 <p>大数定律：样本数量越多，其算术平均值就越趋近期望值。</p>
 </blockquote>
-<ol start="2">
-<li>另一方面，如果n很大，参数空间过大，产生维数灾难。假设词表的大小为100000，那么n-gram模型的参数数量为$100000^n$。这么多的参数，估计内存就不够放了。</li>
+<ol start="2" type="1">
+<li>另一方面，如果n很大，参数空间过大，产生维数灾难。假设词表的大小为100000，那么n-gram模型的参数数量为<span class="math inline">\(100000^n\)</span>。这么多的参数，估计内存就不够放了。</li>
 </ol>
-<p>​    如何选择依赖词的个数n呢？</p>
+<p>​ 如何选择依赖词的个数n呢？</p>
 <ul>
 <li>经验上，trigram用的最多。尽管如此，原则上，能用bigram解决，绝不使用trigram。n取≥4的情况较少。</li>
 <li>当ｎ更大时：对下一个词出现的约束信息更多，具有更大的辨别力；</li>
 <li>当ｎ更小时：在训练语料库中出现的次数更多，具有更可靠的统计信息，具有更高的可靠性、实用性。</li>
 </ul>
-<h2 id="N-gram语言模型应用"><a href="#N-gram语言模型应用" class="headerlink" title="N-gram语言模型应用"></a>N-gram语言模型应用</h2><h3 id="词性标注"><a href="#词性标注" class="headerlink" title="词性标注"></a>词性标注</h3><p><strong>词性标注是一个典型的多分类问题</strong>。</p>
+<h2 id="n-gram语言模型应用">N-gram语言模型应用</h2>
+<h3 id="词性标注">词性标注</h3>
+<p><strong>词性标注是一个典型的多分类问题</strong>。</p>
 <blockquote>
 <p><strong>“爱”作为动词还是比较常见的。所以可以统一给“爱”分配为“动词”</strong>。这种最简单的思想非常好实现，如果准确率要求不高则也比较常用。<strong>它只需要基于词性标注语料库做一个统计就够了，连贝叶斯方法、最大似然法都不要用</strong>。</p>
 </blockquote>
 <p><strong>可以引入2-gram模型提升匹配的精确度。</strong></p>
-<p>𝑃(词性𝑖|“很”的词性（副词），“爱”) = 前面被“副词”修饰的“爱”作为“词性𝑖”的次数 / 前面被“副词”修饰的“爱”出现的次数；𝑖=1,2,3…</p>
-<h3 id="垃圾邮件识别"><a href="#垃圾邮件识别" class="headerlink" title="垃圾邮件识别"></a>垃圾邮件识别</h3><p>一个可行的思路如下：</p>
+<p>𝑃(词性𝑖|“很”的词性（副词），“爱") = 前面被“副词”修饰的“爱"作为“词性𝑖”的次数 / 前面被“副词”修饰的“爱"出现的次数；𝑖=1,2,3...</p>
+<h3 id="垃圾邮件识别">垃圾邮件识别</h3>
+<p>一个可行的思路如下：</p>
 <ul>
 <li>先对邮件文本进行断句，以句尾标点符号（“。” “!” “？”等）为分隔符将邮件内容拆分成不同的句子。</li>
 <li>用<strong>N-gram分类器</strong>判断每个句子是否为垃圾邮件中的敏感句子。</li>
@@ -239,57 +241,65 @@
 </blockquote>
 <p><strong>对𝑃(𝑋|𝑌𝑖)P(X|Yi) 套用2-gram模型。</strong> 则上式化简为：</p>
 <blockquote>
-<p>𝑃(𝑌𝑖|𝑋)∝𝑃(𝑋|𝑌𝑖)𝑃(𝑌𝑖) ∝𝑃(𝑥1|𝑌𝑖)𝑃(𝑥2|𝑥1，𝑌𝑖)𝑃(𝑥3|𝑥2，𝑌𝑖)…𝑃(𝑥10|𝑥9，𝑌𝑖)𝑃(𝑌𝑖)</p>
+<p>𝑃(𝑌𝑖|𝑋)∝𝑃(𝑋|𝑌𝑖)𝑃(𝑌𝑖) ∝𝑃(𝑥1|𝑌𝑖)𝑃(𝑥2|𝑥1，𝑌𝑖)𝑃(𝑥3|𝑥2，𝑌𝑖)...𝑃(𝑥10|𝑥9，𝑌𝑖)𝑃(𝑌𝑖)</p>
 </blockquote>
 <p>因为这种方法<strong>考虑到了词语前面的一个词语的信息</strong>，同时也考虑到了<strong>部分语序信息</strong>，因此区分效果会<strong>比单纯用朴素贝叶斯方法更好</strong>。</p>
-<h4 id="N-gram方法在实际应用中有一些tricks"><a href="#N-gram方法在实际应用中有一些tricks" class="headerlink" title="N-gram方法在实际应用中有一些tricks"></a>N-gram方法在实际应用中有一些tricks</h4><ol>
+<h4 id="n-gram方法在实际应用中有一些tricks">N-gram方法在实际应用中有一些tricks</h4>
+<ol type="1">
 <li>从区分度来看，3-gram方法更好些。</li>
-<li><strong>可以考虑在其前面再添加一个句子起始符号如“&lt;𝑠&gt;”，这样我们就不必单独计算𝑃(“我”|𝑌𝑖)，而是替换为计算𝑃(“我”|“&lt;𝑠&gt;”,𝑌𝑖)。形式上与2-gram统一。</strong> 这样统计和预测起来都比较方便。(一般地，如果采用N-gram模型，可以在文本开头加入n-1个虚拟的开始符号)</li>
+<li><strong>可以考虑在其前面再添加一个句子起始符号如“<𝑠>”，这样我们就不必单独计算𝑃(“我”|𝑌𝑖)，而是替换为计算𝑃(“我”|“<𝑠>”,𝑌𝑖)。形式上与2-gram统一。</strong> 这样统计和预测起来都比较方便。(一般地，如果采用N-gram模型，可以在文本开头加入n-1个虚拟的开始符号)</li>
 <li><strong>N-gram模型也会发生零概率问题，也需要平滑技术</strong></li>
 </ol>
-<h3 id="中文分词"><a href="#中文分词" class="headerlink" title="中文分词"></a>中文分词</h3><p>中文分词技术是“中文NLP中，最最最重要的技术之一”，重要到某搜索引擎厂有专门的team在集中精力优化这一项工作，重要到能影响双语翻译百分位的准确度，能影响某些query下搜索引擎百分位的广告收入。</p>
+<h3 id="中文分词">中文分词</h3>
+<p>中文分词技术是“中文NLP中，最最最重要的技术之一”，重要到某搜索引擎厂有专门的team在集中精力优化这一项工作，重要到能影响双语翻译百分位的准确度，能影响某些query下搜索引擎百分位的广告收入。</p>
 <p><strong>中文分词也可以理解成一个多分类的问题。</strong>𝑋表示被分词的句子，<strong>用𝑌𝑖表示该句子的一个分词方案。</strong></p>
-<p>𝑃(𝑌𝑖|𝑋)∝𝑃(𝑋|𝑌𝑖)𝑃(𝑌𝑖)；𝑖=1,2,3…</p>
+<p>𝑃(𝑌𝑖|𝑋)∝𝑃(𝑋|𝑌𝑖)𝑃(𝑌𝑖)；𝑖=1,2,3...</p>
 <blockquote>
 <p><strong>NOTE：任意假想的一种分词方式之下生成的句子总是唯一的</strong>（只需把分词之间的分界符号扔掉剩下的内容都一样）。于是<strong>可以将 𝑃(𝑋|𝑌𝑖)看作是恒等于1</strong>的。这样贝叶斯公式又进一步化简成为：</p>
 </blockquote>
-<p>𝑃(𝑌𝑖|𝑋)∝𝑃(𝑌𝑖)；𝑖=1,2,3…</p>
+<p>𝑃(𝑌𝑖|𝑋)∝𝑃(𝑌𝑖)；𝑖=1,2,3...</p>
 <p>采用2-gram。于是有：</p>
 <blockquote>
-<ol>
+<ol type="1">
 <li>𝑃(𝑌1)=𝑃(“我司”，“可”，“办理”，“正规发票”) =𝑃(“我司”)𝑃(“可”|“我司”)𝑃(“办理”|“可”)𝑃(“正规发票”|“办理”）</li>
 <li>𝑃(𝑌2)=𝑃(“我”，“司可办”，“理正规”，“发票”) =𝑃(“我”)𝑃(“司可办”|“我”)𝑃(“理正规”|“司可办”)𝑃(“发票”|“理正规”）</li>
 </ol>
 </blockquote>
-<h3 id="机器翻译与语音识别"><a href="#机器翻译与语音识别" class="headerlink" title="机器翻译与语音识别"></a>机器翻译与语音识别</h3><p>N-gram语言模型在机器翻译和语音识别等顶级NLP应用中也有很大的用途。</p>
+<h3 id="机器翻译与语音识别">机器翻译与语音识别</h3>
+<p>N-gram语言模型在机器翻译和语音识别等顶级NLP应用中也有很大的用途。</p>
 <p>用于判断生成的语句的后验概率相对大小。</p>
-<h2 id="平滑技术"><a href="#平滑技术" class="headerlink" title="平滑技术"></a>平滑技术</h2><h4 id="拉普拉斯平滑"><a href="#拉普拉斯平滑" class="headerlink" title="拉普拉斯平滑"></a>拉普拉斯平滑</h4><p>最简单的平滑技术是拉普拉斯平滑，</p>
+<h2 id="平滑技术">平滑技术</h2>
+<h4 id="拉普拉斯平滑">拉普拉斯平滑</h4>
+<p>最简单的平滑技术是拉普拉斯平滑，</p>
 <p>加一平滑法，其<strong>保证每个n-gram在训练语料中至少出现1次</strong>（或者加k）。</p>
-<p>分母加上$k * |V|$</p>
-<h4 id="Back-off方法"><a href="#Back-off方法" class="headerlink" title="Back-off方法"></a>Back-off方法</h4><p>考虑k-1元gram</p>
-<h4 id="插值法"><a href="#插值法" class="headerlink" title="插值法"></a>插值法</h4><p>多种gram加权</p>
+<p>分母加上<span class="math inline">\(k * |V|\)</span></p>
+<h4 id="back-off方法">Back-off方法</h4>
+<p>考虑k-1元gram</p>
+<h4 id="插值法">插值法</h4>
+<p>多种gram加权</p>
 <blockquote>
-<p>一元组 $(w_{i})$ 出现的次数平均比二元组 $(w_{i−1},w_{i})$ 出现的次数要多很多，根据大数定律，它的相对频度更接近概率分布。类似地，二元组平均出现的次数比三元组要高，二元组的相对频度比三元组更接近概率分布。</p>
+<p>一元组 <span class="math inline">\((w_{i})\)</span> 出现的次数平均比二元组 <span class="math inline">\((w_{i−1},w_{i})\)</span> 出现的次数要多很多，根据大数定律，它的相对频度更接近概率分布。类似地，二元组平均出现的次数比三元组要高，二元组的相对频度比三元组更接近概率分布。</p>
 <p>同时，低阶模型的零概率问题也比高阶模型轻。</p>
 </blockquote>
-<p>$$P(w_i\mid w_{i-2},w_{i-1})=\lambda(w_{i-2},w_{i-1})\cdot f(w_i\mid w_{i-2},w_{i-1}) +\lambda(w_{i-1})\cdot f(w_i\mid w_{i-1})+\lambda f(w_i)$$</p>
+<p><span class="math display">\[P(w_i\mid w_{i-2},w_{i-1})=\lambda(w_{i-2},w_{i-1})\cdot f(w_i\mid w_{i-2},w_{i-1}) +\lambda(w_{i-1})\cdot f(w_i\mid w_{i-1})+\lambda f(w_i)\]</span></p>
 <p>其中，三个 λ 为插值权重，均为正数且和为 1。</p>
 <p><strong>线性插值法的效果比卡茨退避法略差</strong>，故现在已经较少使用了。</p>
-<h4 id="古德-图灵"><a href="#古德-图灵" class="headerlink" title="古德-图灵"></a>古德-图灵</h4><blockquote>
+<h4 id="古德-图灵">古德-图灵</h4>
+<blockquote>
 <p>在统计中相信可靠的统计数据，而对不可信的统计数据打折扣的一种概率估计方法。</p>
 </blockquote>
 <p>古德-图灵估计的原理是：</p>
 <p>对于没看见的事件，我们不能认为它发生的概率就是零，因此我们从概率的总量(Probability Mass)中，<strong>分配一个很小的比例给这些没有看见的事件</strong>。这样一来，看见了的事件的概率总和就小于 1了。因此，需要<strong>将所有看见了的事件概率调小一点</strong>，并且按照“<strong>越是不可信的统计折扣越多</strong>”的方法进行。</p>
 <p>假定在语料库中出现 r 次的词有 𝑁𝑟个，特别地，未出现的词数量为 𝑁0。语料库的大小为 N。那么，很显然：</p>
-<p>$$N=\sum_{r=1}^{\infty}rN_r$$</p>
-<p>出现 r 次的词在整个语料库中的相对频度(Relative Frequency)则是 $r/N_r$。</p>
-<p>当 r 比较小时，它的统计可能不可靠，因此在计算那些出现 r 次的词的概率时，要使用一个更小一点的次数，是 $d_r$（而不直接使用r）。</p>
-<p>$$d_r = (r+1)\cdot N_{r+1}/N_r$$</p>
+<p><span class="math display">\[N=\sum_{r=1}^{\infty}rN_r\]</span></p>
+<p>出现 r 次的词在整个语料库中的相对频度(Relative Frequency)则是 <span class="math inline">\(r/N_r\)</span>。</p>
+<p>当 r 比较小时，它的统计可能不可靠，因此在计算那些出现 r 次的词的概率时，要使用一个更小一点的次数，是 <span class="math inline">\(d_r\)</span>（而不直接使用r）。</p>
+<p><span class="math display">\[d_r = (r+1)\cdot N_{r+1}/N_r\]</span></p>
 <p>显然</p>
-<p>$$\sum_rd_r\cdot N_r=N$$</p>
-<p><strong>根据 $Zipf$ 定律，一般情况下 $N_{r+1}&lt;N_r$，因而 $d_r&lt;r$，从而 $d_0&gt;0$。</strong></p>
+<p><span class="math display">\[\sum_rd_r\cdot N_r=N\]</span></p>
+<p><strong>根据 <span class="math inline">\(Zipf\)</span> 定律，一般情况下 <span class="math inline">\(N_{r+1}&lt;N_r\)</span>，因而 <span class="math inline">\(d_r&lt;r\)</span>，从而 <span class="math inline">\(d_0&gt;0\)</span>。</strong></p>
 <blockquote>
-<p>  $Zipf$ 定律：一般来说，出现一次的词的数量比出现两次的多，出现两次的比出现三次的多，这种规律称为 Zipf定律(Zipf’s Law)，即 r 越大，词的数量 $N_r$ 越小。</p>
+<p><span class="math inline">\(Zipf\)</span> 定律：一般来说，出现一次的词的数量比出现两次的多，出现两次的比出现三次的多，这种规律称为 Zipf定律(Zipf’s Law)，即 r 越大，词的数量 <span class="math inline">\(N_r\)</span> 越小。</p>
 </blockquote>
 <blockquote>
 <p>这样就给未出现的词赋予了一个很小的非零值，从而解决了零概率的问题。同时下调了出现频率很低的词的概率。</p>
@@ -301,59 +311,82 @@
 <li>对于频率小于阈值的词，它们的概率估计就小于它们的相对频度，并且出现次数越少，折扣越多</li>
 <li>对于未看见的词，也给与了一个比较小的概率</li>
 </ul>
-<h4 id="卡茨退避法（折扣）"><a href="#卡茨退避法（折扣）" class="headerlink" title="卡茨退避法（折扣）"></a>卡茨退避法（折扣）</h4><p>由前 IBM 科学家卡茨(S.M.Katz)提出。</p>
-<p> $\sum_{w_{i-1},w_i\text{ seen}}P(w_i\mid w_{i-1})\lt 1$类似古德-图灵估计的方法。这意味着有一部分概率量没有分配出去，留给了没有看到的二元组 $(w_{i−1},w_{i})$：</p>
-<p>$$P(w_i\mid w_{i-1})=\begin{cases}f(w_i\mid w_{i-1})\quad\text{if }N(w_{i-1},w_i) \ge T \f_{gt}(w_i\mid w_{i-1})\quad\text{if }0\lt N(w_{i-1},w_i)\lt T \ Q(w_{i-1})\cdot f(w_i)\quad\text{otherwise}\end{cases}$$</p>
-<p>其中 T 是阈值，一般在 8−10 左右，函数 $f_{gt}()$ 表示经过古德-图灵估计后的相对频度。而</p>
-<p>$$Q(w_{i-1})=\frac{1-\sum_{w_i \text{ seen}}P(w_i\mid w_{i-1})}{\sum_{w_i\text{ unseen}}f(w_i)}$$</p>
+<h4 id="卡茨退避法折扣">卡茨退避法（折扣）</h4>
+<p>由前 IBM 科学家卡茨(S.M.Katz)提出。</p>
+<p><span class="math inline">\(\sum_{w_{i-1},w_i\text{ seen}}P(w_i\mid w_{i-1})\lt 1\)</span>类似古德-图灵估计的方法。这意味着有一部分概率量没有分配出去，留给了没有看到的二元组 <span class="math inline">\((w_{i−1},w_{i})\)</span>：</p>
+<p><span class="math display">\[P(w_i\mid w_{i-1})=\begin{cases}f(w_i\mid w_{i-1})\quad\text{if }N(w_{i-1},w_i) \ge T \\f_{gt}(w_i\mid w_{i-1})\quad\text{if }0\lt N(w_{i-1},w_i)\lt T \\ Q(w_{i-1})\cdot f(w_i)\quad\text{otherwise}\end{cases}\]</span></p>
+<p>其中 T 是阈值，一般在 8−10 左右，函数 <span class="math inline">\(f_{gt}()\)</span> 表示经过古德-图灵估计后的相对频度。而</p>
+<p><span class="math display">\[Q(w_{i-1})=\frac{1-\sum_{w_i \text{ seen}}P(w_i\mid w_{i-1})}{\sum_{w_i\text{ unseen}}f(w_i)}\]</span></p>
 <p>类似地，对于三元模型，概率估计的公式如下：</p>
-<p>$$P(w_i\mid w_{i-2},w_{i-1})=\begin{cases}f(w_i\mid w_{i-2},w_{i-1})\quad\text{if }N(w_{i-2,}w_{i-1},w_i) \ge T \f_{gt}(w_i\mid w_{i-2,}w_{i-1})\quad\text{if }0\lt N(w_{i-2},w_{i-1},w_i)\lt T \ Q(w_{i-2},w_{i-1})\cdot P(w_i\mid w_{i-1})\quad\text{otherwise}\end{cases}$$</p>
-<h4 id="Absolute-discounting"><a href="#Absolute-discounting" class="headerlink" title="Absolute discounting"></a>Absolute discounting</h4><p>Absolute discounting 包括了对高阶和低阶模型的差值，然而它并不是用高阶模型的 P 乘以一个 lambda，而是从每个非零计数里减掉一个固定的 discount δ∈[0,1]，作为test set的计数。</p>
-<p><img src="/images/2-%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B.assets/image-20191204002247856.png" alt="image"></p>
-<p><img src="/images/2-%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B.assets/image-20191204002432034.png" alt="image"></p>
-<h4 id="Kneser-Ney-smoothing"><a href="#Kneser-Ney-smoothing" class="headerlink" title="Kneser-Ney smoothing"></a>Kneser-Ney smoothing</h4><p> Absolute discounting 的一个扩展，对回退部分做了一个修正。</p>
+<p><span class="math display">\[P(w_i\mid w_{i-2},w_{i-1})=\begin{cases}f(w_i\mid w_{i-2},w_{i-1})\quad\text{if }N(w_{i-2,}w_{i-1},w_i) \ge T \\f_{gt}(w_i\mid w_{i-2,}w_{i-1})\quad\text{if }0\lt N(w_{i-2},w_{i-1},w_i)\lt T \\ Q(w_{i-2},w_{i-1})\cdot P(w_i\mid w_{i-1})\quad\text{otherwise}\end{cases}\]</span></p>
+<h4 id="absolute-discounting">Absolute discounting</h4>
+<p>Absolute discounting 包括了对高阶和低阶模型的差值，然而它并不是用高阶模型的 P 乘以一个 lambda，而是从每个非零计数里减掉一个固定的 discount δ∈[0,1]，作为test set的计数。</p>
+<figure>
+<img src="/images/2-语言模型.assets/image-20191204002247856.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<figure>
+<img src="/images/2-语言模型.assets/image-20191204002432034.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<h4 id="kneser-ney-smoothing">Kneser-Ney smoothing</h4>
+<p>Absolute discounting 的一个扩展，对回退部分做了一个修正。</p>
 <p>只有在高阶模型的计数很小或者为 0 时，低阶模型才显得重要，(只有在 bigram 没有出现过时，unigram 才有用)。针对该目的进行优化。</p>
 <p>目的： capture the diversity of contexts for the word。</p>
-<p><img src="/images/2-%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B.assets/image-20191204002716604.png" alt="image"></p>
-<h4 id="Modified-Kneser-Ney-smoothing"><a href="#Modified-Kneser-Ney-smoothing" class="headerlink" title="Modified Kneser-Ney smoothing"></a>Modified Kneser-Ney smoothing</h4><p>根据高阶模型（k元）的相对大小，对低阶模型得到的部分进行比例分配。</p>
+<figure>
+<img src="/images/2-语言模型.assets/image-20191204002716604.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<h4 id="modified-kneser-ney-smoothing">Modified Kneser-Ney smoothing</h4>
+<p>根据高阶模型（k元）的相对大小，对低阶模型得到的部分进行比例分配。</p>
 <p><strong>目前在很多情况下，效果最好的平滑方法</strong>。</p>
-<h3 id="KenLM工具构建语言模型"><a href="#KenLM工具构建语言模型" class="headerlink" title="KenLM工具构建语言模型"></a>KenLM工具构建语言模型</h3><p><a href="https://kheafield.com/code/kenlm/" target="_blank" rel="noopener">https://kheafield.com/code/kenlm/</a></p>
-<p>​    使用了Modified Kneser-Ney smoothing的语言模型工具包。安装和使用见<a href="https://github.com/RacleRay/NotesForBlogs/blob/master/KenLM_language_model_package.ipynb" target="_blank" rel="noopener">notebook</a>。</p>
+<h3 id="kenlm工具构建语言模型">KenLM工具构建语言模型</h3>
+<p>https://kheafield.com/code/kenlm/</p>
+<p>​ 使用了Modified Kneser-Ney smoothing的语言模型工具包。安装和使用见<a href="https://github.com/RacleRay/NotesForBlogs/blob/master/KenLM_language_model_package.ipynb" target="_blank" rel="noopener">notebook</a>。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install https:&#x2F;&#x2F;github.com&#x2F;kpu&#x2F;kenlm&#x2F;archive&#x2F;master.zip</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="神经语言预训练语言模型"><a href="#神经语言预训练语言模型" class="headerlink" title="神经语言预训练语言模型"></a>神经语言预训练语言模型</h2><blockquote>
+<h2 id="神经语言预训练语言模型">神经语言预训练语言模型</h2>
+<blockquote>
 <p>BERT，GPT等，同样可以应用在以上领域。相关部分在后面笔记中给出。</p>
 </blockquote>
 <p><strong>参考资料</strong>:</p>
 <ul>
-<li><p><a href="https://karpathy.github.io/2015/05/21/rnn-effectiveness/" target="_blank" rel="noopener">Andrej Karpathy的RNN博客</a></p>
-</li>
+<li><p><a href="https://karpathy.github.io/2015/05/21/rnn-effectiveness/" target="_blank" rel="noopener">Andrej Karpathy的RNN博客</a></p></li>
 <li><p><a href="https://medium.com/syncedreview/language-model-a-survey-of-the-state-of-the-art-technology-64d1a2e5a466" target="_blank" rel="noopener">Language Model: A Survey of the State-of-the-Art Technology</a></p>
-<p>传统n-gram模型简单实用，但是<strong>数据的稀疏性和泛化能力</strong>有很大的问题。</p>
-</li>
+<p>传统n-gram模型简单实用，但是<strong>数据的稀疏性和泛化能力</strong>有很大的问题。</p></li>
 </ul>
 <blockquote>
-<p>​    当新的文本中出现意义相近但是没有在训练文本中出现的单词或者单词组的时候，传统离散模型无法正确计算这些训练样本中未出现的单词的应有概率，他们都会被赋予0概率预测值。</p>
-<p>​    除了对未出现的单词本身进行预测非常困难之外，离散模型还依赖于固定单词组合，需要完全的模式匹配，否则也无法正确输出单词组出现的概率。</p>
-<p>​    离散模型在计算上还存在“维度诅咒”的困难。假设我们的词库有一万个独立单词，对于一个包含4个单词的词组模式，潜在的单词组合多达$10000^4$。</p>
+<p>​ 当新的文本中出现意义相近但是没有在训练文本中出现的单词或者单词组的时候，传统离散模型无法正确计算这些训练样本中未出现的单词的应有概率，他们都会被赋予0概率预测值。</p>
+<p>​ 除了对未出现的单词本身进行预测非常困难之外，离散模型还依赖于固定单词组合，需要完全的模式匹配，否则也无法正确输出单词组出现的概率。</p>
+<p>​ 离散模型在计算上还存在“维度诅咒”的困难。假设我们的词库有一万个独立单词，对于一个包含4个单词的词组模式，潜在的单词组合多达<span class="math inline">\(10000^4\)</span>。</p>
 </blockquote>
-<p>  神经网络模型：<strong>前馈神经网络模型（FFLM）</strong>和<strong>循环神经网络模型（RNNLM）</strong>。前者主要设计来解决稀疏性问题，而后者主要设计来解决泛化能力，尤其是对长上下文信息的处理。</p>
-<h3 id="前馈神经网络模型（FFLM）"><a href="#前馈神经网络模型（FFLM）" class="headerlink" title="前馈神经网络模型（FFLM）"></a>前馈神经网络模型（FFLM）</h3><p>  Bengio等人提出的第一个前馈神经网络模型利用一个三层，包含一个嵌入层、一个全连接层、一个输出层，的全连接神经网络模型来估计给定n-1个上文的情况下，第n个单词出现的概率。其架构如下图所示：</p>
-<p><img src="/images/2-%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B.assets/image-20200223232709790.png" alt="image"></p>
+<p>神经网络模型：<strong>前馈神经网络模型（FFLM）</strong>和<strong>循环神经网络模型（RNNLM）</strong>。前者主要设计来解决稀疏性问题，而后者主要设计来解决泛化能力，尤其是对长上下文信息的处理。</p>
+<h3 id="前馈神经网络模型fflm">前馈神经网络模型（FFLM）</h3>
+<p>Bengio等人提出的第一个前馈神经网络模型利用一个三层，包含一个嵌入层、一个全连接层、一个输出层，的全连接神经网络模型来估计给定n-1个上文的情况下，第n个单词出现的概率。其架构如下图所示：</p>
+<figure>
+<img src="/images/2-语言模型.assets/image-20200223232709790.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
 <p>FFLM假设每个输入都是独立的。而循环神经网络的结构能利用文字的这种上下文序列关系。</p>
-<h3 id="循环神经网络模型（RNNLM）"><a href="#循环神经网络模型（RNNLM）" class="headerlink" title="循环神经网络模型（RNNLM）"></a><strong>循环神经网络模型（RNNLM）</strong></h3><p>循环神经网络模型不要求固定窗口的数据训练。</p>
-<p><img src="/images/2-%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B.assets/image-20200223232953572.png" alt="image"></p>
+<h3 id="循环神经网络模型rnnlm"><strong>循环神经网络模型（RNNLM）</strong></h3>
+<p>循环神经网络模型不要求固定窗口的数据训练。</p>
+<figure>
+<img src="/images/2-语言模型.assets/image-20200223232953572.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
 <p>RNN语言模型训练过程：</p>
-<p><img src="/images/2-%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B.assets/image-20200223233329671.png" alt="image"></p>
+<figure>
+<img src="/images/2-语言模型.assets/image-20200223233329671.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
 <p>RNN语言模型反向传播:</p>
-<p><img src="/images/2-%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B.assets/image-20200223233353866.png" alt="image"></p>
-<h3 id="语言模型评估"><a href="#语言模型评估" class="headerlink" title="语言模型评估"></a>语言模型评估</h3><p>困惑度（perplexity），其基本思想是给测试集的句子赋予较高概率值的语言模型较好。perplexity越小，句子概率越大，语言模型越好。</p>
-<p><img src="/images/2-%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B.assets/image-20200223233555030.png" alt="image"></p>
-<p>也就是，$2^{-crossentropyloss}$</p>
-<p><img src="/images/2-%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B.assets/image-20200223234948452.png" alt="image"></p>
-<img src="/images/2-语言模型.assets/image-20200223234903732.png" alt="image" style="zoom:67%;" />
+<figure>
+<img src="/images/2-语言模型.assets/image-20200223233353866.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<h3 id="语言模型评估">语言模型评估</h3>
+<p>困惑度（perplexity），其基本思想是给测试集的句子赋予较高概率值的语言模型较好。perplexity越小，句子概率越大，语言模型越好。</p>
+<figure>
+<img src="/images/2-语言模型.assets/image-20200223233555030.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>也就是，<span class="math inline">\(2^{-crossentropyloss}\)</span></p>
+<figure>
+<img src="/images/2-语言模型.assets/image-20200223234948452.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p><img src="/images/2-语言模型.assets/image-20200223234903732.png" alt="image" style="zoom:67%;" /></p>
+
       
     </div>
 
@@ -363,7 +396,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/07/06/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/" data-id="ckm4ldz7w0039ac2febek65xq" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/07/06/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/" data-id="ckm4mwmuu002fxw2fc6k35v26" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       

@@ -5,12 +5,12 @@
   
   <title>文本分类传统机器学习方法 | Racle</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="朴素贝叶斯模型与中文文本分类 优化   Logistic Regression SVM 实验">
+  <meta name="description" content="朴素贝叶斯模型与中文文本分类  优化  Logistic Regression SVM 实验">
 <meta property="og:type" content="article">
 <meta property="og:title" content="文本分类传统机器学习方法">
 <meta property="og:url" content="https://racleray.github.io/2020/07/07/%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E4%BC%A0%E7%BB%9F%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/index.html">
 <meta property="og:site_name" content="Racle">
-<meta property="og:description" content="朴素贝叶斯模型与中文文本分类 优化   Logistic Regression SVM 实验">
+<meta property="og:description" content="朴素贝叶斯模型与中文文本分类  优化  Logistic Regression SVM 实验">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://racleray.github.io/images/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95.assets/image-20200226230633386.png">
 <meta property="og:image" content="https://racleray.github.io/images/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95.assets/image-20200226230826078.png">
@@ -122,24 +122,28 @@
     <div class="article-entry" itemprop="articleBody">
       
         <!-- TOC -->
-
 <ul>
-<li><a href="#朴素贝叶斯模型与中文文本分类">朴素贝叶斯模型与中文文本分类</a><ul>
+<li><a href="#朴素贝叶斯模型与中文文本分类">朴素贝叶斯模型与中文文本分类</a>
+<ul>
 <li><a href="#优化">优化</a></li>
-</ul>
-</li>
+</ul></li>
 <li><a href="#logistic-regression">Logistic Regression</a></li>
 <li><a href="#svm">SVM</a></li>
 <li><a href="#实验">实验</a></li>
 </ul>
 <!-- /TOC -->
 <a id="more"></a>
-
-<h2 id="朴素贝叶斯模型与中文文本分类"><a href="#朴素贝叶斯模型与中文文本分类" class="headerlink" title="朴素贝叶斯模型与中文文本分类"></a>朴素贝叶斯模型与中文文本分类</h2><p>$$<br>P(Y|X)=\frac{P(X|Y)P(Y)}{P(X)}<br>$$</p>
-<p>$$<br>P(Y,X) = P(Y|X)P(X)=P(X|Y)P(Y)<br>$$</p>
-<p>​    条件独立假设的一个缺陷是，<strong>失去了词语之间的顺序信息。</strong>这就相当于把所有的词汇扔进到一个袋子里随便搅和，贝叶斯都认为它们一样。因此这种情况也称作<strong>词袋模型(bag of words)</strong>。</p>
-<h3 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h3><blockquote>
-<ol>
+<h2 id="朴素贝叶斯模型与中文文本分类">朴素贝叶斯模型与中文文本分类</h2>
+<p><span class="math display">\[
+P(Y|X)=\frac{P(X|Y)P(Y)}{P(X)}
+\]</span></p>
+<p><span class="math display">\[
+P(Y,X) = P(Y|X)P(X)=P(X|Y)P(Y)
+\]</span></p>
+<p>​ 条件独立假设的一个缺陷是，<strong>失去了词语之间的顺序信息。</strong>这就相当于把所有的词汇扔进到一个袋子里随便搅和，贝叶斯都认为它们一样。因此这种情况也称作<strong>词袋模型(bag of words)</strong>。</p>
+<h3 id="优化">优化</h3>
+<blockquote>
+<ol type="1">
 <li>取对数</li>
 <li>转换为权重，每个词一个重要度，而不是计数</li>
 <li>选取top k关键词</li>
@@ -147,15 +151,24 @@
 <li>位置权重：比如在标题中的关键词，权重大一些</li>
 </ol>
 </blockquote>
-<h2 id="Logistic-Regression"><a href="#Logistic-Regression" class="headerlink" title="Logistic Regression"></a>Logistic Regression</h2><p>​    Logistic 回归并非最强大的分类算法，它可以很容易地被更为复杂的算法所超越，另一个缺点是它高度依赖正确的数据表示。但是其计算效率是相对较高的。不能用 logistic 回归来解决非线性分类问题，因为它的决策边界是线性的。</p>
-<h2 id="SVM"><a href="#SVM" class="headerlink" title="SVM"></a>SVM</h2><p>​    找到具有最小间隔的样本点，然后拟合出一个到这些样本点距离和最大的线段/平面。</p>
-<p>​    目标函数：</p>
-<p><img src="/images/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95.assets/image-20200226230633386.png" alt="image"></p>
-<p>​    优化问题可推导出：【过程见机器学习笔记】</p>
-<p><img src="/images/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95.assets/image-20200226230826078.png" alt="image"></p>
-<p>​    得到回归系数：</p>
-<p><img src="/images/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95.assets/image-20200226230922076.png" alt="image"></p>
-<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p><a href="https://github.com/RacleRay/NotesForBlogs/blob/master/%E5%88%86%E7%B1%BB%E7%AE%97%E6%B3%95%E5%9C%A8%E6%96%87%E6%9C%AC%E9%97%AE%E9%A2%98%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8.ipynb" target="_blank" rel="noopener">notebook</a></p>
+<h2 id="logistic-regression">Logistic Regression</h2>
+<p>​ Logistic 回归并非最强大的分类算法，它可以很容易地被更为复杂的算法所超越，另一个缺点是它高度依赖正确的数据表示。但是其计算效率是相对较高的。不能用 logistic 回归来解决非线性分类问题，因为它的决策边界是线性的。</p>
+<h2 id="svm">SVM</h2>
+<p>​ 找到具有最小间隔的样本点，然后拟合出一个到这些样本点距离和最大的线段/平面。</p>
+<p>​ 目标函数：</p>
+<figure>
+<img src="/images/机器学习方法.assets/image-20200226230633386.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​ 优化问题可推导出：【过程见机器学习笔记】</p>
+<figure>
+<img src="/images/机器学习方法.assets/image-20200226230826078.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​ 得到回归系数：</p>
+<figure>
+<img src="/images/机器学习方法.assets/image-20200226230922076.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
+</figure>
+<h2 id="实验">实验</h2>
+<p><a href="https://github.com/RacleRay/NotesForBlogs/blob/master/%E5%88%86%E7%B1%BB%E7%AE%97%E6%B3%95%E5%9C%A8%E6%96%87%E6%9C%AC%E9%97%AE%E9%A2%98%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8.ipynb" target="_blank" rel="noopener">notebook</a></p>
 
       
     </div>
@@ -166,7 +179,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/07/07/%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E4%BC%A0%E7%BB%9F%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/" data-id="ckm4ldz770027ac2fbc8bfc1p" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/07/07/%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E4%BC%A0%E7%BB%9F%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/" data-id="ckm4mwmul001yxw2f78zuaz84" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       

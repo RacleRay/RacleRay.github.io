@@ -116,65 +116,64 @@
     <div class="article-entry" itemprop="articleBody">
       
         <!-- TOC -->
-
 <ul>
-<li><a href="#文本表示进阶">文本表示进阶</a><ul>
-<li><a href="#elmoembedding-from-language-models">ELMo：Embedding from Language Models</a><ul>
+<li><a href="#文本表示进阶">文本表示进阶</a>
+<ul>
+<li><a href="#elmoembedding-from-language-models">ELMo：Embedding from Language Models</a>
+<ul>
 <li><a href="#结构">结构</a></li>
-<li><a href="#输入层和输出层改进">输入层和输出层改进</a><ul>
+<li><a href="#输入层和输出层改进">输入层和输出层改进</a>
+<ul>
 <li><a href="#输出层">输出层：</a></li>
 <li><a href="#输入层">输入层：</a></li>
 <li><a href="#结果">结果：</a></li>
-</ul>
-</li>
+</ul></li>
 <li><a href="#计算复杂度">计算复杂度</a></li>
-</ul>
-</li>
-<li><a href="#从词向量到句子向量">从词向量到句子向量</a><ul>
+</ul></li>
+<li><a href="#从词向量到句子向量">从词向量到句子向量</a>
+<ul>
 <li><a href="#pv-dm-和-pv-dbow">PV-DM 和 PV-DBOW</a></li>
 <li><a href="#skip-thoughts">Skip-thoughts</a></li>
 <li><a href="#quick-thoughts">Quick-thoughts</a></li>
 <li><a href="#infersent">InferSent</a></li>
 <li><a href="#general-purpose-sentence-representation">General Purpose Sentence Representation</a></li>
 <li><a href="#universal-sentence-encoder">Universal Sentence Encoder</a></li>
-</ul>
-</li>
-<li><a href="#ulmfit">ULMFit</a><ul>
+</ul></li>
+<li><a href="#ulmfit">ULMFit</a>
+<ul>
 <li><a href="#averaged-sgd">Averaged SGD</a></li>
 <li><a href="#dropconnect">DropConnect</a></li>
-<li><a href="#微调的技巧两次-finetune">微调的技巧(两次 finetune)</a><ul>
+<li><a href="#微调的技巧两次-finetune">微调的技巧(两次 finetune)</a>
+<ul>
 <li><a href="#1-discriminative-fine-tune">1. discriminative fine-tune</a></li>
 <li><a href="#2-slanted-triangular-learning-rates">2. slanted triangular learning rates</a></li>
-</ul>
-</li>
+</ul></li>
 <li><a href="#gradual-unfreezing">gradual unfreezing</a></li>
-</ul>
-</li>
+</ul></li>
 <li><a href="#transformer">Transformer</a></li>
 <li><a href="#gpt">GPT</a></li>
-<li><a href="#bert">BERT</a><ul>
-<li><a href="#模型特点">模型特点</a><ul>
+<li><a href="#bert">BERT</a>
+<ul>
+<li><a href="#模型特点">模型特点</a>
+<ul>
 <li><a href="#1-利用了真双向的-transformer">1. 利用了真双向的 Transformer</a></li>
 <li><a href="#2-mask-lm-mask-language-model">2. Mask-LM (Mask-Language Model)</a></li>
 <li><a href="#3-next-sentence-prediction-任务学习句子级别信息">3. Next Sentence Prediction 任务学习句子级别信息</a></li>
-</ul>
-</li>
+</ul></li>
 <li><a href="#输入表示">输入表示</a></li>
 <li><a href="#下游任务">下游任务</a></li>
-</ul>
-</li>
-<li><a href="#xlnet">XLNet</a><ul>
-<li><a href="#自回归语言模型autoregressive-lm">自回归语言模型（Autoregressive LM）</a><ul>
+</ul></li>
+<li><a href="#xlnet">XLNet</a>
+<ul>
+<li><a href="#自回归语言模型autoregressive-lm">自回归语言模型（Autoregressive LM）</a>
+<ul>
 <li><a href="#优点">优点</a></li>
 <li><a href="#缺点">缺点</a></li>
-</ul>
-</li>
+</ul></li>
 <li><a href="#自编码语言模型autoencoder-lm">自编码语言模型（Autoencoder LM）</a></li>
-</ul>
-</li>
+</ul></li>
 <li><a href="#总结">总结</a></li>
-</ul>
-</li>
+</ul></li>
 </ul>
 <!-- /TOC -->
         
@@ -188,7 +187,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/07/06/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA%E8%BF%9B%E9%98%B6/" data-id="ckm4ldz7j002vac2f1okh9gdt" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/07/06/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA%E8%BF%9B%E9%98%B6/" data-id="ckm4mwmuy002oxw2f4zhs8k0s" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -237,46 +236,45 @@
     <div class="article-entry" itemprop="articleBody">
       
         <!-- TOC -->
-
 <ul>
-<li><a href="#文本表示">文本表示</a><ul>
+<li><a href="#文本表示">文本表示</a>
+<ul>
 <li><a href="#1表示方法">1.表示方法</a></li>
-<li><a href="#2文本离散表示">2.文本离散表示</a><ul>
-<li><a href="#bag-of-words">bag of words</a><ul>
+<li><a href="#2文本离散表示">2.文本离散表示</a>
+<ul>
+<li><a href="#bag-of-words">bag of words</a>
+<ul>
 <li><a href="#优缺点">优缺点</a></li>
-</ul>
-</li>
+</ul></li>
 <li><a href="#tf-idf">TF-IDF</a></li>
-</ul>
-</li>
-<li><a href="#3文本分布式表示">3.文本分布式表示</a><ul>
-<li><a href="#基于svd降维的表示方法">基于SVD降维的表示方法</a><ul>
+</ul></li>
+<li><a href="#3文本分布式表示">3.文本分布式表示</a>
+<ul>
+<li><a href="#基于svd降维的表示方法">基于SVD降维的表示方法</a>
+<ul>
 <li><a href="#基于窗口的共现矩阵x">基于窗口的共现矩阵X</a></li>
-</ul>
-</li>
-<li><a href="#基于神经网络的表示方法">基于神经网络的表示方法</a><ul>
+</ul></li>
+<li><a href="#基于神经网络的表示方法">基于神经网络的表示方法</a>
+<ul>
 <li><a href="#连续词袋模型cbow">连续词袋模型（CBOW）</a></li>
 <li><a href="#skip-gram">Skip-Gram</a></li>
 <li><a href="#负例采样negative-sampling">负例采样（Negative Sampling）</a></li>
 <li><a href="#hierarchical-softmax">Hierarchical Softmax</a></li>
 <li><a href="#glove">Glove</a></li>
 <li><a href="#fasttext">fastText</a></li>
-</ul>
-</li>
-<li><a href="#词向量的作用与获取">词向量的作用与获取</a><ul>
+</ul></li>
+<li><a href="#词向量的作用与获取">词向量的作用与获取</a>
+<ul>
 <li><a href="#词向量的意义">词向量的意义</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#4关键词提取">4.关键词提取</a><ul>
+</ul></li>
+</ul></li>
+<li><a href="#4关键词提取">4.关键词提取</a>
+<ul>
 <li><a href="#tf-idf文本关键词抽取方法">TF-IDF文本关键词抽取方法</a></li>
 <li><a href="#基于textrank的文本关键词抽取方法">基于TextRank的文本关键词抽取方法</a></li>
 <li><a href="#基于word2vec词聚类的文本关键词抽取方法">基于Word2Vec词聚类的文本关键词抽取方法</a></li>
-</ul>
-</li>
-</ul>
-</li>
+</ul></li>
+</ul></li>
 </ul>
 <!-- /TOC -->
         
@@ -290,7 +288,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/07/06/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA/" data-id="ckm4ldz7d002lac2fanpm1700" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/07/06/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA/" data-id="ckm4mwmuo0024xw2fbt0v8c2y" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -339,22 +337,23 @@
     <div class="article-entry" itemprop="articleBody">
       
         <!-- TOC -->
-
 <ul>
-<li><a href="#语言模型与应用">语言模型与应用</a><ul>
+<li><a href="#语言模型与应用">语言模型与应用</a>
+<ul>
 <li><a href="#语言模型">语言模型</a></li>
 <li><a href="#选择n-gram的n">选择N-gram的N</a></li>
-<li><a href="#n-gram语言模型应用">N-gram语言模型应用</a><ul>
+<li><a href="#n-gram语言模型应用">N-gram语言模型应用</a>
+<ul>
 <li><a href="#词性标注">词性标注</a></li>
-<li><a href="#垃圾邮件识别">垃圾邮件识别</a><ul>
+<li><a href="#垃圾邮件识别">垃圾邮件识别</a>
+<ul>
 <li><a href="#n-gram方法在实际应用中有一些tricks">N-gram方法在实际应用中有一些tricks</a></li>
-</ul>
-</li>
+</ul></li>
 <li><a href="#中文分词">中文分词</a></li>
 <li><a href="#机器翻译与语音识别">机器翻译与语音识别</a></li>
-</ul>
-</li>
-<li><a href="#平滑技术">平滑技术</a><ul>
+</ul></li>
+<li><a href="#平滑技术">平滑技术</a>
+<ul>
 <li><a href="#拉普拉斯平滑">拉普拉斯平滑</a></li>
 <li><a href="#back-off方法">Back-off方法</a></li>
 <li><a href="#插值法">插值法</a></li>
@@ -362,20 +361,16 @@
 <li><a href="#卡茨退避法折扣">卡茨退避法（折扣）</a></li>
 <li><a href="#absolute-discounting">Absolute discounting</a></li>
 <li><a href="#kneser-ney-smoothing">Kneser-Ney smoothing</a></li>
-<li><a href="#modified-kneser-ney-smoothing">Modified Kneser-Ney smoothing</a><ul>
+<li><a href="#modified-kneser-ney-smoothing">Modified Kneser-Ney smoothing</a></li>
 <li><a href="#kenlm工具构建语言模型">KenLM工具构建语言模型</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#神经语言预训练语言模型">神经语言预训练语言模型</a><ul>
+</ul></li>
+<li><a href="#神经语言预训练语言模型">神经语言预训练语言模型</a>
+<ul>
 <li><a href="#前馈神经网络模型fflm">前馈神经网络模型（FFLM）</a></li>
 <li><a href="#循环神经网络模型rnnlm"><strong>循环神经网络模型（RNNLM）</strong></a></li>
 <li><a href="#语言模型评估">语言模型评估</a></li>
-</ul>
-</li>
-</ul>
-</li>
+</ul></li>
+</ul></li>
 </ul>
 <!-- /TOC -->
         
@@ -389,7 +384,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/07/06/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/" data-id="ckm4ldz7w0039ac2febek65xq" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/07/06/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/" data-id="ckm4mwmuu002fxw2fc6k35v26" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -438,14 +433,15 @@
     <div class="article-entry" itemprop="articleBody">
       
         <!-- TOC -->
-
 <ul>
-<li><a href="#docker中搭建深度学习环境">Docker中搭建深度学习环境</a><ul>
-<li><a href="#宿主机部分">宿主机部分</a><ul>
+<li><a href="#docker中搭建深度学习环境">Docker中搭建深度学习环境</a>
+<ul>
+<li><a href="#宿主机部分">宿主机部分</a>
+<ul>
 <li><a href="#云主机挂载新分区">云主机挂载新分区</a></li>
-</ul>
-</li>
-<li><a href="#docker部分">Docker部分</a><ul>
+</ul></li>
+<li><a href="#docker部分">Docker部分</a>
+<ul>
 <li><a href="#nvidia-container-toolkit">NVIDIA Container Toolkit</a></li>
 <li><a href="#optional修改docker本地镜像与容器的存储位置">（Optional）修改Docker本地镜像与容器的存储位置</a></li>
 <li><a href="#optional修改用户密码">（Optional）修改用户密码</a></li>
@@ -455,10 +451,8 @@
 <li><a href="#端口配置">端口配置</a></li>
 <li><a href="#备份">备份</a></li>
 <li><a href="#pycharm连接">pycharm连接</a></li>
-</ul>
-</li>
-</ul>
-</li>
+</ul></li>
+</ul></li>
 </ul>
 <!-- /TOC -->
         
@@ -472,7 +466,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/07/06/Linux-Docker%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83/" data-id="ckm4ldz6k0011ac2f0wfa08zl" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/07/06/Linux-Docker%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83/" data-id="ckm4mwmtq000nxw2faww240cq" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -521,7 +515,6 @@
     <div class="article-entry" itemprop="articleBody">
       
         <!-- TOC -->
-
 <ul>
 <li><a href="#更新源"><strong>更新源</strong></a></li>
 <li><a href="#sougou-pinyin"><strong>Sougou Pinyin</strong></a></li>
@@ -549,11 +542,11 @@
 <li><a href="#查找shell历史">查找Shell历史</a></li>
 <li><a href="#文件夹导航">文件夹导航</a></li>
 <li><a href="#npm">npm</a></li>
-<li><a href="#vim">vim</a><ul>
+<li><a href="#vim">vim</a>
+<ul>
 <li><a href="#ullitmuxliul">- tmux</a></li>
 <li><a href="#ulli代码折叠liul">- 代码折叠</a></li>
-</ul>
-</li>
+</ul></li>
 <li><a href="#simplescreenrecorder">SimpleScreenRecorder</a></li>
 <li><a href="#you-get">you-get</a></li>
 <li><a href="#tget-tget-is-wget-for-torrents">tget: tget is wget for torrents</a></li>
@@ -574,7 +567,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/07/06/%E4%B8%AA%E4%BA%BALinux%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" data-id="ckm4ldz6v001lac2fa4i50po3" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/07/06/%E4%B8%AA%E4%BA%BALinux%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" data-id="ckm4mwmu6001exw2fa9ivdbw9" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -623,42 +616,41 @@
     <div class="article-entry" itemprop="articleBody">
       
         <!-- TOC -->
-
 <ul>
-<li><a href="#中文文本基本任务与处理">中文文本基本任务与处理</a><ul>
-<li><a href="#1分词">1.分词</a><ul>
+<li><a href="#中文文本基本任务与处理">中文文本基本任务与处理</a>
+<ul>
+<li><a href="#1分词">1.分词</a>
+<ul>
 <li><a href="#最大匹配法">最大匹配法</a></li>
-</ul>
-</li>
+</ul></li>
 <li><a href="#2去停用词与n-gram">2.去停用词与N-gram</a></li>
 <li><a href="#3词性标注">3.词性标注</a></li>
 <li><a href="#4句法依存分析">4.句法依存分析</a></li>
 <li><a href="#5语义依存分析">5.语义依存分析</a></li>
-<li><a href="#6语法解析">6.语法解析</a><ul>
+<li><a href="#6语法解析">6.语法解析</a>
+<ul>
 <li><a href="#表达与存储">表达与存储</a></li>
-<li><a href="#语法解析的算法">语法解析的算法</a><ul>
+<li><a href="#语法解析的算法">语法解析的算法</a>
+<ul>
 <li><a href="#上下文无关语法context-free-grammer">上下文无关语法（Context-Free Grammer）</a></li>
 <li><a href="#概率分布的上下文无关语法probabilistic-context-free-grammar">概率分布的上下文无关语法（Probabilistic Context-Free Grammar）</a></li>
-</ul>
-</li>
-</ul>
-</li>
+</ul></li>
+</ul></li>
 <li><a href="#7命名实体识别">7.命名实体识别</a></li>
-</ul>
-</li>
+</ul></li>
 <li><a href="#关键词抽取">关键词抽取</a></li>
 <li><a href="#常用包的使用">常用包的使用</a></li>
-<li><a href="#jieba">jieba</a><ul>
+<li><a href="#jieba">jieba</a>
+<ul>
 <li><a href="#基本分词函数与用法">基本分词函数与用法</a></li>
 <li><a href="#添加用户自定义字典"><strong>添加用户自定义字典</strong></a></li>
 <li><a href="#词性标注">词性标注</a></li>
-<li><a href="#关键词抽取-1">关键词抽取</a><ul>
+<li><a href="#关键词抽取-1">关键词抽取</a>
+<ul>
 <li><a href="#基于-tf-idf-算法的关键词抽取"><strong>基于 TF-IDF 算法的关键词抽取</strong></a></li>
 <li><a href="#基于-textrank-算法的关键词抽取"><strong>基于 TextRank 算法的关键词抽取</strong></a></li>
-</ul>
-</li>
-</ul>
-</li>
+</ul></li>
+</ul></li>
 </ul>
 <!-- /TOC -->
         
@@ -672,7 +664,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/07/06/%E4%B8%AD%E6%96%87%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86/" data-id="ckm4ldz7c002jac2fawuu1kpi" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/07/06/%E4%B8%AD%E6%96%87%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86/" data-id="ckm4mwmu40018xw2f64awh7lw" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -721,29 +713,28 @@
     <div class="article-entry" itemprop="articleBody">
       
         <!-- TOC -->
-
 <ul>
-<li><a href="#英文文本处理">英文文本处理</a><ul>
+<li><a href="#英文文本处理">英文文本处理</a>
+<ul>
 <li><a href="#1-tokenization标记化分词">1 Tokenization(标记化/分词)</a></li>
 <li><a href="#2-去停用词">2 去停用词</a></li>
 <li><a href="#3-词性标注part-of-speech-tagging">3 词性标注（part-of-speech tagging）</a></li>
 <li><a href="#4-chunking组块分析">4 chunking/组块分析</a></li>
 <li><a href="#5-命名实体识别named-entity-recognitionner">5 命名实体识别（Named Entity Recognition，NER）</a></li>
 <li><a href="#6-stemming和lemmatizing-词干算法-和-词型还原">6 Stemming和Lemmatizing 词干算法 和 词型还原</a></li>
-<li><a href="#nltkwordnet">NLTK：WordNet</a><ul>
+<li><a href="#nltkwordnet">NLTK：WordNet</a>
+<ul>
 <li><a href="#corpus-moduleimg-srcimages1methodsincorpusmodulepng-altcorpus">Corpus Module!Corpus</a></li>
 <li><a href="#wordnet与词义解析">WordNet与词义解析</a></li>
 <li><a href="#frequency-distribution">Frequency Distribution</a></li>
-</ul>
-</li>
-<li><a href="#spacy">SpaCy</a><ul>
+</ul></li>
+<li><a href="#spacy">SpaCy</a>
+<ul>
 <li><a href="#chunking组块分析">chunking/组块分析</a></li>
 <li><a href="#句法依存">句法依存</a></li>
 <li><a href="#词向量">词向量</a></li>
-</ul>
-</li>
-</ul>
-</li>
+</ul></li>
+</ul></li>
 </ul>
 <!-- /TOC -->
         
@@ -757,7 +748,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/07/06/%E8%8B%B1%E6%96%87%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86/" data-id="ckm4ldz7x003bac2f6z2ydgx3" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/07/06/%E8%8B%B1%E6%96%87%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86/" data-id="ckm4mwmuv002hxw2f5f165vp0" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -806,15 +797,14 @@
     <div class="article-entry" itemprop="articleBody">
       
         <!-- TOC -->
-
 <ul>
 <li><a href="#python函数">python函数</a></li>
-<li><a href="#正则表达式">正则表达式</a><ul>
+<li><a href="#正则表达式">正则表达式</a>
+<ul>
 <li><a href="#re模块">re模块</a></li>
 <li><a href="#使用pattern">使用pattern</a></li>
 <li><a href="#词条和解释抽取">词条和解释抽取</a></li>
-</ul>
-</li>
+</ul></li>
 </ul>
 <!-- /TOC -->
         
@@ -828,7 +818,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/07/06/%E5%B8%B8%E7%94%A8python%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86%E5%87%BD%E6%95%B0/" data-id="ckm4ldz740020ac2f9kz5dnzf" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/07/06/%E5%B8%B8%E7%94%A8python%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86%E5%87%BD%E6%95%B0/" data-id="ckm4mwmub001oxw2fbud50bq1" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -873,6 +863,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         
+
       
     </div>
 
@@ -882,7 +873,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/04/16/hello/" data-id="ckm4ldz6t001hac2f5u196fd8" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/04/16/hello/" data-id="ckm4mwmtw000zxw2f133j43hk" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       

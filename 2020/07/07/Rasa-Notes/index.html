@@ -5,12 +5,12 @@
   
   <title>Rasa Notes | Racle</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="rasa_nlu训练数据的生成 官方DOC mini rasa tutorial 创建新项目 自定义NLU训练数据 自定义stories 自定义动作acitons 自定义domain 定义模型配置 训练模型 SHELL启动 可视化界面">
+  <meta name="description" content="rasa_nlu训练数据的生成 官方DOC mini rasa tutorial  创建新项目 自定义NLU训练数据 自定义stories 自定义动作acitons 自定义domain 定义模型配置 训练模型 SHELL启动 可视化界面">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Rasa Notes">
 <meta property="og:url" content="https://racleray.github.io/2020/07/07/Rasa-Notes/index.html">
 <meta property="og:site_name" content="Racle">
-<meta property="og:description" content="rasa_nlu训练数据的生成 官方DOC mini rasa tutorial 创建新项目 自定义NLU训练数据 自定义stories 自定义动作acitons 自定义domain 定义模型配置 训练模型 SHELL启动 可视化界面">
+<meta property="og:description" content="rasa_nlu训练数据的生成 官方DOC mini rasa tutorial  创建新项目 自定义NLU训练数据 自定义stories 自定义动作acitons 自定义domain 定义模型配置 训练模型 SHELL启动 可视化界面">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-07-07T09:47:25.000Z">
 <meta property="article:modified_time" content="2020-07-07T09:55:22.084Z">
@@ -114,11 +114,11 @@
     <div class="article-entry" itemprop="articleBody">
       
         <!-- TOC -->
-
 <ul>
 <li><a href="#rasa_nlu训练数据的生成">rasa_nlu训练数据的生成</a></li>
 <li><a href="#官方doc">官方DOC</a></li>
-<li><a href="#mini-rasa-tutorial">mini rasa tutorial</a><ul>
+<li><a href="#mini-rasa-tutorial">mini rasa tutorial</a>
+<ul>
 <li><a href="#创建新项目">创建新项目</a></li>
 <li><a href="#自定义nlu训练数据">自定义NLU训练数据</a></li>
 <li><a href="#自定义stories">自定义stories</a></li>
@@ -128,19 +128,20 @@
 <li><a href="#训练模型">训练模型</a></li>
 <li><a href="#shell启动">SHELL启动</a></li>
 <li><a href="#可视化界面">可视化界面</a></li>
-</ul>
-</li>
+</ul></li>
 </ul>
 <!-- /TOC -->
 <a id="more"></a>
-
-<h3 id="rasa-nlu训练数据的生成"><a href="#rasa-nlu训练数据的生成" class="headerlink" title="rasa_nlu训练数据的生成"></a>rasa_nlu训练数据的生成</h3><p>对话系统的冷启动都会遇到这样的问题，没有数据。</p>
+<h3 id="rasa_nlu训练数据的生成">rasa_nlu训练数据的生成</h3>
+<p>对话系统的冷启动都会遇到这样的问题，没有数据。</p>
 <p>使用chatito来生成rasa_nlu意图识别需要的数据。这个数据需要反反复复的修改和完善。</p>
-<p><a href="https://github.com/rodrigopivi/Chatito" target="_blank" rel="noopener">Chatito</a>    <a href="https://github.com/rodrigopivi/Chatito/blob/master/spec.md" target="_blank" rel="noopener">doc</a></p>
+<p><a href="https://github.com/rodrigopivi/Chatito" target="_blank" rel="noopener">Chatito</a> <a href="https://github.com/rodrigopivi/Chatito/blob/master/spec.md" target="_blank" rel="noopener">doc</a></p>
 <p>在产生训练数据的时候需要确定的nlu的意图和实体类别，需要在domain.yml文件中配置intents和entities。</p>
-<h3 id="官方DOC"><a href="#官方DOC" class="headerlink" title="官方DOC"></a>官方DOC</h3><p><a href="https://rasa.com/docs/rasa/core/policies/" target="_blank" rel="noopener">https://rasa.com/docs/rasa/core/policies/</a></p>
-<h3 id="mini-rasa-tutorial"><a href="#mini-rasa-tutorial" class="headerlink" title="mini rasa tutorial"></a>mini rasa tutorial</h3><blockquote>
-<ol>
+<h3 id="官方doc">官方DOC</h3>
+<p>https://rasa.com/docs/rasa/core/policies/</p>
+<h3 id="mini-rasa-tutorial">mini rasa tutorial</h3>
+<blockquote>
+<ol type="1">
 <li>创建一个新的项目</li>
 <li>查看NLU培训数据</li>
 <li>定义模型配置，写下第一个故事Story</li>
@@ -149,89 +150,94 @@
 <li>测试你写好的助手</li>
 </ol>
 </blockquote>
-<h4 id="创建新项目"><a href="#创建新项目" class="headerlink" title="创建新项目"></a>创建新项目</h4><p>路径指向一个新的空文件夹 <code>cd path/to/a/blank/folder</code></p>
+<h4 id="创建新项目">创建新项目</h4>
+<p>路径指向一个新的空文件夹 <code>cd path/to/a/blank/folder</code></p>
 <p>在这个文件夹里面创建新的rasa项目 <code>rasa init --no-prompt</code></p>
 <p>文件夹中将会生成以下的文件：</p>
 <table>
 <thead>
-<tr>
+<tr class="header">
 <th><strong>init</strong>.py</th>
 <th>空文件用于定位</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr class="odd">
 <td>actions.py</td>
 <td>用于定义动作（自定义脚本代码）</td>
 </tr>
-<tr>
+<tr class="even">
 <td>config.yml</td>
 <td>配置NLU和core模型</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>credentials.yml</td>
 <td>连接到其他服务器的细节（不常用）</td>
 </tr>
-<tr>
+<tr class="even">
 <td>data/nlu.md</td>
 <td>自定义NLU训练数据</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>data/stories.md</td>
 <td>自定义stories</td>
 </tr>
-<tr>
+<tr class="even">
 <td>domain.yml</td>
 <td>助手的定义域domian</td>
 </tr>
-<tr>
+<tr class="odd">
 <td>endpoints.yml</td>
 <td>连接到fb message等的轨道（不常用）</td>
 </tr>
-<tr>
+<tr class="even">
 <td>models/<timestame>.tar.gz</td>
 <td>模型及其参数文件</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><self design module></td>
 <td>自定义的NLU模型</td>
 </tr>
-</tbody></table>
-<h4 id="自定义NLU训练数据"><a href="#自定义NLU训练数据" class="headerlink" title="自定义NLU训练数据"></a>自定义NLU训练数据</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat data&#x2F;nlu.md</span><br></pre></td></tr></table></figure>
-
-<h4 id="自定义stories"><a href="#自定义stories" class="headerlink" title="自定义stories"></a>自定义stories</h4><p>查看写好的stories</p>
+</tbody>
+</table>
+<h4 id="自定义nlu训练数据">自定义NLU训练数据</h4>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat data&#x2F;nlu.md</span><br></pre></td></tr></table></figure>
+<h4 id="自定义stories">自定义stories</h4>
+<p>查看写好的stories</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat data&#x2F;stories.md</span><br></pre></td></tr></table></figure>
-
-<h4 id="自定义动作acitons"><a href="#自定义动作acitons" class="headerlink" title="自定义动作acitons"></a><strong>自定义动作acitons</strong></h4><p> actions有两种类型：</p>
+<h4 id="自定义动作acitons"><strong>自定义动作acitons</strong></h4>
+<p>actions有两种类型：</p>
 <ul>
 <li>直接回复，在domain.yml中定义templete</li>
 <li>自定义操作，在aciton.py文件中添加</li>
 </ul>
-<h4 id="自定义domain"><a href="#自定义domain" class="headerlink" title="自定义domain"></a>自定义domain</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat domain.yml</span><br></pre></td></tr></table></figure>
-
-<ol>
+<h4 id="自定义domain">自定义domain</h4>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat domain.yml</span><br></pre></td></tr></table></figure>
+<ol type="1">
 <li>intents：用户意图</li>
 <li>entities：实体</li>
 <li>slots：槽</li>
 <li>actions：助手说和做的事情</li>
 <li>templates：助手根据actions具体要做的事情</li>
 </ol>
-<h4 id="定义模型配置"><a href="#定义模型配置" class="headerlink" title="定义模型配置"></a>定义模型配置</h4><p>配置文件<code>config.yml</code></p>
+<h4 id="定义模型配置">定义模型配置</h4>
+<p>配置文件<code>config.yml</code></p>
 <ul>
 <li>police: core，决定对话状态跟踪策略</li>
 <li>pipeline: NLU，Natural Language Understanding and Intent Classification，理解当前用户输入，提取意图。</li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">language: <span class="string">"zh"</span></span><br><span class="line"></span><br><span class="line">pipeline:</span><br><span class="line">  - name: <span class="string">"JiebaTokenizer"</span></span><br><span class="line"></span><br><span class="line">policies:</span><br><span class="line">  - name: FallbackPolic</span><br><span class="line">    fallback_action_name: <span class="string">'action_default_fallback'</span></span><br><span class="line">    nlu_threshold: 0.5</span><br><span class="line">    core_threshold: 0.3</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="训练模型"><a href="#训练模型" class="headerlink" title="训练模型"></a>训练模型</h4><p>使用data下面的训练数据</p>
+<h4 id="训练模型">训练模型</h4>
+<p>使用data下面的训练数据</p>
 <blockquote>
-<p>– core/<br>    – stories.md<br>– nlu/<br>    – nlu.json</p>
+<p>-- core/ -- stories.md -- nlu/ -- nlu.json</p>
 </blockquote>
 <p>自动对模型进行训练，训练好的模型将会被打上时间戳time stamp作为新的模型，保存在models目录下面</p>
-<p> <code>rasa train</code></p>
-<h4 id="SHELL启动"><a href="#SHELL启动" class="headerlink" title="SHELL启动"></a>SHELL启动</h4><p><code>rasa shell</code></p>
-<h4 id="可视化界面"><a href="#可视化界面" class="headerlink" title="可视化界面"></a>可视化界面</h4><p><code>rasa x</code></p>
+<p><code>rasa train</code></p>
+<h4 id="shell启动">SHELL启动</h4>
+<p><code>rasa shell</code></p>
+<h4 id="可视化界面">可视化界面</h4>
+<p><code>rasa x</code></p>
 
       
     </div>
@@ -242,7 +248,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/07/07/Rasa-Notes/" data-id="ckm4ldz6q001aac2fgbe1dm8e" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/07/07/Rasa-Notes/" data-id="ckm4mwmts000pxw2f9r762fua" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
