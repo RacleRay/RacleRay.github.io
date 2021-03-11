@@ -29,6 +29,8 @@
     <link rel="alternate" href="/atom.xml" title="Racle" type="application/atom+xml">
   
   
+    <link rel="icon" href="/images/ELDO.ico">
+  
   
     <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
   
@@ -244,7 +246,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/11/30/%E8%B4%9D%E5%8F%B6%E6%96%AF%E8%B6%85%E5%8F%82%E6%95%B0%E6%90%9C%E7%B4%A2/" data-id="ckm4or9rl006rdc2f2sjogkzv" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/11/30/%E8%B4%9D%E5%8F%B6%E6%96%AF%E8%B6%85%E5%8F%82%E6%95%B0%E6%90%9C%E7%B4%A2/" data-id="ckm4uv5sc002wlo2fdd7558lo" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -279,17 +281,6 @@
   
 </article>
 
-
-
-
-
-<script>
-  var tocEx = function(el){
-    var toc = document.querySelector(el), content = toc.innerHTML;
-    content = content.replace('<!-- toc -->', '<div class="toc"><b>文章目录</b>').replace('<!-- tocstop -->', '</div>');
-    toc.innerHTML = content;
-  }('.entry');
-</script>
 
         </div>
         <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
@@ -369,7 +360,9 @@
   </div>
   <footer class="blog-footer">
   <div class="container">
+	
     <div id="footer-info" class="inner">
+	  哟，来了<br>
       &copy; 2021 江左时雨<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
@@ -392,40 +385,8 @@
 
 
 
-<script src="/js/script.js"></script>
+<script src="/js/script.js"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config("");
-</script>
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-      all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-  });
-</script>
-
-<script type="text/javascript" src="">
-</script>
-<!-- End: Injected MathJax -->
-<!-- hexo-inject:end -->
 </body>
 </html>

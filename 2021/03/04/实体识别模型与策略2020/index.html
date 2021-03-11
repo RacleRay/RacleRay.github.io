@@ -47,7 +47,7 @@
 <meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cmathcal%7BS%7D%253D%7Br%5Cin%5Cmathbb%7BR%7D%5Ed%253A%7C%7Cr%7C%7C_2+%5Cleq+%5Cepsilon%7D">
 <meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Calpha">
 <meta property="article:published_time" content="2021-03-04T13:31:47.157Z">
-<meta property="article:modified_time" content="2021-03-04T16:46:34.432Z">
+<meta property="article:modified_time" content="2021-03-11T12:27:21.890Z">
 <meta property="article:author" content="江左时雨">
 <meta property="article:tag" content="ner">
 <meta property="article:tag" content="flat">
@@ -57,6 +57,8 @@
   
     <link rel="alternate" href="/atom.xml" title="Racle" type="application/atom+xml">
   
+  
+    <link rel="icon" href="/images/ELDO.ico">
   
   
     <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
@@ -319,27 +321,21 @@
 <h3 id="fgm">FGM</h3>
 <p><a href="https://zhuanlan.zhihu.com/p/91269728" target="_blank" rel="noopener">引用Blog原文</a></p>
 <p>对抗可以作为一种防御机制，并且经过简单的修改，便能用在NLP任务上，提高模型的泛化能力。对抗训练可以写成一个插件的形式，用几行代码就可以在训练中自由地调用。</p>
-<p>在原始输入样本 <img src="https://www.zhihu.com/equation?tex=x" alt="[公式]" /> 上加一个扰动 <img src="https://www.zhihu.com/equation?tex=+r_%7Badv%7D" alt="[公式]" /> ，得到对抗样本后，用其进行训练。将输入样本向着损失上升的方向再进一步，得到的对抗样本就能造成更大的损失，提高模型的错误率。问题可以被抽象成这么一个模型：</p>
-<figure>
-<img src="https://www.zhihu.com/equation?tex=+%5Cmin_%7B%5Ctheta%7D-%5Clog+P%28y%7Cx%2Br_%7Badv%7D%3B%5Ctheta%29+" alt="[公式]" /><figcaption aria-hidden="true">[公式]</figcaption>
-</figure>
-<p>其中， <img src="https://www.zhihu.com/equation?tex=y" alt="[公式]" /> 为gold label， <img src="https://www.zhihu.com/equation?tex=%5Ctheta" alt="[公式]" /> 为模型参数。Goodfellow认为，神经网络由于其线性的特点，很容易受到线性扰动的攻击。于是，他提出了 Fast Gradient Sign Method (FGSM) ：</p>
-<figure>
-<img src="https://www.zhihu.com/equation?tex=r_%7Badv%7D+%3D+%5Cepsilon+%5Ccdot+%5Ctext%7Bsgn%7D%28%5Ctriangledown_x+L%28%5Ctheta%2C+x%2C+y%29%29" alt="[公式]" /><figcaption aria-hidden="true">[公式]</figcaption>
-</figure>
-<p>其中， <img src="https://www.zhihu.com/equation?tex=%5Ctext%7Bsgn%7D" alt="[公式]" /> 为符号函数， <img src="https://www.zhihu.com/equation?tex=L" alt="[公式]" /> 为损失函数。Goodfellow发现，令 <img src="https://www.zhihu.com/equation?tex=%5Cepsilon%3D0.25" alt="[公式]" /> ，用这个扰动能给一个单层分类器造成99.9%的错误率。</p>
+<p>在原始输入样本 <img src="https://www.zhihu.com/equation?tex=x" /> 上加一个扰动 <img src="https://www.zhihu.com/equation?tex=+r_%7Badv%7D" /> ，得到对抗样本后，用其进行训练。将输入样本向着损失上升的方向再进一步，得到的对抗样本就能造成更大的损失，提高模型的错误率。问题可以被抽象成这么一个模型：</p>
+<p><img src="https://www.zhihu.com/equation?tex=+%5Cmin_%7B%5Ctheta%7D-%5Clog+P%28y%7Cx%2Br_%7Badv%7D%3B%5Ctheta%29+" /></p>
+<p>其中， <img src="https://www.zhihu.com/equation?tex=y" /> 为gold label， <img src="https://www.zhihu.com/equation?tex=%5Ctheta" /> 为模型参数。Goodfellow认为，神经网络由于其线性的特点，很容易受到线性扰动的攻击。于是，他提出了 Fast Gradient Sign Method (FGSM) ：</p>
+<p><img src="https://www.zhihu.com/equation?tex=r_%7Badv%7D+%3D+%5Cepsilon+%5Ccdot+%5Ctext%7Bsgn%7D%28%5Ctriangledown_x+L%28%5Ctheta%2C+x%2C+y%29%29" /></p>
+<p>其中， <img src="https://www.zhihu.com/equation?tex=%5Ctext%7Bsgn%7D" /> 为符号函数， <img src="https://www.zhihu.com/equation?tex=L" /> 为损失函数。Goodfellow发现，令 <img src="https://www.zhihu.com/equation?tex=%5Cepsilon%3D0.25" /> ，用这个扰动能给一个单层分类器造成99.9%的错误率。</p>
 <p>Goodfellow还总结了对抗训练的两个作用：</p>
 <ol type="1">
 <li>提高模型应对恶意对抗样本时的鲁棒性；</li>
 <li>作为一种regularization，减少overfitting，提高泛化能力。</li>
 </ol>
 <p>从优化的视角，问题重新定义成了一个找鞍点的问题，Min-Max：内部损失函数的最大化，外部经验风险的最小化：</p>
-<figure>
-<img src="https://www.zhihu.com/equation?tex=%5Cmin_%5Ctheta+%5Cmathbb%7BE%7D_%7B%28x%2C+y%29%5Csim+%5Cmathcal%7BD%7D%7D+%5B%5Cmax_%7Br_%7Badv%7D+%5Cin+%5Cmathcal%7BS%7D%7D+L%28%5Ctheta%2C+x%2Br_%7Badv%7D%2C+y%29%5D" alt="[公式]" /><figcaption aria-hidden="true">[公式]</figcaption>
-</figure>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cmin_%5Ctheta+%5Cmathbb%7BE%7D_%7B%28x%2C+y%29%5Csim+%5Cmathcal%7BD%7D%7D+%5B%5Cmax_%7Br_%7Badv%7D+%5Cin+%5Cmathcal%7BS%7D%7D+L%28%5Ctheta%2C+x%2Br_%7Badv%7D%2C+y%29%5D" /></p>
 <ol type="1">
-<li>内部max是为了找到worst-case的扰动，也就是攻击，其中， <img src="https://www.zhihu.com/equation?tex=L" alt="[公式]" /> 为损失函数， <img src="https://www.zhihu.com/equation?tex=%5Cmathcal%7BS%7D" alt="[公式]" /> 为扰动的范围空间。</li>
-<li>外部min是为了基于该攻击方式，找到最鲁棒的模型参数，也就是防御，其中 <img src="https://www.zhihu.com/equation?tex=%5Cmathcal%7BD%7D" alt="[公式]" /> 是输入样本的分布。</li>
+<li>内部max是为了找到worst-case的扰动，也就是攻击，其中， <img src="https://www.zhihu.com/equation?tex=L" /> 为损失函数， <img src="https://www.zhihu.com/equation?tex=%5Cmathcal%7BS%7D" /> 为扰动的范围空间。</li>
+<li>外部min是为了基于该攻击方式，找到最鲁棒的模型参数，也就是防御，其中 <img src="https://www.zhihu.com/equation?tex=%5Cmathcal%7BD%7D" /> 是输入样本的分布。</li>
 </ol>
 <p>CV任务的输入是连续的RGB的值，而NLP问题中，输入是离散的单词序列，一般以one-hot vector的形式呈现，如果直接在raw text上进行扰动，那么扰动的大小和方向可能都没什么意义。Goodfellow在17年的<a href="https://arxiv.org/abs/1605.07725" target="_blank" rel="noopener">ICLR</a>中提出了可以在连续的embedding上做扰动。在CV任务，根据经验性的结论，对抗训练往往会使得模型在非对抗样本上的表现变差，然而神奇的是，在NLP任务中，模型的泛化能力反而变强了。</p>
 <p>因此，<strong>在NLP任务中，对抗训练的角色不再是为了防御基于梯度的恶意攻击，反而更多的是作为一种regularization，提高模型的泛化能力</strong>。</p>
@@ -354,11 +350,9 @@
 <li><p>恢复原网络的embedding数值，使用 gf 对参数进行更新</p></li>
 </ol>
 </blockquote>
-<p><strong>Projected Gradient Descent（PGD）</strong>：<strong>“小步走，多走几步”</strong>，如果走出了扰动半径为 <img src="https://www.zhihu.com/equation?tex=%5Cepsilon" alt="[公式]" /> 的空间，就映射回“球面”上，以保证扰动不要过大。</p>
-<figure>
-<img src="https://www.zhihu.com/equation?tex=%5Cbegin%7Balign%7D+x_%7Bt%2B1%7D+%26%3D+%5CPi_%7Bx%2B%5Cmathcal%7BS%7D%7D%28x_t%2B%5Calpha+g%28x_t%29%2F%7C%7Cg%28x_t%29%7C%7C_2%29+%5C%5C+g%28x_t%29+%26%3D+%5Ctriangledown_x+L%28%5Ctheta%2C+x_t%2C+y%29+%5Cend%7Balign%7D+" alt="[公式]" /><figcaption aria-hidden="true">[公式]</figcaption>
-</figure>
-<p>其中 <img src="https://www.zhihu.com/equation?tex=%5Cmathcal%7BS%7D%3D%7Br%5Cin%5Cmathbb%7BR%7D%5Ed%3A%7C%7Cr%7C%7C_2+%5Cleq+%5Cepsilon%7D" alt="[公式]" /> 为扰动的约束空间， <img src="https://www.zhihu.com/equation?tex=%5Calpha" alt="[公式]" /> 为小步的步长。</p>
+<p><strong>Projected Gradient Descent（PGD）</strong>：<strong>“小步走，多走几步”</strong>，如果走出了扰动半径为 <img src="https://www.zhihu.com/equation?tex=%5Cepsilon" /> 的空间，就映射回“球面”上，以保证扰动不要过大。</p>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cbegin%7Balign%7D+x_%7Bt%2B1%7D+%26%3D+%5CPi_%7Bx%2B%5Cmathcal%7BS%7D%7D%28x_t%2B%5Calpha+g%28x_t%29%2F%7C%7Cg%28x_t%29%7C%7C_2%29+%5C%5C+g%28x_t%29+%26%3D+%5Ctriangledown_x+L%28%5Ctheta%2C+x_t%2C+y%29+%5Cend%7Balign%7D+" /></p>
+<p>其中 <img src="https://www.zhihu.com/equation?tex=%5Cmathcal%7BS%7D%3D%7Br%5Cin%5Cmathbb%7BR%7D%5Ed%3A%7C%7Cr%7C%7C_2+%5Cleq+%5Cepsilon%7D" /> 为扰动的约束空间， <img src="https://www.zhihu.com/equation?tex=%5Calpha" /> 为小步的步长。</p>
 <p>PGD模型能够得到一个<strong>非常低且集中的loss分布</strong>。</p>
 <p>另外在半监督条件下，也可以使用对抗训练方法Virtual Adversarial Training进行半监督训练。</p>
 <p>示例代码</p>
@@ -375,6 +369,11 @@
 <li><p>循环以上步骤，最后使用wswa，作为最终模型</p></li>
 </ol>
 </blockquote>
+<p>有可以直接使用的工具，比较方便。~<em>from</em> torchcontrib.optim <em>import</em> SWA~</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">optimizer = torch.optim.Adam(params_lr)</span><br><span class="line"><span class="comment"># Stochastic Weight Averaging</span></span><br><span class="line">optimizer = SWA(optimizer)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ...:</span><br><span class="line">    optimizer.update_swa()</span><br><span class="line">    </span><br><span class="line">...</span><br><span class="line"><span class="comment"># 训练结束时使用收集到的swa moving average</span></span><br><span class="line">optimizer.swap_swa_sgd()</span><br><span class="line"><span class="comment"># optimizer.bn_update(</span></span><br><span class="line"><span class="comment">#     train_dataloader,</span></span><br><span class="line"><span class="comment">#     model)  # 更新BatchNorm的 running mean</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># save</span></span><br></pre></td></tr></table></figure>
+<p>参考链接：</p>
+<p><a href="https://github.com/BaberMuyu/2020CCF-NER" target="_blank" rel="noopener">2020CCF-NER</a></p>
+<p><a href="https://github.com/LeeSureman/Flat-Lattice-Transformer" target="_blank" rel="noopener">Flat-Lattice-Transformer</a></p>
 
       
     </div>
@@ -385,7 +384,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2021/03/04/%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB%E6%A8%A1%E5%9E%8B%E4%B8%8E%E7%AD%96%E7%95%A52020/" data-id="ckm4or9pf001odc2f6jph2k0e" class="article-share-link">
+      <a data-url="https://racleray.github.io/2021/03/04/%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB%E6%A8%A1%E5%9E%8B%E4%B8%8E%E7%AD%96%E7%95%A52020/" data-id="ckm4uv5r9001olo2fcnjndkzj" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -420,17 +419,6 @@
   
 </article>
 
-
-
-
-
-<script>
-  var tocEx = function(el){
-    var toc = document.querySelector(el), content = toc.innerHTML;
-    content = content.replace('<!-- toc -->', '<div class="toc"><b>文章目录</b>').replace('<!-- tocstop -->', '</div>');
-    toc.innerHTML = content;
-  }('.entry');
-</script>
 
         </div>
         <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
@@ -510,7 +498,9 @@
   </div>
   <footer class="blog-footer">
   <div class="container">
+	
     <div id="footer-info" class="inner">
+	  哟，来了<br>
       &copy; 2021 江左时雨<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
@@ -533,40 +523,8 @@
 
 
 
-<script src="/js/script.js"></script>
+<script src="/js/script.js"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config("");
-</script>
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-      all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-  });
-</script>
-
-<script type="text/javascript" src="">
-</script>
-<!-- End: Injected MathJax -->
-<!-- hexo-inject:end -->
 </body>
 </html>
