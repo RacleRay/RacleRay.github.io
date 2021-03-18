@@ -22,7 +22,7 @@
 <meta property="og:image" content="https://racleray.github.io/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA.assets/image-20200224220549264.png">
 <meta property="og:image" content="https://racleray.github.io/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA.assets/image-20200225224943995.png">
 <meta property="article:published_time" content="2020-07-06T15:11:07.000Z">
-<meta property="article:modified_time" content="2020-07-06T15:55:40.393Z">
+<meta property="article:modified_time" content="2021-03-18T13:35:11.114Z">
 <meta property="article:author" content="江左时雨">
 <meta property="article:tag" content="fastText">
 <meta property="article:tag" content="representation">
@@ -287,9 +287,7 @@ w^{a}=
 </blockquote>
 <p>​ 对X做奇异值分解，只保留前k个维度：</p>
 <p>​ 把子矩阵<span class="math inline">\(U_{1:|V|,1:k}\)</span>视作我们的词嵌入矩阵。也就是说，对于词表中的每一个词，我们都用一个k维的向量来表达了。</p>
-<figure>
-<img src="/images/文本表示.assets/image-20200224210202562.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
+<p><img src="/images/文本表示.assets/image-20200224210202562.png" /></p>
 <p>​ 问题在于：</p>
 <blockquote>
 <ul>
@@ -366,19 +364,13 @@ w^{a}=
 <p>​ 建立一个新的目标函数。如果(w, c)真是来自于语料库，目标函数能够最大化P(D = 1|w, c)。</p>
 <p><img src="/images/文本表示.assets/image-20200224214508047.png" alt="image" style="zoom:67%;" /></p>
 <p>​ <span class="math inline">\(\tilde D\)</span>表示不来自于语料库的数据。</p>
-<figure>
-<img src="/images/文本表示.assets/image-20200224215744317.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
+<p><img src="/images/文本表示.assets/image-20200224215744317.png" /></p>
 <p>​ 在skip gram中，对于<span class="math inline">\(c - m + j\)</span>位置的context 和 center word 的目标函数为：（所有上下文还要求和）</p>
-<figure>
-<img src="/images/文本表示.assets/image-20200224220227855.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
+<p><img src="/images/文本表示.assets/image-20200224220227855.png" /></p>
 <p>​ K -- 为负例样本的个数。</p>
 <p>​ 这样将 <span class="math inline">\(|V|\)</span> words中的softmax，变成了 K个负例中进行 sigmoid ，减少了计算量。多分类目标变为二分类目标。</p>
 <p>​ 在CBOW中为：</p>
-<figure>
-<img src="/images/文本表示.assets/image-20200224220549264.png" alt="image" /><figcaption aria-hidden="true">image</figcaption>
-</figure>
+<p><img src="/images/文本表示.assets/image-20200224220549264.png" /></p>
 <p>​ 负例采样在word的词频分布的3/4次方上进行采样。使得分布更平滑。</p>
 <h4 id="hierarchical-softmax">Hierarchical Softmax</h4>
 <p>​ 对CBOW或者Skip gram的最后一层损失求解方式改进。目标不是目标单词的one hot编码，而是在所有单词预先构建好的Huffam tree中的huffman编码。</p>
@@ -501,7 +493,7 @@ A --最终可以获取的词向量信息</p>
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/07/06/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA/" data-id="ckm4vt5t10029oc2fceshbuur" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/07/06/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA/" data-id="ckmex2iep0024t02f2cl9b065" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
