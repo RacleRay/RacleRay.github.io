@@ -25,12 +25,11 @@
 <meta property="og:image" content="https://racleray.github.io/images/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95.assets/image-20200229223926779.png">
 <meta property="og:image" content="https://racleray.github.io/images/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95.assets/image-20200227183731913.png">
 <meta property="og:image" content="https://racleray.github.io/images/pic/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95_pic/image-20200707005508194.png">
-<meta property="og:image" content="https://racleray.github.io/images/pic/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95_pic/image-20200707005602682.png">
 <meta property="og:image" content="https://racleray.github.io/images/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95.assets/image-20200314215708784.png">
 <meta property="og:image" content="https://racleray.github.io/images/pic/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95_pic/image-20200707005623708.png">
 <meta property="og:image" content="https://racleray.github.io/images/pic/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95_pic/image-20200707005656160.png">
 <meta property="article:published_time" content="2020-07-06T16:34:54.000Z">
-<meta property="article:modified_time" content="2021-03-18T13:34:19.951Z">
+<meta property="article:modified_time" content="2021-03-18T13:47:57.593Z">
 <meta property="article:author" content="江左时雨">
 <meta property="article:tag" content="fastText">
 <meta property="article:tag" content="CNN">
@@ -259,8 +258,7 @@ h_t=f(x_t,h_{t-1})=\sigma(W_{xh}x_t+W_{hh}h_{t-1}+b_h)
 <h3 id="rcnn">RCNN</h3>
 <p><img src="/images/神经网络方法.assets/image-20200227183731913.png" /></p>
 <p>​ ​ 卷积层建立在一个BiRNN模型之上，通过正向和反向循环来构造一个单词的下文和上文，然后输入CNN，如下式： <img src="/images/pic/神经网络方法_pic/image-20200707005508194.png" /></p>
-<p>得到单词的上下文表示之后，用拼接的方式来表示这个单词，如下式：</p>
-<p><img src="/images/pic/神经网络方法_pic/image-20200707005602682.png" /></p>
+<p>得到单词的上下文表示之后，用拼接的方式来表示这个单词.</p>
 <p>然后通过max pooling层和全连接层，得到最后的输出。这一部分相当于文本表示的学习。</p>
 <blockquote>
 <p>​ 将该词向量放入一个单层神经网络中，得到所谓的潜语义向量（latent semantic vector），这里卷积层的计算结束了，时间复杂度仍是O(n)。接下来进行池化层，这里采用max-pooling可以将向量中最大的特征提取出来，从而获取到整个文本的信息。池化过程时间复杂度也是O(n)，所以整个模型的时间复杂度是O(n)。得到文本特征向量之后，进行分类。</p>
@@ -269,7 +267,6 @@ h_t=f(x_t,h_{t-1})=\sigma(W_{xh}x_t+W_{hh}h_{t-1}+b_h)
 <p><img src="/images/神经网络方法.assets/image-20200314215708784.png" alt="image-20200314215708784" style="zoom:67%;" /></p>
 <p>​ 框图显示了QRNN的计算结构与典型值的比较LSTM和CNN架构。 红色表示卷积或矩阵乘法； 连续的块意味着这些计算可以并行进行。 蓝色表示无参数功能沿通道/特征维度并行运行的对象。 LSTM可以分解为（红色）线性块和（蓝色）element-wise部分，但每个时间步的计算仍取决于上一个时间步的结果。</p>
 <p>​ fo-Pool指的是以下公式，包括forget 和 output 的h计算方式 <img src="/images/pic/神经网络方法_pic/image-20200707005623708.png" /> 而上图中 <img src="/images/pic/神经网络方法_pic/image-20200707005656160.png" /></p>
-<p>被称为f-Pool，在原论文中这样定义。</p>
 
       
     </div>
@@ -280,7 +277,7 @@ h_t=f(x_t,h_{t-1})=\sigma(W_{xh}x_t+W_{hh}h_{t-1}+b_h)
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/07/07/%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/" data-id="ckmex2iek001ut02fema3fxfu" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/07/07/%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/" data-id="ckmexic0p001yfc2ff659fbqi" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       

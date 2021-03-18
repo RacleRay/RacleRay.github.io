@@ -378,9 +378,9 @@
     
     <category term="sentence embedding" scheme="https://racleray.github.io/tags/sentence-embedding/"/>
     
-    <category term="nlp" scheme="https://racleray.github.io/tags/nlp/"/>
-    
     <category term="bert" scheme="https://racleray.github.io/tags/bert/"/>
+    
+    <category term="nlp" scheme="https://racleray.github.io/tags/nlp/"/>
     
   </entry>
   
@@ -441,9 +441,9 @@
     <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
     
     
-    <category term="crf" scheme="https://racleray.github.io/tags/crf/"/>
-    
     <category term="nlp" scheme="https://racleray.github.io/tags/nlp/"/>
+    
+    <category term="crf" scheme="https://racleray.github.io/tags/crf/"/>
     
   </entry>
   
@@ -745,11 +745,11 @@
     <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
     
     
-    <category term="text similarity" scheme="https://racleray.github.io/tags/text-similarity/"/>
-    
     <category term="dssm" scheme="https://racleray.github.io/tags/dssm/"/>
     
     <category term="cdssm" scheme="https://racleray.github.io/tags/cdssm/"/>
+    
+    <category term="text similarity" scheme="https://racleray.github.io/tags/text-similarity/"/>
     
   </entry>
   
