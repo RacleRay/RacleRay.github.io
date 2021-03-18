@@ -155,7 +155,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/categories/index.html" data-id="ckmexug9g003kn42f3gow7y4a" class="article-share-link">
+      <a data-url="https://racleray.github.io/categories/index.html" data-id="ckmeyx4700002pw2f6bpk1lzm" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -274,8 +274,23 @@
 
 
 
-<script src="/js/script.js"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<script src="/js/script.js"></script>
 
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>

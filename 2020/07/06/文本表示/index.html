@@ -22,7 +22,7 @@
 <meta property="og:image" content="https://racleray.github.io/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA.assets/image-20200224220549264.png">
 <meta property="og:image" content="https://racleray.github.io/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA.assets/image-20200225224943995.png">
 <meta property="article:published_time" content="2020-07-06T15:11:07.000Z">
-<meta property="article:modified_time" content="2021-03-18T13:35:11.114Z">
+<meta property="article:modified_time" content="2021-03-18T14:27:34.268Z">
 <meta property="article:author" content="江左时雨">
 <meta property="article:tag" content="fastText">
 <meta property="article:tag" content="representation">
@@ -380,9 +380,9 @@ w^{a}=
 <p>​ 构建流程：</p>
 <ol type="1">
 <li>根据所有单词的词频构建最小堆。</li>
-<li>取出前两个最小单词（left child and right child），将二者词频之和插入最小堆。</li>
-<li>二者词频之和作为left child and right child的父节点，构建tree。</li>
-<li>重复以上步骤，直到min heap中只有一个node，作为tree的root。</li>
+<li>取出前两个最小单词（left child and right child），将二者词频之和作为新节点插入最小堆。</li>
+<li>构建哈夫曼树，建立新树节点作为left child and right child的父节点，将上一步的left child and right child二者词频之和作为的该父节点的值，构建tree。</li>
+<li>重复2、3步骤，直到min heap中只有一个node，此时，将这一个node作为tree的root。Huffam tree构建完毕。</li>
 </ol>
 </blockquote>
 <p>​ huffman编码：从root到leaf node的路径，走left child编码加入0，走right child编码加入1。最终编码为该leaf node对应的编码。</p>
@@ -390,7 +390,7 @@ w^{a}=
 <p>​ word2vec中正好采用了相反的编码规则，规定沿着左子树走，那么就是负类(哈夫曼树编码1)，沿着右子树走，那么就是正类(哈夫曼树编码0)。</p>
 <p>​ 每个tree node处：</p>
 <p>​ <span class="math display">\[p(+)= {1\over{1+e^{(-v_w^T\theta)}}}\]</span></p>
-<p>​ 每个tree node都有参数<span class="math inline">\(\theta\)</span>，输入只是模型前面部分输出的向量<span class="math inline">\(v_w\)</span></p>
+<p>​ 每个tree node都有参数<span class="math inline">\(\theta\)</span>，输入是skip gram模型最终输出的向量<span class="math inline">\(v_w\)</span>。</p>
 <h4 id="glove">Glove</h4>
 <p>​ 加入了global statistics，用某个大小window中两个单词的共现次数<span class="math inline">\(X_{ij}\)</span>表示。</p>
 <ul>
@@ -426,11 +426,14 @@ b --两个偏置项<br />
 </ol>
 <p>​ fastText 的网络结构和 CBOW 基本一致，同时在输出层的分类上也使用了 Hierachical Softmax 技巧来加速训练。</p>
 <p>​ 目标函数： <span class="math display">\[
--\frac{1}{N} \sum_{n=1}^{N} y_{n} \log f\left(B A x_{n}\right), x_{n}=\sum_{i=1}^{l_{n}} x_{n, i}
+-\frac{1}{N} \sum_{n=1}^{N} y_{n} \log f\left(B A x_{n}\right)
+\]</span></p>
+<p><span class="math display">\[
+x_{n}=\sum_{i=1}^{l_{n}} x_{n, i}
 \]</span></p>
 <blockquote>
-<p><span class="math inline">\(x_{n, i}\)</span> --语料当中第 n 篇文档的第 i 个词以及加上 N-gram 的特征信息<br />
-A --最终可以获取的词向量信息</p>
+<p><span class="math inline">\(x_{n, i}\)</span> --语料当中第 n 篇文档的第 i 个（词 或者 char N-gram）</p>
+<p>A --最终可以获取的词向量信息</p>
 </blockquote>
 <h3 id="词向量的作用与获取">词向量的作用与获取</h3>
 <p>​ 高阶的深度学习自然语言处理任务，都可以用词向量作为基础。可以从<a href="https://github.com/Embedding/Chinese-Word-Vectors" target="_blank" rel="noopener">开源链接</a>获取。</p>
@@ -493,7 +496,7 @@ A --最终可以获取的词向量信息</p>
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/07/06/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA/" data-id="ckmexugax004fn42fe50se4l1" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/07/06/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA/" data-id="ckmeyx48e002cpw2f0za38ik1" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -632,8 +635,23 @@ A --最终可以获取的词向量信息</p>
 
 
 
-<script src="/js/script.js"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<script src="/js/script.js"></script>
 
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>

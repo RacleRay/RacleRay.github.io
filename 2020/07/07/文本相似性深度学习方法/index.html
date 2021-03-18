@@ -43,9 +43,9 @@
 <meta property="article:published_time" content="2020-07-07T10:49:20.000Z">
 <meta property="article:modified_time" content="2020-07-07T11:12:23.678Z">
 <meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="text similarity">
 <meta property="article:tag" content="dssm">
 <meta property="article:tag" content="cdssm">
-<meta property="article:tag" content="text similarity">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://racleray.github.io/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%A8%A1%E5%9E%8B.assets/image-20200229123435028.png">
   
@@ -394,7 +394,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/07/07/%E6%96%87%E6%9C%AC%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/" data-id="ckmexugah003tn42fcda133hw" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/07/07/%E6%96%87%E6%9C%AC%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/" data-id="ckmeyx48d0029pw2fecc68rbu" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -533,8 +533,23 @@
 
 
 
-<script src="/js/script.js"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<script src="/js/script.js"></script>
 
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>

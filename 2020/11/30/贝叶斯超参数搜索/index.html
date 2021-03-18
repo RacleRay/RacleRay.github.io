@@ -246,7 +246,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://racleray.github.io/2020/11/30/%E8%B4%9D%E5%8F%B6%E6%96%AF%E8%B6%85%E5%8F%82%E6%95%B0%E6%90%9C%E7%B4%A2/" data-id="ckmexugb7004pn42fde084kyh" class="article-share-link">
+      <a data-url="https://racleray.github.io/2020/11/30/%E8%B4%9D%E5%8F%B6%E6%96%AF%E8%B6%85%E5%8F%82%E6%95%B0%E6%90%9C%E7%B4%A2/" data-id="ckmeyx48y0032pw2fggsw11kq" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -385,8 +385,23 @@
 
 
 
-<script src="/js/script.js"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<script src="/js/script.js"></script>
 
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>
