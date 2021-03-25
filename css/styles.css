@@ -497,58 +497,65 @@ h1, .h1 {
   margin-top: 3.5em;
   margin-bottom: 20px;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-weight: normal;
+  font-weight: bold;
   color: #222222;
   font-size: 23px;
 }
 
 h2, .h2
 {
+  text-decoration:underline;
+  text-align: center;
   margin-top: 3em;
   margin-bottom: 18px;
   font-family: "Helvetica Neue", Helvetica, Arial, monospace;
-  font-weight: normal;
-  color: #337ab7;
+  font-weight: bold;
+  color: #F03F28;
   font-size: 20px;
 }
 
 h3, .h3
 {
+  text-decoration:underline;
+  text-align: center;
   margin-top: 2.5em;
   margin-bottom: 13px;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-weight: normal;
-  color: #428bca;
+  font-weight: bold;
+  color: #4B6DDC;
   font-size: 17px;
 }
 
 h4, .h4
 {
+  text-decoration:underline;
   margin-top: 2.5em;
   margin-bottom: 10px;
   font-family: "Helvetica Neue", Helvetica, Arial, cursive;
-  font-weight: normal;
-  color: #65A2D6;
+  font-weight: bold;
+  color: #4B6DDC;
   font-size: 16px;
 }
 
 h5, .h5
 {
+  text-decoration:underline;
   margin-top: 2em;
   margin-bottom: 10px;
   font-family: "Helvetica Neue", Helvetica, Arial, cursive;
-  font-weight: normal;
-  color: #65A2D6;
+  font-weight: bold;
+  color: #4B6DDC;
   font-size: 15px;
 }
 
 h6, .h6
 {
+  text-decoration:underline;
   margin-top: 2em;
   margin-bottom: 10px;
   font-family: "Helvetica Neue", Helvetica, Arial, cursive;
-  font-weight: normal;
-  color: #65A2D6;
+  font-weight: bold;
+  color: #4B6DDC;
   font-size: 15px;
 }
 
