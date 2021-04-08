@@ -6,7 +6,7 @@
   <link href="https://racleray.github.io/atom.xml" rel="self"/>
   
   <link href="https://racleray.github.io/"/>
-  <updated>2021-03-25T15:08:00.319Z</updated>
+  <updated>2021-04-08T15:44:59.138Z</updated>
   <id>https://racleray.github.io/</id>
   
   <author>
@@ -15,6 +15,39 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>再看NCE</title>
+    <link href="https://racleray.github.io/2021/04/08/%E5%86%8D%E7%9C%8BNCE/"/>
+    <id>https://racleray.github.io/2021/04/08/%E5%86%8D%E7%9C%8BNCE/</id>
+    <published>2021-04-08T15:41:42.000Z</published>
+    <updated>2021-04-08T15:44:59.138Z</updated>
+    
+    <content type="html"><![CDATA[<!-- TOC --><ul><li><a href="#标准开头">标准开头</a></li><li><a href="#nce">NCE</a><ul><li><a href="#数据生成">数据生成</a></li><li><a href="#方法">方法</a></li></ul></li><li><a href="#nsnegative-sampling">NS(Negative Sampling)</a></li></ul><!-- /TOC --><a id="more"></a><p>概率语言模型，如最大熵模型和概率神经模型，在参数估计时，都有计算量大的问题，词汇表实在是太大了。这让配分函数的计算量大得就想优化它。</p><p>只看NCE和Negative Sampling（以下简写为NS），就不说其他的方法了。</p><p>NCE和NS刚接触时，看着好像一样一样的。再看，还真是大意了，不够严谨。（废话真多）</p><h2 id="标准开头">标准开头</h2><p>假设以下是一个模型，根据上下文 <span class="math inline">\(c\)</span> 预测词表 <span class="math inline">\(V\)</span> 中的词 <span class="math inline">\(w\)</span>。 <span class="math display">\[p_{\theta}(w \mid c)=\frac{u_{\theta}(w, c)}{\sum_{w^{\prime} \in V} u_{\theta}\left(w^{\prime}, c\right)}=\frac{u_{\theta}(w, c)}{Z_{\theta}(c)}\]</span> 假设 <span class="math inline">\(u_\theta = \exp(s_\theta(w, c))\)</span>，<span class="math inline">\(Z_\theta(c)\)</span>自然是配分函数。<span class="math inline">\(s_\theta\)</span> 假设是一个可微的函数。</p><p>如果了解概率图模型，应该见过使用 Importance Sampling + MC 的方式近似配分函数的期望的法子。NCE走得就是这条路，只是稍稍改进了些。</p><p>其他定义：</p><p>经验分布表示为 <span class="math inline">\(\hat{p}(w|c)\)</span> 和 <span class="math inline">\(\hat{p}(c)\)</span></p><p>模型表示的分布<span class="math inline">\(p_\theta(w|c)\)</span></p><p>NCE的目的就是通过一个 噪声分布 <span class="math inline">\(q(w)\)</span> （w的均匀分布，也可以是对每个概率取幂0&lt; α &lt;1和再normalize得到），得到配分函数的渐进无偏估计。</p><h2 id="nce">NCE</h2><p>方法：通过建立二分类模型，区分来自经验分布（训练数据）和噪声分布的数据，得到最优的模型参数，就是需要的参数求解结果。</p><h3 id="数据生成">数据生成</h3><p>Label d = ｛0，1｝，表示数据属于噪声或者真实数据。分布表示为： <span class="math display">\[p(d, w \mid c)=\left\{\begin{array}{ll}\frac{k}{1+k} \times q(w) &amp; \text { if } d=0 \\\frac{1}{1+k} \times \tilde{p}(w \mid c) &amp; \text { if } d=1\end{array}\right.\]</span> 转换成 d 关于 c 和 w 的条件分布（定义直接推导）： <span class="math display">\[\begin{aligned}p(d=0 \mid c, w) &amp;=\frac{\frac{k}{1+k} \times q(w)}{\frac{1}{1+k} \times \tilde{p}(w \mid c)+\frac{k}{1+k} \times q(w)} \\&amp;=\frac{k \times q(w)}{\tilde{p}(w \mid c)+k \times q(w)} \\p(d=1 \mid c, w) &amp;=\frac{\tilde{p}(w \mid c)}{\tilde{p}(w \mid c)+k \times q(w)}\end{aligned}\]</span> 以上是构建的"proxy corpus"代理的训练数据分布，那么把模型拟合的分布<span class="math inline">\(p_\theta(w|c)\)</span>带入，替换掉经验分布 <span class="math inline">\(\hat{p}(w|c)\)</span>，就可以得到一个可以操作的目标。</p><h3 id="方法">方法</h3><p>但是，<span class="math inline">\(\hat{p}(w|c)\)</span>还是有 <span class="math inline">\(Z_\theta(c)\)</span> 啊，这不相当于构造这么多都白干了？</p><p>所以NCE继续改进，将 <span class="math inline">\(Z_\theta(c)\)</span> 整体但做一个关于 c 的参数，参数化。然后<a href="https://arxiv.org/abs/1206.6426" target="_blank" rel="noopener">一通操作</a>，发现在神经网络模型这种参数巨多的情况下，将 <span class="math inline">\(Z_\theta(c)\)</span> 直接设为 1 ，反而是一种有效且高效的做法，文章里叫做 self-normalized。</p><p>所以，得到的关于 参数 <span class="math inline">\(\theta\)</span> 的分布表示为： <span class="math display">\[\begin{aligned}p(d=0 \mid c, w) &amp;=\frac{k \times q(w)}{u_{\theta}(w, c)+k \times q(w)} \\p(d=1 \mid c, w) &amp;=\frac{u_{\theta}(w, c)}{u_{\theta}(w, c)+k \times q(w)}\end{aligned}\]</span> 直接操作掉了求和配分项。目标也变成了一个二分类： <span class="math display">\[\mathcal{L}_{\mathrm{NCE}_{k}}=\sum_{(w, c) \in \mathcal{D}}\left(\log p(d=1 \mid c, w)+k \mathbb{E}_{\bar{w} \sim q} \log p(d=0 \mid c, \bar{w})\right)\]</span> 只是，其中求期望的部分需要所有单词在噪声分布下求值，得到期望，这显然是低效的。简单的办法，直接MC，期望转Sampling： <span class="math display">\[\begin{aligned}\mathcal{L}_{\mathrm{NCE}_{k}}^{\mathrm{MC}} &amp;=\sum_{(w, c) \in \mathcal{D}}\left(\log p(d=1 \mid c, w)+k \times \sum_{i=1, \bar{w} \sim q}^{k} \frac{1}{k} \times \log p(d=0 \mid c, \bar{w})\right) \\&amp;=\sum_{(w, c) \in \mathcal{D}}\left(\log p(d=1 \mid c, w)+\sum_{i=1, \bar{w} \sim q}^{k} \log p(d=0 \mid c, \bar{w})\right)\end{aligned}\]</span> 完</p><p>可以证明（求极值点嘛，再分析一波k趋于无穷的极限），这个目标函数的最优时，就是模型所表示的分布和经验分布匹配的时候。</p><h2 id="nsnegative-sampling">NS(Negative Sampling)</h2><p>word2vec使用过的方法，直接可以写出目标条件分布： <span class="math display">\[\begin{array}{l}p(d=0 \mid c, w)=\frac{1}{u_{\theta}(w, c)+1} \\p(d=1 \mid c, w)=\frac{u_{\theta}(w, c)}{u_{\theta}(w, c)+1}\end{array}\]</span> 可以看成 k = |V| 且 q 为均匀分布的NCE特殊情况。在分析一次像 <span class="math inline">\(\mathcal{L}_{\mathrm{NCE}_{k}}\)</span> 的损失函数，或者是hinge loss形式的损失函数，求导分析极值，可以发现它最优时，模型所表示的分布和经验分布并不匹配，可以不一致。</p><p>也就是说，NS虽然在word2vec训练时，可以学习到word的representation，但是它并不适用于语言模型等更general的情景。</p>]]></content>
+    
+    
+    <summary type="html">&lt;!-- TOC --&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#标准开头&quot;&gt;标准开头&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#nce&quot;&gt;NCE&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#数据生成&quot;&gt;数据生成&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#方法&quot;&gt;方法&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#nsnegative-sampling&quot;&gt;NS(Negative Sampling)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- /TOC --&gt;</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    
+    <category term="nce" scheme="https://racleray.github.io/tags/nce/"/>
+    
+    <category term="LM" scheme="https://racleray.github.io/tags/LM/"/>
+    
+  </entry>
   
   <entry>
     <title>UDA &amp; MixMatch</title>
@@ -520,9 +553,9 @@
     
     <category term="sentence embedding" scheme="https://racleray.github.io/tags/sentence-embedding/"/>
     
-    <category term="bert" scheme="https://racleray.github.io/tags/bert/"/>
-    
     <category term="nlp" scheme="https://racleray.github.io/tags/nlp/"/>
+    
+    <category term="bert" scheme="https://racleray.github.io/tags/bert/"/>
     
   </entry>
   
@@ -583,9 +616,9 @@
     <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
     
     
-    <category term="nlp" scheme="https://racleray.github.io/tags/nlp/"/>
-    
     <category term="crf" scheme="https://racleray.github.io/tags/crf/"/>
+    
+    <category term="nlp" scheme="https://racleray.github.io/tags/nlp/"/>
     
   </entry>
   
@@ -773,37 +806,6 @@
     
     
     <category term="capsule" scheme="https://racleray.github.io/tags/capsule/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>A SENTENCE EMBEDDINGS Baseline</title>
-    <link href="https://racleray.github.io/2020/07/07/A-SENTENCE-EMBEDDINGS-Baseline/"/>
-    <id>https://racleray.github.io/2020/07/07/A-SENTENCE-EMBEDDINGS-Baseline/</id>
-    <published>2020-07-07T11:45:39.000Z</published>
-    <updated>2020-07-07T11:52:25.332Z</updated>
-    
-    <content type="html"><![CDATA[<!-- TOC --><ul><li><a href="#info">Info:</a></li><li><a href="#brief-summary">Brief Summary:</a></li><li><a href="#main-thought">Main Thought:</a></li><li><a href="#method">Method</a></li><li><a href="#notes">Notes:</a></li></ul><!-- /TOC --><a id="more"></a><p>论文<a href="https://openreview.net/pdf?id=SyK00v5xx" target="_blank" rel="noopener">《A SIMPLE BUT TOUGH-TO-BEAT BASELINE FOR SENTENCE EMBEDDINGS》</a></p><h2 id="info">Info:</h2><ul><li>类别: [engineering ; pragmatic]</li><li>研究目标<ul><li>提升Towards universal paraphrastic sentence embeddings（John Wieting, Mohit Bansal, Kevin Gimpel, and Karen Livescu. ）论文提出的监督学习方法，转而进行无监督学习。</li><li>提升基于word embedding的句子向量的表现力。</li></ul></li><li>研究成果：<ul><li>completely unsupervised sentence embedding</li><li>improves performance by about 10% to 30% in textual similarity tasks, and beats sophisticated supervised methods including RNN’s and LSTM’s.</li><li>new “smoothing” terms that allow for words occurring out of context, as well as high probabilities for words like and, not in all contexts.</li></ul></li><li>存在的问题：<ul><li>在sentiment相关任务上，效果一般，与LSTM相差较大。</li><li>在下游任务为监督学习任务时，效果一般，没有LSTM、Skip-thought等方法有效。</li></ul></li><li>关键词：sentence embedding，无监督学习</li></ul><h2 id="brief-summary">Brief Summary:</h2><p>这项工作提供了一种简单的句子嵌入方法，基于随机游走模型生成句子文本(Arora et al.， 2016)。它简单且无监督，但在各种文本相似性任务上，它的性能明显优于基线，甚至可以击败一些复杂的监督方法，如RNN和LSTM模型。获得的embedding可以作为下游监督任务的特征，与复杂方法相比也能获得不错的结果。</p><hr /><h2 id="main-thought">Main Thought:</h2><p>简单且无监督的Sentence embeddings计算方法。</p><ul><li><p>在 textual similarity tasks上，当选取了合适参数，效果相比于词向量的简单平均、LSTM、Skip-thought等方法有一定提升。</p><ul><li><img src="/images/BASELINE%20%20FOR%20SENTENCE%20EMBEDDINGS.assets/image-20200504103138652.png" title="fig:" alt="image" /></li><li>上图b中，在不同的领域都是有用的。这对于无监督方法尤其重要，因为未标记的可用数据可以从目标应用程序的不同域中收集。</li></ul></li><li><p>在下游任务为监督学习任务时，效果下降的原因</p><ul><li>这可能是因为similarity任务直接依靠余弦相似性, 这使得该方法倾向于removing the common components(可视为一种去噪denoising)。</li><li>而在监督任务, 由于有一些标签的信息用于训练, 分类器可以挑出有用的components和忽视常见的components。</li></ul></li><li><p>无视词序</p><ul><li><p>然而基于LSTM、RNN的结果表明，词序在similarity任务上是有作用的。本文方法忽视了次序，可以考虑两者结合。</p></li><li><p>忽略词序的方法，更能找到sentiment层面的信息。</p></li><li><blockquote><figure><img src="/images/BASELINE%20%20FOR%20SENTENCE%20EMBEDDINGS.assets/image-20200504102856357.png" alt="image" /><figcaption aria-hidden="true">image</figcaption></figure></blockquote></li></ul></li><li><p>与Word2vec的联系</p><ul><li>Word2vec使用子采样（sub-sampling）技术对单词w进行下采样，概率与1 /√p（w）成正比，其中p（w）是单词w的边缘概率。这种启发式方法不仅可以加快训练速度，而且学习了更常见的单词表示形式。</li><li>该文章模型中，对词向量进行隐式加权，因此在一些场景下可以更好的利用文档的统计信息。</li></ul></li></ul><h2 id="method">Method</h2><ol type="1"><li>latent variable generative model for text</li></ol><figure><img src="/images/BASELINE%20%20FOR%20SENTENCE%20EMBEDDINGS.assets/image-20200504105401942.png" alt="image" /><figcaption aria-hidden="true">image</figcaption></figure><p><span class="math inline">\(c_t\)</span>为来自latent random walk的句子向量。使用MAP方法预测下一个（time t）生成的词的概率。</p><ol start="2" type="1"><li>Improved Random Walk model.</li></ol><figure><img src="/images/BASELINE%20%20FOR%20SENTENCE%20EMBEDDINGS.assets/image-20200504105656662.png" alt="image" /><figcaption aria-hidden="true">image</figcaption></figure><p>添加两个smooth项。<span class="math inline">\(p(w)\)</span>: 即使单词的向量与<span class="math inline">\(c_s\)</span>的内积非常低，单词也可能出现。<span class="math inline">\(c_0\)</span>: 与语法相关的sentence向量校正项，保证最重要的向量维度处于主导地位。它提高了与<span class="math inline">\(c_0\)</span>方向相近的单词在模型中表现出较高共现概率。</p><ol start="3" type="1"><li>Computing the sentence embedding</li></ol><p>假设<span class="math inline">\(Z\)</span>是一个常量</p><figure><img src="/images/BASELINE%20%20FOR%20SENTENCE%20EMBEDDINGS.assets/image-20200504111502500.png" alt="image" /><figcaption aria-hidden="true">image</figcaption></figure><p>越常见的word <span class="math inline">\(w\)</span>，权重<span class="math inline">\(a/(p(w) +a)\)</span>就越小，可以使embedding专注于具有代表性的词。</p><p>为了删去没有代表性的信息，计算<span class="math inline">\(c_0\)</span>的方向为<img src="/images/BASELINE%20%20FOR%20SENTENCE%20EMBEDDINGS.assets/image-20200504112151856.png" alt="image" />矩阵的第一个主成分（不进行 centralizing）。</p><figure><img src="/images/BASELINE%20%20FOR%20SENTENCE%20EMBEDDINGS.assets/image-20200504111108410.png" alt="image" /><figcaption aria-hidden="true">image</figcaption></figure><h2 id="notes">Notes:</h2><ol type="1"><li>PMI: Pointwise Mutual Information<ol type="1"><li><span class="math inline">\(PMI = log \frac{p(u, v)}{p(u)p(v)} = log \frac{n_{u}n_{v}}{n_un_v}\)</span></li></ol></li><li>pPMI = max(0,PMI): positive Pointwise Mutual Information</li></ol>]]></content>
-    
-    
-    <summary type="html">&lt;!-- TOC --&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;#info&quot;&gt;Info:&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;#brief-summary&quot;&gt;Brief Summary:&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;#main-thought&quot;&gt;Main Thought:&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;#method&quot;&gt;Method&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;#notes&quot;&gt;Notes:&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;!-- /TOC --&gt;</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    
-    <category term="sentence embedding" scheme="https://racleray.github.io/tags/sentence-embedding/"/>
-    
-    <category term="baseline" scheme="https://racleray.github.io/tags/baseline/"/>
     
   </entry>
   
