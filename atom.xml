@@ -6,7 +6,7 @@
   <link href="https://racleray.github.io/atom.xml" rel="self"/>
   
   <link href="https://racleray.github.io/"/>
-  <updated>2021-04-18T15:45:33.544Z</updated>
+  <updated>2021-06-14T15:54:37.840Z</updated>
   <id>https://racleray.github.io/</id>
   
   <author>
@@ -15,6 +15,37 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>回顾神经网络初始化方法.md</title>
+    <link href="https://racleray.github.io/2021/06/14/%E5%9B%9E%E9%A1%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%88%9D%E5%A7%8B%E5%8C%96%E6%96%B9%E6%B3%95/"/>
+    <id>https://racleray.github.io/2021/06/14/%E5%9B%9E%E9%A1%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%88%9D%E5%A7%8B%E5%8C%96%E6%96%B9%E6%B3%95/</id>
+    <published>2021-06-14T15:51:41.000Z</published>
+    <updated>2021-06-14T15:54:37.840Z</updated>
+    
+    <content type="html"><![CDATA[<!-- TOC --><ul><li><a href="#为了更简洁的期望与方差">为了更简洁的期望与方差</a></li><li><a href="#神经网络计算过程一般性表达">神经网络计算过程一般性表达</a></li><li><a href="#不同激活函数的影响">不同激活函数的影响</a><ul><li><a href="#对称型激活函数">对称型激活函数</a></li><li><a href="#非对称分段激活函数">非对称分段激活函数</a></li></ul></li></ul><!-- /TOC --><a id="more"></a><p>那么首先我们已经知道，全0或者常数、过大、过小的权重初始化都有梯度消失或者梯度爆炸的问题。而我们所期望的初始化状态是：期望为0，方差在一定范围内，同时尽量保证不同层的权重方差的一致性。这样出现internal covariance shift的可能性会大幅降低。闲来无事，适巧康康。</p><h2 id="为了更简洁的期望与方差">为了更简洁的期望与方差</h2><p>首先需要知道期望<span class="math inline">\(E\)</span>和方差<span class="math inline">\(Var\)</span>的计算方法，基本公式： <span class="math display">\[Var(X)=E(X^2)-(E(X))^2\]</span></p><p><span class="math display">\[Covariance(X,Y)=E((X-E(X))(Y-E(Y)))\\=E(XY)-E(X)E(Y)\]</span></p><p>当X，Y为独立的随机变量，Corvariance(即Cov)为0。</p><p>可以表示出两个独立随机变量的和的方差： <span class="math display">\[Var(X+Y)=E((X+Y)^2)-(E(X+Y))^2\\=E(X^2+Y^2+2XY)-(E(X)+E(Y))^2\\=E(X^2)-(E(X))^2+E(Y^2)-(E(Y))^2\\=Var(X)+Var(Y)\]</span> 两个独立随机变量的积的方差： <span class="math display">\[Var(XY)=E((XY)^2)-(E(XY))^2\\=E(X^2)E(Y^2)-(E(X)E(Y))^2\\=(Var(X)+E(X)^2)(Var(Y)+E(Y)^2)-(E(X)E(Y))^2\\=Var(X)Var(Y)+E(X)^2Var(Y)+Var(X)E(Y)^2\]</span></p><h2 id="神经网络计算过程一般性表达">神经网络计算过程一般性表达</h2><p>基本的计算方式： <span class="math display">\[Z_l=WA_{l-1}+B\\A_l=f(Z_l)\]</span> W与A是相互独立的。每一层不同神经元的权重<span class="math inline">\(w_i\)</span>是独立同分布的。</p><p>假如W与A的分布已知，那么Z的方差可以计算： <span class="math display">\[Var(z)=Var(\sum_{i}^{fan\_in} w_ia_i)\\=fan\_in \times (Var(w)Var(a)+E(w)^2Var(a)+Var(w)E(a)^2)\]</span> fan_in表示输入单元个数，每个输入单元的激活值与对应的权重相乘求和，得到当前层的激活值。独立同分布，所以和的方差可以简化为方差之和。</p><h2 id="不同激活函数的影响">不同激活函数的影响</h2><p>初始化的目的始终是避免梯度爆炸或者消失，最好可以加快收敛速度。那么在分析整个网络的参数逐层变化时，需要分析一般性的变化规律。</p><p>激活值的分布，受到激活函数的形式影响，这是一个关键的因素。</p><h3 id="对称型激活函数">对称型激活函数</h3><p>tanh，sigmoid等关于x轴对称的函数，可以保证激活值的期望也为0。而此时，方差的计算得到简化： <span class="math display">\[Var(Z_l)=fan\_in^{l} \times \prod_{l=1}^{L}Var(w_l) \times Var(Z_{l-1})\]</span> 同时考虑反向传播的过程，其差异在于fan_in 变为 fan_out，详细过程见<a href="https://proceedings.mlr.press/v9/glorot10a/glorot10a.pdf" target="_blank" rel="noopener">论文</a>。同时约束前向和反向的系数都为1，那么，可以假设权重的分布为 <span class="math display">\[N(0, \frac{2}{fan\_in+fan\_out})\]</span> 若为均匀分布，可以假设 <span class="math display">\[U(-\frac{\sqrt{6}}{fan\_in+fan\_out}, \frac{\sqrt{6}}{fan\_in+fan\_out})\]</span></p><h3 id="非对称分段激活函数">非对称分段激活函数</h3><p>ReLU这类激活函数，激活值的期望不再为0，公式(6)可以进行另一种变换。注意w的期望依然是我们所假设的0，这和激活值的分布是独立的。 <span class="math display">\[Var(z)=fan\_in \times (Var(w)Var(a)+E(w)^2Var(a)+Var(w)E(a)^2)\\=fan\_in \times (Var(w)Var(a)+Var(w)E(a)^2)\\=fan\_in \times (Var(w)[E(a^2)-E(a)^2]+Var(w)E(a)^2)\\=fan\_in \times Var(w) \times E(a^2)\]</span> 何凯明推出： <span class="math display">\[Var(Z_l)=\frac{1}{2} \times fan\_in \times Var(w_l) \times Var(Z_{l-1})\]</span> 假设两层之间系数为1，权重可假设为分布： <span class="math display">\[N(0, \frac{2}{fan\_in})\]</span> 如果按照反向传播计算： <span class="math display">\[N(0, \frac{2}{fan\_out})\]</span> 在caffe的实现中，可以选择使用 <span class="math display">\[N(0, \frac{4}{fan\_in + fan\_out})\]</span></p><p>当然也可以不从激活函数入手，使用Normalization方法，强制变换分布。</p>]]></content>
+    
+    
+    <summary type="html">&lt;!-- TOC --&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#为了更简洁的期望与方差&quot;&gt;为了更简洁的期望与方差&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#神经网络计算过程一般性表达&quot;&gt;神经网络计算过程一般性表达&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#不同激活函数的影响&quot;&gt;不同激活函数的影响&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#对称型激活函数&quot;&gt;对称型激活函数&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#非对称分段激活函数&quot;&gt;非对称分段激活函数&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- /TOC --&gt;</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    
+    <category term="initialization" scheme="https://racleray.github.io/tags/initialization/"/>
+    
+  </entry>
   
   <entry>
     <title>Knowledge Distillation Note</title>
@@ -586,11 +617,11 @@
     <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
     
     
-    <category term="nlp" scheme="https://racleray.github.io/tags/nlp/"/>
-    
     <category term="sentence embedding" scheme="https://racleray.github.io/tags/sentence-embedding/"/>
     
     <category term="bert" scheme="https://racleray.github.io/tags/bert/"/>
+    
+    <category term="nlp" scheme="https://racleray.github.io/tags/nlp/"/>
     
   </entry>
   
@@ -651,9 +682,9 @@
     <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
     
     
-    <category term="crf" scheme="https://racleray.github.io/tags/crf/"/>
-    
     <category term="nlp" scheme="https://racleray.github.io/tags/nlp/"/>
+    
+    <category term="crf" scheme="https://racleray.github.io/tags/crf/"/>
     
   </entry>
   
@@ -772,34 +803,6 @@
     
     
     <category term="gan" scheme="https://racleray.github.io/tags/gan/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>C++ Project使用外部库</title>
-    <link href="https://racleray.github.io/2020/07/08/C-Project%E4%BD%BF%E7%94%A8%E5%A4%96%E9%83%A8%E5%BA%93/"/>
-    <id>https://racleray.github.io/2020/07/08/C-Project%E4%BD%BF%E7%94%A8%E5%A4%96%E9%83%A8%E5%BA%93/</id>
-    <published>2020-07-08T04:59:37.000Z</published>
-    <updated>2020-07-08T05:31:57.470Z</updated>
-    
-    <content type="html"><![CDATA[<!-- TOC --><ul><li><a href="#static-link">Static link</a></li><li><a href="#dynamic-link">Dynamic link</a></li></ul><!-- /TOC --><a id="more"></a><h3 id="static-link">Static link</h3><p>更快速，编译时会优化。在visual studio中需要添加header file和lib file路径。以GLFW库的使用为例</p><p><img src="/images/pic/C-Project使用外部库_pic/image-20200708131006645.png" /></p><p>在project文件夹下新建Dependencies文件夹，将下载的 include 和 lib-vc2017 复制到文件夹下。</p><p>添加 include 下的header file</p><p><img src="/images/pic/C-Project使用外部库_pic/image-20200708131706674.png" /></p><p>添加lib file</p><p><img src="/images/pic/C-Project使用外部库_pic/image-20200708132005000.png" /></p><p>添加目标static lib file到project。文件位于lib-vc2017文件夹下。</p><p><img src="/images/pic/C-Project使用外部库_pic/image-20200708132324138.png" /></p><h3 id="dynamic-link">Dynamic link</h3><p>lib-vc2017文件夹下，还有glfw3dll.lib，这是动态链接需要导入的lib file。即替换上图中的glfw3.lib为glfw3dll.lib。</p><p>但是需要注意，dll文件需要与可执行文件 xxx.exe 位于同一个文件夹下，在程序运行时动态链接。否则会报错。</p>]]></content>
-    
-    
-    <summary type="html">&lt;!-- TOC --&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;#static-link&quot;&gt;Static link&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;#dynamic-link&quot;&gt;Dynamic link&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;!-- /TOC --&gt;</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    
-    <category term="c++" scheme="https://racleray.github.io/tags/c/"/>
-    
-    <category term="library" scheme="https://racleray.github.io/tags/library/"/>
     
   </entry>
   
