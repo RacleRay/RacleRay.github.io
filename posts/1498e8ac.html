@@ -1,0 +1,646 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="个人博客&amp;笔记">
+  <meta name="author" content="江左时雨">
+  <meta name="keywords" content="机器学习,Machine Learning,自然语言处理,NLP,深度学习,Deep Learning,计算机,Coding,生活随笔">
+  <meta name="description" content="那么首先我们已经知道，全0或者常数、过大、过小的权重初始化都有梯度消失或者梯度爆炸的问题。而我们所期望的初始化状态是：期望为0，方差在一定范围内，同时尽量保证不同层的权重方差的一致性。这样出现internal covariance shift的可能性会大幅降低。闲来无事，适巧康康。 为了更简洁的期望与方差 首先需要知道期望\(E\)和方差\(Var\)的计算方法，基本公式： \[ Var(">
+<meta property="og:type" content="article">
+<meta property="og:title" content="回顾神经网络初始化方法">
+<meta property="og:url" content="https://racleray.github.io/posts/1498e8ac.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="那么首先我们已经知道，全0或者常数、过大、过小的权重初始化都有梯度消失或者梯度爆炸的问题。而我们所期望的初始化状态是：期望为0，方差在一定范围内，同时尽量保证不同层的权重方差的一致性。这样出现internal covariance shift的可能性会大幅降低。闲来无事，适巧康康。 为了更简洁的期望与方差 首先需要知道期望\(E\)和方差\(Var\)的计算方法，基本公式： \[ Var(">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E5%9B%9E%E9%A1%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%88%9D%E5%A7%8B%E5%8C%96%E6%96%B9%E6%B3%95_pic/image-20210617002135477.png">
+<meta property="article:published_time" content="2021-06-14T15:51:41.000Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:31.040Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="deep learning">
+<meta property="article:tag" content="initialization">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E5%9B%9E%E9%A1%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%88%9D%E5%A7%8B%E5%8C%96%E6%96%B9%E6%B3%95_pic/image-20210617002135477.png">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>回顾神经网络初始化方法 - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="回顾神经网络初始化方法">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-06-14 23:51" pubdate>
+        2021年6月14日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.2k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      7 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">回顾神经网络初始化方法</h1>
+            
+            <div class="markdown-body">
+              <p>那么首先我们已经知道，全0或者常数、过大、过小的权重初始化都有梯度消失或者梯度爆炸的问题。而我们所期望的初始化状态是：期望为0，方差在一定范围内，同时尽量保证不同层的权重方差的一致性。这样出现internal
+covariance shift的可能性会大幅降低。闲来无事，适巧康康。</p>
+<h2><span id="为了更简洁的期望与方差">为了更简洁的期望与方差</span></h2>
+<p>首先需要知道期望<span class="math inline">\(E\)</span>和方差<span class="math inline">\(Var\)</span>的计算方法，基本公式： <span class="math display">\[
+Var(X)=E(X^2)-(E(X))^2
+\]</span></p>
+<p><span class="math display">\[
+Covariance(X,Y)=E((X-E(X))(Y-E(Y)))\\
+=E(XY)-E(X)E(Y)
+\]</span></p>
+<p>当X，Y为独立的随机变量，Corvariance(即Cov)为0。</p>
+<p>可以表示出两个独立随机变量的和的方差： <span class="math display">\[
+Var(X+Y)=E((X+Y)^2)-(E(X+Y))^2\\
+=E(X^2+Y^2+2XY)-(E(X)+E(Y))^2\\
+=E(X^2)-(E(X))^2+E(Y^2)-(E(Y))^2\\
+=Var(X)+Var(Y)
+\]</span> 两个独立随机变量的积的方差： <span class="math display">\[
+Var(XY)=E((XY)^2)-(E(XY))^2\\
+=E(X^2)E(Y^2)-(E(X)E(Y))^2\\
+=(Var(X)+E(X)^2)(Var(Y)+E(Y)^2)-(E(X)E(Y))^2\\
+=Var(X)Var(Y)+E(X)^2Var(Y)+Var(X)E(Y)^2
+\]</span></p>
+<h2><span id="神经网络计算过程一般性表达">神经网络计算过程一般性表达</span></h2>
+<p>基本的计算方式： <span class="math display">\[
+Z_l=WA_{l-1}+B\\
+A_l=f(Z_l)
+\]</span> W与A是相互独立的。每一层不同神经元的权重<span class="math inline">\(w_i\)</span>是独立同分布的。</p>
+<p>假如W与A的分布已知，那么Z的方差可以计算： <span class="math display">\[
+Var(z)=Var(\sum_{i}^{fan\_in} w_ia_i)\\
+=fan\_in \times (Var(w)Var(a)+E(w)^2Var(a)+Var(w)E(a)^2)
+\]</span>
+fan_in表示输入单元个数，每个输入单元的激活值与对应的权重相乘求和，得到当前层的激活值。独立同分布，所以和的方差可以简化为方差之和。</p>
+<h2><span id="不同激活函数的影响">不同激活函数的影响</span></h2>
+<p>初始化的目的始终是避免梯度爆炸或者消失，最好可以加快收敛速度。那么在分析整个网络的参数逐层变化时，需要分析一般性的变化规律。</p>
+<p>激活值的分布，受到激活函数的形式影响，这是一个关键的因素。</p>
+<h3><span id="对称型激活函数">对称型激活函数</span></h3>
+<p>tanh，sigmoid等关于x轴对称的函数，可以保证激活值的期望也为0。而此时，方差的计算得到简化：
+<span class="math display">\[
+Var(Z_l)=fan\_in^{l} \times \prod_{l=1}^{L}Var(w_l) \times Var(Z_{l-1})
+\]</span> 同时考虑反向传播的过程，其差异在于fan_in 变为
+fan_out，详细过程见<a href="https://proceedings.mlr.press/v9/glorot10a/glorot10a.pdf" target="_blank" rel="noopener">论文</a>。同时约束前向和反向的系数都为1，那么，可以假设权重的分布为
+<span class="math display">\[
+N(0, \frac{2}{fan\_in+fan\_out})
+\]</span> 若为均匀分布，可以假设 <span class="math display">\[
+U(-\frac{\sqrt{6}}{fan\_in+fan\_out}, \frac{\sqrt{6}}{fan\_in+fan\_out})
+\]</span></p>
+<h3><span id="非对称分段激活函数">非对称分段激活函数</span></h3>
+<p>ReLU这类激活函数，激活值的期望不再为0，公式(6)可以进行另一种变换。注意w的期望依然是我们所假设的0，这和激活值的分布是独立的。
+<span class="math display">\[
+Var(z)
+=fan\_in \times (Var(w)Var(a)+E(w)^2Var(a)+Var(w)E(a)^2)\\
+=fan\_in \times (Var(w)Var(a)+Var(w)E(a)^2)\\
+=fan\_in \times (Var(w)[E(a^2)-E(a)^2]+Var(w)E(a)^2)\\
+=fan\_in \times Var(w) \times E(a^2)
+\]</span> 何凯明推出： <span class="math display">\[
+Var(Z_l)=\frac{1}{2} \times fan\_in \times Var(w_l) \times Var(Z_{l-1})
+\]</span> 假设两层之间系数为1，权重可假设为分布： <span class="math display">\[
+N(0, \frac{2}{fan\_in})
+\]</span> 如果按照反向传播计算： <span class="math display">\[
+N(0, \frac{2}{fan\_out})
+\]</span> 在caffe的实现中，可以选择使用 <span class="math display">\[
+N(0, \frac{4}{fan\_in + fan\_out})
+\]</span></p>
+<p>当然也可以不从激活函数入手，使用Normalization方法，强制变换分布。</p>
+<h2><span id="来自神经网络训练动力学研究的一点点总结">来自神经网络训练动力学研究的一点点总结</span></h2>
+<p>神经网络学习过程，可以从信号频域角度分析。神经网络擅长并且优先学习低频信号信息，而不擅长学习高频振荡信号。也因此，通常模型的参数学习结果是一个比较平滑的曲面（该研究主要是在浅层网络上实验）。<a href="https://arxiv.org/abs/2101.00747" target="_blank" rel="noopener">论文</a>中说，如无必要，勿增频率。</p>
+<p><a href="https://www.bilibili.com/video/BV19Q4y1X7RV" target="_blank" rel="noopener">报告</a>中还展示了一种设计思路，以提高网络处理高频信号的能力，就是scale到较低的值域，以获得相对较小的参数空间。</p>
+<p>而参数的初始化，不仅对参数的频率信息有影响，还影响着模型在不同条件下的收敛速度和收敛性（报告展示了浅层网络在MNIST实验的结果）。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/回顾神经网络初始化方法_pic/image-20210617002135477.png" srcset="/img/loading.gif" lazyload alt style="zoom:60%;"></p>
+<p>实验也指出了多种常用初始化在该理论中，都具有较好的性能。这里的变量和公式，比较复杂，这里也只关心了结论。</p>
+<blockquote>
+<p><a href="https://arxiv.org/abs/2105.11686" target="_blank" rel="noopener">凝聚机制</a></p>
+<p>大模型训练后期，参数会偏向简化参数空间，向更少的方向聚集参数梯度向量，出现趋向相同方向的权重。</p>
+<p>所以论文的结论为，神经网络存在这小网络偏好，如无必要，勿增<strong>神经元</strong>。</p>
+</blockquote>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/DL/">DL</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/deep-learning/">deep learning</a>
+                    
+                      <a class="hover-with-bg" href="/tags/initialization/">initialization</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/9e098b96.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">SimCSE-文本对比学习</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/62f6fe86.html">
+                        <span class="hidden-mobile">Knowledge Distillation Note</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        loader: {
+          load: ['ui/lazy']
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>

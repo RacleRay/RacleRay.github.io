@@ -1,0 +1,624 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="记录英文文本处理的常见概念，以及nltk与SpaCy的简单了解。">
+  <meta name="author" content="江左时雨">
+  <meta name="keywords" content="机器学习,Machine Learning,自然语言处理,NLP,深度学习,Deep Learning,计算机,Coding,生活随笔">
+  <meta name="description" content="记录英文文本处理的常见概念，以及nltk与SpaCy的简单了解。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="英文文本处理">
+<meta property="og:url" content="https://racleray.github.io/posts/80c1e4ba.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="记录英文文本处理的常见概念，以及nltk与SpaCy的简单了解。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1/MethodsInCorpusModule.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1/image-20200224173728775.png">
+<meta property="article:published_time" content="2020-07-06T13:12:08.000Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:31.048Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="english process">
+<meta property="article:tag" content="nltk">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1/MethodsInCorpusModule.png">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>英文文本处理 - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="英文文本处理">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-07-06 21:12" pubdate>
+        2020年7月6日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      6.2k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      19 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">英文文本处理</h1>
+            
+            <div class="markdown-body">
+              <h1><span id="英文文本处理">英文文本处理</span></h1>
+<p>​ 结合nltk包进行说明。</p>
+<h2><span id="1-tokenization标记化分词">1 Tokenization(标记化/分词)</span></h2>
+<p>​
+文本是不能成段送入模型中进行分析的，我们通常会<strong>把文本切成有独立含义的字、词或者短语</strong>，这个过程叫做tokenization，这通常是大家解决自然语言处理问题的第一步。</p>
+<p>​ NLTK中提供了2种不同方式的tokenization： <strong>sentence
+tokenization</strong> 和 <strong>word
+tokenization</strong>，前者把文本进行“断句”，后者对文本进行“分词”。</p>
+<p>​ <strong>sentence
+tokenization</strong>相比于split的优势在于，是别不是句号的位置，如：Mr.H</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> nltk <span class="hljs-keyword">import</span> word_tokenize, sent_tokenize<br></code></pre></div></td></tr></table></figure>
+<h2><span id="2-去停用词">2 去停用词</span></h2>
+<p>​
+在自然语言处理的<strong>一些任务</strong>中，我们处理的主体“文本”中有一些功能词经常出现，然而对于最后的任务目标并没有帮助，甚至会对结果产生干扰，我们把这类词叫做<strong>停用词</strong>。</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">nltk.download(<span class="hljs-string">'stopwords'</span>)<br><br><span class="hljs-comment"># 导入内置停用词</span><br><span class="hljs-keyword">from</span> nltk.corpus <span class="hljs-keyword">import</span> stopwords<br><br>stop_words = stopwords.words(<span class="hljs-string">'english'</span>)<br></code></pre></div></td></tr></table></figure>
+<h2><span id="3-词性标注part-of-speechtagging">3 词性标注（part-of-speech
+tagging）</span></h2>
+<p>​ 词性（part-of-speech）是词汇基本的语法属性，通常也称为词性。</p>
+<p>​
+词性标注是很多NLP任务的预处理步骤，如句法分析，经过词性标注后的文本会带来很大的便利性，但也不是不可或缺的步骤。</p>
+<p>​ 主流的做法可以分为基于规则和基于统计的方法，包括：</p>
+<blockquote>
+<ul>
+<li>基于最大熵的词性标注</li>
+<li>基于统计最大概率输出词性</li>
+<li>基于HMM的词性标注</li>
+</ul>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">nltk.download(<span class="hljs-string">'averaged_perceptron_tagger'</span>)<br><br><span class="hljs-comment"># 词性标注</span><br><span class="hljs-keyword">from</span> nltk <span class="hljs-keyword">import</span> pos_tag<br>tags = pos_tag(filtered_corpus)<br>tags[:<span class="hljs-number">20</span>]<br></code></pre></div></td></tr></table></figure>
+<h2><span id="4-chunking组块分析">4 chunking/组块分析</span></h2>
+<p>​
+chunking分块是命名实体识别的基础，词性给出来的句子成分的属性，但有时候，更多的信息(比如句子句法结构)可以帮助我们对句子中的模式挖掘更充分。</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> nltk.chunk <span class="hljs-keyword">import</span> RegexpParser  <span class="hljs-comment"># RegexpParser</span><br><span class="hljs-keyword">from</span> nltk <span class="hljs-keyword">import</span> sent_tokenize,word_tokenize<br><br><span class="hljs-comment"># 写一个匹配名词的模式</span><br><span class="hljs-comment"># JJ	adjective; NN	noun, singular or mass</span><br><span class="hljs-comment"># CC	coordinating conjunction</span><br>pattern = <span class="hljs-string">"""</span><br><span class="hljs-string">    NP: &#123;&lt;JJ&gt;*&lt;NN&gt;+&#125;</span><br><span class="hljs-string">    &#123;&lt;JJ&gt;*&lt;NN&gt;&lt;CC&gt;*&lt;NN&gt;+&#125;</span><br><span class="hljs-string">    """</span><br>    <br><span class="hljs-comment"># 定义组块分析器</span><br>chunker = RegexpParser(pattern)<br><br><span class="hljs-comment"># 分句</span><br>tokenized_sentence = nltk.sent_tokenize(text)<br><span class="hljs-comment"># 分词</span><br>tokenized_words = [nltk.word_tokenize(sentence) <span class="hljs-keyword">for</span> sentence <span class="hljs-keyword">in</span> tokenized_sentence]<br><span class="hljs-comment"># 词性标注</span><br>tagged_words = [nltk.pos_tag(word) <span class="hljs-keyword">for</span> word <span class="hljs-keyword">in</span> tokenized_words]<br><span class="hljs-comment"># 识别组块</span><br>word_tree = [chunker.parse(word) <span class="hljs-keyword">for</span> word <span class="hljs-keyword">in</span> tagged_words]<br><br>word_tree[<span class="hljs-number">0</span>].draw()  <span class="hljs-comment"># 绘图</span><br></code></pre></div></td></tr></table></figure>
+<h2><span id="5-命名实体识别namedentity-recognitionner">5 命名实体识别（Named
+Entity Recognition，NER）</span></h2>
+<p>​ 命名实体识别包括两部分：1) 实体边界识别；2)
+确定实体类别（人名、地名、机构名或其他）。</p>
+<p>​ <a href="https://stanfordnlp.github.io/CoreNLP/" target="_blank" rel="noopener">stanford core nlp
+modules</a> 速度更快，而且有更高的识别准确度。</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> nltk <span class="hljs-keyword">import</span> ne_chunk, pos_tag,  word_tokenize<br><br>sentence = <span class="hljs-string">"John studies at Stanford University."</span><br>print(ne_chunk(pos_tag(word_tokenize(sentence))))<br></code></pre></div></td></tr></table></figure>
+<h2><span id="6stemming和lemmatizing-词干算法-和-词型还原">6
+Stemming和Lemmatizing 词干算法 和 词型还原</span></h2>
+<p>​ 对英文当中的时态语态等做归一化。</p>
+<p>​ Stemmer</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> nltk.stem <span class="hljs-keyword">import</span> PorterStemmer<br><br>stemmer = PorterStemmer()<br>stemmer.stem(<span class="hljs-string">"running"</span>)<br><span class="hljs-comment"># Out: 'run'</span><br><br><br><span class="hljs-keyword">from</span> nltk.stem <span class="hljs-keyword">import</span> SnowballStemmer<br><br>stemmer2 = SnowballStemmer(<span class="hljs-string">"english"</span>)<br>stemmer2.stem(<span class="hljs-string">"growing"</span>)<br><span class="hljs-comment"># Out: 'grow'</span><br><br><span class="hljs-comment"># Create your own stemmer using Regular Expression</span><br><span class="hljs-keyword">from</span> nltk.stem <span class="hljs-keyword">import</span> RegexpStemmer<br><br>rst = RegexpStemmer(<span class="hljs-string">r'ing$|s$|e$|able$'</span>)<br>rst.stem(<span class="hljs-string">'controllable'</span>)<br><span class="hljs-comment"># Out: 'controll'</span><br></code></pre></div></td></tr></table></figure>
+<p>​
+Lemmatization和Stemmer很类似，不同的地方在于Lemmatization会根据语言词根找到原型，而Stemmer只是根据规则截断结尾的
+-ing 等后缀。Stemmer的速度更快，但是它通常只是一系列的规则。</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> nltk.stem <span class="hljs-keyword">import</span> WordNetLemmatizer<br><br>lemmatizer = WordNetLemmatizer()<br>lemmatizer.lemmatize(<span class="hljs-string">"makes"</span>)<br><br><span class="hljs-comment"># If you do not provide POS tag of the word, </span><br><span class="hljs-comment"># lemmatizer will consider word as a noun and you may not get the result you expected </span><br>lemmatizer.lemmatize(<span class="hljs-string">'spoken'</span>)<br><span class="hljs-comment"># Out: 'spoken'</span><br><br><span class="hljs-comment"># 给出词性</span><br>lemmatizer.lemmatize(<span class="hljs-string">'spoken'</span>,<span class="hljs-string">'v'</span>)<br><span class="hljs-comment"># Out: 'speak'</span><br></code></pre></div></td></tr></table></figure>
+<h2><span id="nltkwordnet">NLTK：WordNet</span></h2>
+<blockquote>
+<p>​ <a href="https://www.nltk.org/" target="_blank" rel="noopener">NLTK</a>，全称Natural Language
+Toolkit，自然语言处理工具包，是NLP研究领域常用的一个Python库，由宾夕法尼亚大学的Steven
+Bird和Edward
+Loper在Python的基础上开发的一个模块，至今已有超过十万行的代码。这是一个开源项目，包含数据集、Python模块、教程等；NLTK是最常用的英文自然语言处理python基础库之一。</p>
+</blockquote>
+<h4><span id="corpus-module">Corpus Module</span></h4>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1/MethodsInCorpusModule.png" srcset="/img/loading.gif" lazyload alt="Corpus">
+<figcaption aria-hidden="true">Corpus</figcaption>
+</figure>
+<h4><span id="wordnet与词义解析">WordNet与词义解析</span></h4>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> nltk.corpus <span class="hljs-keyword">import</span> wordnet <span class="hljs-keyword">as</span> wn<br><br><span class="hljs-comment"># 同义</span><br>wn.synsets(<span class="hljs-string">'man'</span>)<br><br><span class="hljs-comment"># 第一种词义</span><br>wn.synsets(<span class="hljs-string">'man'</span>)[<span class="hljs-number">0</span>].definition()<br><span class="hljs-comment"># 第二种词义</span><br>wn.synsets(<span class="hljs-string">'man'</span>)[<span class="hljs-number">1</span>].definition()<br><br><span class="hljs-comment"># 造句：选择一种词义（dog.n.01）</span><br>dog = wn.synset(<span class="hljs-string">'dog.n.01'</span>)<br>dog.examples()[<span class="hljs-number">0</span>]<br><br><span class="hljs-comment"># 上位词</span><br>dog.hypernyms()<br><br><span class="hljs-comment"># 查看不同词义下的Lemmatization解析</span><br><span class="hljs-keyword">for</span> syn <span class="hljs-keyword">in</span> wn.synsets(<span class="hljs-string">'spoken'</span>):<br>    print(syn,<span class="hljs-string">':'</span>, syn.lemma_names())<br></code></pre></div></td></tr></table></figure>
+<h4><span id="frequency-distribution">Frequency Distribution</span></h4>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> nltk <span class="hljs-keyword">import</span> ConditionalFreqDist, FreqDist<br><br>...<br>fd = FreqDist(l)<br>fd.most_common(<span class="hljs-number">2</span>)<br><span class="hljs-comment"># Return a list of all samples that occur once</span><br>fd.hapaxes()<br><span class="hljs-comment"># Find the word occuring max number of times</span><br>fd_w_humor.max()<br><span class="hljs-comment"># Freq = Number of occurences / total number of words</span><br>fd_w_humor.freq(<span class="hljs-string">'the'</span>)<br><span class="hljs-comment"># check how many times word 'pen' appeared</span><br>fd_w_humor.get(<span class="hljs-string">'pen'</span>)<br>...<br><br><span class="hljs-comment"># Conditional Frequency Distribution</span><br><br><span class="hljs-comment"># Use tabulate mathod to check distribution of modal words in different genre </span><br>cfd = ConditionalFreqDist(<br>           (genre, word)<br>          <span class="hljs-keyword">for</span> genre <span class="hljs-keyword">in</span> brown.categories()<br>          <span class="hljs-keyword">for</span> word <span class="hljs-keyword">in</span> brown.words(categories=genre))<br><br>cfd.tabulate(conditions=genres, samples=modals)<br><br><span class="hljs-comment"># 绘制分布图</span><br>l_names = ([(<span class="hljs-string">'male'</span>,name[<span class="hljs-number">-1</span>]) <span class="hljs-keyword">for</span> name <span class="hljs-keyword">in</span> names.words(<span class="hljs-string">'male.txt'</span>)] +<br>         [(<span class="hljs-string">'female'</span>,name[<span class="hljs-number">-1</span>]) <span class="hljs-keyword">for</span> name <span class="hljs-keyword">in</span> names.words(<span class="hljs-string">'female.txt'</span>)])<br>         <br>cfd_names = ConditionalFreqDist(l_names)<br>cfd_names.plot()<br></code></pre></div></td></tr></table></figure>
+<h2><span id="spacy">SpaCy</span></h2>
+<p>​ <a href="https://spacy.io/" target="_blank" rel="noopener">spaCy</a>是Python和Cython中的高级自然语言处理库，它建立在最新的研究基础之上，从一开始就设计用于实际产品。spaCy
+带有预先训练的统计模型和单词向量，目前支持 20
+多种语言的标记。它具有快速的句法分析器，用于标签的卷积神经网络模型，解析和命名实体识别以及与深度学习整合。</p>
+<blockquote>
+<p>​ !pip install -i https://pypi.tuna.tsinghua.edu.cn/simple spaCy</p>
+<p>​ !python -m spacy download en</p>
+</blockquote>
+<p>​ <a href="https://spacy.io/usage/models#languages" target="_blank" rel="noopener">支持的语言</a></p>
+<p>​</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment"># Tokenization</span><br><span class="hljs-keyword">import</span> spacy<br><br>nlp = spacy.load(<span class="hljs-string">'en'</span>)<br>doc = nlp(<span class="hljs-string">'Hello World!'</span>)<br><br><span class="hljs-keyword">for</span> token <span class="hljs-keyword">in</span> doc:<br>    print(<span class="hljs-string">'"'</span> + token.text + <span class="hljs-string">'"'</span>)<br>    <br><span class="hljs-keyword">for</span> token <span class="hljs-keyword">in</span> doc:<br>    print(<span class="hljs-string">"&#123;0&#125;\t&#123;1&#125;\t&#123;2&#125;\t&#123;3&#125;\t&#123;4&#125;\t&#123;5&#125;\t&#123;6&#125;\t&#123;7&#125;"</span>.format(<br>        token.text,<br>        token.idx,     <span class="hljs-comment"># 开始index</span><br>        token.lemma_,  <span class="hljs-comment"># 原型</span><br>        token.is_punct,<span class="hljs-comment"># 判断标点</span><br>        token.is_space,<span class="hljs-comment"># 判断空格</span><br>        token.shape_,  <span class="hljs-comment"># 词格式</span><br>        token.pos_,    <span class="hljs-comment"># 词性</span><br>        token.tag_     <span class="hljs-comment"># 标注</span><br>    ))<br>    <br><span class="hljs-comment"># 断句</span><br><span class="hljs-keyword">for</span> sent <span class="hljs-keyword">in</span> doc.sents:<br>    print(sent)<br>    <br><br><span class="hljs-comment"># 词性标注</span><br>print([(token.text, token.tag_) <span class="hljs-keyword">for</span> token <span class="hljs-keyword">in</span> doc])<br><br><br><span class="hljs-comment"># NER</span><br><span class="hljs-keyword">for</span> ent <span class="hljs-keyword">in</span> doc.ents:<br>    print(ent.text, ent.label_)<br></code></pre></div></td></tr></table></figure>
+<p>​ BIO/IOB tagging
+是一种对给定句子中的单元做序列标注的方式，用于从给定句子中抽取连续字/词块构成的有意义短语。</p>
+<p>​
+每个词标注为B（Beginning，指示某短语起始）、I（Inside，指示短语内部）、O（Outside，指示不在短语中）中的一个。如：B-人名
+O B-机构名 I-机构名</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">iob_tagged = [<br>    (token.text, token.tag_, <span class="hljs-string">"&#123;0&#125;-&#123;1&#125;"</span>.format(token.ent_iob_, token.ent_type_)<br>    	<span class="hljs-keyword">if</span> token.ent_iob_ != <span class="hljs-string">'O'</span> <span class="hljs-keyword">else</span> token.ent_iob_) <span class="hljs-keyword">for</span> token <span class="hljs-keyword">in</span> doc<br>]<br><br>ent_iob = [(token.ent_iob_, token.ent_type_) <span class="hljs-keyword">for</span> token <span class="hljs-keyword">in</span> doc]<br><br><br><span class="hljs-keyword">from</span> nltk.chunk <span class="hljs-keyword">import</span> conlltags2tree<br><span class="hljs-comment"># 按照nltk.Tree的格式显示</span><br>print(conlltags2tree(iob_tagged))<br></code></pre></div></td></tr></table></figure>
+<p>​ 可视化</p>
+<figure class="highlight routeros"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs routeros"><span class="hljs-keyword">from</span> spacy import displacy<br><br>displacy.render(doc, <span class="hljs-attribute">style</span>=<span class="hljs-string">'ent'</span>, <span class="hljs-attribute">jupyter</span>=<span class="hljs-literal">True</span>)<br><br>displacy.render(doc, <span class="hljs-attribute">style</span>=<span class="hljs-string">'dep'</span>, <span class="hljs-attribute">jupyter</span>=<span class="hljs-literal">True</span>)<br></code></pre></div></td></tr></table></figure>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1/image-20200224173728775.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<h4><span id="chunking组块分析">chunking/组块分析</span></h4>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">for</span> chunk <span class="hljs-keyword">in</span> doc.noun_chunks:<br>    print(chunk.text,<span class="hljs-string">'---'</span>, chunk.label_,<span class="hljs-string">'---'</span>,  chunk.root.text)<br></code></pre></div></td></tr></table></figure>
+<h4><span id="句法依存">句法依存</span></h4>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">for</span> token <span class="hljs-keyword">in</span> doc:<br>    print(<span class="hljs-string">"&#123;0&#125;/&#123;1&#125; &lt;--&#123;2&#125;-- &#123;3&#125;/&#123;4&#125;"</span>.format(<br>        token.text, token.tag_, token.dep_, token.head.text, token.head.tag_))  <span class="hljs-comment">#head</span><br>    <br>displacy.render(doc, style=<span class="hljs-string">'dep'</span>, jupyter=<span class="hljs-literal">True</span>, options=&#123;<span class="hljs-string">'distance'</span>: <span class="hljs-number">90</span>&#125;)<br></code></pre></div></td></tr></table></figure>
+<h4><span id="词向量">词向量</span></h4>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment"># 如果要使用英文的词向量，需要先下载预先训练好的结果</span><br><span class="hljs-comment"># !python -m spacy download en_core_web_lg</span><br><br>nlp = spacy.load(<span class="hljs-string">'en_core_web_lg'</span>)<br>print(nlp.vocab[<span class="hljs-string">'banana'</span>].vector)<br><br><br><span class="hljs-comment"># 在词向量的基础上，spaCy提供了从词到文档的相似度计算的方法</span><br>target = nlp(<span class="hljs-string">"Cats are beautiful animals."</span>)<br> <br>doc1 = nlp(<span class="hljs-string">"Dogs are awesome."</span>)<br>doc2 = nlp(<span class="hljs-string">"Some gorgeous creatures are felines."</span>)<br>doc3 = nlp(<span class="hljs-string">"Dolphins are swimming mammals."</span>)<br> <br>print(target.similarity(doc1))  <span class="hljs-comment"># 0.8901765218466683</span><br>print(target.similarity(doc2))  <span class="hljs-comment"># 0.9115828449161616</span><br>print(target.similarity(doc3))  <span class="hljs-comment"># 0.7822956752876101</span><br></code></pre></div></td></tr></table></figure>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/NLP/">NLP</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/english-process/">english process</a>
+                    
+                      <a class="hover-with-bg" href="/tags/nltk/">nltk</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/b75580e5.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">中文文本处理</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/9ad55c64.html">
+                        <span class="hidden-mobile">常用python文本处理函数</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>

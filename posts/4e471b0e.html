@@ -1,0 +1,601 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="记录几个有用的python包。argh处理命令行参数、schedule定时运行脚本等。">
+  <meta name="author" content="江左时雨">
+  <meta name="keywords" content="机器学习,Machine Learning,自然语言处理,NLP,深度学习,Deep Learning,计算机,Coding,生活随笔">
+  <meta name="description" content="记录几个有用的python包。argh处理命令行参数、schedule定时运行脚本等。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="有用的python package">
+<meta property="og:url" content="https://racleray.github.io/posts/4e471b0e.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="记录几个有用的python包。argh处理命令行参数、schedule定时运行脚本等。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-02-24T12:19:59.000Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:31.046Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="tool">
+<meta name="twitter:card" content="summary_large_image">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>有用的python package - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="有用的python package">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-02-24 20:19" pubdate>
+        2021年2月24日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      6.6k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      20 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">有用的python package</h1>
+            
+            <div class="markdown-body">
+              <h3><span id="argh-懒人版argparse">argh--懒人版argparse</span></h3>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> argh<br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">do_the_thing</span><span class="hljs-params">(required_arg, optional_arg=<span class="hljs-number">1</span>, other_optional_arg=False)</span>:</span><br>    <span class="hljs-string">"""</span><br><span class="hljs-string">    I am a docstring</span><br><span class="hljs-string">    """</span><br>    print((required_arg, type(required_arg)))<br>    print((optional_arg, type(optional_arg)))<br>    print((other_optional_arg, type(other_optional_arg)))<br><br><br><span class="hljs-meta">@argh.arg('--bool-arg-for-flag', '-b', help="Flip this flag for things")</span><br><span class="hljs-meta">@argh.arg('arg_with_choices', choices=['one', 'two', 'three'])</span><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">do_the_other_thing</span><span class="hljs-params">(arg_with_choices, bool_arg_for_flag=False)</span>:</span><br>    print(arg_with_choices)<br>    print(bool_arg_for_flag)<br><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:<br>    <span class="hljs-comment"># argh.dispatch_command(do_the_thing)</span><br>    argh.dispatch_commands([do_the_thing, do_the_other_thing])<br></code></pre></div></td></tr></table></figure>
+<h3><span id="msgpack-二进制版json">msgpack--二进制版json</span></h3>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> msgpack<br><span class="hljs-keyword">import</span> json<br><span class="hljs-keyword">import</span> random<br><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">msgpack_example_1</span><span class="hljs-params">()</span>:</span><br>    example_dict = &#123;i: random.random() <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(<span class="hljs-number">10000</span>)&#125;<br><br>    <span class="hljs-keyword">with</span> open(<span class="hljs-string">'json_file.json'</span>, <span class="hljs-string">'w'</span>) <span class="hljs-keyword">as</span> f:<br>        json.dump(example_dict, f)<br>    <span class="hljs-keyword">with</span> open(<span class="hljs-string">'json_file.json'</span>) <span class="hljs-keyword">as</span> f:<br>        back_from_json = json.load(f)<br><br>    <span class="hljs-comment"># Saving and loading</span><br>    <span class="hljs-keyword">with</span> open(<span class="hljs-string">'msgpack_file.msgpack'</span>, <span class="hljs-string">'wb'</span>) <span class="hljs-keyword">as</span> f:<br>        <span class="hljs-comment"># f.write(msgpack.packb(example_dict))</span><br>        <span class="hljs-comment"># f.write(msgpack.packb(example_dict, use_single_float=True))</span><br>        f.write(msgpack.packb(example_dict))<br>     <br>    <span class="hljs-keyword">with</span> open(<span class="hljs-string">'msgpack_file.msgpack'</span>, <span class="hljs-string">'rb'</span>) <span class="hljs-keyword">as</span> f:<br>        back_from_msgpack = msgpack.unpackb(f.read())<br><br>    <span class="hljs-comment"># Data integrity</span><br>    print(type(next(iter(back_from_json.keys()))))<br>    print(type(next(iter(back_from_msgpack.keys()))))<br><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">msgpack_example_2</span><span class="hljs-params">()</span>:</span><br>    list_of_dicts = [&#123;<span class="hljs-number">0</span>: random.random()&#125; <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(<span class="hljs-number">100</span>)]<br>    <span class="hljs-keyword">with</span> open(<span class="hljs-string">'streamed.msgpack'</span>, <span class="hljs-string">'wb'</span>) <span class="hljs-keyword">as</span> f:<br>        <span class="hljs-keyword">for</span> d <span class="hljs-keyword">in</span> list_of_dicts:<br>            f.write(msgpack.packb(d))<br>	<br>    <span class="hljs-comment"># 迭代读取</span><br>    <span class="hljs-keyword">with</span> open(<span class="hljs-string">'streamed.msgpack'</span>, <span class="hljs-string">'rb'</span>) <span class="hljs-keyword">as</span> f:<br>        loaded_list_of_dicts = [item <span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> msgpack.Unpacker(f)]<br><br>    print(list_of_dicts[<span class="hljs-number">3</span>][<span class="hljs-number">0</span>], loaded_list_of_dicts[<span class="hljs-number">3</span>][<span class="hljs-number">0</span>])<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:<br>    <span class="hljs-comment"># msgpack_example_1()</span><br>    msgpack_example_2()<br></code></pre></div></td></tr></table></figure>
+<h3><span id="redis_cache-使用redis缓存函数">redis_cache--使用redis缓存函数</span></h3>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment"># sudo apt install redis-server</span><br><span class="hljs-comment"># sudo systemctl enable redis-server.service</span><br><span class="hljs-comment"># sudo systemctl start redis-server.service</span><br><br><span class="hljs-comment"># pip/pip3 install git+https://github.com/YashSinha1996/redis-simple-cache.git</span><br><br><span class="hljs-keyword">import</span> time<br><span class="hljs-keyword">from</span> redis_cache <span class="hljs-keyword">import</span> cache_it, cache_it_json<br><br><br><span class="hljs-meta">@cache_it(limit=1000, expire=5)</span><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">function_that_takes_a_long_time</span><span class="hljs-params">(i)</span>:</span><br>    print(<span class="hljs-string">f"function was called with input <span class="hljs-subst">&#123;i&#125;</span>"</span>)<br>    <span class="hljs-keyword">return</span> i**<span class="hljs-number">2</span><br><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(<span class="hljs-number">10</span>):<br>        print(i, function_that_takes_a_long_time(<span class="hljs-number">2</span>))<br></code></pre></div></td></tr></table></figure>
+<h3><span id="schedule-定时运行函数">schedule--定时运行函数</span></h3>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> time<br><span class="hljs-keyword">import</span> schedule<br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">test_function</span><span class="hljs-params">()</span>:</span><br>    print(<span class="hljs-string">f'test called at <span class="hljs-subst">&#123;time.time()&#125;</span>'</span>)<br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">test_function_2</span><span class="hljs-params">()</span>:</span><br>    print(<span class="hljs-string">f'test 2 called at <span class="hljs-subst">&#123;time.time()&#125;</span>'</span>)<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:<br>    schedule.every(<span class="hljs-number">1</span>).seconds.do(test_function)<br>    schedule.every(<span class="hljs-number">3</span>).seconds.do(test_function_2)<br>    <span class="hljs-comment"># schedule.every(1).days.do(daily_task)</span><br>    <span class="hljs-comment"># schedule.every().thursday.at("10:00").do(day_time_task)</span><br><br>    <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>        schedule.run_pending()<br></code></pre></div></td></tr></table></figure>
+<h3><span id="tqdm-进度条显示">tqdm--进度条显示</span></h3>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> tqdm <span class="hljs-keyword">import</span> tqdm, trange<br><span class="hljs-keyword">import</span> random<br><span class="hljs-keyword">import</span> time<br><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">tqdm_example_1</span><span class="hljs-params">()</span>:</span><br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> tqdm(range(<span class="hljs-number">10</span>)):<br>        time.sleep(<span class="hljs-number">0.2</span>)<br><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">tqdm_example_2</span><span class="hljs-params">()</span>:</span><br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> trange(<span class="hljs-number">10</span>, desc=<span class="hljs-string">"outer_loop"</span>):<br>        <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> trange(<span class="hljs-number">10</span>, desc=<span class="hljs-string">"inner_loop"</span>):<br>            time.sleep(<span class="hljs-number">0.01</span>)<br><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">tqdm_example_3</span><span class="hljs-params">(add_tot=False)</span>:</span><br>    max_iter = <span class="hljs-number">100</span><br>    tot = <span class="hljs-number">0</span><br><br>    <span class="hljs-keyword">if</span> add_tot:<br>        bar = tqdm(desc=<span class="hljs-string">"update example"</span>, total=max_iter)<br>    <span class="hljs-keyword">else</span>:<br>        bar = tqdm()<br><br>    <span class="hljs-keyword">while</span> tot &lt; max_iter:<br>        update_iter = random.randint(<span class="hljs-number">1</span>, <span class="hljs-number">5</span>)<br>        bar.update(update_iter)<br>        tot += update_iter<br>        time.sleep(<span class="hljs-number">0.03</span>)<br><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">tqdm_example_4</span><span class="hljs-params">()</span>:</span><br>    t = trange(<span class="hljs-number">100</span>)<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> t:<br>        t.set_description(<span class="hljs-string">f"on iter <span class="hljs-subst">&#123;i&#125;</span>"</span>)<br>        time.sleep(<span class="hljs-number">0.02</span>)<br><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">"__main__"</span>:<br>    <span class="hljs-comment"># tqdm_example_1()</span><br>    <span class="hljs-comment"># tqdm_example_2()</span><br>    <span class="hljs-comment"># tqdm_example_3()</span><br>    <span class="hljs-comment"># tqdm_example_3(True)</span><br>    tqdm_example_4()<br></code></pre></div></td></tr></table></figure>
+<h3><span id="numba-矩阵运算加速">Numba--矩阵运算加速</span></h3>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br><span class="hljs-keyword">from</span> numba <span class="hljs-keyword">import</span> njit<br><span class="hljs-keyword">from</span> concurrent.futures <span class="hljs-keyword">import</span> ThreadPoolExecutor<br><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">test_func</span><span class="hljs-params">(x)</span>:</span><br>    out=<span class="hljs-number">0</span><br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(<span class="hljs-number">100000000</span>):<br>        out += i<br>    <span class="hljs-keyword">return</span> out<br><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">test_heavy_func</span><span class="hljs-params">(times)</span>:</span><br>    arr = np.random.rand(<span class="hljs-number">10000</span>, <span class="hljs-number">10000</span>)<br>    <span class="hljs-keyword">return</span> arr * arr<br><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">"__main__"</span>:<br>    jitted_func = njit(test_func)<br>    jitted_func_2 = njit(test_heavy_func)<br>    <span class="hljs-comment"># 计算使用 jit 并 关闭 gil，提升矩阵运算速度</span><br>    jitted_func_3 = njit(test_heavy_func, nogil=<span class="hljs-literal">True</span>)<br><br><br>    <span class="hljs-keyword">import</span> time<br><br>    <span class="hljs-comment"># start = time.time()</span><br>    <span class="hljs-comment"># with ThreadPoolExecutor(4) as ex:</span><br>    <span class="hljs-comment">#     ex.map(jitted_func, range(1000))</span><br>    <span class="hljs-comment"># end = time.time()</span><br>    <span class="hljs-comment"># print("[Python origin test] Used time: ", end - start)</span><br><br>    start = time.time()<br>    <span class="hljs-keyword">with</span> ThreadPoolExecutor(<span class="hljs-number">4</span>) <span class="hljs-keyword">as</span> ex:<br>        ex.map(jitted_func_2, range(<span class="hljs-number">100</span>))<br>    end = time.time()<br>    print(<span class="hljs-string">"[Numpy origin test] Used time: "</span>, end - start)<br><br>    start = time.time()<br>    <span class="hljs-keyword">with</span> ThreadPoolExecutor(<span class="hljs-number">4</span>) <span class="hljs-keyword">as</span> ex:<br>        ex.map(jitted_func_3, range(<span class="hljs-number">100</span>))<br>    end = time.time()<br>    print(<span class="hljs-string">"[Numpy no gil test] Used time: "</span>, end - start)<br></code></pre></div></td></tr></table></figure>
+<p>注意：在numba中使用一个普通的python列表不是一个好主意，因为它将花费很长时间来验证类型。</p>
+<p><strong>使用ndarray，才是正确的方法</strong>！才能带来速度的提升。</p>
+<p>另外，<span class="citation" data-cites="vectorize可以将处理一个元素的函数">@vectorize可以将处理一个元素的函数</span>，转换成可以接受
+array输入的优化函数，只是第一次使用需要对内存分配进行优化，会慢一些。</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-meta">@vectorize(nopython=True)</span><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">non_list_function</span><span class="hljs-params">(item)</span>:</span><br>    <span class="hljs-keyword">if</span> item % <span class="hljs-number">2</span> == <span class="hljs-number">0</span>:<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">2</span><br>    <span class="hljs-keyword">else</span>:<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span><br>    <br>non_list_function(test_list)<br></code></pre></div></td></tr></table></figure>
+<h5><span id="弹簧阻尼系统计算实例">弹簧阻尼系统计算实例</span></h5>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">friction_fn</span><span class="hljs-params">(v, vt)</span>:</span><br>    <span class="hljs-keyword">if</span> v &gt; vt:<br>        <span class="hljs-keyword">return</span> - v * <span class="hljs-number">3</span><br>    <span class="hljs-keyword">else</span>:<br>        <span class="hljs-keyword">return</span> - vt * <span class="hljs-number">3</span> * np.sign(v)<br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">simulate_spring_mass_funky_damper</span><span class="hljs-params">(x0, T=<span class="hljs-number">10</span>, dt=<span class="hljs-number">0.0001</span>, vt=<span class="hljs-number">1.0</span>)</span>:</span><br>    times = np.arange(<span class="hljs-number">0</span>, T, dt)<br>    positions = np.zeros_like(times)<br>    <br>    v = <span class="hljs-number">0</span><br>    a = <span class="hljs-number">0</span><br>    x = x0<br>    positions[<span class="hljs-number">0</span>] = x0/x0<br>    <br>    <span class="hljs-keyword">for</span> ii <span class="hljs-keyword">in</span> range(len(times)):<br>        <span class="hljs-keyword">if</span> ii == <span class="hljs-number">0</span>:<br>            <span class="hljs-keyword">continue</span><br>        t = times[ii]<br>        a = friction_fn(v, vt) - <span class="hljs-number">100</span>*x<br>        v = v + a*dt<br>        x = x + v*dt<br>        positions[ii] = x/x0<br>    <span class="hljs-keyword">return</span> times, positions<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">%time _ = simulate_spring_mass_funky_damper(<span class="hljs-number">0.1</span>)<br></code></pre></div></td></tr></table></figure>
+<p>运行280ms，当输入x0为从0到10000，每次增加0.1，需要7个小时</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-meta">@njit</span><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">friction_fn</span><span class="hljs-params">(v, vt)</span>:</span><br>    <span class="hljs-keyword">if</span> v &gt; vt:<br>        <span class="hljs-keyword">return</span> - v * <span class="hljs-number">3</span><br>    <span class="hljs-keyword">else</span>:<br>        <span class="hljs-keyword">return</span> - vt * <span class="hljs-number">3</span> * np.sign(v)<br><br><span class="hljs-meta">@njit</span><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">simulate_spring_mass_funky_damper</span><span class="hljs-params">(x0, T=<span class="hljs-number">10</span>, dt=<span class="hljs-number">0.0001</span>, vt=<span class="hljs-number">1.0</span>)</span>:</span><br>    times = np.arange(<span class="hljs-number">0</span>, T, dt)<br>    positions = np.zeros_like(times)<br>    <br>    v = <span class="hljs-number">0</span><br>    a = <span class="hljs-number">0</span><br>    x = x0<br>    positions[<span class="hljs-number">0</span>] = x0/x0<br>    <br>    <span class="hljs-keyword">for</span> ii <span class="hljs-keyword">in</span> range(len(times)):<br>        <span class="hljs-keyword">if</span> ii == <span class="hljs-number">0</span>:<br>            <span class="hljs-keyword">continue</span><br>        t = times[ii]<br>        a = friction_fn(v, vt) - <span class="hljs-number">100</span>*x<br>        v = v + a*dt<br>        x = x + v*dt<br>        positions[ii] = x/x0<br>    <span class="hljs-keyword">return</span> times, positions<br><br>_ = simulate_spring_mass_funky_damper(<span class="hljs-number">0.1</span>)<br></code></pre></div></td></tr></table></figure>
+<p>运行时间 1.99 ms，加速 200x。</p>
+<p>再加速：</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment"># 使用多线程</span><br><span class="hljs-keyword">from</span> concurrent.futures <span class="hljs-keyword">import</span> ThreadPoolExecutor<br><br><span class="hljs-keyword">with</span> ThreadPoolExecutor(<span class="hljs-number">8</span>) <span class="hljs-keyword">as</span> ex:<br>    ex.map(simulate_spring_mass_funky_damper, np.arange(<span class="hljs-number">0</span>, <span class="hljs-number">1000</span>, <span class="hljs-number">0.1</span>))<br></code></pre></div></td></tr></table></figure>
+<p>当输入x0为从0到1000，每次增加0.1，需要19.3s。</p>
+<p>再加速，利用多核，在矩阵运算时，关闭 GIL 锁：</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-meta">@njit(nogil=True)</span><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">friction_fn</span><span class="hljs-params">(v, vt)</span>:</span><br>    <span class="hljs-keyword">if</span> v &gt; vt:<br>        <span class="hljs-keyword">return</span> - v * <span class="hljs-number">3</span><br>    <span class="hljs-keyword">else</span>:<br>        <span class="hljs-keyword">return</span> - vt * <span class="hljs-number">3</span> * np.sign(v)<br><br><span class="hljs-meta">@njit(nogil=True)</span><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">simulate_spring_mass_funky_damper</span><span class="hljs-params">(x0, T=<span class="hljs-number">10</span>, dt=<span class="hljs-number">0.0001</span>, vt=<span class="hljs-number">1.0</span>)</span>:</span><br>    times = np.arange(<span class="hljs-number">0</span>, T, dt)<br>    positions = np.zeros_like(times)<br>    <br>    v = <span class="hljs-number">0</span><br>    a = <span class="hljs-number">0</span><br>    x = x0<br>    positions[<span class="hljs-number">0</span>] = x0/x0<br>    <br>    <span class="hljs-keyword">for</span> ii <span class="hljs-keyword">in</span> range(len(times)):<br>        <span class="hljs-keyword">if</span> ii == <span class="hljs-number">0</span>:<br>            <span class="hljs-keyword">continue</span><br>        t = times[ii]<br>        a = friction_fn(v, vt) - <span class="hljs-number">100</span>*x<br>        v = v + a*dt<br>        x = x + v*dt<br>        positions[ii] = x/x0<br>    <span class="hljs-keyword">return</span> times, positions<br><br><span class="hljs-comment"># compile：先编译，那么使用时，省去了这段时间</span><br>_ = simulate_spring_mass_funky_damper(<span class="hljs-number">0.1</span>)<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> concurrent.futures <span class="hljs-keyword">import</span> ThreadPoolExecutor<br><br><span class="hljs-keyword">with</span> ThreadPoolExecutor(<span class="hljs-number">8</span>) <span class="hljs-keyword">as</span> ex:<br>    ex.map(simulate_spring_mass_funky_damper, np.arange(<span class="hljs-number">0</span>, <span class="hljs-number">1000</span>, <span class="hljs-number">0.1</span>))<br></code></pre></div></td></tr></table></figure>
+<p>当输入x0为从0到1000，每次增加0.1，需要1.83s。</p>
+<p>不使用多线程，使用numba自带的多进程并行，也是可以的</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> numba <span class="hljs-keyword">import</span> prange<br><br><span class="hljs-meta">@njit(nogil=True, parallel=True)</span><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">run_sims</span><span class="hljs-params">(end=<span class="hljs-number">1000</span>)</span>:</span><br>    <span class="hljs-keyword">for</span> x0 <span class="hljs-keyword">in</span> prange(int(end/<span class="hljs-number">0.1</span>)):<br>        <span class="hljs-keyword">if</span> x0 == <span class="hljs-number">0</span>:<br>            <span class="hljs-keyword">continue</span><br>        simulate_spring_mass_funky_damper(x0*<span class="hljs-number">0.1</span>)<br>        <br>run_sims()<br></code></pre></div></td></tr></table></figure>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Tools/">Tools</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Tools/python/">python</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/python/">python</a>
+                    
+                      <a class="hover-with-bg" href="/tags/tool/">tool</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/cdee5c8d.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">浅涉python与分布式</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/6a1e61f5.html">
+                        <span class="hidden-mobile">浅涉知识图谱</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        loader: {
+          load: ['ui/lazy']
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>

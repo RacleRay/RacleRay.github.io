@@ -1,0 +1,830 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="记录NER比赛中用到的新东西。FLAT模型结构，MRC等方法的设计思路，FGM和SWA等训练技巧，伪标签设计思路等。">
+  <meta name="author" content="江左时雨">
+  <meta name="keywords" content="机器学习,Machine Learning,自然语言处理,NLP,深度学习,Deep Learning,计算机,Coding,生活随笔">
+  <meta name="description" content="记录NER比赛中用到的新东西。FLAT模型结构，MRC等方法的设计思路，FGM和SWA等训练技巧，伪标签设计思路等。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="实体识别模型与策略2020">
+<meta property="og:url" content="https://racleray.github.io/posts/548512d6.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="记录NER比赛中用到的新东西。FLAT模型结构，MRC等方法的设计思路，FGM和SWA等训练技巧，伪标签设计思路等。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220165643972.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220165700873.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220165716666.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220165950494.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220170005373.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220170019854.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220170032945.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220170231288.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220173026930.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220173255967.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220174003119.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220174208145.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220174356970.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220174404314.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220174417043.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220182059909.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220164737197.png">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=x">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=+r_%7Badv%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=+%5Cmin_%7B%5Ctheta%7D-%5Clog+P(y%7Cx%252Br_%7Badv%7D%253B%5Ctheta)+">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=y">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Ctheta">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=r_%7Badv%7D+%253D+%5Cepsilon+%5Ccdot+%5Ctext%7Bsgn%7D(%5Ctriangledown_x+L(%5Ctheta%252C+x%252C+y))">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Ctext%7Bsgn%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=L">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cepsilon%253D0.25">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cmin_%5Ctheta+%5Cmathbb%7BE%7D_%7B(x%252C+y)%5Csim+%5Cmathcal%7BD%7D%7D+%5B%5Cmax_%7Br_%7Badv%7D+%5Cin+%5Cmathcal%7BS%7D%7D+L(%5Ctheta%252C+x%252Br_%7Badv%7D%252C+y)%5D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=L">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cmathcal%7BS%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cmathcal%7BD%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cepsilon">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cbegin%7Balign%7D+x_%7Bt%252B1%7D+%2526%253D+%5CPi_%7Bx%252B%5Cmathcal%7BS%7D%7D(x_t%252B%5Calpha+g(x_t)%252F%7C%7Cg(x_t)%7C%7C_2)+%5C%5C+g(x_t)+%2526%253D+%5Ctriangledown_x+L(%5Ctheta%252C+x_t%252C+y)+%5Cend%7Balign%7D+">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cmathcal%7BS%7D%253D%7Br%5Cin%5Cmathbb%7BR%7D%5Ed%253A%7C%7Cr%7C%7C_2+%5Cleq+%5Cepsilon%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Calpha">
+<meta property="article:published_time" content="2021-03-10T15:21:03.000Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:31.041Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="NER">
+<meta property="article:tag" content="FLAT">
+<meta property="article:tag" content="methodology">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220165643972.png">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>实体识别模型与策略2020 - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="实体识别模型与策略2020">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-03-10 23:21" pubdate>
+        2021年3月10日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      10k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      33 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">实体识别模型与策略2020</h1>
+            
+            <div class="markdown-body">
+              <h2><span id="模型">模型</span></h2>
+<h3><span id="flat">FLAT</span></h3>
+<p>FLAT部分Blog原文：https://mp.weixin.qq.com/s/6aU6ZDYPWPHc3KssuzArKw</p>
+<p>论文：FLAT: Chinese NER Using Flat-Lattice Transformer</p>
+<p>将Lattice图结构无损转换为扁平的Flat结构的方法，并将LSTM替换为了更先进的Transformer
+Encoder，更好地建模了序列的<strong>长期依赖关系</strong>；</p>
+<p>提出了一种针对Flat结构的<strong>相对位置编码机制</strong>，使得字符与词汇信息交互更直接，在基于词典的中文NER模型中取得了SOTA。</p>
+<p>由于中文词汇的稀疏性和模糊性，基于字符的序列标注模型往往比基于词汇的序列标注模型表现更好，但在基于字符的模型中引入<strong>分词信息</strong>往往能够带来性能的提升，尤其是对于NER任务来说，词汇能够提供丰富的实体边界信息。</p>
+<p>Lattice
+LSTM首次提出使用Lattice结构在NER任务中融入词汇信息，如图所示，一个句子的Lattice结构是一个有向无环图，每个节点是一个字或者一个词。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220165643972.png" srcset="/img/loading.gif" lazyload></p>
+<h4><span id="设计适应lattice结构的模型">设计适应Lattice结构的模型</span></h4>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220165700873.png" srcset="/img/loading.gif" lazyload></p>
+<p>Lattice LSTM (ACL 2018):
+将词汇信息引入中文NER的开篇之作，作者将词节点编码为向量，并在字节点以注意力的方式融合词向量。</p>
+<p>Lexicon Rethink CNN(IJCAI 2019):
+作者提出了含有rethink机制的CNN网络解决Lattice LSTM的词汇冲突问题。</p>
+<p>RNN和CNN难以建模长距离的依赖关系，且在Lattice
+LSTM中的字符只能获取前向信息，没有和词汇进行足够充分的全局交互</p>
+<h4><span id="flat">FLAT</span></h4>
+<p><a href="https://github.com/LeeSureman/Flat-Lattice-Transformer" target="_blank" rel="noopener">Git
+Repo</a></p>
+<p>从Transformer的position
+representation得到启发，作者给每一个token/span(字、词)增加了两个位置编码，分别表示该span在sentence中开始(head)和结束(tail)的位置</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220165716666.png" srcset="/img/loading.gif" lazyload></p>
+<p>扁平的结构允许我们使用Transformer
+Encoder，其中的self-attention机制允许任何字符和词汇进行直接的交互</p>
+<h4><span id="relative-position-encodingof-spans">Relative Position Encoding
+of Spans</span></h4>
+<p>span是字符和词汇的总称，span之间存在三种关系：交叉、包含、分离，然而作者没有直接编码这些位置关系，而是将其表示为一个稠密向量。作者用
+和 表示span的头尾位置坐标，并从四个不同的角度来计算 和 的距离：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220165950494.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220170005373.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220170019854.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220170032945.png" srcset="/img/loading.gif" lazyload></p>
+<p>使用<span class="math inline">\(A^{*}_{i,j}\)</span>代替 tranformer
+的self attention 中的 <span class="math inline">\(A_{i,j}\)</span>:</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220170231288.png" srcset="/img/loading.gif" lazyload></p>
+<p>通过FLAT模型后，取出token的编码表示，将其送入CRF层进行解码得到预测的标签序列。</p>
+<p>论文中给出的结果显示，FLAT相较于一众NER模型，取得了SOTA的效果。同时，使用较大规模数据时，效果更好。在对比实验中发现，字符与包含它的词汇之间的充分交互是很重要的。</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MultiHeadAttention</span><span class="hljs-params">(nn.Module)</span>:</span><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, hidden_size, num_heads, scaled=True, attn_dropout=None)</span>:</span><br>        super(MultiHeadAttentionRel, self).__init__()<br><br>        self.hidden_size = hidden_size<br><br>        self.num_heads = num_heads<br>        self.per_head_size = self.hidden_size // self.num_heads<br>        self.scaled = scaled<br>        <span class="hljs-keyword">assert</span> (self.per_head_size * self.num_heads == self.hidden_size)<br><br>        <span class="hljs-comment"># 正常 attention 的 q,k,v 变换矩阵</span><br>        self.w_k = nn.Linear(self.hidden_size, self.hidden_size)<br>        self.w_q = nn.Linear(self.hidden_size, self.hidden_size)<br>        self.w_v = nn.Linear(self.hidden_size, self.hidden_size)<br><br>        <span class="hljs-comment"># 计算 Rij 的权重</span><br>        self.w_r = nn.Linear(self.hidden_size, self.hidden_size)<br><br>        <span class="hljs-comment"># 计算 A* 的权重</span><br>        self.u = nn.Parameter(torch.randn(self.num_heads, self.per_head_size), requires_grad=<span class="hljs-literal">True</span>)<br>        self.v = nn.Parameter(torch.randn(self.num_heads, self.per_head_size), requires_grad=<span class="hljs-literal">True</span>)<br><br>        self.dropout = nn.Dropout(attn_dropout)<br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">forward</span><span class="hljs-params">(self, key, query, value, pos, flat_mask)</span>:</span><br>        <span class="hljs-string">"pos 为 自定义的 postion embedding，对应公式的 Rij"</span><br>        batch = key.size(<span class="hljs-number">0</span>)<br><br>        <span class="hljs-comment"># 输入线性变换</span><br>        key = self.w_k(key)<br>        query = self.w_q(query)<br>        value = self.w_v(value)<br>        rel_pos_embedding = self.w_r(pos)<br><br>        <span class="hljs-comment">####### 计算 A* 矩阵的方法 和 论文不是完全一致</span><br>        <span class="hljs-comment"># batch, seq_len, n_head, d_head</span><br>        key = torch.reshape(key, [batch, <span class="hljs-number">-1</span>, self.num_heads, self.per_head_size])<br>        query = torch.reshape(query, [batch, <span class="hljs-number">-1</span>, self.num_heads, self.per_head_size])<br>        value = torch.reshape(value, [batch, <span class="hljs-number">-1</span>, self.num_heads, self.per_head_size])<br>        <span class="hljs-comment"># batch, seq_len, seq_len, n_head, d_head</span><br>        rel_pos_embedding = torch.reshape(rel_pos_embedding,<br>                                          list(rel_pos_embedding.size()[:<span class="hljs-number">3</span>]) + [self.num_heads, self.per_head_size])<br><br>        <span class="hljs-comment"># batch, n_head, seq_len, d_head</span><br>        key = key.transpose(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)<br>        query = query.transpose(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)<br>        value = value.transpose(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)<br><br>        <span class="hljs-comment"># batch, n_head, d_head, seq_len</span><br>        key = key.transpose(<span class="hljs-number">-1</span>, <span class="hljs-number">-2</span>)<br><br>        <span class="hljs-comment"># 1, num_heads, 1, d_head</span><br>        u_for_c = self.u.unsqueeze(<span class="hljs-number">0</span>).unsqueeze(<span class="hljs-number">-2</span>)<br><br>        <span class="hljs-comment"># batch, n_head, seq_len, d_head</span><br>        query_and_u_for_c = query + u_for_c<br><br>        <span class="hljs-comment"># batch, n_head, seq_len, seq_len</span><br>        A_C = torch.matmul(query_and_u_for_c, key)<br><br>        <span class="hljs-comment"># batch, n_head, seq_len, d_head, seq_len</span><br>        rel_pos_embedding_for_b = rel_pos_embedding.permute(<span class="hljs-number">0</span>, <span class="hljs-number">3</span>, <span class="hljs-number">1</span>, <span class="hljs-number">4</span>, <span class="hljs-number">2</span>)<br>        <span class="hljs-comment"># batch, n_head, seq_len, seq_len, 1, d_head</span><br>        query_for_b = query.view([batch, self.num_heads, query.size(<span class="hljs-number">2</span>), <span class="hljs-number">1</span>, self.per_head_size])<br>        <span class="hljs-comment"># batch, n_head, seq_len, seq_len, 1, d_head</span><br>        query_for_b_and_v_for_d = query_for_b + self.v.view(<span class="hljs-number">1</span>, self.num_heads, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, self.per_head_size)<br><br>        <span class="hljs-comment"># batch, n_head, seq_len, seq_len</span><br>        B_D = torch.matmul(query_for_b_and_v_for_d, rel_pos_embedding_for_b).squeeze(<span class="hljs-number">-2</span>)<br><br>        <span class="hljs-comment"># batch, n_head, seq_len, seq_len</span><br>        attn_score_raw = A_C + B_D<br><br>        <span class="hljs-comment"># 计算 score</span><br>        <span class="hljs-keyword">if</span> self.scaled:<br>            attn_score_raw = attn_score_raw / math.sqrt(self.per_head_size)<br><br>        mask = <span class="hljs-number">1</span> - flat_mask.long().unsqueeze(<span class="hljs-number">1</span>).unsqueeze(<span class="hljs-number">1</span>)<br>        attn_score_raw_masked = attn_score_raw.masked_fill(mask.bool(), <span class="hljs-number">-1e15</span>)<br><br>        <span class="hljs-comment"># batch, n_head, seq_len, seq_len</span><br>        attn_score = F.softmax(attn_score_raw_masked, dim=<span class="hljs-number">-1</span>)<br>        attn_score = self.dropout(attn_score)<br><br>        <span class="hljs-comment"># batch, n_head, seq_len, d_head</span><br>        value_weighted_sum = torch.matmul(attn_score, value)<br>        <span class="hljs-comment"># batch, seq_len, n_head, d_head -&gt; batch, seq_len, hidden_size</span><br>        result = value_weighted_sum.transpose(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>).contiguous().reshape(batch, <span class="hljs-number">-1</span>, self.hidden_size)<br><br>        <span class="hljs-keyword">return</span> result<br></code></pre></div></td></tr></table></figure>
+<h3><span id="bert">BERT</span></h3>
+<p>教程博客很多，比如 http://jalammar.github.io/illustrated-bert/</p>
+<h3><span id="crf">CRF</span></h3>
+<p>参考 <a href="https://racleray.github.io/2020/11/18/CRF-SimpleNote/">note1</a>
+<a href="https://racleray.github.io/2021/02/22/%E6%B5%85%E6%B6%89%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1/#more">note2</a></p>
+<h3><span id="mrc">MRC</span></h3>
+<p>论文：A Unified MRC Framework for Named Entity Recognition</p>
+<p><a href="https://github.com/ShannonAI/mrc-for-flat-nested-ner?utm_source=catalyzex.com" target="_blank" rel="noopener">Git
+Repo</a></p>
+<p>转换为阅读理解（MRC）任务，来解决NER问题。似乎有很多搞研究的，都在尝试将NLP问题转换到MRC框架下，解决问题。</p>
+<p>目的，解决NER中的实体重叠、嵌套关系问题。这是序列建模方式，比较难处理的问题。</p>
+<p>数据，处理为三元组形式：(问题，答案，上下文)</p>
+<blockquote>
+<p>其中，问题：一段对 实体类型
+的描述文字，多种实体，就有多个问题；答案：为 实体的起始
+index；上下文就是待识别的整个文本。</p>
+</blockquote>
+<p>模型，使用BERT：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220173026930.png" srcset="/img/loading.gif" lazyload></p>
+<p>每个token预测输出有两个，是否为实体开始字，是否为实体结束字。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220173255967.png" srcset="/img/loading.gif" lazyload></p>
+<p>输出为 2
+维，是和不是的预测概率。分别对每个位置判断，是否为开始字或者结束字。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220174003119.png" srcset="/img/loading.gif" lazyload></p>
+<p>但是这个两个集合，在有监督数据条件下，即训练时，并没有必要，只在预测推断时使用（推断需要通过下式计算所有组合的概率
+P）。因为下式：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220174208145.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接根据标注数据的 i, j 对标注部分计算 P。而不用对所有 i, j
+组合算一次 P。</p>
+<p>损失，多个预测损失之和：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220174356970.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220174404314.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220174417043.png" srcset="/img/loading.gif" lazyload></p>
+<p>权重为超参数。</p>
+<h3><span id="simple-lexicon">Simple-Lexicon</span></h3>
+<p>论文：Simple-Lexicon：Simplify the Usage of Lexicon in Chinese
+NER</p>
+<p><a href="https://github.com/v-mipeng/LexiconAugmentedNER?utm_source=catalyzex.com" target="_blank" rel="noopener">Git
+Repo</a></p>
+<p>在Embedding信息的输入上进行改进，尝试了多种方式。</p>
+<blockquote>
+<ol type="1">
+<li><p>Softword：使用分词工具，标记词的
+BMESO，结合字向量和标记向量输入。存在误差传播问题，无法引入一整个词汇对应word
+embedding</p></li>
+<li><p>ExtendSoftword：组合所有字的所有BME，得到可能的词，但是无法复原原始的词汇信息是怎样</p></li>
+<li><p>Soft-lexicon：对当前字符，依次获取BMES对应所有词汇集合。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220182059909.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;"></p>
+<p>根据词频加权词向量，与字向量求和。</p></li>
+</ol>
+</blockquote>
+<p>该模型比Lattice LSTM,
+WC-LSTM等，在输入embedding上进行改进的模型，效果更好，更容易使用和迁移。</p>
+<h2><span id="策略">策略</span></h2>
+<h3><span id="positive-unlabeledlearning-pu-learning">Positive-unlabeled
+learning -- PU Learning</span></h3>
+<blockquote>
+<p>在只有正类和无标记数据的情况下，训练二分类器</p>
+</blockquote>
+<blockquote>
+<p>Method 1 Directly</p>
+<ol type="1">
+<li>将正样本和部分筛选出的未标记样本分别看作是positive samples和negative
+samples</li>
+<li>训练一个分类器，输出样本属于正、负类的概率</li>
+<li>使用训练好的分类器。分类未标注数据，若正类的概率 大于
+负类的概率，则该未标注样本的更可能为正类</li>
+</ol>
+<p>Method 2 PU bagging</p>
+<ol type="1">
+<li>将所有正样本和未标记样本进行随机组合 bootstrap 来创建训练集；</li>
+<li>将正样本和未标记样本视为positive和negative，训练一个分类器；</li>
+<li>将分类器应用于不在训练集中的未标记样本 OOB（“out of
+bag”），并记录其分数；</li>
+<li>重复上述三个步骤，最后每个未标记样本的分数为每一轮 OOB分数
+的平均值。</li>
+</ol>
+<p>Method 3</p>
+<p>人工标注一部分确认为负类的数据，训练分类器识别这些 确认为
+负类的数据。</p>
+<p><a href="https://github.com/phuijse/bagging_pu/blob/master/PU_Learning_simple_example.ipynb" target="_blank" rel="noopener">示例</a>
+<a href="https://github.com/roywright/pu_learning/blob/master/circles.ipynb" target="_blank" rel="noopener">示例</a></p>
+</blockquote>
+<p>论文：Distantly Supervised Named Entity Recognition using
+Positive-Unlabeled Learning，将PU Learning应用在NER任务上 <a href="https://github.com/v-mipeng/LexiconNER" target="_blank" rel="noopener">Git Repo</a>：</p>
+<blockquote>
+<ol type="1">
+<li><p>首先有 未标记数据 Du，实体字典 Dict；</p></li>
+<li><p>使用最大匹配方法，标记一部分
+Du，是NE则为正类，不是NE则为负类；</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/README_pic/image-20210220164737197.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;"></p></li>
+<li><p>对每一种NE类型（比如，Loc，Nane）训练一个PU
+分类器（自定义的神经网络模型）；</p></li>
+<li><p>使用多个PU 分类器，对剩余的
+Du，进行预测，每一个词，取预测概率最大的那一类标记；</p></li>
+<li><p>若某些 词 多次被预测为
+实体，且每次出现都被预测为同一类实体，那么，将这个词，加入Dict；</p></li>
+<li><p>重复以上步骤，直到Dict不再改变。</p></li>
+</ol>
+</blockquote>
+<h3><span id="fgm">FGM</span></h3>
+<p><a href="https://zhuanlan.zhihu.com/p/91269728" target="_blank" rel="noopener">引用Blog原文</a></p>
+<p>对抗可以作为一种防御机制，并且经过简单的修改，便能用在NLP任务上，提高模型的泛化能力。对抗训练可以写成一个插件的形式，用几行代码就可以在训练中自由地调用。</p>
+<p>在原始输入样本 <img src="https://www.zhihu.com/equation?tex=x" srcset="/img/loading.gif" lazyload>
+上加一个扰动 <img src="https://www.zhihu.com/equation?tex=+r_%7Badv%7D" srcset="/img/loading.gif" lazyload>
+，得到对抗样本后，用其进行训练。将输入样本向着损失上升的方向再进一步，得到的对抗样本就能造成更大的损失，提高模型的错误率。问题可以被抽象成这么一个模型：</p>
+<p><img src="https://www.zhihu.com/equation?tex=+%5Cmin_%7B%5Ctheta%7D-%5Clog+P%28y%7Cx%2Br_%7Badv%7D%3B%5Ctheta%29+" srcset="/img/loading.gif" lazyload></p>
+<p>其中， <img src="https://www.zhihu.com/equation?tex=y" srcset="/img/loading.gif" lazyload> 为gold
+label， <img src="https://www.zhihu.com/equation?tex=%5Ctheta" srcset="/img/loading.gif" lazyload>
+为模型参数。Goodfellow认为，神经网络由于其线性的特点，很容易受到线性扰动的攻击。于是，他提出了
+Fast Gradient Sign Method (FGSM) ：</p>
+<p><img src="https://www.zhihu.com/equation?tex=r_%7Badv%7D+%3D+%5Cepsilon+%5Ccdot+%5Ctext%7Bsgn%7D%28%5Ctriangledown_x+L%28%5Ctheta%2C+x%2C+y%29%29" srcset="/img/loading.gif" lazyload></p>
+<p>其中， <img src="https://www.zhihu.com/equation?tex=%5Ctext%7Bsgn%7D" srcset="/img/loading.gif" lazyload>
+为符号函数， <img src="https://www.zhihu.com/equation?tex=L" srcset="/img/loading.gif" lazyload>
+为损失函数。Goodfellow发现，令 <img src="https://www.zhihu.com/equation?tex=%5Cepsilon%3D0.25" srcset="/img/loading.gif" lazyload>
+，用这个扰动能给一个单层分类器造成99.9%的错误率。</p>
+<p>Goodfellow还总结了对抗训练的两个作用：</p>
+<ol type="1">
+<li>提高模型应对恶意对抗样本时的鲁棒性；</li>
+<li>作为一种regularization，减少overfitting，提高泛化能力。</li>
+</ol>
+<p>从优化的视角，问题重新定义成了一个找鞍点的问题，Min-Max：内部损失函数的最大化，外部经验风险的最小化：</p>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cmin_%5Ctheta+%5Cmathbb%7BE%7D_%7B%28x%2C+y%29%5Csim+%5Cmathcal%7BD%7D%7D+%5B%5Cmax_%7Br_%7Badv%7D+%5Cin+%5Cmathcal%7BS%7D%7D+L%28%5Ctheta%2C+x%2Br_%7Badv%7D%2C+y%29%5D" srcset="/img/loading.gif" lazyload></p>
+<ol type="1">
+<li>内部max是为了找到worst-case的扰动，也就是攻击，其中， <img src="https://www.zhihu.com/equation?tex=L" srcset="/img/loading.gif" lazyload> 为损失函数， <img src="https://www.zhihu.com/equation?tex=%5Cmathcal%7BS%7D" srcset="/img/loading.gif" lazyload>
+为扰动的范围空间。</li>
+<li>外部min是为了基于该攻击方式，找到最鲁棒的模型参数，也就是防御，其中
+<img src="https://www.zhihu.com/equation?tex=%5Cmathcal%7BD%7D" srcset="/img/loading.gif" lazyload>
+是输入样本的分布。</li>
+</ol>
+<p>CV任务的输入是连续的RGB的值，而NLP问题中，输入是离散的单词序列，一般以one-hot
+vector的形式呈现，如果直接在raw
+text上进行扰动，那么扰动的大小和方向可能都没什么意义。Goodfellow在17年的<a href="https://arxiv.org/abs/1605.07725" target="_blank" rel="noopener">ICLR</a>中提出了可以在连续的embedding上做扰动。在CV任务，根据经验性的结论，对抗训练往往会使得模型在非对抗样本上的表现变差，然而神奇的是，在NLP任务中，模型的泛化能力反而变强了。</p>
+<p>因此，<strong>在NLP任务中，对抗训练的角色不再是为了防御基于梯度的恶意攻击，反而更多的是作为一种regularization，提高模型的泛化能力</strong>。</p>
+<p>对抗训练，FSGM的修改版本，取消了符号函数，对梯度计算进行scale，而不是只使用
++1 或者 -1 代替。</p>
+<blockquote>
+<ol type="1">
+<li><p>原网络进行一次，前向反向传播，得到梯度g</p></li>
+<li><p>计算embedding矩阵的修正梯度 r:</p>
+<p><span class="math inline">\(r=\frac{\epsilon
+g}{\|g\|_{2}}\)</span></p></li>
+<li><p>输入 embedding + r ，计算对抗梯度 ga</p></li>
+<li><p>将 ga 累加到 g 中，得到 gf</p></li>
+<li><p>恢复原网络的embedding数值，使用 gf 对参数进行更新</p></li>
+</ol>
+</blockquote>
+<p><strong>Projected Gradient
+Descent（PGD）</strong>：<strong>“小步走，多走几步”</strong>，如果走出了扰动半径为
+<img src="https://www.zhihu.com/equation?tex=%5Cepsilon" srcset="/img/loading.gif" lazyload>
+的空间，就映射回“球面”上，以保证扰动不要过大。</p>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cbegin%7Balign%7D+x_%7Bt%2B1%7D+%26%3D+%5CPi_%7Bx%2B%5Cmathcal%7BS%7D%7D%28x_t%2B%5Calpha+g%28x_t%29%2F%7C%7Cg%28x_t%29%7C%7C_2%29+%5C%5C+g%28x_t%29+%26%3D+%5Ctriangledown_x+L%28%5Ctheta%2C+x_t%2C+y%29+%5Cend%7Balign%7D+" srcset="/img/loading.gif" lazyload></p>
+<p>其中 <img src="https://www.zhihu.com/equation?tex=%5Cmathcal%7BS%7D%3D%7Br%5Cin%5Cmathbb%7BR%7D%5Ed%3A%7C%7Cr%7C%7C_2+%5Cleq+%5Cepsilon%7D" srcset="/img/loading.gif" lazyload>
+为扰动的约束空间， <img src="https://www.zhihu.com/equation?tex=%5Calpha" srcset="/img/loading.gif" lazyload> 为小步的步长。</p>
+<p>PGD模型能够得到一个<strong>非常低且集中的loss分布</strong>。</p>
+<p>另外在半监督条件下，也可以使用对抗训练方法Virtual Adversarial
+Training进行半监督训练。</p>
+<p>示例代码</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><br><br>grad_backup = &#123;&#125;<br><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">save_grad</span><span class="hljs-params">(tensorName)</span>:</span><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">backward_hook</span><span class="hljs-params">(grad: torch.Tensor)</span>:</span><br>        grad_backup[tensorName] = grad<br><br>    <span class="hljs-keyword">return</span> backward_hook<br><br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PGD</span>:</span><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, model)</span>:</span><br>        self.model = model<br>        self.emb_backup = &#123;&#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">attack</span><span class="hljs-params">(self,</span></span><br><span class="hljs-function"><span class="hljs-params">               epsilon=<span class="hljs-number">1.</span>,</span></span><br><span class="hljs-function"><span class="hljs-params">               alpha=<span class="hljs-number">0.3</span>,</span></span><br><span class="hljs-function"><span class="hljs-params">               emb_name=<span class="hljs-string">'emb.'</span>,</span></span><br><span class="hljs-function"><span class="hljs-params">               is_first_attack=False)</span>:</span><br>        <span class="hljs-keyword">for</span> name, param <span class="hljs-keyword">in</span> self.model.named_parameters():<br>            <span class="hljs-keyword">if</span> param.requires_grad <span class="hljs-keyword">and</span> emb_name <span class="hljs-keyword">in</span> name:<br>                <span class="hljs-keyword">if</span> is_first_attack:<br>                    self.emb_backup[name] = param.data.clone()<br>                norm = torch.norm(param.grad)<br>                <span class="hljs-keyword">if</span> norm != <span class="hljs-number">0</span> <span class="hljs-keyword">and</span> <span class="hljs-keyword">not</span> torch.isnan(norm):<br>                    r_at = alpha * param.grad / norm<br>                    param.data.add_(r_at)<br>                    param.data = self.project(name, param.data, epsilon)<br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">restore</span><span class="hljs-params">(self, emb_name=<span class="hljs-string">'emb.'</span>)</span>:</span><br>        <span class="hljs-comment"># emb_name这个参数要换成你模型中embedding的参数名</span><br>        <span class="hljs-keyword">for</span> name, param <span class="hljs-keyword">in</span> self.model.named_parameters():<br>            <span class="hljs-keyword">if</span> param.requires_grad <span class="hljs-keyword">and</span> emb_name <span class="hljs-keyword">in</span> name:<br>                <span class="hljs-keyword">assert</span> name <span class="hljs-keyword">in</span> self.emb_backup<br>                param.data = self.emb_backup[name]<br>        self.emb_backup = &#123;&#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">project</span><span class="hljs-params">(self, param_name, param_data, epsilon)</span>:</span><br>        r = param_data - self.emb_backup[param_name]<br>        <span class="hljs-keyword">if</span> torch.norm(r) &gt; epsilon:<br>            r = epsilon * r / torch.norm(r)<br>        <span class="hljs-keyword">return</span> self.emb_backup[param_name] + r<br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">backup_grad</span><span class="hljs-params">(self)</span>:</span><br>        <span class="hljs-comment"># 此处也可以直接用一个成员变量储存 grad，而不用 register_hook 存储在全局变量中</span><br>        <span class="hljs-keyword">for</span> name, param <span class="hljs-keyword">in</span> self.model.named_parameters():<br>            <span class="hljs-keyword">if</span> param.requires_grad:<br>                param.register_hook(save_grad(name))<br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">restore_grad</span><span class="hljs-params">(self)</span>:</span><br>        <span class="hljs-keyword">for</span> name, param <span class="hljs-keyword">in</span> self.model.named_parameters():<br>            <span class="hljs-keyword">if</span> param.requires_grad:<br>                param.grad = grad_backup[name]<br><br><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:<br>    <span class="hljs-comment"># 示例过程</span><br>    pgd = PGD(model)<br>    K = <span class="hljs-number">3</span> <span class="hljs-comment"># 小步走的步数</span><br>    <span class="hljs-keyword">for</span> batch_input, batch_label <span class="hljs-keyword">in</span> data:<br>        <span class="hljs-comment"># 正常训练</span><br>        loss = model(batch_input, batch_label)<br>        loss.backward() <span class="hljs-comment"># 反向传播，得到正常的grad</span><br>        pgd.backup_grad()<br><br>        <span class="hljs-comment"># 对抗训练</span><br>        <span class="hljs-keyword">for</span> t <span class="hljs-keyword">in</span> range(K):<br>            pgd.attack(is_first_attack=(t==<span class="hljs-number">0</span>)) <span class="hljs-comment"># 在embedding上添加对抗扰动, first attack时备份param.data</span><br>            <span class="hljs-keyword">if</span> t != K<span class="hljs-number">-1</span>:<br>                model.zero_grad()<br>            <span class="hljs-keyword">else</span>:<br>                pgd.restore_grad()<br>            loss_adv = model(batch_input, batch_label)<br>            loss_adv.backward() <span class="hljs-comment"># 反向传播，并在正常的grad基础上，累加对抗训练的梯度</span><br>        pgd.restore() <span class="hljs-comment"># 恢复embedding参数</span><br><br>        <span class="hljs-comment"># 梯度下降，更新参数</span><br>        optimizer.step()<br>        model.zero_grad()<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FGM</span>:</span><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, model)</span>:</span><br>        self.model = model<br>        self.backup = &#123;&#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">attack</span><span class="hljs-params">(self, epsilon=<span class="hljs-number">1</span>, emb_name=<span class="hljs-string">'emb.'</span>)</span>:</span><br>        <span class="hljs-keyword">for</span> name, param <span class="hljs-keyword">in</span> self.model.named_parameters():<br>            <span class="hljs-keyword">if</span> param.requires_grad <span class="hljs-keyword">and</span> emb_name <span class="hljs-keyword">in</span> name:<br>                self.backup[name] = param.data.clone()<br>                norm = torch.norm(param.grad)<br>                <span class="hljs-keyword">if</span> norm != <span class="hljs-number">0</span> <span class="hljs-keyword">and</span> <span class="hljs-keyword">not</span> torch.isnan(norm):<br>                    r_adv = epsilon * param.grad / norm<br>                    param.data.add_(r_adv)<br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">restore</span><span class="hljs-params">(self, emb_name=<span class="hljs-string">'emb.'</span>)</span>:</span><br>        <span class="hljs-keyword">for</span> name, param <span class="hljs-keyword">in</span> self.model.named_parameters():<br>            <span class="hljs-keyword">if</span> param.requires_grad <span class="hljs-keyword">and</span> emb_name <span class="hljs-keyword">in</span> name:<br>                <span class="hljs-keyword">assert</span> name <span class="hljs-keyword">in</span> self.backup<br>                param.data = self.backup[name]<br>        self.backup = &#123;&#125;<br><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">"__main__"</span>:<br>    <span class="hljs-comment"># 示例过程</span><br>    fgm = FGM(model)<br>    <span class="hljs-keyword">for</span> batch_input, batch_label <span class="hljs-keyword">in</span> data:<br>        <span class="hljs-comment"># 正常训练</span><br>        loss = model(batch_input, batch_label)<br>        loss.backward()  <span class="hljs-comment"># 反向传播，得到正常的grad</span><br>        <span class="hljs-comment"># 对抗训练</span><br>        fgm.attack()  <span class="hljs-comment"># 在embedding上添加对抗扰动</span><br>        loss_adv = model(batch_input, batch_label)<br>        loss_adv.backward()  <span class="hljs-comment"># 反向传播，并在正常的grad基础上，累加对抗训练的梯度</span><br>        fgm.restore()  <span class="hljs-comment"># 恢复embedding参数</span><br>        <span class="hljs-comment"># 梯度下降，更新参数</span><br>        optimizer.step()<br>        model.zero_grad()<br></code></pre></div></td></tr></table></figure>
+<h3><span id="swa">SWA</span></h3>
+<p>Stochastic Weight
+Averaging，方法的提出者认为，训练期间得到的局部最小值 倾向于
+在损失值较低的区域的边界，而不是集中在损失更低的区域中心部分。所以，Stochastic
+Weight
+Averaging可以通过对边界的平均，得到更好性能和更好泛化性能的模型。<a href="https://github.com/timgaripov/swa" target="_blank" rel="noopener">Git Repo</a></p>
+<blockquote>
+<ol type="1">
+<li><p>保存两套权重w, wswa；</p></li>
+<li><p>使用循环学习率，训练w；</p></li>
+<li><p>达到指定轮次，更新ws，<span class="math inline">\(n_{models}\)</span>指更新<span class="math inline">\(w_{swa}\)</span>时，中间间隔的轮次:</p>
+<p><span class="math inline">\(w_{swa} =
+\frac{w_{swa}n_{models}+w}{n_{models}+1}\)</span></p></li>
+<li><p>循环以上步骤，最后使用wswa，作为最终模型</p></li>
+</ol>
+</blockquote>
+<p>有可以直接使用的工具，比较方便。~<em>from</em> torchcontrib.optim
+<em>import</em> SWA~</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">optimizer = torch.optim.Adam(params_lr)<br><span class="hljs-comment"># Stochastic Weight Averaging</span><br>optimizer = SWA(optimizer)<br><br><br><span class="hljs-keyword">if</span> ...:<br>    optimizer.update_swa()<br>    <br>...<br><span class="hljs-comment"># 训练结束时使用收集到的swa moving average</span><br>optimizer.swap_swa_sgd()<br><span class="hljs-comment"># optimizer.bn_update(</span><br><span class="hljs-comment">#     train_dataloader,</span><br><span class="hljs-comment">#     model)  # 更新BatchNorm的 running mean</span><br><br><span class="hljs-comment"># save</span><br></code></pre></div></td></tr></table></figure>
+<p>参考链接：</p>
+<p><a href="https://github.com/BaberMuyu/2020CCF-NER" target="_blank" rel="noopener">2020CCF-NER</a></p>
+<p><a href="https://github.com/LeeSureman/Flat-Lattice-Transformer" target="_blank" rel="noopener">Flat-Lattice-Transformer</a></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/NLP/">NLP</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/NER/">NER</a>
+                    
+                      <a class="hover-with-bg" href="/tags/FLAT/">FLAT</a>
+                    
+                      <a class="hover-with-bg" href="/tags/methodology/">methodology</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/6875388b.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Pointer review</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/51024bbf.html">
+                        <span class="hidden-mobile">字符串匹配从KMP到AC自动机</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        loader: {
+          load: ['ui/lazy']
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>

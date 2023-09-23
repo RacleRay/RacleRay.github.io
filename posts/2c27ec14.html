@@ -1,0 +1,937 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="记录个人桌面版Linux配置过程。但是在本机安装双系统很不稳定，虚拟机在我的小破笔记本上也表现很一般，最后还是转战云主机了。">
+  <meta name="author" content="江左时雨">
+  <meta name="keywords" content="机器学习,Machine Learning,自然语言处理,NLP,深度学习,Deep Learning,计算机,Coding,生活随笔">
+  <meta name="description" content="记录个人桌面版Linux配置过程。但是在本机安装双系统很不稳定，虚拟机在我的小破笔记本上也表现很一般，最后还是转战云主机了。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="个人Linux环境配置">
+<meta property="og:url" content="https://racleray.github.io/posts/2c27ec14.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="记录个人桌面版Linux配置过程。但是在本机安装双系统很不稳定，虚拟机在我的小破笔记本上也表现很一般，最后还是转战云主机了。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-07-06T14:42:23.000Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:31.038Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary_large_image">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>个人Linux环境配置 - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="个人Linux环境配置">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-07-06 22:42" pubdate>
+        2020年7月6日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      11k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      34 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">个人Linux环境配置</h1>
+            
+            <div class="markdown-body">
+              <h3><span id="更新源"><strong>更新源</strong></span></h3>
+<p>找到Software &amp; Updates，将源更新为阿里云的源</p>
+<p>在Other Software里将Canonical Partners勾上</p>
+<p>然后自己手动更新一下：</p>
+<figure class="highlight properties"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs properties"><span class="hljs-attr">sudo</span> <span class="hljs-string">apt update</span><br><br><span class="hljs-attr">sudo</span> <span class="hljs-string">apt upgrade</span><br></code></pre></div></td></tr></table></figure>
+<h3><span id="sougou-pinyin"><strong>Sougou Pinyin</strong></span></h3>
+<figure class="highlight sql"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sql">sudo apt-get <span class="hljs-keyword">install</span> fcitx-<span class="hljs-keyword">bin</span><br><br>sudo apt-<span class="hljs-keyword">get</span> <span class="hljs-keyword">install</span> fcitx-<span class="hljs-keyword">table</span> <br><br><span class="hljs-comment"># 搜狗输入法Linux官网 https://pinyin.sogou.com/linux/ 下载64bit的程序</span><br>sudo dpkg -i sogoupinyin*.deb<br></code></pre></div></td></tr></table></figure>
+<p>重启</p>
+<p>找到Fcitx Configure，设置输入法</p>
+<h3><span id="截图软件-shutter"><strong>截图软件 Shutter</strong></span></h3>
+<p>下载<a href="https://launchpad.net/ubuntu/+archive/primary/+files/libgoocanvas-common_1.0.0-1_all.deb" target="_blank" rel="noopener">libgoocanvas-common</a>、<a href="https://launchpad.net/ubuntu/+archive/primary/+files/libgoocanvas3_1.0.0-1_amd64.deb" target="_blank" rel="noopener">libgoocanvas3</a>、<a href="https://launchpad.net/ubuntu/+archive/primary/+files/libgoo-canvas-perl_0.06-2ubuntu3_amd64.deb" target="_blank" rel="noopener">libgoo-canvas-perl</a></p>
+<figure class="highlight stylus"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs stylus">sudo dpkg -<span class="hljs-selector-tag">i</span> libgoocanvas-common*.deb<br><br>sudo dpkg -<span class="hljs-selector-tag">i</span> libgoocanvas3*.deb<br><br>sudo dpkg -<span class="hljs-selector-tag">i</span> libgoo-canvas-perl*deb<br></code></pre></div></td></tr></table></figure>
+<p>将上述三个包给安装上，若安装失败，执行下面代码:</p>
+<figure class="highlight routeros"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs routeros">sudo apt-<span class="hljs-builtin-name">get</span> install -f<br></code></pre></div></td></tr></table></figure>
+<p>然后再安装这几个包</p>
+<h3><span id="视频和音频"><strong>视频和音频</strong></span></h3>
+<p>安装解码器：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs routeros">sudo apt-<span class="hljs-builtin-name">get</span> install ubuntu-restricted-extras<br></code></pre></div></td></tr></table></figure>
+<p>安装VLC视频播放器</p>
+<figure class="highlight routeros"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs routeros">sudo apt-<span class="hljs-builtin-name">get</span> install vlc browser-plugin-vlc<br></code></pre></div></td></tr></table></figure>
+<p>安装FFmpeg</p>
+<figure class="highlight routeros"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs routeros">sudo apt-<span class="hljs-builtin-name">get</span> install ffmpeg<br></code></pre></div></td></tr></table></figure>
+<p>网易云音乐 <a href="https://music.163.com/#/download" target="_blank" rel="noopener">官网</a></p>
+<h3><span id="设置-点击图标最小化"><strong>设置: 点击图标最小化</strong></span></h3>
+<figure class="highlight stylus"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs stylus">gsettings set org<span class="hljs-selector-class">.gnome</span><span class="hljs-selector-class">.shell</span><span class="hljs-selector-class">.extensions</span><span class="hljs-selector-class">.dash-to-dock</span> click-action <span class="hljs-string">'minimize'</span><br></code></pre></div></td></tr></table></figure>
+<h3><span id="美化">美化</span></h3>
+<figure class="highlight sql"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sql">sudo apt-get <span class="hljs-keyword">install</span> gnome-tweak-tool   <span class="hljs-comment">#安装tweak</span><br><br>sudo apt-<span class="hljs-keyword">get</span> <span class="hljs-keyword">install</span> gnome-shell-extensions -y  <span class="hljs-comment">#安装shell扩展</span><br><br>sudo apt <span class="hljs-keyword">install</span> chrome-gnome-shell     <span class="hljs-comment">#为了能在浏览器内安装gnome插件，火狐和谷歌都能用</span><br><br>sudo apt-<span class="hljs-keyword">get</span> <span class="hljs-keyword">install</span> gtk2-<span class="hljs-keyword">engines</span>-pixbuf    <span class="hljs-comment">#防止GTK2错误</span><br><br>sudo apt <span class="hljs-keyword">install</span> libxml2-utils<br></code></pre></div></td></tr></table></figure>
+<p>从<a href="https://www.gnome-look.org/browse/ord/top/" target="_blank" rel="noopener">gnome-look</a>这里下载，或者通过<a href="https://www.pling.com/p/1175480/" target="_blank" rel="noopener">pling</a>和 <a href="https://www.opendesktop.org/p/1136805/" target="_blank" rel="noopener">ocs-url</a>直接安装</p>
+<blockquote>
+<p>或者手动下载下来，接下来解压到指定文件夹，并安装他们。</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs jboss-cli">xz -d Gnome-OSC-HS-light-menu*<span class="hljs-string">.tar.xz</span><br><br>tar -xvf Gnome-OSC-HS-light-menu*<span class="hljs-string">.tar</span> -C <span class="hljs-string">/usr/share/themes/</span><br><br>xz -d Gnome-OSC-HS<span class="hljs-params">--2</span>*<span class="hljs-string">.tar.xz</span><br><br>tar -xvf Gnome-OSC-HS<span class="hljs-params">--2</span>*<span class="hljs-string">.tar</span> -C <span class="hljs-string">/usr/share/themes/</span><br></code></pre></div></td></tr></table></figure>
+<p>图标：/usr/share/icons/</p>
+<p>其他主题：/usr/share/themes/</p>
+</blockquote>
+<p>如果Shell显示不可修改，</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs dockerfile">sudo apt install gnome-<span class="hljs-keyword">shell</span><span class="bash">-extensions</span><br></code></pre></div></td></tr></table></figure>
+<h3><span id="安装压缩软件"><strong>安装压缩软件</strong></span></h3>
+<figure class="highlight pgsql"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs pgsql">sudo apt-<span class="hljs-keyword">get</span> install p7zip-<span class="hljs-keyword">full</span> p7zip-rar rar unzip<br></code></pre></div></td></tr></table></figure>
+<h3><span id="chrome-brower"><strong>Chrome Brower</strong></span></h3>
+<figure class="highlight nginx"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs nginx"><span class="hljs-attribute">wget</span> https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb<br><br>sudo dpkg -i google-chrome*; <span class="hljs-attribute">sudo</span> apt-get -f install<br></code></pre></div></td></tr></table></figure>
+<h3><span id="安装多版本gcc和g并共存"><strong>安装多版本gcc和g++，并共存</strong></span></h3>
+<figure class="highlight angelscript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs angelscript">sudo apt-<span class="hljs-keyword">get</span> install gcc<span class="hljs-number">-5</span> gcc<span class="hljs-number">-5</span>-multilib<br><br>sudo apt-<span class="hljs-keyword">get</span> install g++<span class="hljs-number">-5</span> g++<span class="hljs-number">-5</span>-multilib<br><br>sudo apt-<span class="hljs-keyword">get</span> install gcc<span class="hljs-number">-6</span> gcc<span class="hljs-number">-6</span>-multilib<br><br>sudo apt-<span class="hljs-keyword">get</span> install g++<span class="hljs-number">-6</span> g++<span class="hljs-number">-6</span>-multilib<br><br>sudo apt-<span class="hljs-keyword">get</span> install gcc<span class="hljs-number">-7</span> gcc<span class="hljs-number">-7</span>-multilib<br><br>sudo apt-<span class="hljs-keyword">get</span> install g++<span class="hljs-number">-7</span> g++<span class="hljs-number">-7</span>-multilib<br><br>sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc<span class="hljs-number">-5</span> <span class="hljs-number">50</span><br><br>sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc<span class="hljs-number">-6</span> <span class="hljs-number">60</span><br><br>sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc<span class="hljs-number">-7</span> <span class="hljs-number">70</span><br><br>sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++<span class="hljs-number">-5</span> <span class="hljs-number">50</span><br><br>sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++<span class="hljs-number">-6</span> <span class="hljs-number">60</span><br><br>sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++<span class="hljs-number">-7</span> <span class="hljs-number">70</span><br></code></pre></div></td></tr></table></figure>
+<p>然后选择gcc和g++版本</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs pgsql">sudo <span class="hljs-keyword">update</span>-alternatives <span class="hljs-comment">--config gcc</span><br><br>sudo <span class="hljs-keyword">update</span>-alternatives <span class="hljs-comment">--config g++</span><br></code></pre></div></td></tr></table></figure>
+<h3><span id="cmake">CMAKE</span></h3>
+<p>https://cmake.org/download/</p>
+<p>安装在/opt下，软连接到/usr/bin/</p>
+<figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">sudo ln -sf <span class="hljs-regexp">/opt/</span>cmake-<span class="hljs-number">3.17</span>.<span class="hljs-number">1</span><span class="hljs-regexp">/bin/</span>* <span class="hljs-regexp">/usr/</span>bin<span class="hljs-regexp">/</span><br></code></pre></div></td></tr></table></figure>
+<p>complete cmake process with following
+libs:(boost版本较低，需要手动安装较高版本，见下文Boost部分)</p>
+<figure class="highlight q"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs q">sudo apt-<span class="hljs-built_in">get</span> install cmake libblkid-<span class="hljs-built_in">dev</span> e2fslibs-<span class="hljs-built_in">dev</span> libboost-<span class="hljs-built_in">all</span>-<span class="hljs-built_in">dev</span> libaudit-<span class="hljs-built_in">dev</span><br></code></pre></div></td></tr></table></figure>
+<p>openSSL</p>
+<figure class="highlight cmake"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cmake">sudo apt <span class="hljs-keyword">install</span> libssl-dev<br></code></pre></div></td></tr></table></figure>
+<blockquote>
+<p><strong>编写简单的cmake</strong></p>
+<p>https://cmake.org/cmake/help/v3.17/guide/tutorial/index.html</p>
+<p>使用cmake首先得有个CMakeList.txt文件，你需要把配置信息写在该文件中，然后通过cmake去处理该文件。
+将设有下面一个main.cpp文件</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-comment">//main.cpp文件</span><br>\<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span><span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;<br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br><span class="hljs-built_in">cout</span>&lt;&lt;<span class="hljs-string">"hello world!"</span>&lt;&lt;<span class="hljs-built_in">endl</span>;<br><span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>这时候我们就可以写个如下的CMakeList.txt文件</p>
+<figure class="highlight stylus"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs stylus">\#cmake最小需要版本<br><span class="hljs-function"><span class="hljs-title">cmake_minimum_required</span><span class="hljs-params">(VERSION <span class="hljs-number">2.8</span>)</span></span><br><br>\#项目名字<br><span class="hljs-function"><span class="hljs-title">project</span><span class="hljs-params">(HELLOWORLD)</span></span><br><br>\#包含原程序,即把给定目录下的源程序复制给变量DIR_SRC<br><span class="hljs-function"><span class="hljs-title">aux_source_directory</span><span class="hljs-params">(DIR_SRC ./)</span></span><br><br>\#生成程序<br><span class="hljs-function"><span class="hljs-title">add_executable</span><span class="hljs-params">(helloworld $&#123;DIR_SRC&#125;)</span></span><br></code></pre></div></td></tr></table></figure>
+<p>然后执行如下命令</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs jboss-cli">mkdir build<br><span class="hljs-keyword">cd</span> build<br>cmake <span class="hljs-string">..</span><br>make<br><span class="hljs-string">./helloworld</span><br></code></pre></div></td></tr></table></figure>
+<p>这样就编译好程序并运行。</p>
+<p>添加静态库或者动态库</p>
+<p>而假设我们程序用到了在/usr/lib下的一个静态库libmy.a，那就需要添加如下两个命令</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs reasonml">\#库所在位置<br>link<span class="hljs-constructor">_directories(<span class="hljs-operator">/</span><span class="hljs-params">usr</span><span class="hljs-operator">/</span><span class="hljs-params">lib</span>)</span><br><br>\#程序编译时候链接库<br>target<span class="hljs-constructor">_link_libraries(<span class="hljs-params">helloworld</span> <span class="hljs-params">my</span>)</span><br></code></pre></div></td></tr></table></figure>
+</blockquote>
+<h3><span id="boost">Boost</span></h3>
+<p>下载https://www.boost.org/users/history/version_1_72_0.html</p>
+<figure class="highlight stylus"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs stylus">sudo tar -zxvf boost_1_72_0<span class="hljs-selector-class">.tar</span><span class="hljs-selector-class">.gz</span> -C /usr/local/<br></code></pre></div></td></tr></table></figure>
+<p>Boost库的编译安装还有一些依赖库，需要先安装</p>
+<figure class="highlight q"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs q">sudo apt-<span class="hljs-built_in">get</span> install mpi-default-<span class="hljs-built_in">dev</span> libicu-<span class="hljs-built_in">dev</span> python-<span class="hljs-built_in">dev</span> libbz2-<span class="hljs-built_in">dev</span><br></code></pre></div></td></tr></table></figure>
+<p>回到boost库的路径下，运行如下命令</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs jboss-cli">sudo <span class="hljs-string">./bootstrap.sh</span><br>sudo <span class="hljs-string">./b2</span> install <span class="hljs-params">--prefix=/usr</span> <span class="hljs-params">--build-dir=tmp/build-boost</span><br></code></pre></div></td></tr></table></figure>
+<p>--prefix后面跟的是你安装boost库的路径，安装完成后所有的头文件和lib库都会保存在这个路径下</p>
+<blockquote>
+<p>若 ./b2不加 install --prefix=/usr
+会编译到当前文件夹下，安装没有链接成功，因此手动链接。</p>
+<figure class="highlight crystal"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs crystal">sudo ln -sf /usr/local/boost_1_72_0/boost/* <span class="hljs-regexp">/usr/include</span><span class="hljs-regexp">/boost/include</span><span class="hljs-regexp">/</span><br><span class="hljs-regexp">sudo ln -sf /usr</span><span class="hljs-regexp">/local/boost</span>_1_72_0/stage/<span class="hljs-class"><span class="hljs-keyword">lib</span>/* /<span class="hljs-title">usr</span>/<span class="hljs-title">include</span>/<span class="hljs-title">boost</span>/<span class="hljs-title">lib</span>/</span><br></code></pre></div></td></tr></table></figure>
+<p>然后加入环境变量/etc/profile</p>
+<figure class="highlight elixir"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs elixir">export env=<span class="hljs-variable">$PATH</span><span class="hljs-symbol">:/usr/include/boost</span><br></code></pre></div></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p><strong>只是用头文件示例程序</strong></p>
+<p>不需要先编译boost，直接引入头文件就行。</p>
+<p>这个程序用到了boost提供的正则匹配库</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;boost/regex.hpp&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;string&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br> <span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span> line;<br> <span class="hljs-function">boost::regex <span class="hljs-title">pat</span><span class="hljs-params">(<span class="hljs-string">"tcp:*"</span>)</span></span>;<br> <br> <span class="hljs-keyword">while</span>(<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cin</span>)<br> &#123;<br>     <span class="hljs-built_in">std</span>::getline(<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cin</span>, line);<br>     boost::smatch matches;<br>     <br>     <span class="hljs-keyword">if</span>(boost::regex_match(line, matches, pat))<br>         <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; matches[<span class="hljs-number">0</span>] &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;<br> &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>依旧通过CMake进行编译</p>
+<ul>
+<li>首先设置Boost库的路径，也就是之前的安装路径</li>
+<li>然后使用find_package来搜索这个路径下面是否有需要的regex库</li>
+<li>最后设置头文件搜索路径以及把找到的库link到应用程序</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">project(tutorial-0)<br>cmake_minimum_required(VERSION 3.5)<br><span class="hljs-built_in">set</span>(CMAKE_CXX_STANDARD 14)<br><br><span class="hljs-built_in">set</span>(BOOST_ROOT /usr/<span class="hljs-built_in">local</span>/boost_1_72_0)<br><br>find_package(Boost COMPONENTS regex REQUIRED)<br><br><span class="hljs-keyword">if</span>(Boost_FOUND)<br>    include_directories(<span class="hljs-variable">$&#123;Boost_INCLUDE_DIRS&#125;</span>)<br><br>    add_executable(foo foo.cpp)<br>    target_link_libraries (foo <span class="hljs-variable">$&#123;Boost_LIBRARIES&#125;</span>)<br>endif()<br></code></pre></div></td></tr></table></figure>
+<p>编译完成后运行app查看结果</p>
+</blockquote>
+<h3><span id="多版本python和pip共存">多版本python和pip共存</span></h3>
+<p>ubuntu18.04自带python3，但是没有python2，pip2，pip3</p>
+<figure class="highlight dsconfig"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs dsconfig"><span class="hljs-string">sudo </span><span class="hljs-string">apt </span><span class="hljs-string">install </span><span class="hljs-string">curl</span><br><span class="hljs-string">sudo </span><span class="hljs-string">apt-get </span><span class="hljs-string">install </span><span class="hljs-string">python3-distutils</span><br><span class="hljs-string">sudo </span><span class="hljs-string">apt-get </span><span class="hljs-string">install </span><span class="hljs-string">python3-testresources</span><br><span class="hljs-string">sudo </span><span class="hljs-string">apt-get </span><span class="hljs-string">install </span><span class="hljs-string">python3-widgetsnbextension</span><br><span class="hljs-string">sudo </span><span class="hljs-string">apt </span><span class="hljs-string">install </span><span class="hljs-string">python-minimal</span><br><span class="hljs-string"></span><br><span class="hljs-string">sudo </span><span class="hljs-string">apt </span><span class="hljs-string">install </span><span class="hljs-string">python2.</span>7<br><br><span class="hljs-string">curl </span><span class="hljs-string">https:</span>//<span class="hljs-string">bootstrap.</span><span class="hljs-string">pypa.</span><span class="hljs-string">io/</span><span class="hljs-built_in">get-pip.py</span> -o <span class="hljs-built_in">get-pip.py</span><br><span class="hljs-built_in"></span><br><span class="hljs-built_in">sudo</span> <span class="hljs-string">python3 </span><span class="hljs-built_in">get-pip.py</span> <span class="hljs-comment">#安装pip3</span><br><br><span class="hljs-string">sudo </span><span class="hljs-string">python2 </span><span class="hljs-built_in">get-pip.py</span> <span class="hljs-comment">#安装pip3</span><br><br><span class="hljs-string">sudo </span><span class="hljs-string">pip3 </span><span class="hljs-string">install </span><span class="hljs-built_in">--upgrade</span> <span class="hljs-string">pip </span><span class="hljs-comment">#升级pip3</span><br><br><span class="hljs-string">sudo </span><span class="hljs-string">pip2 </span><span class="hljs-string">install </span><span class="hljs-built_in">--upgrade</span> <span class="hljs-string">pip </span><span class="hljs-comment">#升级pip2</span><br><br><span class="hljs-comment"># 此时pip和python并不知道指向2还是3，需要自己修改。我们使用alias来设置别名</span><br><span class="hljs-string">vim </span>/<span class="hljs-string">etc/</span><span class="hljs-string">profile </span> <span class="hljs-comment"># 所有用户 。修改~/.bashrc或者.profile只会修改当前用户</span><br><span class="hljs-comment"># 写入</span><br>		<span class="hljs-string">alias </span><span class="hljs-string">pip=</span>/<span class="hljs-string">usr/</span><span class="hljs-string">local/</span><span class="hljs-string">bin/</span><span class="hljs-string">pip3.</span>6<br>		<span class="hljs-string">alias </span><span class="hljs-string">python=</span>/<span class="hljs-string">usr/</span><span class="hljs-string">bin/</span><span class="hljs-string">python3.</span>6<br><br><span class="hljs-string">source </span>/<span class="hljs-string">etc/</span><span class="hljs-string">profile</span><br></code></pre></div></td></tr></table></figure>
+<h3><span id="vs-code">VS Code</span></h3>
+<p><a href="https://code.visualstudio.com/download" target="_blank" rel="noopener">微软官网</a>下载<code>deb</code>安装即可</p>
+<h3><span id="git">Git</span></h3>
+<figure class="highlight cmake"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cmake">sudo apt <span class="hljs-keyword">install</span> git<br></code></pre></div></td></tr></table></figure>
+<h3><span id="有道词典">有道词典</span></h3>
+<p><a href="https://cidian.youdao.com/multi.html#linuxAll" target="_blank" rel="noopener">官网</a>下载安装即可</p>
+<h3><span id="typora">typora</span></h3>
+<p>官网打包的二进制 Typora 在 Ubuntu (gnome)
+上安装为应用程序（可被选择为默认程序）</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">$</span><span class="bash"> <span class="hljs-built_in">cd</span> Downloads/Software</span><br><span class="hljs-meta">$</span><span class="bash"> wget https://typora.io/linux/Typora-linux-x64.tar.gz</span><br><span class="hljs-meta">$</span><span class="bash"> tar -xzvf Typora-linux-x64.tar.gz</span><br><span class="hljs-meta">$</span><br><span class="hljs-meta">$</span><span class="bash"> sudo mv Typora-linux-x64 /opt/</span><br><span class="hljs-meta">$</span><span class="bash"> </span><br><span class="hljs-meta">$</span><span class="bash"> <span class="hljs-built_in">cd</span> /opt/Typora-linux-x64/</span><br><span class="hljs-meta">$</span><span class="bash"> ./Typora  <span class="hljs-comment"># test could run ?</span></span><br><br><span class="hljs-meta">$</span><span class="bash"> <span class="hljs-built_in">cd</span> /usr/share/applications/Typora.desktop</span><br><span class="hljs-meta">$</span><span class="bash"> sudo vim Typora.desktop</span><br><br>[Desktop Entry]<br>Name=Typora<br>GenericName=Editor<br>Comment=Typroa - a markdown editor<br>Exec="/opt/Typora-linux-x64/Typora" %U<br>Icon=/opt/Typora-linux-x64/resources/app/asserts/icon/icon_256x256.png<br>Terminal=false<br>Categories=Markdown;<br>StartupNotify=false<br>Type=Application<br></code></pre></div></td></tr></table></figure>
+<h3><span id="sublime-text">sublime-text</span></h3>
+<p>https://www.sublimetext.com/docs/3/linux_repositories.html#apt</p>
+<h3><span id="jetbrains">jetbrains</span></h3>
+<p>https://www.jetbrains.com/toolbox-app/</p>
+<h3><span id="terminator">Terminator</span></h3>
+<p>新的shell界面</p>
+<ul>
+<li>常用快捷键</li>
+</ul>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">快捷键</th>
+<th style="text-align: left;">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Ctrl+Shift+E</td>
+<td style="text-align: left;">垂直分割窗口</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ctrl+Shift+O</td>
+<td style="text-align: left;">水平分割窗口</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ctrl+Shift+W</td>
+<td style="text-align: left;">关闭当前窗格</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ctrl+Shift+C</td>
+<td style="text-align: left;">复制</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ctrl+Shift+V</td>
+<td style="text-align: left;">粘贴</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ctrl+Shift+X</td>
+<td style="text-align: left;">放大或缩小某一窗口</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ctrl+Shift+Z</td>
+<td style="text-align: left;">从放大窗口回到多窗格界面</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ALT+↑[↓,←,→]</td>
+<td style="text-align: left;">移动到上[下、左、右]面一个窗口</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ctrl+Tab</td>
+<td style="text-align: left;">切换窗口</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ctrl+<code>-</code></td>
+<td style="text-align: left;">缩小字体</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ctrl+Shift+<code>=</code>也就是Ctrl+<code>+</code></td>
+<td style="text-align: left;">放大字体</td>
+</tr>
+</tbody>
+</table>
+<h3><span id="zsh-fish">Zsh fish</span></h3>
+<p>使用<code>oh-my-zsh</code>来自动管理配置，可以查看官网：<a href="https://link.zhihu.com/?target=https%3A//ohmyz.sh/">https://ohmyz.sh/</a></p>
+<p>zsh官方的<code>antigen</code>来管理
+https://github.com/zsh-users/antigen</p>
+<figure class="highlight properties"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs properties"><span class="hljs-attr">sudo</span> <span class="hljs-string">apt install zsh</span><br><span class="hljs-comment"># 切换到zsh</span><br><span class="hljs-attr">chsh</span> <span class="hljs-string">-s /bin/zsh </span><br><br><span class="hljs-attr">curl</span> <span class="hljs-string">-L git.io/antigen &gt; antigen.zsh  # 或者直接在git.io/antigen下载文本</span><br><span class="hljs-comment"># or use git.io/antigen-nightly for the latest version</span><br><span class="hljs-comment"># or apt-get install zsh-antigen</span><br></code></pre></div></td></tr></table></figure>
+<p>在 <code>~/.zshrc</code> 中添加下面的内容</p>
+<figure class="highlight properties"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs properties"><span class="hljs-attr">source</span> <span class="hljs-string">~/antigen.zsh</span><br><br><span class="hljs-comment"># Load the oh-my-zsh's library.</span><br><span class="hljs-attr">antigen</span> <span class="hljs-string">use oh-my-zsh</span><br><br><span class="hljs-comment"># Bundles from the default repo (robbyrussell's oh-my-zsh).</span><br><span class="hljs-attr">antigen</span> <span class="hljs-string">bundle brew</span><br><span class="hljs-attr">antigen</span> <span class="hljs-string">bundle command-not-found</span><br><span class="hljs-attr">antigen</span> <span class="hljs-string">bundle docker</span><br><span class="hljs-attr">antigen</span> <span class="hljs-string">bundle docker-compose</span><br><span class="hljs-attr">antigen</span> <span class="hljs-string">bundle gem</span><br><span class="hljs-attr">antigen</span> <span class="hljs-string">bundle git</span><br><span class="hljs-attr">antigen</span> <span class="hljs-string">bundle golang</span><br><span class="hljs-attr">antigen</span> <span class="hljs-string">bundle ng</span><br><span class="hljs-attr">antigen</span> <span class="hljs-string">bundle osx</span><br><span class="hljs-attr">antigen</span> <span class="hljs-string">bundle pip</span><br><br><span class="hljs-comment"># Syntax highlighting bundle.</span><br><span class="hljs-attr">antigen</span> <span class="hljs-string">bundle zsh-users/zsh-syntax-highlighting</span><br><span class="hljs-attr">antigen</span> <span class="hljs-string">bundle zsh-users/zsh-completions</span><br><span class="hljs-attr">antigen</span> <span class="hljs-string">bundle zsh-users/zsh-autosuggestions</span><br><span class="hljs-attr">antigen</span> <span class="hljs-string">bundle zsh-users/zsh-apple-touchbar</span><br><br><span class="hljs-comment"># Load the theme.</span><br><span class="hljs-comment"># antigen theme robbyrussell</span><br><span class="hljs-attr">antigen</span> <span class="hljs-string">theme https://github.com/denysdovhan/spaceship-prompt spaceship</span><br><br><span class="hljs-comment"># Tell Antigen that you're done.</span><br><span class="hljs-attr">antigen</span> <span class="hljs-string">apply</span><br></code></pre></div></td></tr></table></figure>
+<p>进入zsh</p>
+<p>乱码问题</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs crmsh">git <span class="hljs-keyword">clone</span> <span class="hljs-title">https</span>://github.com/powerline/fonts.git<br><span class="hljs-comment"># install</span><br>cd fonts<br>./install.sh<br></code></pre></div></td></tr></table></figure>
+<p>在优化中设置等宽字体为powerline类型字体中的一个</p>
+<p>其他选择：fish</p>
+<p>https://link.zhihu.com/?target=https%3A//wiki.archlinux.org/index.php/Fish</p>
+<h3><span id="tldr">TLDR</span></h3>
+<p>https://tldr.sh/：常用命令范式查找工具</p>
+<h3><span id="文件查找">文件查找</span></h3>
+<p>find</p>
+<p>locate</p>
+<p><a href="https://github.com/sharkdp/fd" target="_blank" rel="noopener">fd</a>：<em>fd</em> is a
+simple, fast and user-friendly alternative to <a href="https://www.gnu.org/software/findutils/" target="_blank" rel="noopener"><em>find</em></a>.</p>
+<h3><span id="代码查找">代码查找</span></h3>
+<blockquote>
+<p>重要的是：有些问题使用合适的工具就会迎刃而解，而具体选择哪个工具则不是那么重要</p>
+</blockquote>
+<p>grep</p>
+<p><a href="https://beyondgrep.com/" target="_blank" rel="noopener">ack</a>, <a href="https://github.com/ggreer/the_silver_searcher" target="_blank" rel="noopener">ag</a> 和 <a href="https://github.com/BurntSushi/ripgrep" target="_blank" rel="noopener">rg</a></p>
+<h3><span id="查找shell历史">查找Shell历史</span></h3>
+<p><code>Ctrl+R</code> 对命令历史记录进行回溯搜索</p>
+<h3><span id="文件夹导航">文件夹导航</span></h3>
+<p><a href="https://github.com/clvv/fasd" target="_blank" rel="noopener">fasd</a>：查找最常用和/或最近使用的文件和目录</p>
+<p>概览目录结构，例如 <a href="https://linux.die.net/man/1/tree" target="_blank" rel="noopener"><code>tree</code></a>, <a href="https://github.com/Canop/broot" target="_blank" rel="noopener"><code>broot</code></a></p>
+<p>更完整的文件管理器，例如 <a href="https://github.com/jarun/nnn" target="_blank" rel="noopener"><code>nnn</code></a> 或 <a href="https://github.com/ranger/ranger" target="_blank" rel="noopener"><code>ranger</code></a></p>
+<h3><span id="npm">npm</span></h3>
+<figure class="highlight arduino"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs arduino">sudo  apt-<span class="hljs-built_in">get</span> install nodejs<br><br>sudo  apt-<span class="hljs-built_in">get</span> install npm<br><br>npm -v<br><br>npm <span class="hljs-built_in">config</span> <span class="hljs-built_in">set</span> registry https:<span class="hljs-comment">//registry.npm.taobao.org</span><br></code></pre></div></td></tr></table></figure>
+<p>安装nrm工具，用于管理软件源。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs elixir"><span class="hljs-variable">$ </span>sudo npm install -g nrm<br><br><span class="hljs-variable">$ </span>nrm ls<br></code></pre></div></td></tr></table></figure>
+<p>在特定网络环境下需要配置代理的话，可以使用如下命令配置。</p>
+<figure class="highlight arduino"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs arduino">$  npm <span class="hljs-built_in">config</span> <span class="hljs-built_in">set</span> proxy http:<span class="hljs-comment">//127.0.0.1:3128</span><br>$ npm <span class="hljs-built_in">config</span> <span class="hljs-built_in">set</span> http-proxy http:<span class="hljs-comment">//127.0.0.1:3128</span><br>$ npm <span class="hljs-built_in">config</span> <span class="hljs-built_in">set</span> https-proxy https:<span class="hljs-comment">//127.0.0.1:3128</span><br></code></pre></div></td></tr></table></figure>
+<h3><span id="vim">vim</span></h3>
+<p><strong>安装VIM</strong></p>
+<figure class="highlight routeros"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs routeros">apt-<span class="hljs-builtin-name">get</span> install vim<br></code></pre></div></td></tr></table></figure>
+<p>https://spacevim.org/documentation/：spacevim插件集合</p>
+<p>or</p>
+<p>https://github.com/spf13/spf13-vim：一键配置插件集合</p>
+<p>http://vim.spf13.com/#install</p>
+<figure class="highlight vim"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs vim">curl http<span class="hljs-variable">s:</span>//<span class="hljs-keyword">j</span>.mp/spf13-vim3 -L &gt; spf13-<span class="hljs-keyword">vim</span>.<span class="hljs-keyword">sh</span> &amp;&amp; <span class="hljs-keyword">sh</span> spf13-<span class="hljs-keyword">vim</span>.<span class="hljs-keyword">sh</span><br></code></pre></div></td></tr></table></figure>
+<h4><span id="-tmux">- tmux</span></h4>
+<p>Ubuntu并不自带tmux，所以我们需要输入以下指令进行安装：</p>
+<p>按下 Ctrl + d 或者直接在命令行输入 exit
+指令，就可以退出Tmux窗口。</p>
+<p>Tmux窗口有很多的快捷键，所有的快捷键都需要前缀键。默认的前缀键是 Ctrl
++ b，只有先按下 Ctrl + b，快捷键才能生效。举例来说，帮助指令的快捷键是
+Ctrl + b ?。那么在Tmux窗口下，先按下 Ctrl + b，再按下
+?，就能显示帮助信息。</p>
+<p>tmux重要指令的总结：</p>
+<table>
+<colgroup>
+<col style="width: 67%">
+<col style="width: 32%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>tmux new -s <session_name></session_name></th>
+<th>新建一个特定名称的会话</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>tmux detach</td>
+<td>将当前会话与窗口分离</td>
+</tr>
+<tr class="even">
+<td>tmux ls / tmux list-session</td>
+<td>查看当前所有的Tmux会话</td>
+</tr>
+<tr class="odd">
+<td>tmux attach -t <session_name></session_name></td>
+<td>重新连接某个已存在的会话</td>
+</tr>
+<tr class="even">
+<td>tmux kill-session -t <session_name></session_name></td>
+<td>删除某个会话</td>
+</tr>
+<tr class="odd">
+<td>tmux switch -t <session-name></session-name></td>
+<td>切换会话</td>
+</tr>
+<tr class="even">
+<td>tmux rename-session -t <old_session> <new_session></new_session></old_session></td>
+<td>重新命名会话</td>
+</tr>
+</tbody>
+</table>
+<p>会话相关的快捷键：</p>
+<table>
+<thead>
+<tr class="header">
+<th>Ctrl + b d</th>
+<th>分离会话</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Ctrl + b s</td>
+<td>列出所有会话</td>
+</tr>
+<tr class="even">
+<td>Ctrl + b $</td>
+<td>重命名当前会话</td>
+</tr>
+</tbody>
+</table>
+<p>Tmux可以在一个窗口中分出多个窗格
+(pane)，每个窗格可以运行不同的指令。以下是相关快捷键：</p>
+<p>Ctrl+b % 划分左右两个窗格 Ctrl+b “ 划分上下两个窗格 Ctrl+b
+<arrow key> 切换到其他窗格，<arrow key>指向切换的方向 Ctrl+b ;
+切换到上一个窗格 Ctrl+b o 切换到下一个窗格 Ctrl+b { 当前窗格左移 Ctrl+b
+} 当前窗格右移 Ctrl+b x 关闭当前窗格</arrow></arrow></p>
+<h4><span id="-代码折叠">- 代码折叠</span></h4>
+<table>
+<thead>
+<tr class="header">
+<th><code>zc</code></th>
+<th>关闭当前打开的折叠</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>zo</code></td>
+<td>打开当前的折叠</td>
+</tr>
+<tr class="even">
+<td><code>zm</code></td>
+<td>关闭所有折叠</td>
+</tr>
+<tr class="odd">
+<td><code>zM</code></td>
+<td>关闭所有折叠及其嵌套的折叠</td>
+</tr>
+<tr class="even">
+<td><code>zr</code></td>
+<td>打开所有折叠</td>
+</tr>
+<tr class="odd">
+<td><code>zR</code></td>
+<td>打开所有折叠及其嵌套的折叠</td>
+</tr>
+<tr class="even">
+<td><code>zd</code></td>
+<td>删除当前折叠</td>
+</tr>
+<tr class="odd">
+<td><code>zE</code></td>
+<td>删除所有折叠</td>
+</tr>
+<tr class="even">
+<td><code>zj</code></td>
+<td>移动至下一个折叠</td>
+</tr>
+<tr class="odd">
+<td><code>zk</code></td>
+<td>移动至上一个折叠</td>
+</tr>
+<tr class="even">
+<td><code>zn</code></td>
+<td>禁用折叠</td>
+</tr>
+<tr class="odd">
+<td><code>zN</code></td>
+<td>启用折叠</td>
+</tr>
+</tbody>
+</table>
+<h3><span id="simplescreenrecorder">SimpleScreenRecorder</span></h3>
+<figure class="highlight routeros"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs routeros">sudo apt-<span class="hljs-builtin-name">get</span> install simplescreenrecorder<br></code></pre></div></td></tr></table></figure>
+<h3><span id="you-get"></span></h3>
+<p>Dumb downloader that scrapes the web</p>
+<h3><span id="tget-tget-is-wget-fortorrents">: tget is wget for
+torrents</span></h3>
+<h3><span id="unity-tweak-工具">Unity Tweak 工具</span></h3>
+<figure class="highlight routeros"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs routeros">sudo apt-<span class="hljs-builtin-name">get</span> install unity-tweak-tool<br></code></pre></div></td></tr></table></figure>
+<h3><span id="使用-parcellite剪切板">使用 parcellite剪切板</span></h3>
+<figure class="highlight elixir"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs elixir"><span class="hljs-variable">$ </span>sudo apt-get install parcellite<br><span class="hljs-variable">$ </span>parcellite<br></code></pre></div></td></tr></table></figure>
+<h3><span id="设置登录背景">设置登录背景</span></h3>
+<p><strong>假设我现在用的图片是mypicture.jpg ,
+将它移动到/usr/share/backgrounds/目录下</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs text">sudo mv currentdir&#x2F;mypicture.jpg  &#x2F;usr&#x2F;share&#x2F;backgrounds&#x2F;<br></code></pre></div></td></tr></table></figure>
+<p>Ubuntu现在用的Gnome的桌面，和以前Unity时候的配置文件不一样，所以16.04的教程是用不了的，18.04登录背景相关的配置是用css的：/etc/alternatives/gdm3.css</p>
+<figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">sudo gedit <span class="hljs-regexp">/etc/</span>alternatives<span class="hljs-regexp">/gdm3.css</span><br></code></pre></div></td></tr></table></figure>
+<figure class="highlight css"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs css">#找到默认的这个部分<br><span class="hljs-selector-id">#lockDialogGroup</span> &#123;<br>  <span class="hljs-attribute">background</span>: <span class="hljs-number">#2c001e</span> <span class="hljs-built_in">url</span>(resource:///org/gnome/shell/theme/noise-texture.png);<br>  <span class="hljs-attribute">background-repeat</span>: repeat; <br>&#125;<br>#改为<br><span class="hljs-selector-id">#lockDialogGroup</span> &#123;<br>  <span class="hljs-attribute">background</span>: <span class="hljs-number">#2c001e</span> <span class="hljs-built_in">url</span>(file:///usr/share/backgrounds/mypicture.jpg);         <br>  <span class="hljs-attribute">background-repeat</span>: no-repeat;<br>  <span class="hljs-attribute">background-size</span>: cover;<br>  <span class="hljs-attribute">background-position</span>: center; <br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>保存并重启.</p>
+<h3><span id="apt-get使用">apt-get使用</span></h3>
+<p>apt-get命令本身并不具有管理软件包功能，只是提供了一个软件包管理的命令行平台。</p>
+<p>apt-get命令的一般语法格式为： apt-get subcommands [ -d | -f | -m | -q
+| --purge | --reinstall | - b | - s | - y | - u | - h | -v ] [pkg]<br>
+apt-cache提供了搜索功能。</p>
+<ol type="1">
+<li><p>更新或升级操作： apt-get update # 更新源<br>
+apt-get upgrade # 更新所有已安装的包<br>
+apt-get dist-upgrade # 发行版升级（如，从10.10到11.04）</p></li>
+<li><p>安装或重装类操作： apt-get install <pkg> #
+安装软件包<pkg>，多个软件包用空格隔开<br>
+apt-get install --reinstall <pkg> # 重新安装软件包<pkg><br>
+apt-get install -f <pkg> # 修复安装（破损的依赖关系）软件包<pkg></pkg></pkg></pkg></pkg></pkg></pkg></p>
+<ol start="3" type="1">
+<li>卸载类操作： apt-get remove <pkg> #
+删除软件包<pkg>（不包括配置文件）<br>
+apt-get purge <pkg> # 删除软件包<pkg>（包括配置文件）</pkg></pkg></pkg></pkg></li>
+</ol></li>
+<li><p>下载清除类操作： apt-get source <pkg> #
+下载pkg包的源代码到当前目录<br>
+apt-get download <pkg> # 下载pkg包的二进制包到当前目录<br>
+apt-get source -d <pkg> # 下载完源码包后，编译<br>
+apt-get build-dep <pkg> # 构建pkg源码包的依赖环境（编译环境？）<br>
+apt-get clean #
+清除缓存(/var/cache/apt/archives/{,partial}下)中所有已下载的包<br>
+apt-get autoclean #
+类似于clean，但清除的是缓存中过期的包（即已不能下载或者是无用的包）<br>
+apt-get autoremove #
+删除因安装软件自动安装的依赖，而现在不需要的依赖包</pkg></pkg></pkg></pkg></p></li>
+<li><p>查询类操作： apt-cache stats # 显示系统软件包的统计信息<br>
+apt-cache search <pkg> # 使用关键字pkg搜索软件包<br>
+apt-cache show <pkg_name> # 显示软件包pkg_name的详细信息<br>
+apt-cache depends <pkg> # 查看pkg所依赖的软件包<br>
+apt-cache rdepends <pkg> # 查看pkg被那些软件包所依赖</pkg></pkg></pkg_name></pkg></p></li>
+<li><p>关于软件安装目录的说明：</p></li>
+</ol>
+<p>一般的deb包(包括新立得或者apt-get下载的)都在/usr/share。</p>
+<p>自己下载的压缩包或者编译的包，有些可以选择安装目录，一般放在/usr/local/，也有在/opt的。</p>
+<ol start="7" type="1">
+<li>关于apt-get的缓存目录：</li>
+</ol>
+<p>默认的缓存目录是/var/cache/apt/archives/</p>
+<p>为日后重装系统后安装软件节省下载时间或者将软件包给别人用</p>
+<hr>
+<p>参考链接：</p>
+<p><a href="https://ywnz.com/linuxjc/1727.html" target="_blank" rel="noopener">Ubuntu18.04安装后应该做的事</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/56253982" target="_blank" rel="noopener">Linux玩家必备：Ubuntu完全配置指南</a></p>
+<p><a href="https://blog.csdn.net/ice__snow/article/details/80152068" target="_blank" rel="noopener">Ubuntu
+18.04配置及美化</a></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Tools/">Tools</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Tools/Linux/">Linux</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Linux/">Linux</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/accc2125.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Linux+Docker深度学习环境</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/b75580e5.html">
+                        <span class="hidden-mobile">中文文本处理</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>

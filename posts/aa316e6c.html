@@ -1,0 +1,842 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="简要记录从JEM、SupContrast、Momentum Contrast到Simple Siamese的一系列对比学习方法。">
+  <meta name="author" content="江左时雨">
+  <meta name="keywords" content="机器学习,Machine Learning,自然语言处理,NLP,深度学习,Deep Learning,计算机,Coding,生活随笔">
+  <meta name="description" content="简要记录从JEM、SupContrast、Momentum Contrast到Simple Siamese的一系列对比学习方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Self-supervised methods note">
+<meta property="og:url" content="https://racleray.github.io/posts/aa316e6c.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="简要记录从JEM、SupContrast、Momentum Contrast到Simple Siamese的一系列对比学习方法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325132453856.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325132509264.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325132522763.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325132728516.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325132742173.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325132852898.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325132742173.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/note_pic/image-20210325135929140.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325141640924.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325141705462.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325141838354.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325143354895.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325144230523.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325144104440.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325145037111.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/note_pic/image-20210325145319564.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325145506469.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325151256643.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325151340615.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325153918958.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325154027809.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325153953440.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325160231546.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/note_pic/image-20210325160425754.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325160539811.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/note_pic/image-20210325161937370.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/note_pic/image-20210325162122950.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325163343143.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325163245658.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/note_pic/image-20210325163549980.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325180628135.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/note_pic/image-20210325180841797.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325181017801.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325181033739.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325181108866.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/note_pic/image-20210325184008628.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325184150946.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/note_pic/image-20210325184222198.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325170733648.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325170834493.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325171007836.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325171036935.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/note_pic/image-20210325171308159.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325171359577.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325171534637.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325171557166.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325173002725.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325173301941.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325173341416.png">
+<meta property="article:published_time" content="2021-03-25T10:56:12.000Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:31.037Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="self-supervise">
+<meta property="article:tag" content="contrastive learning">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325132453856.png">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>Self-supervised methods note - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Self-supervised methods note">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-03-25 18:56" pubdate>
+        2021年3月25日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      4k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      12 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Self-supervised methods note</h1>
+            
+            <div class="markdown-body">
+              <h3><span id="jem">JEM</span></h3>
+<p><a href="https://arxiv.org/abs/2002.05709" target="_blank" rel="noopener">paper</a>, <a href="https://github.com/tohmae/pytorch-jem?utm_source=catalyzex.com" target="_blank" rel="noopener">link</a></p>
+<p>Google</p>
+<p>建模联合概率，factorize为监督部分和非监督部分。同时论文指出从y开始factorize的话，效果会下降。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325132453856.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325132509264.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325132522763.png" srcset="/img/loading.gif" lazyload></p>
+<p>energy部分使用 Stochastic Gradient Langevin Dynamics
+（SGLD）对生成数据采样，最小化其energy</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325132728516.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325132742173.png" srcset="/img/loading.gif" lazyload></p>
+<p>framework：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325132852898.png" srcset="/img/loading.gif" lazyload style="zoom:80%;"></p>
+<p>达到效果：提高了 calibration（输出与真实分布具有一致性）, robustness,
+和out-of-distribution detection方面的性能。</p>
+<p>问题：训练自然会变慢（CIFAR10一个epoch为半个小时），另外就是不稳定，SGLD采样使用随机数据开始。</p>
+<p>JEM采样方式来自 Implicit Generation and Modeling with EBM</p>
+<h3><span id="buffer-sample">Buffer Sample</span></h3>
+<p><a href="https://github.com/rosinality/igebm-pytorch" target="_blank" rel="noopener">igebm-pytorch</a>，
+<a href="https://arxiv.org/abs/1903.08689" target="_blank" rel="noopener">link</a>，Google</p>
+<p>先比于VAE和GAN，是一种根据energy采样的隐式采样，使用一个主网络，可以将生成的限制和目标构建成损失函数。但是生成样本分布需要更多的计算迭代次数。</p>
+<p>energy based采样主要是高维数据采样困难。真实图片分布在high
+energy区域，噪声图片分布在low energy区域。</p>
+<p>方法：</p>
+<ol type="1">
+<li>随机输入开始</li>
+<li>使用模型输出 + SGLD迭代采样出sample i</li>
+<li>将更新过的sample i重新写入buffer</li>
+<li>2、3步迭代 K 次。K不能太小。论文中60，JEM 20</li>
+</ol>
+<p>SGLD：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325132742173.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/note_pic/image-20210325135929140.png" srcset="/img/loading.gif" lazyload alt style="zoom:80%;"></p>
+<h3><span id="supcontrast">SupContrast</span></h3>
+<p><a href="https://arxiv.org/abs/2004.11362" target="_blank" rel="noopener">paper</a>，<a href="https://github.com/HobbitLong/SupContrast" target="_blank" rel="noopener">git</a>，Google</p>
+<p>contrastive
+learning一般的方式是，先数据增广，然后通过模型识别出来自同一张图的输入，将不是来自同一张图的输入的相似度变小。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325141640924.png" srcset="/img/loading.gif" lazyload></p>
+<p>Supervised Contrastive
+Learning将识别对象变为同一类图片，而不是同一张图片。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325141705462.png" srcset="/img/loading.gif" lazyload></p>
+<p>损失函数定义为：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325141838354.png" srcset="/img/loading.gif" lazyload></p>
+<p>论文中还有另一种形式的L，但是效果不好。</p>
+<p>通过引入标签数据，计算同一类图片的相似度。在计算损失时，处理同一类图片方法如下</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">...<br><span class="hljs-comment"># 将相同label的mask出来</span><br>mask = torch.eq(labels, labels.T).float()<br><br><span class="hljs-comment"># tile mask：增广数据shape匹配</span><br>mask = mask.repeat(anchor_count, contrast_count)<br><br><span class="hljs-comment"># mask-out 自己对自己位置进行mask</span><br>logits_mask = torch.scatter(<br>    torch.ones_like(mask),<br>    <span class="hljs-number">1</span>,<br>    torch.arange(batch_size * anchor_count).view(<span class="hljs-number">-1</span>, <span class="hljs-number">1</span>).to(device),<br>    <span class="hljs-number">0</span><br>)<br>mask = mask * logits_mask<br>...<br></code></pre></div></td></tr></table></figure>
+<p>模型训练分为两个阶段。如果只是训练一个encoder，只需要第一阶段。若是要进行分类任务，需要固定encoder训练第二阶段分类器。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325143354895.png" srcset="/img/loading.gif" lazyload></p>
+<p>实验结果：模型对超参数的敏感性降低，使用Supervised Contrastive
+Loss能够提升分类准确率（论文中在Imagenet等多个数据集上进行了实验）。</p>
+<h3><span id="hybriddiscriminative-generative">Hybrid
+Discriminative-Generative</span></h3>
+<p><a href="https://arxiv.org/abs/2007.09070" target="_blank" rel="noopener">paper</a>，<a href="https://github.com/lhao499/HDGE?utm_source=catalyzex.com" target="_blank" rel="noopener">git</a>,
+UCB</p>
+<p>通过对比学习contrastive
+learning，混合监督与非监督一起训练。和Supervised Contrastive
+Learning中的encoder框架不同，没有两个编码的 contrastive 计算。从</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325144230523.png" srcset="/img/loading.gif" lazyload></p>
+<p>变为：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325144104440.png" srcset="/img/loading.gif" lazyload></p>
+<p>只有一个f(x)编码，和 label y。</p>
+<p>这个和 cross entropy 有点像。但是数据来源不同，这里数据是来自K大小的
+normalization samples，也是来自SGLD方法中设计的buffer。</p>
+<p>这个方法也是针对loss进行变化：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325145037111.png" srcset="/img/loading.gif" lazyload></p>
+<p>计算两个部分的cross entropy loss。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/note_pic/image-20210325145319564.png" srcset="/img/loading.gif" lazyload></p>
+<p>论文结果，相比于JEM，在CIFAR10上的效果，有一定提升</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325145506469.png" srcset="/img/loading.gif" lazyload></p>
+<p>提高了 calibration, robustness, 和out-of-distribution
+detection方面的性能。</p>
+<p>同时K越大，效果越好。“有钱人的游戏”。</p>
+<h3><span id="momentum-contrast">Momentum Contrast</span></h3>
+<p><a href="https://arxiv.org/abs/1911.05722" target="_blank" rel="noopener">paper</a>，<a href="https://github.com/HobbitLong/PyContrast/tree/master/pycontrast" target="_blank" rel="noopener">git</a>，FB</p>
+<p><a href="https://github.com/HobbitLong/PyContrast" target="_blank" rel="noopener">PyContrast</a>：pytorch
+implementation of a set of (improved) SoTA methods using the same
+training and evaluation pipeline.</p>
+<p>首先contrastive loss 计算的一般框架：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325151256643.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325151340615.png" srcset="/img/loading.gif" lazyload></p>
+<p>就是 k+1个softmax分类器。</p>
+<p>目前的训练方式：</p>
+<ol type="1">
+<li>end to
+end：输入一个batch，进行数据增广，然后优化来自同一张图片的相似度。如果有多个类，那么一个batch的数据，覆盖的类是有限的。</li>
+<li>memory bank: 使用一个encoder，构建memory
+bank（样本的vector表示集合），随机抽取batch
+size个数据，与query正例计算loss。然后再更新memory
+bank中的样本表达数据。如此循环。</li>
+<li>MoCo：使用一个大小为k的queue，出队batch size个数据经过 momentum
+encoder，与query正例计算loss。然后使用 encoder的参数，以一定 momentum
+更新 momentum encoder参数。重新入队batch size个样本。</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325153918958.png" srcset="/img/loading.gif" lazyload></p>
+<p>momentum
+更新，论文实验发现，m应该设置为一个很接近1的数，比如0.9999：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325154027809.png" srcset="/img/loading.gif" lazyload></p>
+<p>MoCo伪代码：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325153953440.png" srcset="/img/loading.gif" lazyload></p>
+<p>经过MoCo得到一个预训练模型 encoder，使用就类似 BERT 之类的模型。</p>
+<p>接一个简单 Linear classifier 就可以达到接近监督训练模型的效果。</p>
+<h3><span id="simclr">SimCLR</span></h3>
+<p><a href="https://arxiv.org/abs/2002.05709" target="_blank" rel="noopener">paper</a>，<a href="https://github.com/sthalles/SimCLR?utm_source=catalyzex.com" target="_blank" rel="noopener">git</a>，Google</p>
+<p>在MoCo之上的改进。两个点：</p>
+<ol type="1">
+<li>数据增广加一倍，一个图片会有两个 aug(x) 。</li>
+<li>计算NCE时，使用Cosine Similarity，而不是MoCo中的 inner
+product。</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325160231546.png" srcset="/img/loading.gif" lazyload></p>
+<p>增广方法使用了：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/note_pic/image-20210325160425754.png" srcset="/img/loading.gif" lazyload alt style="zoom:80%;"></p>
+<p>framework：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325160539811.png" srcset="/img/loading.gif" lazyload></p>
+<p>模型结构：</p>
+<p>使用encoder时，如果使用预训练的Resnet之类在ImageNet训练的模型，输出部分重新设计，不需要转到1000类，直接输出模型表征经过avgpool
++ fc 之后的结果，即 图中 h。</p>
+<p>h 之后还增加 g(x) DNN层变换。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/note_pic/image-20210325161937370.png" srcset="/img/loading.gif" lazyload></p>
+<p>其他变化：</p>
+<ol type="1">
+<li>放弃 MoCo的 queue，也不用 memory bank，直接用很大的batch
+size....</li>
+<li>使用LARS优化器</li>
+<li>32到128个GPU训练</li>
+</ol>
+<p>论文给出的self-supervised模型+linear classifier在ImageNet上的Top-1
+accuracy.</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/note_pic/image-20210325162122950.png" srcset="/img/loading.gif" lazyload></p>
+<h3><span id="bootstrap-your-own-latent">Bootstrap your own latent</span></h3>
+<p><a href="https://arxiv.org/abs/2006.07733" target="_blank" rel="noopener">paper</a>, <a href="https://github.com/lucidrains/byol-pytorch?utm_source=catalyzex.com" target="_blank" rel="noopener">git</a>，
+Google</p>
+<p>结合SimCLR和MoCo：</p>
+<ol type="1">
+<li><p>结构还是SimCLR的结构，只是一个分支在这里称为online，一个称为target。</p></li>
+<li><p>使用MoCo的 momentum 更新 momentum
+encoder参数的方法，更新target网路参数。</p></li>
+<li><p>target部分不计算bp。</p></li>
+<li><p>重新定义损失为mean squared error形式，不需要构造负样本对：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325163343143.png" srcset="/img/loading.gif" lazyload></p></li>
+</ol>
+<p>结构：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325163245658.png" srcset="/img/loading.gif" lazyload></p>
+<p>当然，又是一次提升:</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/note_pic/image-20210325163549980.png" srcset="/img/loading.gif" lazyload></p>
+<p>同时，BYOL对batch的敏感性比SimCLR低一些。</p>
+<h3><span id="simple-siamese-simpler-ampbetter">Simple Siamese: simpler &amp;
+better</span></h3>
+<p><a href="https://arxiv.org/abs/2011.10566" target="_blank" rel="noopener">paper</a>，<a href="https://github.com/PatrickHua/SimSiam?utm_source=catalyzex.com" target="_blank" rel="noopener">git</a>，
+FB</p>
+<p>结合了BOYL和SimCLR，将Siamese结构加入模型，得到一个更neat的设计。</p>
+<ol type="1">
+<li>删掉BOYL的 momentum encoder。</li>
+<li>不用构造SimCLR中的negative pairs。</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325180628135.png" srcset="/img/loading.gif" lazyload></p>
+<p>encoder对两个aug(x)计算hidden representation：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/note_pic/image-20210325180841797.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;"></p>
+<p>计算损失函数：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325181017801.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325181033739.png" srcset="/img/loading.gif" lazyload></p>
+<p>伪代码：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325181108866.png" srcset="/img/loading.gif" lazyload></p>
+<p>stopgrad部分视为一个constant输入。</p>
+<p>其他设计：</p>
+<ol type="1">
+<li>优化器SGD + 0.9 momentum动量 + 0.0001 的 weight decay</li>
+<li>不再需要很大的batch size，batch size 512即可</li>
+</ol>
+<p>消融实验结果：</p>
+<ol type="1">
+<li>lr不要要decay，效果最好</li>
+<li>batch size最大512即可</li>
+<li>loss设计为 cosine
+形式更好，在hidden层和predict层之前使用BN效果最好</li>
+<li>Loss的对称计算形式提升了效果。</li>
+</ol>
+<p>SimSiam不再需要negative sample pairs ，large batches ，和momentum
+encoders。终于找到一个简洁而有效的model。当然，后浪依然会有。</p>
+<h4><span id="why-stop-gradient">Why stop-gradient?</span></h4>
+<p>论文假设只是一个EM模型：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/note_pic/image-20210325184008628.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325184150946.png" srcset="/img/loading.gif" lazyload></p>
+<p>那么问题转化为：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/note_pic/image-20210325184222198.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;"></p>
+<p>假设从 <span class="math inline">\(\eta\)</span>
+网络输出就假设为当前期望估计。更新<span class="math inline">\(\theta\)</span>就是在计算最优化损失。所以，计算期望时，自然是不更新<span class="math inline">\(\theta\)</span>的。</p>
+<p>这里predictor的作用也是假设loss是在两侧 expectation
+上进行计算的，这只是假设，严格证明没有。</p>
+<p>这因为EM显示的合理性，所以在 stop-gradient
+时，模型能够收敛到一个好的结果。而如果不进行
+stop-gradient，训练反而会变得不稳定。</p>
+<h3><span id="contrastivelearning-with-adversarial-examples">Contrastive
+Learning with Adversarial Examples</span></h3>
+<p>理论偏研究，没有开源实现。</p>
+<p>基于SimCLR框架，选择能最大化差异的样本，然后再使之相似性损失最小化。</p>
+<p>将SimCLR损失写成：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325170733648.png" srcset="/img/loading.gif" lazyload></p>
+<p>然后固定一个增广样本输入，然后找差异最大的另一个：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325170834493.png" srcset="/img/loading.gif" lazyload></p>
+<p>计算扰动：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325171007836.png" srcset="/img/loading.gif" lazyload></p>
+<p>得到对抗样本：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325171036935.png" srcset="/img/loading.gif" lazyload></p>
+<p>计算损失（16）：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/note_pic/image-20210325171308159.png" srcset="/img/loading.gif" lazyload alt style="zoom:80%;"></p>
+<p>算法设计：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325171359577.png" srcset="/img/loading.gif" lazyload></p>
+<p>计算 <span class="math inline">\(W^*\)</span>（15）:</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325171534637.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325171557166.png" srcset="/img/loading.gif" lazyload></p>
+<h3><span id="more">More</span></h3>
+<h4><span id="adversarialexamples-improve-image-recognition">Adversarial
+Examples Improve Image Recognition</span></h4>
+<p><a href="https://arxiv.org/abs/1911.09665" target="_blank" rel="noopener">paper</a>，<a href="https://github.com/tensorflow/tpu/tree/master/models/official/efficientnet?utm_source=catalyzex.com" target="_blank" rel="noopener">在EfficientNet中使用的效果评测</a></p>
+<p>提升的基本思想，加入对抗样本，联合原数据进行训练</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325173002725.png" srcset="/img/loading.gif" lazyload></p>
+<p>max部分为求得最大化差异的对抗样本损失。</p>
+<p>但是，实际效果并不好，因为原数据与对抗样本的分布不匹配。所以提出，两个BN分布处理原数据和对抗样本。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325173301941.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/self-supervised-methods-note_pic/image-20210325173341416.png" srcset="/img/loading.gif" lazyload></p>
+<p>然后，在预测时，只使用主BN层。</p>
+<p>当模型越大，效果提升越明显。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/Contrastive-Learning/">Contrastive Learning</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/self-supervise/">self-supervise</a>
+                    
+                      <a class="hover-with-bg" href="/tags/contrastive-learning/">contrastive learning</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/d4b0eecc.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">UDA & MixMatch</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/aa5b647c.html">
+                        <span class="hidden-mobile">Joint Extraction of Entities and Relations 2020</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        loader: {
+          load: ['ui/lazy']
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>

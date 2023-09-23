@@ -1,0 +1,747 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="记录关于并行计算的一点东西。包括并行与分布式的概念、使用python工具包的简单示例。">
+  <meta name="author" content="江左时雨">
+  <meta name="keywords" content="机器学习,Machine Learning,自然语言处理,NLP,深度学习,Deep Learning,计算机,Coding,生活随笔">
+  <meta name="description" content="记录关于并行计算的一点东西。包括并行与分布式的概念、使用python工具包的简单示例。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅涉python与分布式">
+<meta property="og:url" content="https://racleray.github.io/posts/cdee5c8d.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="记录关于并行计算的一点东西。包括并行与分布式的概念、使用python工具包的简单示例。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/python%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F_pic/image-20210224103645288.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/python%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F_pic/image-20210224103754677.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/python%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F_pic/image-20210224104425223.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/python%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F_pic/image-20210224104653051.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/python%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F_pic/image-20210224182217952.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/python%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F_pic/image-20210224185036957.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/python%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F_pic/image-20210224185417007.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/python%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F_pic/image-20210224185353263.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/python%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F_pic/image-20210224192154714.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/python%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F_pic/image-20210224192813155.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/python%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F_pic/image-20210224192839727.png">
+<meta property="article:published_time" content="2021-02-24T12:23:25.000Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:31.046Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="ray">
+<meta property="article:tag" content="distributed">
+<meta property="article:tag" content="asyc">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/python%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F_pic/image-20210224103645288.png">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>浅涉python与分布式 - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="浅涉python与分布式">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-02-24 20:23" pubdate>
+        2021年2月24日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      16k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      49 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">浅涉python与分布式</h1>
+            
+            <div class="markdown-body">
+              <h2><span id="并行和分布式计算介绍">并行和分布式计算介绍</span></h2>
+<p>现代计算的特点，主板上安装多块处理器（每个处理器含有多个核心），这使得计算机能真正地实现并发。</p>
+<blockquote>
+<p>一个处理器同一时间只能处理同一事务；后面章节我们会看到，当处理器快到一定程度，就可以给出同一时间进行多项任务的假象。若要真正实现同一时间多任务，就需要多个处理器。</p>
+</blockquote>
+<p>另一个是高速计算机网络。它让无穷多的电脑实现了相互通讯。</p>
+<h4><span id="并行计算">并行计算</span></h4>
+<p>并行计算是同时使用多个处理器处理事务。</p>
+<h4><span id="分布式计算">分布式计算</span></h4>
+<p>分布式计算是指同一时间使用多台计算机处理一个任务。只有当计算机之间互相连接时，才可以使用分布式计算。要记住，真正的瓶颈往往是数据而不是CPU。</p>
+<p>并行和分布式计算的最明显的差异就是底层的内存架构和访问方式不同。</p>
+<p>并行和四个处理器可以访问同一内存地址。对于分布式应用，不同的并发任务不能正常访问同一内存。原因是，一些任务是在这一台计算机运行，一些任务是在另一台计算机运行，它们是物理分隔的，通过网络进行数据传输。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/python与分布式_pic/image-20210224103645288.png" srcset="/img/loading.gif" lazyload alt style="zoom:50%;"></p>
+<p>现实中，计算机网络通讯就像一个纯粹的分布式内存架构。然而，每台计算机有多个处理器，运行着共享式内存架构。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/python与分布式_pic/image-20210224103754677.png" srcset="/img/loading.gif" lazyload alt style="zoom:50%;"></p>
+<p>分布式内存系统扩展性强、组建成本低：需要更高性能，扩展即可。另一优点是，处理器可以访问各自的内存，不必担心发生Race
+condition。</p>
+<p>缺点是，开发者需要手动写数据传输的策略，需要考虑数据存储的位置。另外，不是所有算法都能容易移植到这种架构。</p>
+<h4><span id="阿姆达尔定律">阿姆达尔定律</span></h4>
+<p>考虑一个部分并行的算法，称<code>P</code>为并行分量，<code>S</code>为序列分量（即非并行分量），<code>P+S=100%</code>。<code>T(n)</code>为运行时间，处理器数量为<code>n</code>。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/python与分布式_pic/image-20210224104425223.png" srcset="/img/loading.gif" lazyload alt style="zoom:60%;"></p>
+<p>对比T(n)和T(1)可以得到，分布式处理的加速比。</p>
+<p>随着<code>n</code>的提高，加速的效果不让人满意。使用10个处理器，是9.2倍速。使用100个处理器，则是50倍速。使用1000个处理器，仅仅是91倍速。</p>
+<p>阿姆达尔定律告诉我们两点：我们最快可以将倍速提高到多少；收益减少时，何时应该减少硬件资源的投入。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/python与分布式_pic/image-20210224104653051.png" srcset="/img/loading.gif" lazyload alt style="zoom:50%;"></p>
+<h2><span id="异步编程非阻塞编程">异步编程（非阻塞编程）</span></h2>
+<p>与传统的同步编程相比，异步编程或非阻塞编程，可以使性能获得极大提高。</p>
+<p>理想的状态应该是安排一下任务，当一个任务等待I/O时，它处于悬停状态，就让另一个任务接管CPU。这就是异步（也称为事件驱动）编程。</p>
+<p>使用多线程在不同的线程并行运行，也可以达到同样的效果。但是，有一个显著的不同：使用多线程时，是由<strong>操作系统决定</strong>哪个线程处于运行或悬停。然而，在异步编程中，每个任务可以<strong>自己决定</strong>是否放弃CPU。</p>
+<p>另外，单单使用异步编程，我们不能做出真正的并发：同一时间仅仅有一个任务在运行。</p>
+<p>另一点要注意的是，异步编程更善于处理I/O密集型任务，而不是CPU密集型任务（暂停任务不会使性能提高）。</p>
+<p>任何异步代码都要精心选择非阻塞的库，以防使用阻塞代码。</p>
+<h3><span id="协程">协程</span></h3>
+<p>在Python中，让一个功能中途暂停的关键是使用协程。</p>
+<p>协程就是一类函数，它可以通过<code>yield</code>，在指定位置暂停或继续任务。需要注意，尽管协程是强化的生成器，在概念意义上并不等于生成器。原因是，协程与迭代无关。另一不同点，生成器产生值，而协程消除值。</p>
+<blockquote>
+<p>生成器就是一个callable，它生成一个结果序列，而不是返回结果。这是通过产生（通过<code>yield</code>关键字）值而不是返回值</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">mygenerator</span><span class="hljs-params">(n)</span>:</span><br>    <span class="hljs-keyword">while</span> n:<br>        n -= <span class="hljs-number">1</span><br>        <span class="hljs-keyword">yield</span> n<br></code></pre></div></td></tr></table></figure>
+<p><code>next()</code>从生成的序列产生一个值，本质上，生成器是简化的迭代器，免去了定义类中<code>__iter__</code>和<code>__next__</code>的方法。外，生成器是一次性操作，不能重复生成的序列。</p>
+<p><code>__iter__</code>和<code>__next__</code>方法，运行了迭代协议：前者返回了迭代的对象，后者逐个返回了序列中的元素。</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyIterator</span><span class="hljs-params">(object)</span>:</span><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, xs)</span>:</span><br>        self.xs = xs<br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__iter__</span><span class="hljs-params">(self)</span>:</span><br>        <span class="hljs-keyword">return</span> self<br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__next__</span><span class="hljs-params">(self)</span>:</span><br>        <span class="hljs-keyword">if</span> self.xs:<br>            <span class="hljs-keyword">return</span> self.xs.pop(<span class="hljs-number">0</span>)<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-keyword">raise</span> StopIteration<br></code></pre></div></td></tr></table></figure>
+</blockquote>
+<p>协程有三种主要的结构:</p>
+<p><code>yield()</code>： 用来暂停协程的执行</p>
+<p><code>send()</code>： 用来向协程传递数据（以让协程继续执行）</p>
+<p><code>close()</code>：用来关闭协程</p>
+<p>示例</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">complain_about</span><span class="hljs-params">(substring)</span>:</span><br>    print(<span class="hljs-string">'Please talk to me!'</span>)<br>    <span class="hljs-keyword">try</span>:<br>        <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>            <span class="hljs-comment"># 执行到此处，控制点返回shell，直到外部send数据到yield处，传递给text</span><br>            text = (<span class="hljs-keyword">yield</span>)<br>            <span class="hljs-keyword">if</span> substring <span class="hljs-keyword">in</span> text:<br>                print(<span class="hljs-string">'Oh no: I found a %s again!'</span><br>                      % (substring))<br>    <span class="hljs-keyword">except</span> GeneratorExit:<br>        print(<span class="hljs-string">'Ok, ok: I am quitting.'</span>)<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight ruby"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs ruby"><span class="hljs-meta">&gt;&gt;</span>&gt; c = complain_about(<span class="hljs-string">'Ruby'</span>)<br><span class="hljs-meta">&gt;&gt;</span>&gt; next(c)<br>Please talk to me!<br><span class="hljs-meta">&gt;&gt;</span>&gt; c.send(<span class="hljs-string">'Test data'</span>)<br><span class="hljs-meta">&gt;&gt;</span>&gt; c.send(<span class="hljs-string">'Some more random text'</span>)<br><span class="hljs-meta">&gt;&gt;</span>&gt; c.send(<span class="hljs-string">'Test data with Ruby somewhere in it'</span>)<br>Oh <span class="hljs-symbol">no:</span> I found a Ruby again!<br><span class="hljs-meta">&gt;&gt;</span>&gt; c.send(<span class="hljs-string">'Stop complaining about Ruby or else!'</span>)<br>Oh <span class="hljs-symbol">no:</span> I found a Ruby again!<br><span class="hljs-meta">&gt;&gt;</span>&gt; c.close()<br>Ok, <span class="hljs-symbol">ok:</span> I am quitting. 复制ErrorOK!<br></code></pre></div></td></tr></table></figure>
+<p>通过 next 启动协程，close关闭。</p>
+<p>词汇计数示例，文本来自http://www.gutenberg.org/cache/epub/2600/pg2600.txt。</p>
+<p>逐行读取文件（通过<code>cat</code>函数）；统计每行中<code>substring</code>的出现次数（<code>grep</code>协程）；求和并打印数据（<code>count</code>协程）。</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> functools <span class="hljs-keyword">import</span> wraps<br><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">coroutine</span><span class="hljs-params">(fn)</span>:</span><br><span class="hljs-meta">    @wraps(fn)</span><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">wrapper</span><span class="hljs-params">(*args, **kwargs)</span>:</span><br>        c = fn(*args, **kwargs)<br>        next(c)<br>        <span class="hljs-keyword">return</span> c<br><br>    <span class="hljs-keyword">return</span> wrapper<br><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">cat</span><span class="hljs-params">(f, case_insensitive, child)</span>:</span><br>    <span class="hljs-keyword">if</span> case_insensitive:<br>        line_processor = <span class="hljs-keyword">lambda</span> l: l.lower()<br>    <span class="hljs-keyword">else</span>:<br>        line_processor = <span class="hljs-keyword">lambda</span> l: l<br>    <span class="hljs-keyword">for</span> line <span class="hljs-keyword">in</span> f:<br>        child.send(line_processor(line))<br><br><br><span class="hljs-meta">@coroutine</span><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">grep</span><span class="hljs-params">(sub_str, case_insensitive, child)</span>:</span><br>    <span class="hljs-keyword">if</span> case_insensitive:<br>        sub_str = sub_str.lower()<br>    <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>        text = (<span class="hljs-keyword">yield</span>)  <span class="hljs-comment"># 等待send发送的数据</span><br>        child.send(text.count(sub_str))<br><br><br><span class="hljs-meta">@coroutine</span><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">count</span><span class="hljs-params">(sub_str)</span>:</span><br>    n = <span class="hljs-number">0</span><br>    <span class="hljs-keyword">try</span>:<br>        <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>            n += (<span class="hljs-keyword">yield</span>)<br>    <span class="hljs-keyword">except</span> GeneratorExit:<br>        print(sub_str, n)<br><br><br><span class="hljs-meta">@coroutine</span><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">fanout</span><span class="hljs-params">(children)</span>:</span><br>	<span class="hljs-comment"># 多个目标同时输入，计数</span><br>    <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>        data = (<span class="hljs-keyword">yield</span>)<br>        <span class="hljs-keyword">for</span> child <span class="hljs-keyword">in</span> children:<br>            child.send(data)<br><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:<br>    <span class="hljs-keyword">import</span> argparse<br>    parser = argparse.ArgumentParser()<br>    parser.add_argument(<span class="hljs-string">'-i'</span>, action=<span class="hljs-string">'store_true'</span>, dest=<span class="hljs-string">'case_insensitive'</span>)<br>    parser.add_argument(<span class="hljs-string">'pattern'</span>, type=str)<br>    parser.add_argument(<span class="hljs-string">'infile'</span>, type=argparse.FileType(<span class="hljs-string">'r'</span>))<br>    args = parser.parse_args()<br><br>    cat(args.infile, args.case_insensitive,<br>        grep(args.pattern, args.case_insensitive, count(args.pattern)))<br><br>    cat(<br>        args.infile, args.case_insensitive,<br>        fanout(<br>            [grep(p, args.case_insensitive, count(p)) <span class="hljs-keyword">for</span> p <span class="hljs-keyword">in</span> args.pattern]))<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight vim"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs vim"><span class="hljs-keyword">python</span> <span class="hljs-keyword">grep</span>.<span class="hljs-keyword">py</span> -i love pg2600.txt<br></code></pre></div></td></tr></table></figure>
+<h2><span id="并行计算">并行计算</span></h2>
+<p>如何使用多个CPU进行并行编程的。具体目标是加速CPU密集型任务。</p>
+<h3><span id="多线程">多线程</span></h3>
+<p>在单CPU系统中，使用多线程并不是真正的并行，在给定时间只有一个线程在运行。只有在多CPU计算机上，线程才是并行的。</p>
+<p>尽管Python的线程是OS原生的，全局锁却使特定时间只有一个是运行的。</p>
+<p>当一个协程或进程等待I/O时，让另一个运行CPU，也可以达到并发的效果。当一个任务需要占用CPU大量时间时，CPU
+Bound，就不会有多大提高。</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> threading <span class="hljs-keyword">import</span> Thread<br><span class="hljs-keyword">from</span> queue <span class="hljs-keyword">import</span> Queue<br><span class="hljs-keyword">import</span> urllib.request<br>URL = <span class="hljs-string">'http://finance.yahoo.com/d/quotes.csv?s=&#123;&#125;=X&amp;f=p'</span><br><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_rate</span><span class="hljs-params">(pair, outq, url_tmplt=URL)</span>:</span><br>    <span class="hljs-keyword">with</span> urllib.request.urlopen(url_tmplt.format(pair)) <span class="hljs-keyword">as</span> res:<br>        body = res.read()<br>    outq.put((pair, float(body.strip())))<br><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:<br>    <span class="hljs-keyword">import</span> argparse<br>    parser = argparse.ArgumentParser()<br>    parser.add_argument(<span class="hljs-string">'pairs'</span>, type=str, nargs=<span class="hljs-string">'+'</span>)<br>    args = parser.parse_args()<br>    outputq = Queue()<br>    <span class="hljs-keyword">for</span> pair <span class="hljs-keyword">in</span> args.pairs:<br>        t = Thread(target=get_rate, kwargs=&#123;<span class="hljs-string">'pair'</span>: pair, <span class="hljs-string">'outq'</span>: outputq&#125;)<br>        t.daemon = <span class="hljs-literal">True</span>  <span class="hljs-comment"># 结束时，会自行回收线程资源</span><br>        t.start()<br>    <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> args.pairs:<br>        pair, rate = outputq.get()<br>        print(pair, rate)<br>        outputq.task_done()<br>    outputq.join()<br></code></pre></div></td></tr></table></figure>
+<h3><span id="多进程">多进程</span></h3>
+<p>为避免全局锁对CPU制约型线程的影响，使用多进程。多进程有一些缺点，它必须启动Python的多个实例，启动时间长，耗费内存多。</p>
+<p>多进程有它们各自的内存空间，使用的是无共享架构，数据访问十分清晰。</p>
+<p>实现并行进程，python提供两个module：<strong>multiprocessing</strong>和<strong>concurrent.futures</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> concurrent.futures <span class="hljs-keyword">as</span> cf<br><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">fib</span><span class="hljs-params">(n)</span>:</span><br>    <span class="hljs-keyword">if</span> n &lt;= <span class="hljs-number">2</span>:<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span><br>    <span class="hljs-keyword">elif</span> n == <span class="hljs-number">0</span>:<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span><br>    <span class="hljs-keyword">elif</span> n &lt; <span class="hljs-number">0</span>:<br>        <span class="hljs-keyword">raise</span> Exception(<span class="hljs-string">'fib(n) is undefined for n &lt; 0'</span>)<br>    <span class="hljs-keyword">return</span> fib(n - <span class="hljs-number">1</span>) + fib(n - <span class="hljs-number">2</span>)<br><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:<br>    <span class="hljs-keyword">import</span> argparse<br>    parser = argparse.ArgumentParser()<br>    parser.add_argument(<span class="hljs-string">'-n'</span>, type=int, default=<span class="hljs-number">1</span>)<br>    parser.add_argument(<span class="hljs-string">'number'</span>, type=int, nargs=<span class="hljs-string">'?'</span>, default=<span class="hljs-number">34</span>)<br>    args = parser.parse_args()<br>    <span class="hljs-keyword">assert</span> args.n &gt;= <span class="hljs-number">1</span>, <span class="hljs-string">'The number of threads has to be &gt; 1'</span><br>    <br>    <span class="hljs-keyword">with</span> cf.ProcessPoolExecutor(max_workers=args.n) <span class="hljs-keyword">as</span> pool:<br>        results = pool.map(fib, [args.number] * args.n)<br></code></pre></div></td></tr></table></figure>
+<p>在四核处理器的计算机上运行时，可以实现真正的并行，运行一次到四次，时间差不多。</p>
+<p>进程数比处理器数目多时，性能会急剧下降。</p>
+<p>在工作进程之间交换数据，在学习C时，会用到</p>
+<ul>
+<li>管道 (使用最简单)</li>
+<li>信号 (开销最小)</li>
+<li>共享映射区 (无父子关系)</li>
+<li>本地套接字 (最稳定)</li>
+</ul>
+<p><code>multiprocessing</code>模块提供的方法是队列和管道。</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> multiprocessing <span class="hljs-keyword">as</span> mp<br><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">fib</span><span class="hljs-params">(n)</span>:</span><br>    <span class="hljs-keyword">if</span> n &lt;= <span class="hljs-number">2</span>:<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span><br>    <span class="hljs-keyword">elif</span> n == <span class="hljs-number">0</span>:<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span><br>    <span class="hljs-keyword">elif</span> n &lt; <span class="hljs-number">0</span>:<br>        <span class="hljs-keyword">raise</span> Exception(<span class="hljs-string">'fib(n) is undefined for n &lt; 0'</span>)<br>    <span class="hljs-keyword">return</span> fib(n - <span class="hljs-number">1</span>) + fib(n - <span class="hljs-number">2</span>)<br><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">worker</span><span class="hljs-params">(inq, outq)</span>:</span><br>    <span class="hljs-string">"inq 任务队列， outq 输出队列"</span><br>    <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>        data = inq.get()<br>        <span class="hljs-keyword">if</span> data <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>: <span class="hljs-comment"># 检测 哨兵值</span><br>            <span class="hljs-keyword">return</span><br>        fn, arg = data<br>        outq.put(fn(arg))<br><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:<br>    <span class="hljs-keyword">import</span> argparse<br>    parser = argparse.ArgumentParser()<br>    parser.add_argument(<span class="hljs-string">'-n'</span>, type=int, default=<span class="hljs-number">1</span>)<br>    parser.add_argument(<span class="hljs-string">'number'</span>, type=int, nargs=<span class="hljs-string">'?'</span>, default=<span class="hljs-number">34</span>)<br>    args = parser.parse_args()<br>    <span class="hljs-keyword">assert</span> args.n &gt;= <span class="hljs-number">1</span>, <span class="hljs-string">'The number of threads has to be &gt; 1'</span><br>    <br>    tasks = mp.Queue()<br>    results = mp.Queue()<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(args.n):<br>        tasks.put((fib, args.number))<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(args.n):<br>        mp.Process(target=worker, args=(tasks, results)).start()<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(args.n):<br>        print(results.get())<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(args.n):  <span class="hljs-comment"># 输入哨兵值，停止worker</span><br>        tasks.put(<span class="hljs-literal">None</span>)<br></code></pre></div></td></tr></table></figure>
+<p>开发并行应用的主要难点就是控制数据访问，避免竞争条件或篡改共享数据。要明确何时停止。阿姆达尔定律指出，并行是收益递减的。并行化可能耗时巨大。一定要知道，哪段代码是需要并行化的，理论加速上限又是多少。</p>
+<p>另外，避免收益递减的方法是增加任务量，提升并行任务的占比，这是古斯塔夫森定律的核心。</p>
+<h2><span id="celery">Celery</span></h2>
+<p>Celery（<a href="https://link.jianshu.com/?t=http://www.celeryproject.org/" target="_blank" rel="noopener">http://www.celeryproject.org</a>）是用到的第一个第三方库。Celery是一个分布任务队列，就是一个以队列为基础的系统。</p>
+<p>轻量化的队列任务调度包：https://python-rq.org/</p>
+<p>分别在主机安装RabbitMQ （windows: <a href="https://github.com/rabbitmq/rabbitmq-server/releases/download/v3.8.12/rabbitmq-server-3.8.12.exe" target="_blank" rel="noopener">exe</a>
+<a href="https://erlang.org/download/otp_versions_tree.html" target="_blank" rel="noopener">erlang</a>），ubuntu机器开启
+redis-server ( sudo apt-get install redis-server )，python环境安装
+celery，redis。（pip install celery[Redis]）</p>
+<p>就学习示例而言，自己搭建整个环境耗时太大，尤其在windows环境下！最好能云服务器环境，只管写代码，环境一般不会出问题。</p>
+<p>直接在几个虚拟机上测试比较方便。</p>
+<p>在机器1上：</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> celery<br> <br>app = celery.Celery(<span class="hljs-string">'test'</span>,<br>                     broker=<span class="hljs-string">'redis://192.168.56.104'</span>,<br>                     backend=<span class="hljs-string">'redis://192.168.56.103'</span>)<br>  <br><span class="hljs-meta">@app.task</span><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">echo</span><span class="hljs-params">(message)</span>:</span><br>    <span class="hljs-keyword">return</span> message<br></code></pre></div></td></tr></table></figure>
+<p>建立机器1，worker池</p>
+<figure class="highlight nginx"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs nginx"><span class="hljs-attribute">celery</span> -A test worker --loglevel=<span class="hljs-literal">info</span><br></code></pre></div></td></tr></table></figure>
+<p><code>celery</code>命令会默认启动CPU数目相同的worker进程。worker会使用<code>test</code>模块中的应用<code>app</code>（我们可以使用实例的名字<code>celery -A test.app worker</code>），并使用<code>INFO</code>等级在控制台显示日志。</p>
+<p>在机器2上（此处即为 master节点），保存一份test.py相同代码</p>
+<p>进入 python 交互环境：</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> test <span class="hljs-keyword">import</span> echo<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight ruby"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs ruby"><span class="hljs-meta">&gt;&gt;</span>&gt; res = echo.delay(<span class="hljs-string">'Python rocks!'</span>)<br><span class="hljs-meta">&gt;&gt;</span>&gt; res.result<br></code></pre></div></td></tr></table></figure>
+<p>可以在worker机器上执行程序，并返回结果</p>
+<h4><span id="分布式任务队列">分布式任务队列</span></h4>
+<p>master-worker架构，有一个中间件层，中间件层使用多个任务请求队列（即任务队列），和一个用于存储结果的队列（即结果后台）。</p>
+<p>主进程（也叫作<code>client</code>或<code>producer</code>）将任务请求安插到某个任务队列，从结果后台获取数据。worker进程订阅任务队列以明确任务是什么，并把结果放到结果后台。</p>
+<p>只管定制好 任务队列 和
+结果后台，其他worker、producer如何变化、什么程序都无所谓。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/python与分布式_pic/image-20210224182217952.png" srcset="/img/loading.gif" lazyload alt style="zoom:50%;"></p>
+<p>也称作 Master Worker 模式：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/python与分布式_pic/image-20210224185036957.png" srcset="/img/loading.gif" lazyload alt style="zoom:70%;"></p>
+<p>Master Worker 示例</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment"># master.py</span><br><span class="hljs-keyword">import</span> random, time, queue<br><span class="hljs-keyword">from</span> multiprocessing.managers <span class="hljs-keyword">import</span> BaseManager<br><br><span class="hljs-comment"># 发送任务的队列:</span><br>task_queue = queue.Queue()<br><span class="hljs-comment"># 接收结果的队列:</span><br>result_queue = queue.Queue()<br><br><br><span class="hljs-comment"># 从BaseManager继承的QueueManager:</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">QueueManager</span><span class="hljs-params">(BaseManager)</span>:</span><br>    <span class="hljs-keyword">pass</span><br><br><br><span class="hljs-comment"># 把两个Queue都注册到网络上, callable参数关联了Queue对象:</span><br>QueueManager.register(<span class="hljs-string">'get_task_queue'</span>, callable=<span class="hljs-keyword">lambda</span>: task_queue)<br>QueueManager.register(<span class="hljs-string">'get_result_queue'</span>, callable=<span class="hljs-keyword">lambda</span>: result_queue)<br><span class="hljs-comment"># 绑定端口5000, 设置验证码'abc':</span><br>manager = QueueManager(address=(<span class="hljs-string">''</span>, <span class="hljs-number">5000</span>), authkey=<span class="hljs-string">b'abc'</span>)<br><br><span class="hljs-comment"># 启动Queue:</span><br>manager.start()<br><span class="hljs-comment"># 获得通过网络访问的Queue对象:</span><br>task = manager.get_task_queue()<br>result = manager.get_result_queue()<br><br><span class="hljs-comment"># 注册任务</span><br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(<span class="hljs-number">10</span>):<br>    n = random.randint(<span class="hljs-number">0</span>, <span class="hljs-number">10000</span>)<br>    print(<span class="hljs-string">'Put task %d...'</span> % n)<br>    task.put(n)<br><br><span class="hljs-comment"># 读取结果:</span><br>print(<span class="hljs-string">'Try get results...'</span>)<br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(<span class="hljs-number">10</span>):<br>    r = result.get(timeout=<span class="hljs-number">10</span>)<br>    print(<span class="hljs-string">'Result: %s'</span> % r)<br><br><span class="hljs-comment"># 关闭:</span><br>manager.shutdown()<br>print(<span class="hljs-string">'master exit.'</span>)<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment"># worker.py</span><br><span class="hljs-keyword">import</span> time, sys, queue<br><span class="hljs-keyword">from</span> multiprocessing.managers <span class="hljs-keyword">import</span> BaseManager<br><br><br><span class="hljs-comment"># 可以在多个机器上同时开启多个worker</span><br><span class="hljs-comment"># 创建类似的QueueManager:</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">QueueManager</span><span class="hljs-params">(BaseManager)</span>:</span><br>    <span class="hljs-keyword">pass</span><br><br><br><span class="hljs-comment"># 由于这个QueueManager只从网络上获取Queue，所以注册时只提供名字:</span><br>QueueManager.register(<span class="hljs-string">'get_task_queue'</span>)<br>QueueManager.register(<span class="hljs-string">'get_result_queue'</span>)<br><br><span class="hljs-comment"># 连接到服务器，也就是运行task_master.py的机器:</span><br>server_addr = <span class="hljs-string">'127.0.0.1'</span><br>print(<span class="hljs-string">'Connect to server %s...'</span> % server_addr)<br><br><span class="hljs-comment"># 端口和验证码注意保持与task_master.py设置的完全一致:</span><br>m = QueueManager(address=(server_addr, <span class="hljs-number">5000</span>), authkey=<span class="hljs-string">b'abc'</span>)<br><span class="hljs-comment"># 从网络连接:</span><br>m.connect()<br><br><span class="hljs-comment"># 获取Queue的对象:</span><br>task = m.get_task_queue()<br>result = m.get_result_queue()<br><br><span class="hljs-comment"># 从task队列取任务,并把结果写入result队列:</span><br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(<span class="hljs-number">10</span>):<br>    <span class="hljs-keyword">try</span>:<br>        n = task.get(timeout=<span class="hljs-number">1</span>)<br>        print(<span class="hljs-string">'run task %d * %d...'</span> % (n, n))<br>        r = <span class="hljs-string">'%d * %d = %d'</span> % (n, n, n * n)<br>        time.sleep(<span class="hljs-number">1</span>)<br>        result.put(r)<br>    <span class="hljs-keyword">except</span> queue.Queue.Empty:<br>        print(<span class="hljs-string">'task queue is empty.'</span>)<br><br><span class="hljs-comment"># 处理结束:</span><br>print(<span class="hljs-string">'worker exit.'</span>)<br></code></pre></div></td></tr></table></figure>
+<p>使用中间件传递消息（基于网络），类似Go语言的channel（基于内存）。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/python与分布式_pic/image-20210224185417007.png" srcset="/img/loading.gif" lazyload alt style="zoom:50%;"></p>
+<p>另一种消息传递方式是，直接传递，Actor模型，一般有一个Global
+Schedule，设计的目的是计算。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/python与分布式_pic/image-20210224185353263.png" srcset="/img/loading.gif" lazyload alt style="zoom:50%;"></p>
+<p>Actor消息传递示例</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment"># actor.py</span><br><span class="hljs-keyword">from</span> queue <span class="hljs-keyword">import</span> Queue<br><span class="hljs-keyword">from</span> threading <span class="hljs-keyword">import</span> Thread, Event<br><br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ActorExit</span><span class="hljs-params">(Exception)</span>:</span><br>      <span class="hljs-keyword">pass</span><br><br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Actor</span><span class="hljs-params">(object)</span>:</span><br>      <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self)</span>:</span><br>          self._mailbox = Queue()<br><br>      <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">send</span><span class="hljs-params">(self, msg)</span>:</span><br>          <span class="hljs-string">"向_mailbox提交任务"</span><br>          self._mailbox.put(msg)<br><br>      <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">recv</span><span class="hljs-params">(self)</span>:</span><br>          <span class="hljs-string">"从_mailbox获取任务"</span><br>          msg = self._mailbox.get()<br>          <span class="hljs-keyword">if</span> msg <span class="hljs-keyword">is</span> ActorExit:<br>              <span class="hljs-keyword">raise</span> ActorExit()<br>          <span class="hljs-keyword">return</span> msg<br><br>      <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">close</span><span class="hljs-params">(self)</span>:</span><br>          self.send(ActorExit)<br><br>      <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">start</span><span class="hljs-params">(self)</span>:</span><br>          <span class="hljs-string">"启动线程执行任务"</span><br>          self._terminated = Event()<br>          t = Thread(target=self._bootstrap)<br>          t.daemon = <span class="hljs-literal">True</span><br>          t.start()<br><br>      <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">_bootstrap</span><span class="hljs-params">(self)</span>:</span><br>          <span class="hljs-keyword">try</span>:<br>              self.run()<br>          <span class="hljs-keyword">except</span> ActorExit:<br>              <span class="hljs-keyword">pass</span><br>          <span class="hljs-keyword">finally</span>:<br>              self._terminated.set()<br><br>      <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">join</span><span class="hljs-params">(self)</span>:</span><br>          self._terminated.wait()<br><br>      <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">run</span><span class="hljs-params">(self)</span>:</span><br>          <span class="hljs-string">'''</span><br><span class="hljs-string">          Run method to be implemented by the user</span><br><span class="hljs-string">          '''</span><br>          <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>              msg = self.recv()<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment"># test_actor.py</span><br><span class="hljs-keyword">from</span> .actor <span class="hljs-keyword">import</span> Actor<br><span class="hljs-keyword">from</span> threading <span class="hljs-keyword">import</span> Event<br><br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Result</span><span class="hljs-params">(object)</span>:</span><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self)</span>:</span><br>        self._evt = Event()<br>        self._result = <span class="hljs-literal">None</span><br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">set_result</span><span class="hljs-params">(self, value)</span>:</span><br>        self._result = value<br>        self._evt.set()  <span class="hljs-comment"># 当执行完成计算任务时，解除block</span><br><br><span class="hljs-meta">    @property</span><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">result</span><span class="hljs-params">(self)</span>:</span><br>        self._evt.wait()  <span class="hljs-comment"># 等待计算结果程序的执行完成，thread block</span><br>        <span class="hljs-keyword">return</span> self._result<br><br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Worker</span><span class="hljs-params">(Actor)</span>:</span><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">submit</span><span class="hljs-params">(self, func, *args, **kwargs)</span>:</span><br>        <span class="hljs-string">"注册任务"</span><br>        r = Result()<br>        self.send((func, args, kwargs, r))<br>        <span class="hljs-keyword">return</span> r<br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">run</span><span class="hljs-params">(self)</span>:</span><br>        <span class="hljs-string">"重写actor的run逻辑，执行用户程序"</span><br>        <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>            func, args, kwargs, r = self.recv()<br>            r.set_result(func(*args, **kwargs))<br><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:<br>    worker = Worker()<br>    worker.start()<br>    r = worker.submit(pow, <span class="hljs-number">2</span>, <span class="hljs-number">4</span>)<br>    print(<span class="hljs-string">'it will not block'</span>)<br>    print(r.result)<br></code></pre></div></td></tr></table></figure>
+<h2><span id="ray">Ray</span></h2>
+<p>基于Master Slaves，Actor的分布式框架。<a href="https://docs.ray.io/en/master/ray-overview/index.html" target="_blank" rel="noopener">DOC</a> <a href="https://github.com/anyscale/academy" target="_blank" rel="noopener">tutorials</a>。分布计算、深度学习调参等等，可是请问
+在下去哪里能领到更多的物理机器呢。。。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/python与分布式_pic/image-20210224192154714.png" srcset="/img/loading.gif" lazyload alt style="zoom:50%;"></p>
+<p>Global
+Scheduler：Master上启动了一个全局调度器，用于接收本地调度器提交的任务，并将任务分发给合适的本地任务调度器执行</p>
+<p>Redis Server：Master上启动了一到多个Redis
+Server用于保存分布式任务的状态信息（ControlState），包括对象机器的映射、任务描述、任务debug信息等。</p>
+<p>Local
+Scheduler：每个Slave上启动了一个本地调度器，用于提交任务到全局调度器，以及分配任务给当前机器的Worker进程</p>
+<p>Worker：每个Slave上可以启动多个Worker进程执行分布式任务，并将计算结果存储到Object
+Store，每一个有全局唯一的 Object ID</p>
+<p>Object Store：每个Slave上启动了一个Object
+Store存储只读数据对象，Worker可以通过<strong>共享内存的方式</strong>访问这些对象数据（通过Object
+ID），这样可以有效地减少内存拷贝和对象序列化成本。Object
+Store底层由Apache Arrow实现</p>
+<p>Plasma：每个Slave上的Object
+Store都由一个名为Plasma的对象管理器进行管理，它可以在<strong>Worker访问本地Object
+Store上不存在的远程数据对象时，主动拉取其它Slave上的对象数据到当前机器</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/python与分布式_pic/image-20210224192813155.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/python与分布式_pic/image-20210224192839727.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;"></p>
+<blockquote>
+<p>Ray简易环境搭建</p>
+<ul>
+<li><p>配置Conda</p>
+<figure class="highlight vim"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs vim">$ wget http<span class="hljs-variable">s:</span>//repo.anaconda.<span class="hljs-keyword">com</span>/miniconda/Miniconda3-latest-Linux-x86_64.<span class="hljs-keyword">sh</span><br><br>$ <span class="hljs-keyword">sh</span> Miniconda3-latest-Linux-x86_64.<span class="hljs-keyword">sh</span><br></code></pre></div></td></tr></table></figure></li>
+<li><p>安装Ray，推荐python3.7，其他版本存在已知的Bug（官方）</p>
+<figure class="highlight sql"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sql">$ conda <span class="hljs-keyword">create</span> <span class="hljs-comment">--name ray python=3.7</span><br><br>$ conda <span class="hljs-keyword">activate</span> ray<br><br>$ pip <span class="hljs-keyword">install</span> ray<br></code></pre></div></td></tr></table></figure></li>
+</ul>
+<p>Ray 集群搭建:</p>
+<ul>
+<li>部署Redis服务(下面假设部署在localhost:6379)</li>
+<li>选择任意一台主机作为Master启动 ray start --head --ip localhost
+--redis-port=6379</li>
+<li>在集群其他机器上启动 ray start
+--address=[head_node_address]:6379</li>
+</ul>
+</blockquote>
+<p>运行一个Map
+Reduce示例。数据准备，下载Wiki数据，使用WikiExtractor解析：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs elixir"><span class="hljs-variable">$ </span>wget <span class="hljs-symbol">https:</span>/<span class="hljs-regexp">/dumps.wikimedia.org/enwiki</span><span class="hljs-regexp">/latest/enwiki</span>-latest-pages-articles-multistream9.xml-p1791081p2336422.bz2<br><span class="hljs-variable">$ </span>python WikiExtractor.py -o /data enwiki-latest-pages-articles-multistream9.xml-p1791081p2336422.bz2<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> argparse<br><span class="hljs-keyword">from</span> collections <span class="hljs-keyword">import</span> Counter, defaultdict<br><span class="hljs-keyword">import</span> heapq<br><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br><span class="hljs-keyword">import</span> os<br><span class="hljs-keyword">import</span> ray<br><br>parser = argparse.ArgumentParser()<br>parser.add_argument(<span class="hljs-string">"--num-mappers"</span>,<br>                    help=<span class="hljs-string">"number of mapper actors used"</span>,<br>                    default=<span class="hljs-number">3</span>,<br>                    type=int)<br>parser.add_argument(<span class="hljs-string">"--num-reducers"</span>,<br>                    help=<span class="hljs-string">"number of reducer actors used"</span>,<br>                    default=<span class="hljs-number">4</span>,<br>                    type=int)<br><br><span class="hljs-meta">@ray.remote</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Mapper</span><span class="hljs-params">(object)</span>:</span><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, content_stream)</span>:</span><br>        self.content_stream = content_stream<br>        self.num_articles_processed = <span class="hljs-number">0</span><br>        self.articles = []<br>        self.word_counts = []<br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_new_article</span><span class="hljs-params">(self)</span>:</span><br>        article = self.content_stream.next()<br>        <span class="hljs-comment"># Count the words and store the result.</span><br>        self.word_counts.append(Counter(article.split(<span class="hljs-string">" "</span>)))<br>        self.num_articles_processed += <span class="hljs-number">1</span><br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_range</span><span class="hljs-params">(self, article_index, keys)</span>:</span><br>        <span class="hljs-string">"""keys: list of 2 chars</span><br><span class="hljs-string">        article_index：当前mapper处理的文章index，需要与GlobalScheduler中任务参数进行通信，</span><br><span class="hljs-string">            保证当前article在整个处理序列中处于article_index的位置"""</span><br>        <span class="hljs-comment"># Process more articles if this Mapper hasn't processed enough yet.</span><br>        <span class="hljs-keyword">while</span> self.num_articles_processed &lt; article_index + <span class="hljs-number">1</span>:<br>            self.get_new_article()<br>        <span class="hljs-comment"># Return the word counts from within a given character range.</span><br>        <span class="hljs-keyword">return</span> [(k, v) <span class="hljs-keyword">for</span> k, v <span class="hljs-keyword">in</span> self.word_counts[article_index].items()<br>                <span class="hljs-keyword">if</span> len(k) &gt;= <span class="hljs-number">1</span> <span class="hljs-keyword">and</span> k[<span class="hljs-number">0</span>] &gt;= keys[<span class="hljs-number">0</span>] <span class="hljs-keyword">and</span> k[<span class="hljs-number">0</span>] &lt;= keys[<span class="hljs-number">1</span>]]<br><br><br><span class="hljs-meta">@ray.remote</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Reducer</span><span class="hljs-params">(object)</span>:</span><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, keys, *mappers)</span>:</span><br>        <span class="hljs-string">"针对不同范围的开头字母区间，进行reduce"</span><br>        self.mappers = mappers<br>        self.keys = keys<br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">next_reduce_result</span><span class="hljs-params">(self, article_index)</span>:</span><br>        word_count_sum = defaultdict(<span class="hljs-keyword">lambda</span>: <span class="hljs-number">0</span>)<br>        <span class="hljs-comment"># Get the word counts for this Reducer's keys from all of the Mappers</span><br>        <span class="hljs-comment"># and aggregate the results.</span><br>        count_ids = [<br>            mapper.get_range.remote(article_index, self.keys)<br>            <span class="hljs-keyword">for</span> mapper <span class="hljs-keyword">in</span> self.mappers<br>        ]<br>        <span class="hljs-comment"># From many Mappers</span><br>        <span class="hljs-keyword">for</span> count_id <span class="hljs-keyword">in</span> count_ids:<br>            <span class="hljs-keyword">for</span> k, v <span class="hljs-keyword">in</span> ray.get(count_id):<br>                word_count_sum[k] += v<br>        <span class="hljs-keyword">return</span> word_count_sum<br><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_content</span><span class="hljs-params">(file, floder=<span class="hljs-string">'/data/'</span>)</span>:</span><br>    file = floder + file<br>    f = open(file, <span class="hljs-string">'r'</span>)<br>    <span class="hljs-keyword">return</span> f.read()<br><br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Stream</span><span class="hljs-params">(object)</span>:</span><br>    <span class="hljs-string">"数据流生成"</span><br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, max, folder)</span>:</span><br>        <span class="hljs-string">"""max: 最大提取文件数量</span><br><span class="hljs-string">               folder: 文件夹名称</span><br><span class="hljs-string">        """</span><br>        self.index = <span class="hljs-number">0</span><br>        self.max = max<br>        self.folder = folder<br>        self.g = <span class="hljs-literal">None</span><br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">init</span><span class="hljs-params">(self)</span>:</span><br>        self.g = self.content()<br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">file</span><span class="hljs-params">(self)</span>:</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-string">f"wiki_<span class="hljs-subst">&#123;<span class="hljs-number">0</span>&#125;</span><span class="hljs-subst">&#123;self.index&#125;</span>"</span> <span class="hljs-keyword">if</span> self.index &lt; <span class="hljs-number">10</span> <span class="hljs-keyword">else</span> <span class="hljs-string">f"wiki_<span class="hljs-subst">&#123;self.index&#125;</span>"</span><br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">content</span><span class="hljs-params">(self)</span>:</span><br>        <span class="hljs-keyword">while</span> self.index &lt; self.max:<br>            <span class="hljs-keyword">yield</span> get_content(self.file(), self.folder)<br>            self.index += <span class="hljs-number">1</span><br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">next</span><span class="hljs-params">(self)</span>:</span><br>        <span class="hljs-string">"生成器"</span><br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> self.g:<br>            self.init()<br>        <span class="hljs-keyword">return</span> next(self.g)<br><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">"__main__"</span>:<br>    MAX = <span class="hljs-number">10</span><br>    args = parser.parse_args()<br><br>    ray.init()<br><br>    <span class="hljs-comment"># Create one streaming source of articles per mapper.</span><br>    directory = os.path.dirname(os.path.realpath(__file__))<br>    streams = []<br>    folders = [<span class="hljs-string">'/data/AA/'</span>, <span class="hljs-string">'/data/AB/'</span>, <span class="hljs-string">'/data/AC/'</span>]<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(args.num_mappers):<br>        streams.append(Stream(MAX, folders[i % len(folders)]))<br><br>    <span class="hljs-comment"># Partition the keys among the reducers.</span><br>    chunks = np.array_split([chr(i)<br>                             <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(ord(<span class="hljs-string">"a"</span>),<br>                                            ord(<span class="hljs-string">"z"</span>) + <span class="hljs-number">1</span>)], args.num_reducers)<br>    keys = [[chunk[<span class="hljs-number">0</span>], chunk[<span class="hljs-number">-1</span>]] <span class="hljs-keyword">for</span> chunk <span class="hljs-keyword">in</span> chunks]<br><br>    <span class="hljs-comment"># Create a number of mappers.</span><br>    mappers = [Mapper.remote(stream) <span class="hljs-keyword">for</span> stream <span class="hljs-keyword">in</span> streams]<br><br>    <span class="hljs-comment"># Create a number of reduces, each responsible for a different range of</span><br>    <span class="hljs-comment"># keys. This gives each Reducer actor a handle to each Mapper actor.</span><br>    reducers = [Reducer.remote(key, *mappers) <span class="hljs-keyword">for</span> key <span class="hljs-keyword">in</span> keys]<br><br>    <span class="hljs-comment"># Most frequent 10 words.</span><br>    article_index = <span class="hljs-number">0</span><br>    <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>        print(<span class="hljs-string">"article index = &#123;&#125;"</span>.format(article_index))<br>        wordcounts = &#123;&#125;<br>        counts = ray.get([<br>            reducer.next_reduce_result.remote(article_index)<br>            <span class="hljs-keyword">for</span> reducer <span class="hljs-keyword">in</span> reducers<br>        ])<br>        <span class="hljs-keyword">for</span> count <span class="hljs-keyword">in</span> counts:<br>            wordcounts.update(count)<br>        most_frequent_words = heapq.nlargest(<span class="hljs-number">10</span>,<br>                                             wordcounts,<br>                                             key=wordcounts.get)<br>        <span class="hljs-keyword">for</span> word <span class="hljs-keyword">in</span> most_frequent_words:<br>            print(<span class="hljs-string">"  "</span>, word, wordcounts[word])<br>        article_index += <span class="hljs-number">1</span><br></code></pre></div></td></tr></table></figure>
+<p>然后，在每个节点保存一份代码，启动worker和master节点</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs jboss-cli">ray start <span class="hljs-params">--head</span> <span class="hljs-params">--ip</span> localhost <span class="hljs-params">--redis-port=6379</span> <br><br><span class="hljs-comment"># 修改head_node_address为 master 节点的ip地址</span><br>ray start <span class="hljs-params">--address=</span>[head_node_address]<span class="hljs-function">:6379</span><br></code></pre></div></td></tr></table></figure>
+<p>在master运行程序得到结果。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/CS/">CS</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/ray/">ray</a>
+                    
+                      <a class="hover-with-bg" href="/tags/distributed/">distributed</a>
+                    
+                      <a class="hover-with-bg" href="/tags/asyc/">asyc</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/51024bbf.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">字符串匹配从KMP到AC自动机</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/4e471b0e.html">
+                        <span class="hidden-mobile">有用的python package</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        loader: {
+          load: ['ui/lazy']
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>

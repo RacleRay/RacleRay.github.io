@@ -1,0 +1,651 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="这是得空听百度paddle平台公开课的一个小作业，选了一篇很简单的论文读读。结论有一定参考价值，虽然很少用到GAN。">
+  <meta name="author" content="江左时雨">
+  <meta name="keywords" content="机器学习,Machine Learning,自然语言处理,NLP,深度学习,Deep Learning,计算机,Coding,生活随笔">
+  <meta name="description" content="这是得空听百度paddle平台公开课的一个小作业，选了一篇很简单的论文读读。结论有一定参考价值，虽然很少用到GAN。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Large scale GAN training for high fidelity natural image synthesis">
+<meta property="og:url" content="https://racleray.github.io/posts/204efe7c.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="这是得空听百度paddle平台公开课的一个小作业，选了一篇很简单的论文读读。结论有一定参考价值，虽然很少用到GAN。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/Large-scale-GAN-training-for-high-fidelity-natural-image-synthesis_pic/image-20200806164910557.png">
+<meta property="article:published_time" content="2020-08-04T08:08:56.000Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:31.031Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="gan">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/Large-scale-GAN-training-for-high-fidelity-natural-image-synthesis_pic/image-20200806164910557.png">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>Large scale GAN training for high fidelity natural image synthesis - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Large scale GAN training for high fidelity natural image synthesis">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-08-04 16:08" pubdate>
+        2020年8月4日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.5k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      8 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Large scale GAN training for high fidelity natural image synthesis</h1>
+            
+            <div class="markdown-body">
+              <h2><span id="问题">问题</span></h2>
+<p>GAN生成图像的过程是一个敏感的过程。虽然相比于VAE，其优化目标从Elmo最优损失函数的一个下界，变为直接优化生成结果和目标之间差异损失本身，直觉上是一种更好的方法，但是由于动态地交叉训练生成器与判别器，导致对网络设计、训练方法、参数设置等非常敏感。</p>
+<p>尽管有研究表明在经验和理论上，获得了在多种设置中可以实现稳定训练的结论。但是GAN生成网络的效果始终有点差强人意。</p>
+<p>当前在Image
+Net建模上的最佳结果仅达到了<strong>52.5的IS</strong>，而真实数据有<strong>233的IS</strong>。</p>
+<blockquote>
+<p>Is( inception score)：用来衡量GAN网络的两个指标:
+生成图片的质量和多样性</p>
+<ul>
+<li>entropy = -sum(p_i * log(p_i))</li>
+</ul>
+<p>The conditional probability captures our interest in image
+quality.</p>
+<ul>
+<li>KL (C || M) : KL divergence = p(y|x) * (log(p(y|x)) –
+log(p(y)))</li>
+</ul>
+<p>The average of the KL divergence for all generated images. C for
+conditional and M for marginal distributions.</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment"># calculate inception score in numpy</span><br><span class="hljs-keyword">from</span> numpy <span class="hljs-keyword">import</span> asarray<br><span class="hljs-keyword">from</span> numpy <span class="hljs-keyword">import</span> expand_dims<br><span class="hljs-keyword">from</span> numpy <span class="hljs-keyword">import</span> log<br><span class="hljs-keyword">from</span> numpy <span class="hljs-keyword">import</span> mean<br><span class="hljs-keyword">from</span> numpy <span class="hljs-keyword">import</span> exp<br> <br><span class="hljs-comment"># calculate the inception score for p(y|x)</span><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">calculate_inception_score</span><span class="hljs-params">(p_yx， eps=<span class="hljs-number">1E-16</span>)</span>:</span><br>	<span class="hljs-comment"># calculate p(y)</span><br>	p_y = expand_dims(p_yx.mean(axis=<span class="hljs-number">0</span>)， <span class="hljs-number">0</span>)<br>	<span class="hljs-comment"># kl divergence for each image</span><br>	kl_d = p_yx * (log(p_yx + eps) - log(p_y + eps))<br>	<span class="hljs-comment"># sum over classes</span><br>	sum_kl_d = kl_d.sum(axis=<span class="hljs-number">1</span>)<br>	<span class="hljs-comment"># average over images</span><br>	avg_kl_d = mean(sum_kl_d)<br>	<span class="hljs-comment"># undo the logs</span><br>	is_score = exp(avg_kl_d)<br>	<span class="hljs-keyword">return</span> is_score<br></code></pre></div></td></tr></table></figure>
+<p>但是有一个缺陷，概率计算是建立在Inception数据集限制的1000种类别中的，不在其中的类别则无法评估，同时要达到较好的效果，计算score时，不同类别中的数据分布最好是比较均匀的。</p>
+</blockquote>
+<p>《<a href="https://arxiv.org/abs/1809.11096" target="_blank" rel="noopener">Large scale GAN training
+for high fidelity natural image
+synthesis</a>》的研究正是探索生成效果的一项成果，作者成功地将GAN生成图像和真实图像之间的保真度和多样性gap大幅降低。</p>
+<h2><span id="方法">方法</span></h2>
+<p>高分辨率能够带来更为真实的生成图像，在这样的思想的指导下，本论文结合了GAN的各种新技术，并且分析了训练难的原因，最后提出自己的模型。</p>
+<p>本文展示了GAN可以<strong>从训练规模中显著获益</strong>，并且能在参数数量很大和八倍Batch
+size于之前最佳结果，的条件下，仍然能以2倍到4倍的速度进行训练。</p>
+<p>作者引入了两种简单的生成架构变化，提高了可扩展性，并修改了正则化方案以提升conditioning，通过实验说明了这样可以提升性能。</p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/Large-scale-GAN-training-for-high-fidelity-natural-image-synthesis_pic/image-20200806164910557.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>这篇论文没有提出新的模型，只是将原有的GAN的模型：</p>
+<ol type="1">
+<li>用8倍原有的batch size大小</li>
+<li>将隐层的变量数量扩充到原有模型的4倍</li>
+</ol>
+<p>训练获得了很好的图片生成的效果。与此同时，在扩充了变量数量和 batch
+size大小后，模型出现了不稳定的现象。</p>
+<p>文章中对出现的不稳定现象，采用现有的比较有效的稳定训练GAN的方法，但是文中发现这样确实会稳定GAN的训练，但是同时会栖牲生成图片的质量。</p>
+<h2><span id="实验结果">实验结果</span></h2>
+<ul>
+<li>研究表明按<strong>8的倍数增加批大小</strong>可以将当前最佳的<strong>IS提高46%</strong>。</li>
+</ul>
+<p>研究者假设这是由于每个批量覆盖了更多的模式，为生成器和鉴别器都提供了更好的梯度信息。</p>
+<p>这种扩扆带来的值得注意的副作用是，模型以更少的迭代次数达到了更好的性能，但变得不稳定并且遭遇了完全的训练崩溃。</p>
+<p>因此在实验中，研究者在崩溃刚好发生之后立刻停止训练，并从之前保存的检查点进行结果报告。</p>
+<ul>
+<li><strong>增加了每个层50%的宽度</strong>(通道数量)，进一步的<strong>21%的IS提升</strong>。</li>
+</ul>
+<p>生成器和鉴别器中的参数数量几乎翻倍。研究者假设这是由于模型相对于数据集复杂度的容量的增加。将深度翻倍，在ImageNet
+Based模型上，反而会降低性能。</p>
+<ul>
+<li>其他技巧</li>
+</ul>
+<ol type="1">
+<li><p>截断技巧</p>
+<p>生成器的随机噪声输入一般使用正态分布或者均匀分布的随机数。</p>
+<p>本文采用了<strong>截断技术</strong>，对正态分布的随机数进行截断处理，实验发现这种方法的<strong>结果最好</strong>。</p>
+<blockquote>
+<p>对此的直观解释是，如果网络的随机噪声输入的随机数变动范围越大，生成的样本在标准模板上的变动就越大，因此样本的多样性就越强，但真实性可能会降低。</p>
+<p>首先用截断态分布N（0，1）随机数产生噪声向量Z，具体做法是如果随机数超出一定范围，则重新采样，使得其落在这个区间里。</p>
+<p>这种做法称为截断技巧：向量Z的模超过某一指定阈值的随机数进行重釆样，这样可以提高单个样本的质量，但代价是降低了样本的多样性。</p>
+</blockquote></li>
+</ol>
+<h2><span id="实验后分析">实验后分析</span></h2>
+<ul>
+<li>生成器的不稳定性</li>
+</ul>
+<p>本文着重对小规模时稳定，大规模时不稳定的问题进行分析。</p>
+<p>实验中发现，权重矩阵的前3个奇异值σ0，σ1，σ2蘊含的信息最丰富。</p>
+<p>在训练中，G的大部分层的谱范数都是正常的，但有一些是病态的，这些谱范数随着训练的进行不断的增长，最后爆炸，导致训练坍塌。</p>
+<h2><span id="结论">结论</span></h2>
+<ol type="1">
+<li>本文证明了将GAN用于多类自然图像生成任务时，<strong>加大模型的规模</strong>可以显著的提高生成的图像的质量，对生成的样本的<strong>真实性和多样性</strong>都是如此。</li>
+<li>通过使用一些技巧，本文提出的方法的性能较之前的方法有了大度的提高。</li>
+<li>另外，还分析了大规模GAN在训练时的机制，用它们的权重矩阵的奇异值来刻画它们的稳定性。</li>
+<li>讨论了稳定性和性能即生成的图像的质量之间的相互作用和影响</li>
+</ol>
+<p>参考链接：</p>
+<p>百度论文复现课程：https://aistudio.baidu.com/aistudio/education/group/info/1340</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/DL/">DL</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/gan/">gan</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/5de6e8e6.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">神经网络normalization</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/b7fe0c52.html">
+                        <span class="hidden-mobile">C++ Project使用外部库</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        loader: {
+          load: ['ui/lazy']
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>

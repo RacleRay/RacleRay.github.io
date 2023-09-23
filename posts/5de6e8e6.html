@@ -1,0 +1,840 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="记录Normalization相关方法，以及一点点思考。">
+  <meta name="author" content="江左时雨">
+  <meta name="keywords" content="机器学习,Machine Learning,自然语言处理,NLP,深度学习,Deep Learning,计算机,Coding,生活随笔">
+  <meta name="description" content="记录Normalization相关方法，以及一点点思考。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="神经网络normalization">
+<meta property="og:url" content="https://racleray.github.io/posts/5de6e8e6.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="记录Normalization相关方法，以及一点点思考。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cbold%7Bx%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=h%253Df%5Cleft(%5Cbold%7Bg%7D%5Ccdot%5Cfrac%7B%5Cbold%7Bx%7D-%5Cbold%7B%5Cmu%7D%7D%7B%5Cbold%7B%5Csigma%7D%7D%252B%5Cbold%7Bb%7D%5Cright)%5C%5C">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cbold%7B%5Cmu%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cbold%7B%5Csigma%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cbold%7Bb%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cbold%7Bg%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cbold%7Bb%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cbold%7Bg%7D%5E2">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cbold%7Bb%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cbold%7Bg%7D%5E2">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%AE%80%E8%BF%B0_pic/image-20200707230136648.png">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cmu_i+%253D+%5Cfrac%7B1%7D%7BM%7D%5Csum%7Bx_i%7D%252C+%5Cquad+%5Csigma_i%253D+%5Csqrt%7B%5Cfrac%7B1%7D%7BM%7D%5Csum%7B(x_i-%5Cmu_i)%5E2%7D%252B%5Cepsilon+%7D%5C%5C">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=M">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=x_i">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%AE%80%E8%BF%B0_pic/image-20200707230153204.png">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cmu+%253D+%5Csum_i%7Bx_i%7D%252C+%5Cquad+%5Csigma%253D+%5Csqrt%7B%5Csum_i%7B(x_i-%5Cmu)%5E2%7D%252B%5Cepsilon+%7D%5C%5C">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=i">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cbold%7B%5Cmu%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cbold%7B%5Csigma%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cbold%7Bg%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cbold%7Bb%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=h%253Df%5Cleft(%5Cbold%7Bg%7D%5Ccdot%5Cfrac%7B%5Cbold%7Bx%7D-%5Cbold%7B%5Cmu%7D%7D%7B%5Cbold%7B%5Csigma%7D%7D%252B%5Cbold%7Bb%7D%5Cright)%5C%5C">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=f_%5Cbold%7Bw%7D(%5Cbold%7Bx%7D)%253D%5Cbold%7Bw%7D%5Ccdot%5Cbold%7Bx%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cbold%7Bx%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cbold%7Bw%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=+f_%5Cbold%7Bw%7D(WN(%5Cbold%7Bx%7D))%253D%5Cbold%7Bw%7D%5Ccdot+WN(%5Cbold%7Bx%7D)+%253D+g%5Ccdot%5Cfrac%7B%5Cbold%7Bv%7D%7D%7B%5Cbold%7B%7C%7Cv%7C%7C%7D%7D+%5Ccdot%5Cbold%7Bx%7D+%5C%5C%253D+%5Cbold%7Bv%7D%5Ccdot+g%5Ccdot%5Cfrac%7B%5Cbold%7Bx%7D%7D%7B%5Cbold%7B%7C%7Cv%7C%7C%7D%7D%253Df_%5Cbold%7Bv%7D(g%5Ccdot%5Cfrac%7B%5Cbold%7Bx%7D%7D%7B%5Cbold%7B%7C%7Cv%7C%7C%7D%7D)">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cbold%7B%7C%7Cv%7C%7C%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Chat%7B%5Cbold%7Bv%7D%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cbold%7Bw%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=g">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cbold%7Bw%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%7C%7C%7B%5Cbold%7Bw%7D%7D%7C%7C+%5Cequiv+%7Cg%7C">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=f_%5Cbold%7Bw%7D(%5Cbold%7Bx%7D)%253Dcos+%5Ctheta+%253D+%5Cfrac%7B%5Cbold%7Bw%7D%5Ccdot%5Cbold%7Bx%7D%7D%7B%5Cbold%7B%7C%7Cw%7C%7C%7D%5Ccdot%5Cbold%7B%7C%7Cx%7C%7C%7D%7D%5C%5C">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Ctheta">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cbold%7Bw%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cbold%7Bx%7D">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%AE%80%E8%BF%B0_pic/image-20200707230250211.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%AE%80%E8%BF%B0_pic/image-20200707230332377.png">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=Norm(%5Cbold%7BW%27%7D%5Cbold%7Bx%7D)%253DNorm(%5Cbold%7BW%7D%5Cbold%7Bx%7D)%5C%5C">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cbold%7BW%27%7D%253D%5Clambda%5Cbold%7BW%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cfrac%7B%5Cpartial+Norm(%5Cbold%7BW%27x%7D)%7D%7B%5Cpartial+%5Cbold%7Bx%7D%7D+%253D+%5Cfrac%7B%5Cpartial+Norm(%5Cbold%7BWx%7D)%7D%7B%5Cpartial+%5Cbold%7Bx%7D%7D+%5C%5C">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cfrac%7B%5Cpartial+Norm(%5Cbold%7BW%27x%7D)%7D%7B%5Cpartial+%5Cbold%7BW%27%7D%7D+%253D%5Cfrac%7B1%7D%7B+%5Clambda%7D%5Ccdot+%5Cfrac%7B%5Cpartial+Norm(%5Cbold%7BWx%7D)%7D%7B%5Cpartial%5Cbold%7BW%7D%7D+%5C%5C">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cbold%7Bx%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Clambda">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=Norm(%5Cbold%7BW%7D%5Cbold%7Bx%27%7D)%253DNorm(%5Cbold%7BW%7D%5Cbold%7Bx%7D)%5C%5C">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cbold%7Bx%27%7D%253D%5Clambda%5Cbold%7Bx%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=h_l%253Df_%7B%5Cbold%7BW%7D_l%7D(%5Cbold%7Bx%7D_l)">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=h_l%253Df_%7B%5Cbold%7BW%7D_l%7D(%5Cbold%7Bx%7D_l)%253Df_%7B%5Cbold%7BW%7D_l%7D(f_%7B%5Cbold%7BW%7D_%7Bl-1%7D%7D(%5Cbold%7Bx%7D_%7Bl-1%7D))%253D%5Ccdots%253D%5Cbold%7Bx%7D_0%5Cprod_%7Bk%253D0%7D%5El%5Cbold%7BW%7D_k%5C%5C">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//%E7%AE%80%E8%BF%B0.assets/1566535024691.png">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=h_l%253Df_%7B%5Cbold%7BW%7D_l%7D(%5Cbold%7Bx%7D_l)">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cbold%7Bx%7D_l">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cfrac%7B%5Cpartial+Norm(%5Cbold%7BWx%27%7D)%7D%7B%5Cpartial+%5Cbold%7BW%7D%7D+%253D+%5Cfrac%7B%5Cpartial+Norm(%5Cbold%7BWx%7D)%7D%7B%5Cpartial%5Cbold%7BW%7D%7D+%5C%5C">
+<meta property="article:published_time" content="2020-10-19T11:32:28.000Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:31.047Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="deep learning">
+<meta property="article:tag" content="normalization">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.zhihu.com/equation?tex=%5Cbold%7Bx%7D">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>神经网络normalization - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="神经网络normalization">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-10-19 19:32" pubdate>
+        2020年10月19日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      5.3k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      17 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">神经网络normalization</h1>
+            
+            <div class="markdown-body">
+              <h1><span id="深度学习中的normalizationbnlnwn">深度学习中的Normalization，BN/LN/WN</span></h1>
+<h2><span id="为什么需要normalization"><strong>为什么需要
+Normalization</strong></span></h2>
+<ul>
+<li>independent and identically distributed，简称为 <em>i.i.d</em></li>
+</ul>
+<blockquote>
+<p>并非所有机器学习模型的必然要求（比如 Naive Bayes
+模型就建立在特征彼此独立的基础之上，而Logistic Regression 和 神经网络
+则在非独立的特征数据上依然可以训练出很好的模型），但独立同分布的数据可以简化常规机器学习模型的训练、提升机器学习模型的预测能力，已经是一个共识。</p>
+</blockquote>
+<ul>
+<li><strong>白化（whitening）</strong></li>
+</ul>
+<blockquote>
+<p>数据预处理步骤。</p>
+<p>（1）<em>去除特征之间的相关性</em> —&gt; 独立；</p>
+<p>（2）<em>使得所有特征具有相同的均值和方差</em> —&gt; 同分布。</p>
+</blockquote>
+<ul>
+<li><strong>深度学习中的 Internal Covariate Shift</strong></li>
+</ul>
+<blockquote>
+<p>参数更新使每一层的数据分布发生变化，向前叠加，高层的受到数据变化的影响，需要不断重新适应底层的数据变化。</p>
+<ul>
+<li><p>Internal Covariate Shift，简称 ICS.</p>
+<blockquote>
+<p>ML经典假设是“源空间（source domain）和目标空间（target
+domain）的数据分布（distribution）是一致的”</p>
+<p>covariate
+shift是指源空间和目标空间的条件概率是一致的，但是其边缘概率不同</p>
+<p>​ 1. 给定输入，拟合label，条件概率一致的</p>
+<ol start="2" type="1">
+<li>层间计算导致，各层分布发生改变，边缘概率是不同的</li>
+</ol>
+</blockquote></li>
+<li><p>ICS的问题</p></li>
+</ul>
+<blockquote>
+<ol type="1">
+<li>上层参数需要不断适应新的输入数据分布，降低学习速度</li>
+<li>下层输入的变化可能趋向于变大或者变小，导致上层落入饱和区，使得学习过早停止
+(想想sigmoid)</li>
+<li>每层的更新都会影响到其它层，因此每层的参数更新策略需要尽可能的谨慎</li>
+</ol>
+</blockquote>
+</blockquote>
+<h2><span id="normalization的通用框架与基本思想"><strong>Normalization
+的通用框架与基本思想</strong></span></h2>
+<p>标准的白化操作代价高昂，特别是我们还希望白化操作是可微的（<em>每一点上必存在非垂直切线</em>），保证白化操作可以通过反向传播来更新梯度。</p>
+<p>Normalization 方法退而求其次，进行了简化的白化操作。</p>
+<ul>
+<li><strong>Normalization </strong></li>
+</ul>
+<blockquote>
+<p>先对其做<strong>平移和伸缩变换</strong>， 将 <img src="https://www.zhihu.com/equation?tex=%5Cbold%7Bx%7D" srcset="/img/loading.gif" lazyload>
+的分布规范化成在固定区间范围的标准分布。</p>
+<p><img src="https://www.zhihu.com/equation?tex=h%3Df%5Cleft%28%5Cbold%7Bg%7D%5Ccdot%5Cfrac%7B%5Cbold%7Bx%7D-%5Cbold%7B%5Cmu%7D%7D%7B%5Cbold%7B%5Csigma%7D%7D%2B%5Cbold%7Bb%7D%5Cright%29%5C%5C" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cbold%7B%5Cmu%7D" srcset="/img/loading.gif" lazyload>
+是<strong>平移参数</strong>（shift parameter）， <img src="https://www.zhihu.com/equation?tex=%5Cbold%7B%5Csigma%7D" srcset="/img/loading.gif" lazyload>
+是<strong>缩放参数</strong>（scale parameter）</p>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cbold%7Bb%7D" srcset="/img/loading.gif" lazyload>
+是<strong>再平移参数</strong>（re-shift parameter）， <img src="https://www.zhihu.com/equation?tex=%5Cbold%7Bg%7D" srcset="/img/loading.gif" lazyload>
+是<strong>再缩放参数</strong>（re-scale parameter）</p>
+<p>最终得到的数据符合均值为 <img src="https://www.zhihu.com/equation?tex=%5Cbold%7Bb%7D" srcset="/img/loading.gif" lazyload> 、方差为 <img src="https://www.zhihu.com/equation?tex=%5Cbold%7Bg%7D%5E2" srcset="/img/loading.gif" lazyload>
+的分布</p>
+<blockquote>
+<p>变换为均值为 <img src="https://www.zhihu.com/equation?tex=%5Cbold%7Bb%7D" srcset="/img/loading.gif" lazyload>、方差为 <img src="https://www.zhihu.com/equation?tex=%5Cbold%7Bg%7D%5E2" srcset="/img/loading.gif" lazyload>
+的分布，也并不是严格的同分布，只是映射到了一个确定的区间范围而已</p>
+</blockquote>
+</blockquote>
+<ul>
+<li>再平移调整的意义</li>
+</ul>
+<blockquote>
+<ol type="1">
+<li>不会过分改变每一层计算结果</li>
+<li>第一步的规范化会将几乎所有数据映射到激活函数的非饱和区（线性区），仅利用到了线性变化能力，从而降低了神经网络的表达能力。而进行再变换，则可以将数据从线性区变换到非线性区，恢复模型的表达能力（想想激活函数）</li>
+</ol>
+</blockquote>
+<h2><span id="主流-normalization方法梳理"><strong>主流 Normalization
+方法梳理</strong></span></h2>
+<ol type="1">
+<li><strong>Batch Normalization ——
+纵向规范化</strong>：整个batch的不同维度（channel）</li>
+</ol>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/简述_pic/image-20200707230136648.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cmu_i+%3D+%5Cfrac%7B1%7D%7BM%7D%5Csum%7Bx_i%7D%2C+%5Cquad+%5Csigma_i%3D+%5Csqrt%7B%5Cfrac%7B1%7D%7BM%7D%5Csum%7B%28x_i-%5Cmu_i%29%5E2%7D%2B%5Cepsilon+%7D%5C%5C" srcset="/img/loading.gif" lazyload></p>
+<p>其中 <img src="https://www.zhihu.com/equation?tex=M" srcset="/img/loading.gif" lazyload> 是 mini-batch
+的大小。由于 BN 是针对单个维度定义的，因此标准公式中的计算均为
+element-wise。</p>
+<p>然后，用一个 mini-batch 的一阶统计量和二阶统计量，规范每一个输入维度
+<img src="https://www.zhihu.com/equation?tex=x_i" srcset="/img/loading.gif" lazyload></p>
+<p><strong>KEYPOINT</strong>：mini-batch数据决定，x每个维度的分布，上图可理解为RGB三个通道。</p>
+<p>要求：每个 mini-batch 比较大，数据分布比较接近，充分的 shuffle</p>
+<p>不适用：动态的网络结构 和 RNN 网络 （最后才知道mini-batch的<span class="math inline">\(\mu\)</span>）。Batch Normalization基于一个mini
+batch的数据计算均值和方差，而不是基于整个Training
+set来做，相当于进行梯度计算式引入噪声。因此，Batch
+Normalization不适用于对噪声敏感的强化学习、生成模型（Generative
+model：GAN，VAE）使用。</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">batch_normalization_layer</span><span class="hljs-params">(inputs, out_size, isTrain=True)</span>:</span><br>    <span class="hljs-comment"># in_size, out_size = inputs.get_shape()</span><br>    pop_mean = tf.Variable(tf.zeros([out_size]),trainable=<span class="hljs-literal">False</span>)<br>    pop_var = tf.Variable(tf.ones([out_size]),trainable=<span class="hljs-literal">False</span>)<br>    scale = tf.Variable(tf.ones([out_size]))<br>    shift = tf.Variable(tf.zeros([out_size]))<br>    eps = <span class="hljs-number">0.001</span><br>    decay = <span class="hljs-number">0.999</span><br>    <span class="hljs-keyword">if</span> isTrain:<br>        <span class="hljs-comment"># batch的mean和var。 注原始维度为[batch_size, height, width, channel]</span><br>        batch_mean, batch_var = tf.nn.moments(inputs,[<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">2</span>])<br>        print(batch_mean.get_shape())<br>        <span class="hljs-comment"># 记录训练的mean和var</span><br>        train_mean = tf.assign(pop_mean, pop_mean * decay + batch_mean * (<span class="hljs-number">1</span>-decay))<br>        train_var = tf.assign(pop_var, pop_var * decay + batch_var * (<span class="hljs-number">1</span>-decay))<br>        <span class="hljs-keyword">with</span> tf.control_dependencies([train_mean,train_var]):<br>            <span class="hljs-keyword">return</span> tf.nn.batch_normalization(inputs,batch_mean,batch_var,shift,scale,eps)<br>    <span class="hljs-keyword">else</span>:<br>        <span class="hljs-keyword">return</span> tf.nn.batch_normalization(inputs,pop_mean,pop_var,shift,scale,eps)<br></code></pre></div></td></tr></table></figure>
+<ol start="2" type="1">
+<li><strong>Layer Normalization —— 横向规范化</strong>：单个输入
+https://arxiv.org/abs/1607.06450</li>
+</ol>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/简述_pic/image-20200707230153204.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>考虑一层所有维度的输入，计算该层的平均输入值和输入方差，然后用同一个规范化操作来转换各个维度的输入</p>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cmu+%3D+%5Csum_i%7Bx_i%7D%2C+%5Cquad+%5Csigma%3D+%5Csqrt%7B%5Csum_i%7B%28x_i-%5Cmu%29%5E2%7D%2B%5Cepsilon+%7D%5C%5C" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://www.zhihu.com/equation?tex=i" srcset="/img/loading.gif" lazyload>
+枚举了该层所有的输入神经元。对应到标准公式中，四大参数 <img src="https://www.zhihu.com/equation?tex=%5Cbold%7B%5Cmu%7D" srcset="/img/loading.gif" lazyload>, <img src="https://www.zhihu.com/equation?tex=%5Cbold%7B%5Csigma%7D" srcset="/img/loading.gif" lazyload>, <img src="https://www.zhihu.com/equation?tex=%5Cbold%7Bg%7D" srcset="/img/loading.gif" lazyload>, <img src="https://www.zhihu.com/equation?tex=%5Cbold%7Bb%7D" srcset="/img/loading.gif" lazyload>
+均为标量（BN中是向量），<strong>所有输入共享一个规范化变换</strong></p>
+<p><strong>KEYPOINT</strong>：LN 针对单个训练样本进行，用于
+小mini-batch场景、动态网络场景和 RNN，特别是自然语言处理领域。此外，LN
+不需要保存 mini-batch 的均值和方差，节省了额外的存储空间</p>
+<p><strong>NOTE</strong>：如果不同输入特征不属于相似的类别（比如颜色和大小），那么
+LN 的处理可能会降低模型的表达能力。</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">layer_norm</span><span class="hljs-params">(Function)</span>:</span><br><span class="hljs-meta">	@staticmethod</span><br>	<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">forward</span><span class="hljs-params">(input, gain=None, bias=None)</span>:</span><br>        <span class="hljs-comment"># 这里的输入是unroll的，[batch_size, h x w x c]，按实例norm</span><br>		mean = input.mean(<span class="hljs-number">-1</span>, keepdim=<span class="hljs-literal">True</span>)<br>		var = input.var(<span class="hljs-number">-1</span>, unbiased=<span class="hljs-literal">False</span>, keepdim=<span class="hljs-literal">True</span>)<br>		input_normalized = (input - mean) / torch.sqrt(var + <span class="hljs-number">1e-9</span>)<br><br>		<span class="hljs-keyword">if</span> gain <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span> <span class="hljs-keyword">and</span> bias <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:<br>			output = input_normalized * gain + bias<br>		<span class="hljs-keyword">elif</span> <span class="hljs-keyword">not</span> (gain <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span> <span class="hljs-keyword">and</span> bias <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>):<br>			<span class="hljs-keyword">raise</span> RuntimeError(<span class="hljs-string">"gain and bias of LayerNorm should be both None or not None!"</span>)<br>		<span class="hljs-keyword">else</span>:<br>			output = input_normalized<br><br>		<span class="hljs-keyword">return</span> output<br>	...<br></code></pre></div></td></tr></table></figure>
+<ol start="3" type="1">
+<li><strong>Weight Normalization —— 参数规范化</strong>
+https://arxiv.org/abs/1602.07868</li>
+</ol>
+<p>将以下方程<img src="https://www.zhihu.com/equation?tex=h%3Df%5Cleft%28%5Cbold%7Bg%7D%5Ccdot%5Cfrac%7B%5Cbold%7Bx%7D-%5Cbold%7B%5Cmu%7D%7D%7B%5Cbold%7B%5Csigma%7D%7D%2B%5Cbold%7Bb%7D%5Cright%29%5C%5C" srcset="/img/loading.gif" lazyload></p>
+<p>理解为： <img src="https://www.zhihu.com/equation?tex=f_%5Cbold%7Bw%7D%28%5Cbold%7Bx%7D%29%3D%5Cbold%7Bw%7D%5Ccdot%5Cbold%7Bx%7D" srcset="/img/loading.gif" lazyload>.</p>
+<ul>
+<li><p>BN 和 LN 均将规范化应用于输入的特征数据 <img src="https://www.zhihu.com/equation?tex=%5Cbold%7Bx%7D" srcset="/img/loading.gif" lazyload></p></li>
+<li><p><strong>WN将规范化应用于线性变换的权重</strong> <img src="https://www.zhihu.com/equation?tex=%5Cbold%7Bw%7D" srcset="/img/loading.gif" lazyload></p></li>
+</ul>
+<p>用神经元的权重的欧氏范数对输入数据进行 scale。</p>
+<p><img src="https://www.zhihu.com/equation?tex=+f_%5Cbold%7Bw%7D%28WN%28%5Cbold%7Bx%7D%29%29%3D%5Cbold%7Bw%7D%5Ccdot+WN%28%5Cbold%7Bx%7D%29+%3D+g%5Ccdot%5Cfrac%7B%5Cbold%7Bv%7D%7D%7B%5Cbold%7B%7C%7Cv%7C%7C%7D%7D+%5Ccdot%5Cbold%7Bx%7D+%5C%5C%3D+%5Cbold%7Bv%7D%5Ccdot+g%5Ccdot%5Cfrac%7B%5Cbold%7Bx%7D%7D%7B%5Cbold%7B%7C%7Cv%7C%7C%7D%7D%3Df_%5Cbold%7Bv%7D%28g%5Ccdot%5Cfrac%7B%5Cbold%7Bx%7D%7D%7B%5Cbold%7B%7C%7Cv%7C%7C%7D%7D%29" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cbold%7B%7C%7Cv%7C%7C%7D" srcset="/img/loading.gif" lazyload>是神经元的权重的欧氏范数，因此<img src="https://www.zhihu.com/equation?tex=%5Chat%7B%5Cbold%7Bv%7D%7D" srcset="/img/loading.gif" lazyload>
+是单位向量，决定了 <img src="https://www.zhihu.com/equation?tex=%5Cbold%7Bw%7D" srcset="/img/loading.gif" lazyload>的方向；</p>
+<p><img src="https://www.zhihu.com/equation?tex=g" srcset="/img/loading.gif" lazyload> 是标量，决定了
+<img src="https://www.zhihu.com/equation?tex=%5Cbold%7Bw%7D" srcset="/img/loading.gif" lazyload>
+的长度。</p>
+<p><img src="https://www.zhihu.com/equation?tex=%7C%7C%7B%5Cbold%7Bw%7D%7D%7C%7C+%5Cequiv+%7Cg%7C" srcset="/img/loading.gif" lazyload></p>
+<p><strong>KEYPOINT</strong>：WN
+的规范化不直接使用输入数据的统计量，因此避免了 BN 过于依赖 mini-batch
+的不足，以及 LN 每层唯一转换器的限制，同时也可以用于动态网络结构</p>
+<p>Weight
+Normalization对通过标量g和向量v对权重W进行重写，重写向量v是固定的，因此，基于Weight
+Normalization的Normalization比Batch Normalization引入更少的噪声。</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">_weight_norm</span><span class="hljs-params">(v, g)</span>:</span><br>    <span class="hljs-string">'v就是weights'</span><br>    norm = torch.norm(v, <span class="hljs-number">2</span>)<br>    <span class="hljs-keyword">return</span> v * (g * norm)<br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">norm_except_dim</span><span class="hljs-params">(v, pow, dim)</span>:</span><br>    <span class="hljs-string">'计算g： norm_except_dim(weight, 2, dim).data'</span><br>    <span class="hljs-keyword">if</span> dim <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:<br>        <span class="hljs-keyword">return</span> v.norm()<br>    <span class="hljs-keyword">if</span> dim != <span class="hljs-number">0</span>:<br>        v = v.transpose(<span class="hljs-number">0</span>, dim)<br>    output_size = (v.size(<span class="hljs-number">0</span>),) + (<span class="hljs-number">1</span>,) * (v.dim() - <span class="hljs-number">1</span>)<br>    v = v.contiguous().view(v.size(<span class="hljs-number">0</span>), <span class="hljs-number">-1</span>).norm(dim=<span class="hljs-number">1</span>).view(*output_size)<br>    <span class="hljs-keyword">if</span> dim != <span class="hljs-number">0</span>:<br>        v = v.transpose(<span class="hljs-number">0</span>, dim)<br>    <span class="hljs-keyword">return</span> v<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">WeightNorm</span>:</span><br>	...<br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">compute_weight</span><span class="hljs-params">(self, module)</span>:</span><br>        g = getattr(module, self.name + <span class="hljs-string">'_g'</span>)<br>        v = getattr(module, self.name + <span class="hljs-string">'_v'</span>)<br>        <span class="hljs-keyword">return</span> _weight_norm(v, g)<br>    ...<br></code></pre></div></td></tr></table></figure>
+<ol start="4" type="1">
+<li><strong>Cosine Normalization —— 余弦规范化</strong></li>
+</ol>
+<p><img src="https://www.zhihu.com/equation?tex=f_%5Cbold%7Bw%7D%28%5Cbold%7Bx%7D%29%3Dcos+%5Ctheta+%3D+%5Cfrac%7B%5Cbold%7Bw%7D%5Ccdot%5Cbold%7Bx%7D%7D%7B%5Cbold%7B%7C%7Cw%7C%7C%7D%5Ccdot%5Cbold%7B%7C%7Cx%7C%7C%7D%7D%5C%5C" srcset="/img/loading.gif" lazyload></p>
+<p>其中 <img src="https://www.zhihu.com/equation?tex=%5Ctheta" srcset="/img/loading.gif" lazyload> 是
+<img src="https://www.zhihu.com/equation?tex=%5Cbold%7Bw%7D" srcset="/img/loading.gif" lazyload> 和 <img src="https://www.zhihu.com/equation?tex=%5Cbold%7Bx%7D" srcset="/img/loading.gif" lazyload>
+的夹角。所有的数据就都是 [-1, 1] 区间。</p>
+<p>超简单的变化，直接在wx的上scale，并且不需要再次缩放。</p>
+<p>将 点积》》》变为余弦相似度</p>
+<ol start="5" type="1">
+<li><strong>Instance Norm</strong></li>
+</ol>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/简述_pic/image-20200707230250211.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>InstanceNorm等价于当<strong>Group
+Norm</strong>的<strong>num_groups等于num_channel</strong>.</p>
+<ol start="6" type="1">
+<li><strong>Group Norm</strong> https://arxiv.org/abs/1803.08494</li>
+</ol>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/简述_pic/image-20200707230332377.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>当<strong>Group Norm中group</strong>的数量是1的时候,
+是与LayerNorm是等价的</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">GroupNorm</span><span class="hljs-params">(x, gamma, beta, G, eps=<span class="hljs-number">1</span>e−<span class="hljs-number">5</span>)</span>:</span><br>    <span class="hljs-comment"># x: input features with shape [N,C,H,W]</span><br>    <span class="hljs-comment"># gamma, beta: scale and offset, with shape [1,C,1,1]</span><br>    <span class="hljs-comment"># G: number of groups for GN</span><br>    N, C, H, W = x.shape<br>    <span class="hljs-comment"># group划分</span><br>    x = tf.reshape(x, [N, G, C // G, H, W])<br>    <span class="hljs-comment"># 按group求mean var</span><br>    mean, var = tf.nn.moments(x, [<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>], keepdims=<span class="hljs-literal">True</span>)<br>    <br>    x = (x−mean) / tf.sqrt(var + eps)<br>    x = tf.reshape(x, [N, C, H, W])<br>    <span class="hljs-keyword">return</span> x∗gamma + beta<br></code></pre></div></td></tr></table></figure>
+<h2><span id="normalization为什么会有效"><strong>Normalization
+为什么会有效？</strong></span></h2>
+<ol type="1">
+<li><strong>权重伸缩不变性（weight scale invariance）</strong></li>
+</ol>
+<p><img src="https://www.zhihu.com/equation?tex=Norm%28%5Cbold%7BW%27%7D%5Cbold%7Bx%7D%29%3DNorm%28%5Cbold%7BW%7D%5Cbold%7Bx%7D%29%5C%5C" srcset="/img/loading.gif" lazyload></p>
+<p>其中 <img src="https://www.zhihu.com/equation?tex=%5Cbold%7BW%27%7D%3D%5Clambda%5Cbold%7BW%7D" srcset="/img/loading.gif" lazyload>
+。</p>
+<p>由于</p>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cfrac%7B%5Cpartial+Norm%28%5Cbold%7BW%27x%7D%29%7D%7B%5Cpartial+%5Cbold%7Bx%7D%7D+%3D+%5Cfrac%7B%5Cpartial+Norm%28%5Cbold%7BWx%7D%29%7D%7B%5Cpartial+%5Cbold%7Bx%7D%7D+%5C%5C" srcset="/img/loading.gif" lazyload></p>
+<p>因此，权重的伸缩变化不会影响反向梯度的 Jacobian
+矩阵，因此也就对反向传播没有影响，避免了反向传播时因为权重过大或过小导致的<strong>梯度消失或梯度爆炸</strong>问题，从而加速了神经网络的训练</p>
+<ol start="2" type="1">
+<li><strong>参数正则</strong></li>
+</ol>
+<p>由于 <img src="https://www.zhihu.com/equation?tex=%5Cfrac%7B%5Cpartial+Norm%28%5Cbold%7BW%27x%7D%29%7D%7B%5Cpartial+%5Cbold%7BW%27%7D%7D+%3D%5Cfrac%7B1%7D%7B+%5Clambda%7D%5Ccdot+%5Cfrac%7B%5Cpartial+Norm%28%5Cbold%7BWx%7D%29%7D%7B%5Cpartial%5Cbold%7BW%7D%7D+%5C%5C" srcset="/img/loading.gif" lazyload></p>
+<p>因此，下层的权重值越大，<span class="math inline">\(\lambda\)</span>越大，那么其梯度就越小。这样，参数的变化就越稳定，相当于实现了参数正则化的效果，避免参数的大幅震荡，提高网络的泛化性能。</p>
+<ol start="3" type="1">
+<li><strong>数据伸缩不变性（data scale invariance）</strong></li>
+</ol>
+<p>当数据 <img src="https://www.zhihu.com/equation?tex=%5Cbold%7Bx%7D" srcset="/img/loading.gif" lazyload> 按照常量 <img src="https://www.zhihu.com/equation?tex=%5Clambda" srcset="/img/loading.gif" lazyload>
+进行伸缩时，得到的规范化后的值保持不变，即：<img src="https://www.zhihu.com/equation?tex=Norm%28%5Cbold%7BW%7D%5Cbold%7Bx%27%7D%29%3DNorm%28%5Cbold%7BW%7D%5Cbold%7Bx%7D%29%5C%5C" srcset="/img/loading.gif" lazyload></p>
+<p>其中 <img src="https://www.zhihu.com/equation?tex=%5Cbold%7Bx%27%7D%3D%5Clambda%5Cbold%7Bx%7D" srcset="/img/loading.gif" lazyload>
+。</p>
+<p><strong>数据伸缩不变性仅对 BN、LN 和 CN 成立。</strong>WN
+不具有这一性质。很明显。</p>
+<ol start="4" type="1">
+<li><strong>数据伸缩不变性可以有效地减少梯度弥散，简化对学习率的选择</strong></li>
+</ol>
+<p>某一层神经元 <img src="https://www.zhihu.com/equation?tex=h_l%3Df_%7B%5Cbold%7BW%7D_l%7D%28%5Cbold%7Bx%7D_l%29" srcset="/img/loading.gif" lazyload>
+而言，展开可得（以下式子为示意，没写入激活函数）</p>
+<p><img src="https://www.zhihu.com/equation?tex=h_l%3Df_%7B%5Cbold%7BW%7D_l%7D%28%5Cbold%7Bx%7D_l%29%3Df_%7B%5Cbold%7BW%7D_l%7D%28f_%7B%5Cbold%7BW%7D_%7Bl-1%7D%7D%28%5Cbold%7Bx%7D_%7Bl-1%7D%29%29%3D%5Ccdots%3D%5Cbold%7Bx%7D_0%5Cprod_%7Bk%3D0%7D%5El%5Cbold%7BW%7D_k%5C%5C" srcset="/img/loading.gif" lazyload></p>
+<p>每一层神经元的输出依赖于底下各层的计算结果。再次回忆activition
+function的图像</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//简述.assets/1566535024691.png" srcset="/img/loading.gif" lazyload></p>
+<p>如果没有正则化，当下层输入发生伸缩变化时，经过层层传递，可能会导致数据发生剧烈的膨胀或者弥散，从而也导致了反向计算时的梯度爆炸或梯度弥散。</p>
+<p><img src="https://www.zhihu.com/equation?tex=h_l%3Df_%7B%5Cbold%7BW%7D_l%7D%28%5Cbold%7Bx%7D_l%29" srcset="/img/loading.gif" lazyload>
+而言，其输入 <img src="https://www.zhihu.com/equation?tex=%5Cbold%7Bx%7D_l" srcset="/img/loading.gif" lazyload>
+永远保持标准的分布，这就使得高层的训练更加简单。从梯度的计算公式来看：</p>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cfrac%7B%5Cpartial+Norm%28%5Cbold%7BWx%27%7D%29%7D%7B%5Cpartial+%5Cbold%7BW%7D%7D+%3D+%5Cfrac%7B%5Cpartial+Norm%28%5Cbold%7BWx%7D%29%7D%7B%5Cpartial%5Cbold%7BW%7D%7D+%5C%5C" srcset="/img/loading.gif" lazyload></p>
+<p>数据的伸缩变化也不会影响到对该层的权重参数更新，使得训练过程更加鲁棒，简化了对学习率的选择。</p>
+<p>参考链接：https://zhuanlan.zhihu.com/p/33173246</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/DL/">DL</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/deep-learning/">deep learning</a>
+                    
+                      <a class="hover-with-bg" href="/tags/normalization/">normalization</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/858c7a63.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">hadoop+spark环境配置</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/204efe7c.html">
+                        <span class="hidden-mobile">Large scale GAN training for high fidelity natural image synthesis</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        loader: {
+          load: ['ui/lazy']
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>

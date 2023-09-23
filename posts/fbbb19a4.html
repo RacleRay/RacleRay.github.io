@@ -1,0 +1,1194 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="Brief summary notes about discrete math.">
+  <meta name="author" content="HeRui">
+  <meta name="keywords" content="离散数学">
+  <meta name="description" content="Brief summary notes about discrete math.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="离散数学">
+<meta property="og:url" content="https://racleray.github.io/posts/fbbb19a4.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="Brief summary notes about discrete math.">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-10-03T12:54:44.000Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:31.048Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="离散数学">
+<meta name="twitter:card" content="summary_large_image">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>离散数学 - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="离散数学">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-10-03 20:54" pubdate>
+        2021年10月3日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      8k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      25 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">离散数学</h1>
+            
+            <div class="markdown-body">
+              <h2><span id="representation">Representation</span></h2>
+<h3><span id="set-no-order">Set: no order</span></h3>
+<ol type="1">
+<li>set roster notation: <span class="math inline">\(\{1, 2,
+3\}\)</span></li>
+<li>set builder notation: <span class="math inline">\(\{x|P(x)\}\)</span>, P means Property</li>
+</ol>
+<p>Empty set:</p>
+<ol type="1">
+<li><span class="math inline">\(\phi \subset \{1,2,3\}\)</span> is
+<code>vacuously true</code>. （空真）</li>
+</ol>
+<hr>
+<h3><span id="ordered-pairs">Ordered Pairs</span></h3>
+<p>(a, b, c): order matters</p>
+<blockquote>
+<p>a, b, c : can be different type of elements</p>
+</blockquote>
+<h4><span id="cartesian-product-笛卡尔积">Cartesian Product: 笛卡尔积</span></h4>
+<p><span class="math inline">\(A × B\)</span> ： is all ordered pairs
+(a, b) where a <span class="math inline">\(\in\)</span> A, b <span class="math inline">\(\in\)</span> B.</p>
+<blockquote>
+<ul>
+<li><span class="math inline">\(\{a,b\} × \{0,1\}\)</span> = { (a, 0),
+(a, 1), (b, 0), (b, 1) }</li>
+<li>A point in a two-dimensional coordinate system can be represented by
+<span class="math inline">\(R \times R\)</span>.
+二维坐标系中的点可表示为 <span class="math inline">\(R \times
+R\)</span></li>
+</ul>
+</blockquote>
+<hr>
+<h3><span id="relations">Relations</span></h3>
+<ul>
+<li><p>Def:</p>
+<p>​ A relation R between A and B is a subset of <span class="math inline">\(A \times B\)</span>.</p></li>
+</ul>
+<hr>
+<h3><span id="function">Function</span></h3>
+<ul>
+<li><p>Def:</p>
+<p>​ A function F between A and B is a relation between A and B such
+that:</p>
+<ul>
+<li>for every <span class="math inline">\(x \in A\)</span> there is a
+<span class="math inline">\(y \in B\)</span> such that <span class="math inline">\((x,y) \in F\)</span></li>
+<li>if <span class="math inline">\((x,y)\in F \ and \ (x,z) \in
+F\)</span> then <span class="math inline">\(y=z\)</span></li>
+</ul></li>
+</ul>
+<blockquote>
+<p>Ex: <span class="math inline">\(x^2 + y^2 = 1\)</span> is not a
+function in Discrete Math domain definition.</p>
+</blockquote>
+<hr>
+<h3><span id="statement">Statement</span></h3>
+<ul>
+<li><p>Def:</p>
+<p>​ A sentence that is either <code>True</code> or
+<code>False</code>.</p></li>
+<li><p>Combine Form:</p>
+<ol type="1">
+<li><span class="math inline">\(\lnot p\)</span></li>
+<li><span class="math inline">\(p \land q\)</span></li>
+<li><span class="math inline">\(p\lor q\)</span></li>
+</ol></li>
+</ul>
+<blockquote>
+<p>Ex 1:</p>
+<p>​ "My shirt is gray but my shorts are not."</p>
+<p>​ p: "my shirt is gray", q: "my shorts are gray"</p>
+<p>​ ~q: "my shorts are not gray"</p>
+<p>​ the result logic form: <span class="math inline">\(p \land \lnot
+q\)</span></p>
+</blockquote>
+<h4><span id="truth-table">Truth table</span></h4>
+<table>
+<thead>
+<tr class="header">
+<th>p</th>
+<th>q</th>
+<th><span class="math inline">\(\lnot p\)</span></th>
+<th><span class="math inline">\(p \land q\)</span></th>
+<th><span class="math inline">\(p\lor q\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>T</td>
+<td>T</td>
+<td>F</td>
+<td>T</td>
+<td>T</td>
+</tr>
+<tr class="even">
+<td>T</td>
+<td>F</td>
+<td>F</td>
+<td>F</td>
+<td>T</td>
+</tr>
+<tr class="odd">
+<td>F</td>
+<td>T</td>
+<td>T</td>
+<td>F</td>
+<td>T</td>
+</tr>
+<tr class="even">
+<td>F</td>
+<td>F</td>
+<td>T</td>
+<td>F</td>
+<td>F</td>
+</tr>
+</tbody>
+</table>
+<h4><span id="logically-equivalent">Logically equivalent</span></h4>
+<ul>
+<li><p>Def:</p>
+<p>​ Two statements have the same truth table.</p></li>
+</ul>
+<blockquote>
+<p>Ex: <span class="math inline">\(p \equiv \lnot(\lnot p)\)</span></p>
+</blockquote>
+<h4><span id="tautology">Tautology</span></h4>
+<ul>
+<li><p>Def:</p>
+<p>​ A tautology is a statement that is always
+<code>True</code>.</p></li>
+</ul>
+<h4><span id="contradiction">Contradiction</span></h4>
+<ul>
+<li><p>Def:</p>
+<p>​ A contradiction is a statement that is always
+<code>False</code>.</p></li>
+</ul>
+<h4><span id="basic-laws">Basic Laws</span></h4>
+<p>Obvious but useful</p>
+<ol type="1">
+<li><p>DeMorgan`s Law:</p>
+<p><span class="math inline">\(\lnot(p \land q) \equiv (\lnot p) \lor
+(\lnot) q\)</span></p>
+<p><span class="math inline">\(\lnot(p \lor q) \equiv (\lnot p) \land
+(\lnot) q\)</span></p></li>
+<li><p>Identity Laws:</p>
+<p><span class="math inline">\(p \lor contradiction \equiv
+p\)</span></p>
+<p><span class="math inline">\(p \land tautology \equiv
+p\)</span></p></li>
+<li><p>Universal Bound Laws:</p>
+<p><span class="math inline">\(p \land contradiction \equiv
+contradiction\)</span></p>
+<p><span class="math inline">\(p \lor tautology \equiv
+tautology\)</span></p></li>
+</ol>
+<blockquote>
+<p>Ex: <span class="math display">\[
+\begin{align*}
+(\lnot(p \lor \lnot q)) \land tautology(t) &amp; \\
+(DeMorgan`s\ Law) &amp; \equiv (\lnot p \land \lnot(\lnot q)) \land t \\
+(Double\ Negative) &amp; \equiv (\lnot p \land q) \land t \\
+(Identity) &amp; \equiv \lnot p \land q
+\end{align*}
+\]</span></p>
+</blockquote>
+<hr>
+<h3><span id="conditional-statements">Conditional statements</span></h3>
+<ul>
+<li><p>Def:</p>
+<p>​ <span class="math inline">\(p \to q\)</span> means "if p is True
+then q is True"</p>
+<table>
+<thead>
+<tr class="header">
+<th>p</th>
+<th>q</th>
+<th><span class="math inline">\(p \to q\)</span></th>
+<th><span class="math inline">\(\lnot p \lor q\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>T</td>
+<td>T</td>
+<td>T</td>
+<td>T</td>
+</tr>
+<tr class="even">
+<td>T</td>
+<td>F</td>
+<td>F</td>
+<td>F</td>
+</tr>
+<tr class="odd">
+<td>F</td>
+<td>T</td>
+<td>T(vacuously true)</td>
+<td>T</td>
+</tr>
+<tr class="even">
+<td>F</td>
+<td>F</td>
+<td>T(vacuously true)</td>
+<td>T</td>
+</tr>
+</tbody>
+</table>
+<p>If p is false, then I didn`t have a assumption indeed. Think it as a
+vacuously true statement.</p>
+<blockquote>
+
+</blockquote></li>
+</ul>
+<h4><span id="vacuously-true-statement">Vacuously true statement</span></h4>
+<ul>
+<li><p>When the hypothesis (<span class="math inline">\(p\)</span>) is
+false.</p>
+<blockquote>
+<p>Ex: if I am a pig, then the world will be better.</p>
+<p>​ equal form: <code>Either</code> I am <code>not</code> a pig,
+<code>or</code> the world will be better.</p>
+<p>​ "I am <code>not</code> a pig.". It is vacuously true, anyway. So the
+whole statement is <code>True</code>.</p>
+</blockquote></li>
+</ul>
+<h4><span id="negating-a-conditional">Negating a conditional</span></h4>
+<ul>
+<li><span class="math inline">\(\lnot (p \to q) \equiv \lnot (\lnot p
+\lor q)\)</span></li>
+</ul>
+<p><span class="math display">\[
+\begin{align*}
+\lnot (\lnot p \lor q) &amp; \equiv (\lnot \lnot p \land \lnot q) \\
+&amp; \equiv p \land \lnot q
+\end{align*}
+\]</span></p>
+<h4><span id="contrapositive-of-astatement">Contrapositive of a
+statement</span></h4>
+<ul>
+<li><p>Def:</p>
+<p>​ <span class="math inline">\(p \to q \equiv \lnot q \to \lnot
+p\)</span></p>
+<p>equal form: <span class="math inline">\(\lnot p \lor q \equiv q \lor
+\lnot p\)</span></p></li>
+</ul>
+<h4><span id="converse-of-a-statement">Converse of a statement</span></h4>
+<ul>
+<li><p>Def:</p>
+<p>​ Converse of <span class="math inline">\(p \to q\)</span> is <span class="math inline">\(q \to p\)</span>. Not necessarily logically
+equivalent.</p></li>
+</ul>
+<h4><span id="inverse-of-a-statement">Inverse of a statement</span></h4>
+<ul>
+<li><p>Def:</p>
+<p>​ Inverse of <span class="math inline">\(p \to q\)</span> is <span class="math inline">\(\lnot p \to \lnot q\)</span>.</p>
+<p>Cause the <code>contrapositive</code> is <span class="math inline">\(\lnot q \to \lnot p\)</span> which is the
+<code>converse</code> of <span class="math inline">\(\lnot p \to \lnot
+q\)</span>, so:</p>
+<blockquote>
+<p>the <code>inverse</code> of <span class="math inline">\(p \to
+q\)</span> is the <code>converse</code> of the
+<code>contrapositive</code> of <span class="math inline">\(p \to
+q\)</span>.</p>
+</blockquote></li>
+</ul>
+<hr>
+<h3><span id="biconditional">Biconditional</span></h3>
+<ul>
+<li><p>Def:</p>
+<p>​ <span class="math inline">\(p \leftrightarrow q\)</span> means <span class="math inline">\(p \to q\)</span> and <span class="math inline">\(q
+\to p\)</span>.</p>
+<blockquote>
+<p>Ex: I will pass the exam <code>if and only if</code> I study
+hard.</p>
+<p>​ It means biconditional.</p>
+</blockquote></li>
+</ul>
+<hr>
+<h2><span id="logic-arguments">Logic Arguments</span></h2>
+<ul>
+<li><p>Def:</p>
+<p>​ A <code>valid argument</code> is a list of premises from which the
+conclusion follows.</p>
+<blockquote>
+<p>premises: statements.</p>
+</blockquote></li>
+</ul>
+<h3><span id="modus-ponens-肯定前件推理">Modus Ponens: 肯定前件推理</span></h3>
+<blockquote>
+<p>if <span class="math inline">\(p\)</span>, then <span class="math inline">\(q\)</span></p>
+<p><span class="math inline">\(p\)</span></p>
+<p>therefore <span class="math inline">\(q\)</span></p>
+</blockquote>
+<table>
+<thead>
+<tr class="header">
+<th>p</th>
+<th>q</th>
+<th><span class="math inline">\(p \to q\)</span>(premises)</th>
+<th>p(premises)</th>
+<th>conclusion</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>T</td>
+<td>T</td>
+<td>T</td>
+<td>T</td>
+<td>T</td>
+</tr>
+<tr class="even">
+<td>T</td>
+<td>F</td>
+<td>F</td>
+<td><span class="math inline">\(\boxtimes\)</span></td>
+<td><span class="math inline">\(\boxtimes\)</span></td>
+</tr>
+<tr class="odd">
+<td>F</td>
+<td>T</td>
+<td>T</td>
+<td><span class="math inline">\(\boxtimes\)</span></td>
+<td><span class="math inline">\(\boxtimes\)</span></td>
+</tr>
+<tr class="even">
+<td>F</td>
+<td>F</td>
+<td>T</td>
+<td><span class="math inline">\(\boxtimes\)</span></td>
+<td><span class="math inline">\(\boxtimes\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>We focus on where premises is true.</p>
+<h3><span id="modus-tollens-否定后件推理">Modus Tollens: 否定后件推理</span></h3>
+<blockquote>
+<p>if <span class="math inline">\(p\)</span>, then <span class="math inline">\(q\)</span></p>
+<p><span class="math inline">\(\lnot q\)</span></p>
+<p>therefore <span class="math inline">\(\lnot p\)</span></p>
+</blockquote>
+<p>We focus on where premises is true.</p>
+<h3><span id="generalization">Generalization</span></h3>
+<blockquote>
+<p><span class="math inline">\(p\)</span> (True)</p>
+<p>therefore, <span class="math inline">\(p \lor q\)</span></p>
+</blockquote>
+<h3><span id="specialization">Specialization</span></h3>
+<blockquote>
+<p><span class="math inline">\(p \land q\)</span> (True)</p>
+<p>therefore, <span class="math inline">\(p\)</span></p>
+</blockquote>
+<h3><span id="contradiction">Contradiction</span></h3>
+<blockquote>
+<p><span class="math inline">\(\lnot p \to contradiction\)</span></p>
+<p>therefore, <span class="math inline">\(p\)</span></p>
+</blockquote>
+<h2><span id="predicate">Predicate</span></h2>
+<ul>
+<li><p>Def:</p>
+<p>​ A predicate(谓词) is a statement depending on variables which
+becomes a statement upon substituting values in the domain.</p>
+<blockquote>
+<p>Ex:</p>
+<p>​ P(x): x is the variable that is a factor of 12 with domain <span class="math inline">\(Z^+\)</span>.</p>
+<blockquote>
+<p>P(x) is a predicate. When x = 6, P(6) is True. When x = 7, P(7) is
+False.</p>
+</blockquote>
+</blockquote></li>
+</ul>
+<h3><span id="true-set">True set</span></h3>
+<ul>
+<li><p>Def:</p>
+<p>​ It is a predicate P(x) satisfies that <span class="math inline">\(\{x \in D | P(x)\ is\ True\}\)</span></p></li>
+</ul>
+<h3><span id="universal-quantifier">Universal Quantifier</span></h3>
+<ul>
+<li><p><span class="math inline">\(\forall\)</span> means "for all".</p>
+<p><span class="math inline">\(\forall x \in D, P(x)\)</span> means: For
+all x in domain D, <span class="math inline">\(P(x)\)</span> is
+True.</p>
+<blockquote>
+<p>Ex:</p>
+<p>​ Every dog is mammal.</p>
+<blockquote>
+<p>D is the <code>dog</code> domain, P(x) means x is a mammal.</p>
+</blockquote>
+</blockquote></li>
+</ul>
+<h3><span id="existential-quantifier">Existential Quantifier</span></h3>
+<ul>
+<li><p><span class="math inline">\(\exists\)</span> mean "there
+exists"</p>
+<p><span class="math inline">\(\exists x \in D, P(x)\)</span> means:
+There exists x in the domain, such that P(x) is True.</p>
+<blockquote>
+<p>Ex:</p>
+<p>​ Some person is the oldest in the world.</p>
+<blockquote>
+<p>D is people in the world. P(x) means that x is the oldest.</p>
+</blockquote>
+</blockquote></li>
+</ul>
+<h3><span id="summary">Summary</span></h3>
+<ol type="1">
+<li>P: "The earth is round." -&gt; <code>Statement</code></li>
+<li>P(x): "x is round." -&gt; <code>Predicate</code></li>
+<li>Q: <span class="math inline">\(\forall x \in D, P(x)\)</span>:
+"Every dog is a mammal." -&gt; <code>Statement</code></li>
+<li>Q: <span class="math inline">\(\exists x \in D, P(x)\)</span>: "Some
+person is the oldest in the world." -&gt; <code>Statement</code></li>
+</ol>
+<h3><span id="negate-quantifier">Negate Quantifier</span></h3>
+<p>For example, we have "<span class="math inline">\(\forall x \in Z^+,
+x &gt; 4\)</span>".</p>
+<p>Negate the quantifier: <span class="math display">\[
+\lnot(\forall x \in D, P(x)) \equiv (\exists x \in D, \lnot P(x))
+\]</span> So, for the example, we have "<span class="math inline">\(\exists x \in Z^+, x \leqslant 4\)</span>".</p>
+<blockquote>
+<p>Ex:</p>
+<p>​ Every integer has a larger integer.</p>
+<blockquote>
+<p>It is <span class="math inline">\(\forall x \in Z, P(x): (\exists y
+\in Z, P(y): (y &gt; x))\)</span>.</p>
+<p>Negate it, we have <span class="math inline">\(\exists x \in Z,
+(\forall y \in Z, y \leqslant x)\)</span>, which can`t be True.</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p>Ex:</p>
+<p>​ Some number in D is the largest.</p>
+<blockquote>
+<p>It is <span class="math inline">\(\exists x \in D, (\forall y \in D,
+x \geqslant y)\)</span>.</p>
+<p>Negate it, we have <span class="math inline">\(\forall x \in D,
+(\exists y \in D, x &lt; y)\)</span></p>
+</blockquote>
+</blockquote>
+<h3><span id="conditional-predicate">Conditional Predicate</span></h3>
+<h4><span id="universal-conditionals">Universal-Conditionals</span></h4>
+<ul>
+<li><p>Def:</p>
+<p>​ <span class="math inline">\(P(x) \Rightarrow Q(x)\)</span> means
+<span class="math inline">\(\forall x \in D, P(x) \to Q(x)\ is\
+True\)</span>.</p></li>
+</ul>
+<blockquote>
+<p>Ex:</p>
+<p>​ If x is a dog, then x is a mammal.</p>
+<blockquote>
+<p>D maybe all possible animals.</p>
+</blockquote>
+</blockquote>
+<h4><span id="sufficient-condition">Sufficient Condition</span></h4>
+<ul>
+<li><p>Def:</p>
+<p>​ If <span class="math inline">\(A(x)\)</span> , then <span class="math inline">\(B(x)\)</span>. We have <span class="math inline">\(A(x)\)</span> is a sufficient condition for <span class="math inline">\(B(x)\)</span>.</p></li>
+</ul>
+<h4><span id="necessary-condition">Necessary Condition</span></h4>
+<ul>
+<li><p>Def:</p>
+<p>​ If $ A(x)$ , then $ B(x)$. We have <span class="math inline">\(A(x)\)</span> is a necessary condition for <span class="math inline">\(B(x)\)</span>.</p></li>
+</ul>
+<p>Use contrapositive statement to explain above definition.</p>
+<h2><span id="proof">Proof</span></h2>
+<ul>
+<li><p>Precisely define even &amp; odd integers</p>
+<blockquote>
+<p>n is even integer if <span class="math inline">\(\exists k \in
+Z\)</span>, such that <span class="math inline">\(n=2k\)</span>.</p>
+<p>n is odd integer if <span class="math inline">\(\exists k \in
+Z\)</span>, such that <span class="math inline">\(n=2k+1\)</span>.</p>
+</blockquote></li>
+</ul>
+<h4><span id="theorem-1-to-proof">Theorem 1 to proof</span></h4>
+<p>An <span style="color:blue">even</span> integer plus an <span style="color:orange">odd</span> integer is another <span style="color:orange">odd</span> integer.</p>
+<p>Proof</p>
+<blockquote>
+<p>Assumption:</p>
+<p>​ Suppose m is even and n is odd.</p>
+<p>Definitions:</p>
+<p>​ <span class="math inline">\(\exists k_1 \in Z \ and \ \exists k_2
+\in Z\)</span> , so that <span class="math inline">\(m = 2*k_1\)</span>
+and <span class="math inline">\(n=2*k_2+1\)</span>.</p>
+<p>Manipulate: Then, <span class="math display">\[
+\begin{align*}
+m+n &amp; = 2k_1+2k_2+1 \\
+&amp; = 2(k_1+k_2) + 1
+\end{align*}
+\]</span> Definitions: Thus,</p>
+<p>​ <span class="math inline">\(\exists k_3 \in Z\)</span> so that <span class="math inline">\(m+n=2k_3+1\)</span>.</p>
+<p>Conclusion:</p>
+<p>​ Thus <span class="math inline">\(m+n\)</span> is <span style="color:orange">odd</span>.</p>
+</blockquote>
+<h4><span id="theorem-2-to-proof">Theorem 2 to proof</span></h4>
+<p>An <strong>even integer</strong> times an <strong>even
+integer</strong> is another <strong>even integer</strong>.</p>
+<p>Proof:</p>
+<blockquote>
+<p>Formally stated theorem:</p>
+<p>​ <span class="math inline">\(\forall m,n \in Z\)</span> if m, n are
+even, then <span class="math inline">\(mn\)</span> is even.</p>
+<p>Assumption:</p>
+<p>​ Suppose m, n are even.</p>
+<p>Definition:</p>
+<p>​ <span class="math inline">\(\exists k_1, k_2 \in Z\)</span> so that
+<span class="math inline">\(m = 2k_1, n=2k_2\)</span>.</p>
+<p>Manipulation: <span class="math display">\[
+\begin{align*}
+mn &amp; = 2k_1 *2k_2 \\
+&amp; = 2(2*k_1*k_2)
+\end{align*}
+\]</span> Definition:</p>
+<p>​ Let t = <span class="math inline">\(2k_1k_2\)</span>, <span class="math inline">\(t \in Z\)</span>.</p>
+<p>Conclusion:</p>
+<p>​ Thus, <span class="math inline">\(mn\)</span> is
+<strong>even</strong>.</p>
+</blockquote>
+<h4><span id="proof-by-counterexample">Proof by counterexample</span></h4>
+<p>Aim is prove <span class="math inline">\(P(x) \Rightarrow
+Q(x)\)</span> is false.</p>
+<p>To do that find one <span class="math inline">\(a \in D\)</span>
+where <span class="math inline">\(P(a) \land \lnot Q(a)\)</span> is
+true.</p>
+<h4><span id="proof-by-division-into-class">Proof by division into class</span></h4>
+<p>Divide the theorem into different cases.</p>
+<h4><span id="proof-by-contradiction">Proof by contradiction</span></h4>
+<ol type="1">
+<li>Suppose <span class="math inline">\(\lnot p\)</span> is true;</li>
+<li>Find a contradiction like 0 = 1;</li>
+<li>Therefore, <span class="math inline">\(p\)</span> is true.</li>
+</ol>
+<blockquote>
+<p><span class="math inline">\(\lnot p \to contradiction\)</span></p>
+<p>therefore, <span class="math inline">\(p\)</span></p>
+</blockquote>
+<h4><span id="proof-by-contrapositive">Proof by contrapositive</span></h4>
+<blockquote>
+<p><span class="math inline">\(p \to q \equiv \lnot q \to \lnot
+p\)</span></p>
+</blockquote>
+<ol type="1">
+<li>Goal: prove <span class="math inline">\(P(x) \Rightarrow
+Q(x)\)</span>.</li>
+<li>Instead, prove: <span class="math inline">\(\lnot Q(x) \Rightarrow
+\lnot P(x)\)</span>.</li>
+</ol>
+<h2><span id="sequence">Sequence</span></h2>
+<p>Def:</p>
+<p>​ A sequence is a function <span class="math inline">\(f: Z^+ \to
+C\)</span>.</p>
+<blockquote>
+<p>Ex:</p>
+<p>​ <span class="math inline">\(f(k) = (-1)^k(3*k)\)</span></p>
+</blockquote>
+<h2><span id="induction">Induction</span></h2>
+<p>Goal: prove <span class="math inline">\(P(n), \forall n \geqslant
+1\)</span>.</p>
+<p>Step 1: prove <span class="math inline">\(P(a), P(b),
+...,P(x)\)</span> is true.</p>
+<p>Step 2: Assume <span class="math inline">\(P(k)\)</span> is true,
+Prove <span class="math inline">\(P(k+1)\)</span> is true, <span class="math inline">\(x &lt; k\)</span>.</p>
+<h2><span id="skipped-things">Skipped things</span></h2>
+<p>Relations of Sets.</p>
+<p>Permutation and combination.</p>
+<p>Bayes` theorem.</p>
+<p>Markov Chain.</p>
+<h2><span id="graph">Graph</span></h2>
+<p>Def:</p>
+<p>​ A graph (V, E) has a set V called "vertices" and a set E called
+"edges" that consisting of two-element subsets of V.</p>
+<blockquote>
+<p>Ex:</p>
+<p>​ <span class="math inline">\(V = \{A,B,C,D\}\)</span></p>
+<p>​ <span class="math inline">\(E = \{\{A,B\}, \{B,A\}, \{B,D\},
+\{D,B\}, \{B,C\}, \{C,D\}, \{A,C\}\}\)</span></p>
+</blockquote>
+<h3><span id="complete-graph">Complete Graph</span></h3>
+<p>Def:</p>
+<p>​ A simple undirected graph in which every pair of distinct vertices
+is connected by a unique edge. The notation is <span class="math inline">\(K_n\)</span>. The edge number is <span class="math inline">\(\frac {n(n-1)}{2}\)</span>.</p>
+<h3><span id="connected-graph">Connected Graph</span></h3>
+<p>Def:</p>
+<p>​ A graph is connected if you can get from any vertex to any other via
+edges.</p>
+<h3><span id="induced-subgraph">Induced Subgraph</span></h3>
+<p>Def:</p>
+<p>​ <span class="math inline">\((V_1, E_1)\)</span> is an induced
+subgraph of <span class="math inline">\((V_2,E_2)\)</span> if it is a
+graph where <span class="math inline">\(V_1 \subseteq V_2\)</span> and
+<span class="math inline">\(E_1\)</span> contains all possible edges
+consisting of vertices in <span class="math inline">\(V_1\)</span> and
+<span class="math inline">\(E_1 \subset E_2\)</span>.</p>
+<h3><span id="degree">Degree</span></h3>
+<p>Def:</p>
+<p>​ The degree of a vertex is the number of edges attached.</p>
+<p>Fact:</p>
+<p>​ Sum of degrees of all vertices is <strong>even</strong>. Cause every
+edge adds 2 degrees.</p>
+<blockquote>
+<p>Ex:</p>
+<p>​ Among 5 people, could everyone be friends with exactly 2 people?</p>
+<blockquote>
+<p>The degree is <span class="math inline">\(5 * 2=10\)</span>, it`s
+possible.</p>
+</blockquote>
+<p>​ Among 5 people, could everyone be friends with exactly 3 people?</p>
+<blockquote>
+<p>The degree is <span class="math inline">\(5 * 3=15\)</span>, it`s not
+possible.</p>
+</blockquote>
+</blockquote>
+<h3><span id="euler-path">Euler Path</span></h3>
+<p>Def:</p>
+<p>​ An <strong>Euler Path</strong> walks through a graph <strong>using
+every edge exactly once</strong>.</p>
+<p>​ An <strong>Euler Circuit</strong> starts and stops at the same
+vertex when walking through a Euler Path.</p>
+<p>Theorem:</p>
+<p>​ If a graph has an Euler Circuit, then every vertex has <strong>even
+degree</strong>.</p>
+<p>Contrapositive Theorem:</p>
+<p>​ If a graph has a vertex with odd degree, no Euler Circuit is
+possible.</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Math/">Math</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Math/basic/">basic</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/cs-basic/">cs basic</a>
+                    
+                      <a class="hover-with-bg" href="/tags/math/">math</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/d828af60.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">数据结构整理-part1</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/9e991c30.html">
+                        <span class="hidden-mobile">Embedding & Searching</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        loader: {
+          load: ['ui/lazy']
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>

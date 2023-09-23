@@ -1,0 +1,704 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="整理CNN、RNN、fastText等模型在文本分类中的应用。">
+  <meta name="author" content="江左时雨">
+  <meta name="keywords" content="机器学习,Machine Learning,自然语言处理,NLP,深度学习,Deep Learning,计算机,Coding,生活随笔">
+  <meta name="description" content="整理CNN、RNN、fastText等模型在文本分类中的应用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="文本分类深度学习方法">
+<meta property="og:url" content="https://racleray.github.io/posts/bc7ffed8.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="整理CNN、RNN、fastText等模型在文本分类中的应用。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95.assets/image-20200226232701301.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95.assets/image-20200227181258567.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95.assets/image-20200227181538048.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95.assets/image-20200227181745278.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95.assets/image-20200227182547937.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95.assets/image-20200229223725986.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95.assets/image-20200229223750280.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95.assets/image-20200229223828649.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95.assets/image-20200229223856230.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95.assets/image-20200227182528708.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95.assets/image-20200229223926779.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95.assets/image-20200227183731913.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95_pic/image-20200707005508194.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95.assets/image-20200314215708784.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95_pic/image-20200707005623708.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95_pic/image-20200707005656160.png">
+<meta property="article:published_time" content="2020-07-06T16:34:54.000Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:31.044Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="fastText">
+<meta property="article:tag" content="CNN">
+<meta property="article:tag" content="RNN">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%96%B9%E6%B3%95.assets/image-20200226232701301.png">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>文本分类深度学习方法 - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="文本分类深度学习方法">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-07-07 00:34" pubdate>
+        2020年7月7日 凌晨
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.4k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      8 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">文本分类深度学习方法</h1>
+            
+            <div class="markdown-body">
+              <h2><span id="fasttext">fastText</span></h2>
+<p>​ <a href="https://github.com/facebookresearch/fastText/tree/master/python" target="_blank" rel="noopener">官方Git</a></p>
+<p>​ fastText是Facebook AI Research在16年开源的一个文本分类器。
+其特点就是fast。相对于其它文本分类模型，如SVM，Logistic
+Regression和neural
+network等模型，fastText在保持分类效果的同时，大大缩短了训练时间。</p>
+<blockquote>
+<ul>
+<li><strong>适合大型数据+高效的训练速度</strong>：在使用标准多核CPU的情况下10分钟内处理超过10亿个词</li>
+<li>支持<strong>多语言</strong>表达：利用其语言形态结构，fastText能够被设计用来支持包括英语、德语、西班牙语、法语以及捷克语等多种语言。</li>
+<li>fastText专注于<strong>文本分类</strong>，在许多标准问题上有较好的表现（例如文本倾向性分析或标签预测）。</li>
+</ul>
+</blockquote>
+<p>​ fastText
+模型输入一个词的序列（一段文本或者一句话)，输出这个词序列属于不同类别的概率。</p>
+<p>​
+序列中的词和词组组成特征向量，特征向量通过线性变换映射到中间层，中间层再映射到标签。
+fastText
+<strong>在预测标签时使用了非线性激活函数</strong>，但在<strong>中间层不使用非线性激活函数</strong>。</p>
+<p>​ fastText 模型架构和 Word2Vec 中的 CBOW
+模型很类似。不同之处在于，fastText 预测标签，而 CBOW
+模型预测中间词。</p>
+<p>​ 基本框架：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/神经网络方法.assets/image-20200226232701301.png" srcset="/img/loading.gif" lazyload></p>
+<h3><span id="字符n-gram">字符n-gram</span></h3>
+<p>​
+将输入序列（一整句话，而不是CBOW的窗口输入），进行字符n-gram。n-gram一定程度上克服了CBOW这类bag
+of words模型无视了语序的缺点。</p>
+<p>​ 罕见词仍然可以被分解成字符n-gram。</p>
+<figure class="highlight xml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs xml">apple &gt;&gt;&gt; <br>    “<span class="hljs-tag">&lt;<span class="hljs-name">ap”,</span> “<span class="hljs-attr">app</span>”, “<span class="hljs-attr">ppl</span>”, “<span class="hljs-attr">ple</span>”, “<span class="hljs-attr">le</span>&gt;</span>”<br>    <span class="hljs-tag">&lt;<span class="hljs-name">表示前缀，</span>&gt;</span>表示后缀<br></code></pre></div></td></tr></table></figure>
+<p>​
+隐藏表征在不同类别所有分类器中进行共享，使得文本信息在不同类别中能够共同使用。</p>
+<h3><span id="层次-softmax-分类">层次 Softmax 分类</span></h3>
+<p>​ 基本思想是使用树的层级结构替代扁平化的标准Softmax，使得在计算 P(y=j)
+时，只需计算一条路径上的所有节点的概率值，无需在意其它的节点。</p>
+<p>​ 层次
+Softmax的原理在文本表示笔记部分，在word2vec的优化部分进行了说明。</p>
+<p>​
+一般情况下，使用fastText进行文本分类的同时也会产生词的embedding，即embedding是fastText分类的产物。</p>
+<p>​
+用单词的embedding叠加获得的文档向量，词向量的重要特点就是<strong>向量的距离可以用来衡量单词间的语义相似程度</strong>，于是，在fastText模型中，这<strong>两段同类文本的向量应该是相似</strong>的。</p>
+<hr>
+<h2><span id="cnn">CNN</span></h2>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/神经网络方法.assets/image-20200227181258567.png" srcset="/img/loading.gif" lazyload></p>
+<p>​ 卷积神经网络经常用来处理具有类似网格拓扑结构（grid-like
+topology）的数据。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/神经网络方法.assets/image-20200227181538048.png" srcset="/img/loading.gif" lazyload></p>
+<p>​ 应用于文本处理很简单。</p>
+<h2><span id="rnn">RNN</span></h2>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/神经网络方法.assets/image-20200227181745278.png" srcset="/img/loading.gif" lazyload>
+<span class="math display">\[
+h_t=f(x_t,h_{t-1})=\sigma(W_{xh}x_t+W_{hh}h_{t-1}+b_h)
+\]</span> ​ 其中<span class="math inline">\(W_{xh}\)</span>是输入到隐层的矩阵参数，<span class="math inline">\(W_{hh}\)</span>是隐层到隐层的矩阵参数，<span class="math inline">\(b_h\)</span>为隐层的偏置向量（bias）参数，<span class="math inline">\(\sigma\)</span>为<span class="math inline">\(sigmoid\)</span>函数。</p>
+<p>​ 一般提取最后一个时刻的隐层状态作为句子表示进而使用分类模型。</p>
+<h3><span id="lstm">LSTM</span></h3>
+<p>​
+LSTM增加了记忆单元𝑐、输入门𝑖、遗忘门𝑓及输出门𝑜。这些门及记忆单元组合起来大大提升了循环神经网络处理长序列数据的能力。</p>
+<blockquote>
+<p><span class="math inline">\(i_t =
+\sigma{(W_{xi}x_t+W_{hi}h_{t-1}+b_i)}\)</span></p>
+<p>$ f_t = (W_{xf}x_t+W_{hf}h_{t-1}+b_f) $</p>
+<p>$ c_t = f_t c_{t-1}+i_t tanh(W_{xc}x_t+W_{hc}h_{t-1}+b_c) $</p>
+<p>$o_t = (W_{xo}x_t+W_{ho}h_{t-1}+b_o) $</p>
+<p>$ h_t = o_t tanh(c_t) $</p>
+</blockquote>
+<p>​ 其中，<span class="math inline">\(i_t, f_t, c_t,
+o_t\)</span>分别表示输入门，遗忘门，记忆单元及输出门的向量值，带角标的<span class="math inline">\(W\)</span>及<span class="math inline">\(b\)</span>为模型参数，<span class="math inline">\(tanh\)</span>为双曲正切函数，<span class="math inline">\(\odot\)</span><mark>表示逐元素（elementwise）的乘法操作</mark>。</p>
+<p>​ 输入门控制着新输入进入记忆单元<span class="math inline">\(c\)</span>的强度，遗忘门控制着记忆单元维持上一时刻值的强度，输出门控制着输出记忆单元的强度。</p>
+<p>​
+三种门的计算方式类似，但有着完全不同的参数，它们各自以不同的方式控制着记忆单元<span class="math inline">\(c\)</span>：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/神经网络方法.assets/image-20200227182547937.png" srcset="/img/loading.gif" lazyload></p>
+<p>Forget Gate：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/神经网络方法.assets/image-20200229223725986.png" srcset="/img/loading.gif" lazyload></p>
+<p>Input Gate：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/神经网络方法.assets/image-20200229223750280.png" srcset="/img/loading.gif" lazyload></p>
+<p>更新Cell state：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/神经网络方法.assets/image-20200229223828649.png" srcset="/img/loading.gif" lazyload></p>
+<p>Output Gate：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/神经网络方法.assets/image-20200229223856230.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/神经网络方法.assets/image-20200227182528708.png" srcset="/img/loading.gif" lazyload></p>
+<p>​ 图中带有方块的线，没有在计算中直接公式求解，s即cell
+state，通过hidden
+state的计算，从而进行信息传递。详细内容查找神经网络笔记。</p>
+<p>​</p>
+<h3><span id="gru">GRU</span></h3>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/神经网络方法.assets/image-20200229223926779.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>将忘记门和输入门合并成为一个单一的更新门</li>
+<li>同时合并了数据单元状态和隐藏状态</li>
+<li>结构比LSTM的结构更加简单</li>
+</ul>
+<h3><span id="rcnn">RCNN</span></h3>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/神经网络方法.assets/image-20200227183731913.png" srcset="/img/loading.gif" lazyload></p>
+<p>​ ​
+卷积层建立在一个BiRNN模型之上，通过正向和反向循环来构造一个单词的下文和上文，然后输入CNN，如下式：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/神经网络方法_pic/image-20200707005508194.png" srcset="/img/loading.gif" lazyload></p>
+<p>​ 得到单词的上下文表示之后，用拼接的方式来表示这个单词.</p>
+<p>​ 然后通过max
+pooling层和全连接层，得到最后的输出。这一部分相当于文本表示的学习。</p>
+<blockquote>
+<p>​ 将该词向量放入一个单层神经网络中，得到所谓的潜语义向量（latent
+semantic
+vector），这里卷积层的计算结束了，时间复杂度仍是O(n)。接下来进行池化层，这里采用max-pooling可以将向量中最大的特征提取出来，从而获取到整个文本的信息。池化过程时间复杂度也是O(n)，所以整个模型的时间复杂度是O(n)。得到文本特征向量之后，进行分类。</p>
+</blockquote>
+<h3><span id="quasi-rnn">Quasi-RNN</span></h3>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/神经网络方法.assets/image-20200314215708784.png" srcset="/img/loading.gif" lazyload alt="image-20200314215708784" style="zoom:67%;"></p>
+<p>​ 框图显示了QRNN的计算结构与典型值的比较LSTM和CNN架构。
+红色表示卷积或矩阵乘法； 连续的块意味着这些计算可以并行进行。
+蓝色表示无参数功能沿通道/特征维度并行运行的对象。
+LSTM可以分解为（红色）线性块和（蓝色）element-wise部分，但每个时间步的计算仍取决于上一个时间步的结果。</p>
+<p>​ fo-Pool指的是以下公式，包括forget 和 output 的h计算方式</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/神经网络方法_pic/image-20200707005623708.png" srcset="/img/loading.gif" lazyload></p>
+<p>而上图中</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/神经网络方法_pic/image-20200707005656160.png" srcset="/img/loading.gif" lazyload></p>
+<p>​</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/NLP/">NLP</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/fastText/">fastText</a>
+                    
+                      <a class="hover-with-bg" href="/tags/CNN/">CNN</a>
+                    
+                      <a class="hover-with-bg" href="/tags/RNN/">RNN</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/e6e273ef.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">文本分类advanced</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/f4b85348.html">
+                        <span class="hidden-mobile">文本分类传统机器学习方法</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        loader: {
+          load: ['ui/lazy']
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>

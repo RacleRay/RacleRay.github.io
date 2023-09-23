@@ -1,0 +1,906 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="简要记录一点中文文本处理的概念和工具使用。">
+  <meta name="author" content="江左时雨">
+  <meta name="keywords" content="机器学习,Machine Learning,自然语言处理,NLP,深度学习,Deep Learning,计算机,Coding,生活随笔">
+  <meta name="description" content="简要记录一点中文文本处理的概念和工具使用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="中文文本处理">
+<meta property="og:url" content="https://racleray.github.io/posts/b75580e5.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="简要记录一点中文文本处理的概念和工具使用。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/3-%E4%B8%AD%E6%96%87%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86.assets/image-20200229212113564.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/3-%E4%B8%AD%E6%96%87%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86.assets/image-20200229201007335.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/3-%E4%B8%AD%E6%96%87%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86.assets/image-20200224180805695.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/3-%E4%B8%AD%E6%96%87%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86.assets/image-20200229211941735.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/3-%E4%B8%AD%E6%96%87%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86.assets/image-20200229212501592.png">
+<meta property="article:published_time" content="2020-07-06T13:40:16.000Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:31.038Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="chinese process">
+<meta property="article:tag" content="basic">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/3-%E4%B8%AD%E6%96%87%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86.assets/image-20200229212113564.png">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>中文文本处理 - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="中文文本处理">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-07-06 21:40" pubdate>
+        2020年7月6日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      5k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      16 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">中文文本处理</h1>
+            
+            <div class="markdown-body">
+              <h1><span id="中文文本基本任务与处理">中文文本基本任务与处理</span></h1>
+<h2><span id="1分词">1.分词</span></h2>
+<p>中文和日文单纯从文本形态上无法区分具备独立含义的词（拉丁语系纯天然由空格分隔不同的word）。因此在很多中文任务中，我们需要做的第一个处理叫做<strong>分词</strong>。</p>
+<ul>
+<li>​
+主流的分词方法主要是<strong>基于词典匹配的分词方法(正向最大匹配法、逆向最大匹配法和双向匹配分词法等)</strong>和<strong>基于统计的分词方法(HMM、CRF、和深度学习)</strong>；‘</li>
+<li>​ 主流的分词工具库包括
+中科院计算所NLPIR、哈工大LTP、清华大学THULAC、Hanlp分词器、Python
+jieba工具库等。</li>
+</ul>
+<h3><span id="最大匹配法">最大匹配法</span></h3>
+<p>​
+最大匹配是指以词典为依据，取词典中最长单词为第一个次取字数量的扫描串，在词典中进行扫描（为提升扫描效率，还可以跟据字数多少设计多个字典，然后根据字数分别从不同字典中进行扫描）。</p>
+<p>​
+双向最大匹配法：正向最大匹配和逆向最大匹配两种算法都切一遍，然后根据大颗粒度词越多越好，非词典词和单字词越少越好的原则，选取其中一种分词结果输出。</p>
+<blockquote>
+<p>“我们在野生动物园玩”</p>
+<p>​ -
+正向最大匹配法：“我们/在野/生动/物/园/玩”，其中，单字字典词为2，非词典词为1。</p>
+<p>​ -
+逆向最大匹配法：“我们/在/野生动物园/玩”，其中，单字字典词为2，非词典词为0。</p>
+<blockquote>
+<p>​ 非字典词：正向(1)&gt;逆向(0)（越少越好） ​
+单字字典词：正向(2)=逆向(2)（越少越好） ​
+总词数：正向(6)&gt;逆向(4)（越少越好）</p>
+</blockquote>
+<p>因此最终输出为逆向结果。</p>
+</blockquote>
+<h2><span id="2去停用词与n-gram">2.去停用词与N-gram</span></h2>
+<p>​ 同英文</p>
+<h2><span id="3词性标注">3.词性标注</span></h2>
+<p>​ 词性标注（part-of-speech
+tagging）,又称为词类标注或者简称标注，是指为分词结果中的每个单词标注一个正确的词性。</p>
+<p>​
+在汉语中，词性标注比较简单，因为汉语词汇词性多变的情况比较少见，大多词语只有一个词性，或者出现频次最高的词性远远高于第二位的词性。</p>
+<h2><span id="4句法依存分析">4.句法依存分析</span></h2>
+<p>​ 依存句法分析(Dependency Parsing, DP)
+识别句子中的“主谓宾”、“定状补”这些语法成分，并分析各成分之间的关系。</p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/3-中文文本处理.assets/image-20200229212113564.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​ 依存句法分析标注关系(共14种) 及含义如下(哈工大开源包使用)：</p>
+<table>
+<colgroup>
+<col style="width: 15%">
+<col style="width: 6%">
+<col style="width: 39%">
+<col style="width: 38%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">关系类型</th>
+<th style="text-align: center;">Tag</th>
+<th style="text-align: center;">Description</th>
+<th style="text-align: center;">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">主谓关系</td>
+<td style="text-align: center;">SBV</td>
+<td style="text-align: center;">subject-verb</td>
+<td style="text-align: center;">我送她一束花(我&lt;–送)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">动宾关系</td>
+<td style="text-align: center;">VOB</td>
+<td style="text-align: center;">直接宾语，verb-object</td>
+<td style="text-align: center;">我送她一束花(送–&gt; 花)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">间宾关系</td>
+<td style="text-align: center;">IOB</td>
+<td style="text-align: center;">间接宾语，indirect-object</td>
+<td style="text-align: center;">我送她一束花(送–&gt; 她)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">前置宾语</td>
+<td style="text-align: center;">FOB</td>
+<td style="text-align: center;">前置宾语，fronting-object</td>
+<td style="text-align: center;">他什么书都读(书&lt;–读)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">兼语</td>
+<td style="text-align: center;">DBL</td>
+<td style="text-align: center;">double</td>
+<td style="text-align: center;">他请我吃饭(请–&gt; 我)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">定中关系</td>
+<td style="text-align: center;">ATT</td>
+<td style="text-align: center;">attribute</td>
+<td style="text-align: center;">红苹果(红&lt;–苹果)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">状中结构</td>
+<td style="text-align: center;">ADV</td>
+<td style="text-align: center;">adverbial</td>
+<td style="text-align: center;">非常美丽(非常&lt;–美丽)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">动补结构</td>
+<td style="text-align: center;">CMP</td>
+<td style="text-align: center;">complement</td>
+<td style="text-align: center;">做完了作业(做–&gt; 完)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">并列关系</td>
+<td style="text-align: center;">COO</td>
+<td style="text-align: center;">coordinate</td>
+<td style="text-align: center;">大山和大海(大山–&gt; 大海)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">介宾关系</td>
+<td style="text-align: center;">POB</td>
+<td style="text-align: center;">preposition-object</td>
+<td style="text-align: center;">在贸易区内(在–&gt; 内)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">左附加关系</td>
+<td style="text-align: center;">LAD</td>
+<td style="text-align: center;">left adjunct</td>
+<td style="text-align: center;">大山和大海(和&lt;–大海)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">右附加关系</td>
+<td style="text-align: center;">RAD</td>
+<td style="text-align: center;">right adjunct</td>
+<td style="text-align: center;">孩子们(孩子–&gt; 们)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">独立结构</td>
+<td style="text-align: center;">IS</td>
+<td style="text-align: center;">independent structure</td>
+<td style="text-align: center;">两个单句在结构上彼此独立</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">核心关系</td>
+<td style="text-align: center;">HED</td>
+<td style="text-align: center;">head</td>
+<td style="text-align: center;">指整个句子的核心</td>
+</tr>
+</tbody>
+</table>
+<h2><span id="5语义依存分析">5.语义依存分析</span></h2>
+<p>​ Semantic Dependency Parsing,
+SDP，分析句子各个语言单位间的语义关联。</p>
+<p>​
+使用语义依存刻画句子语义，好处在于不需要去抽象词汇本身，而是通过词汇所承受的语义框架来描述该词汇。</p>
+<p>​
+语义依存分析目标是<strong>跨越句子表层句法结构的束缚</strong>，直接获取深层的语义信息。</p>
+<p>​
+例如以下三个句子，用不同的表达方式表达了同一个语义信息，即张三实施了一个吃的动作，吃的动作是对苹果实施的。</p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/3-中文文本处理.assets/image-20200229201007335.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​
+语义依存分析<strong>不受句法结构的影响</strong>，将具有直接语义关联的语言单元直接连接依存弧并标记上相应的语义关系。</p>
+<p>​ 语义依存关系分为三类，分别是</p>
+<blockquote>
+<ul>
+<li>主要语义角色，每一种语义角色对应存在一个嵌套关系和反关系；</li>
+<li>事件关系，描述两个事件间的关系；</li>
+<li>语义依附标记，标记说话者语气等依附性信息。</li>
+</ul>
+</blockquote>
+<p>​
+http://ltp.ai/demo.html，http://ltp.ai/docs/index.html：哈工大开源包网站</p>
+<h2><span id="6语法解析">6.语法解析</span></h2>
+<p>​
+句子可以用主语、谓语、宾语来表示。在自然语言的处理过程中，有许多应用场景都需要考虑句子的语法，因此研究语法解析变得非常重要。</p>
+<p>​
+语法解析有两个主要的问题，其一是句子语法在计算机中的表达与存储方法，以及语料数据集；其二是语法解析的算法。</p>
+<h4><span id="表达与存储">表达与存储</span></h4>
+<p>​ 用树状结构图来表示</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/3-中文文本处理.assets/image-20200224180805695.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:67%;"></p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/3-中文文本处理.assets/image-20200229211941735.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​
+NP、VP、PP是名词、动词、介词短语（短语级别）；N、V、P分别是名词、动词、介词。</p>
+<h4><span id="语法解析的算法">语法解析的算法</span></h4>
+<h5><span id="上下文无关语法context-freegrammer">上下文无关语法（Context-Free
+Grammer）</span></h5>
+<p>​ 为了生成句子的语法树，我们可以定义如下的一套上下文无关语法。</p>
+<blockquote>
+<p>•1）N表示一组非叶子节点的标注，例如{S、NP、VP、N...}</p>
+<p>•2）Σ表示一组叶子结点的标注，例如{我们、尊敬...}</p>
+<p>•3）R表示一组规则，每条规则可以表示为</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/3-中文文本处理.assets/image-20200229212501592.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:67%;"></p>
+<p>•4）S表示语法树开始的标注</p>
+</blockquote>
+<p>​ 当给定一个句子时，我们便可以按照从左到右的顺序来解析语法。</p>
+<p>​ 例如，句子the man sleeps就可以表示为(S (NP (DT the) (NN man)) (VP
+sleeps))。</p>
+<p>​ 规则R示例如下：</p>
+<blockquote>
+<p>S -&gt; NP VP VP -&gt; V NP | V NP PP PP -&gt; P NP</p>
+</blockquote>
+<blockquote>
+<p>V -&gt; "saw" | "ate" NP -&gt; "John" | "Mary" | "Bob" | Det N | Det
+N PP Det -&gt; "a" | "an" | "the" | "my" N -&gt; "dog" | "cat" |
+"cookie" | "park" P -&gt; "in" | "on" | "by" | "with"</p>
+</blockquote>
+<h5><span id="概率分布的上下文无关语法probabilisticcontext-free-grammar">概率分布的上下文无关语法（Probabilistic
+Context-Free Grammar）</span></h5>
+<p>​
+上下文无关的语法可以很容易的推导出一个句子的语法结构，但是缺点是推导出的结构可能存在<strong>二义性</strong>。</p>
+<p>​
+由于语法的解析存在二义性，我们就需要找到一种方法从多种可能的语法树种找出最可能的一棵树。</p>
+<p>​ 一种常见的方法既是PCFG （Probabilistic Context-Free
+Grammar）。除了常规的语法规则以外，我们还对每<strong>一条规则赋予了一个概率</strong>。对于每一棵生成的语法树，我们将其中所有规则的<strong>概率的乘积作为语法树的出现概率</strong>。</p>
+<p>​
+分别计算每颗语法树的概率p(t)，出现概率最大的那颗语法树就是我们希望得到的结果，即<strong>argmax
+p(t)</strong>。</p>
+<p>​ <strong>训练算法</strong>：</p>
+<blockquote>
+<p>算法依赖于CFG中对于N、Σ、R、S的定义以及PCFG中的p(x)。</p>
+<blockquote>
+<ul>
+<li>统计出语料库中所有的N和Σ</li>
+<li>利用语料库中的所有规则作为R</li>
+<li>针对每个规则A -&gt; B，从语料库中估算p(x) = p(A -&gt; B) / p(A)</li>
+</ul>
+</blockquote>
+<p>​
+在CFG的定义的基础上，重新定义一种叫Chomsky的语法格式。这种格式要求每条规则只能是X
+-&gt; Y1 Y2或者X -&gt;
+Y的格式。实际上Chomsky语法格式保证生产的语法树总是<strong>二叉树</strong>的格式，同时任意一棵语法树总是能够转化成Chomsky语法格式。</p>
+</blockquote>
+<p>​ <strong>语法树预测算法</strong>：</p>
+<blockquote>
+<p>输入一个句子x1, x2, ... , xn时，计算句子对应的语法树有两种方法：</p>
+<ul>
+<li>第一种方法是暴力遍历的方法，每个单词x可能有m =
+len(N)种取值，句子长度是n，每种情况至少存在n个规则，所以在时间复杂度<span class="math inline">\(O(mn^2)\)</span>的情况下，我们可以判断出所有可能的语法树并计算出最佳的那个。</li>
+<li>第二种方法当然是动态规划，我们定义w[i, j,
+X]是第i个单词至第j个单词由标注X来表示的最大概率。w[i, j,
+PP]代表的是继续往上一层递归时，只选择当前概率最大的组合方式。</li>
+</ul>
+</blockquote>
+<p>​ <strong>缺点</strong>：</p>
+<p>​
+PCFG也有一些缺点，例如：1）缺乏词法信息；2）连续短语（如名词、介词）的处理等。但总体来讲它给语法解析提供了一种非常有效的实现方法。</p>
+<h2><span id="7命名实体识别">7.命名实体识别</span></h2>
+<p>​
+从一段非结构化文本中找出相关实体（triplet中的主词和宾词），并标注出其位置以及类型，它是NLP领域中一些复杂任务（如<strong>关系抽取</strong>、<strong>信息检索</strong>、<strong>知识问答</strong>、<strong>知识图谱</strong>等）的基础。</p>
+<h1><span id="关键词抽取">关键词抽取</span></h1>
+<p>​
+文本关键词抽取，是对文本信息进行高度凝练的一种有效手段，通过3-5个词语准确概括文本的主题，帮助读者快速理解文本信息。是文本检索、文本摘要等许多下游文本挖掘任务的基础性和必要性的工作。</p>
+<h1><span id="常用包的使用"></span></h1>
+<h1><span id="jieba">jieba</span></h1>
+<h2><span id="基本分词函数与用法">基本分词函数与用法</span></h2>
+<p>​ <strong>jieba.cut</strong> 以及
+<strong>jieba.cut_for_search</strong> 返回的结构都是一个可迭代的
+generator。</p>
+<p>​
+<strong>jieba.lcut</strong>以及<strong>jieba.lcut_for_search</strong>直接返回
+list</p>
+<h2><span id="添加用户自定义字典"><strong>添加用户自定义字典</strong></span></h2>
+<ul>
+<li><p>1.可以用jieba.load_userdict(file_name)加载用户字典</p></li>
+<li><p>2.少量的词汇可以自己用下面方法手动添加：</p>
+<ul>
+<li>用 add_word(word, freq=None, tag=None) 和 del_word(word)
+在程序中动态修改词典用</li>
+<li>suggest_freq(segment, tune=True)
+可调节单个词语的词频，使其能（或不能）被分出来。</li>
+</ul></li>
+</ul>
+<h2><span id="词性标注">词性标注</span></h2>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> jieba.posseg <span class="hljs-keyword">as</span> pseg    <span class="hljs-comment"># .posseg模块</span><br><br>words = pseg.cut()<br></code></pre></div></td></tr></table></figure>
+<h2><span id="关键词抽取">关键词抽取</span></h2>
+<h3><span id="基于-tf-idf算法的关键词抽取"><strong>基于 TF-IDF
+算法的关键词抽取</strong></span></h3>
+<ul>
+<li><p>import jieba.analyse</p></li>
+<li><p>jieba.analyse.extract_tags(sentence, topK=20, withWeight=False,
+allowPOS=())</p>
+<ul>
+<li>sentence 为待提取的文本</li>
+<li>topK 为返回几个 TF/IDF 权重最大的关键词，默认值为 20</li>
+<li>withWeight 为是否一并返回关键词权重值，默认值为 False</li>
+<li>allowPOS 仅包括指定词性的词，默认值为空，即不筛选</li>
+</ul></li>
+<li><p>自定义逆向文件频率（IDF）文本语料库</p>
+<ul>
+<li>用法： jieba.analyse.set_idf_path(file_name) #
+file_name为自定义语料库的路径
+<ul>
+<li>自定义语料库示例见<a href="https://github.com/fxsjy/jieba/blob/master/extra_dict/idf.txt.big" target="_blank" rel="noopener">这里</a></li>
+<li>用法示例见<a href="https://github.com/fxsjy/jieba/blob/master/test/extract_tags_idfpath.py" target="_blank" rel="noopener">这里</a></li>
+</ul></li>
+</ul></li>
+<li><p>自定义停止词（Stop Words）文本语料库</p>
+<ul>
+<li>用法： jieba.analyse.set_stop_words(file_name) #
+file_name为自定义语料库的路径
+<ul>
+<li>自定义语料库示例见<a href="https://github.com/fxsjy/jieba/blob/master/extra_dict/stop_words.txt" target="_blank" rel="noopener">这里</a></li>
+<li>用法示例见<a href="https://github.com/fxsjy/jieba/blob/master/test/extract_tags_stop_words.py" target="_blank" rel="noopener">这里</a></li>
+</ul></li>
+</ul></li>
+<li><p>关键词一并返回关键词权重值示例</p>
+<ul>
+<li>用法示例见<a href="https://github.com/fxsjy/jieba/blob/master/test/extract_tags_with_weight.py" target="_blank" rel="noopener">这里</a></li>
+</ul></li>
+</ul>
+<h3><span id="基于-textrank算法的关键词抽取"><strong>基于 TextRank
+算法的关键词抽取</strong></span></h3>
+<ul>
+<li><p>jieba.analyse.textrank(sentence, topK=20, withWeight=False,
+allowPOS=('ns', 'n', 'vn', 'v'))
+直接使用，接口相同，注意默认过滤词性。</p></li>
+<li><p>jieba.analyse.TextRank() 新建自定义 TextRank 实例</p>
+<p>算法论文： <a href="http://web.eecs.umich.edu/~mihalcea/papers/mihalcea.emnlp04.pdf" target="_blank" rel="noopener">TextRank:
+Bringing Order into Texts</a></p></li>
+</ul>
+<p>基本思想:</p>
+<ul>
+<li>将待抽取关键词的文本进行分词</li>
+<li>以固定窗口大小(默认为5，通过span属性调整)，词之间的共现关系，构建图</li>
+<li>计算图中节点的PageRank，注意是无向带权图</li>
+</ul>
+<p>详解见<a href="https://github.com/RacleRay/NotesForBlogs/blob/master/basic/textrank.html" target="_blank" rel="noopener">textrank</a></p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> jieba.analyse <span class="hljs-keyword">as</span> analyse<br><br>analyse.textrank(lines, topK=<span class="hljs-number">20</span>, withWeight=<span class="hljs-literal">False</span>, allowPOS=(<span class="hljs-string">'ns'</span>, <span class="hljs-string">'n'</span>))<br></code></pre></div></td></tr></table></figure>
+<p>示例</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> jieba.analyse <span class="hljs-keyword">as</span> analyse<br><span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd<br><br>df = pd.read_csv(<span class="hljs-string">"./data/file.csv"</span>, encoding=<span class="hljs-string">'utf-8'</span>)<br>df = df.dropna()<br>lines=df.content.values.tolist()<br>content = <span class="hljs-string">""</span>.join(lines)  <span class="hljs-comment"># 一行输入</span><br><br>print(analyse.textrank(content, topK=<span class="hljs-number">20</span>, withWeight=<span class="hljs-literal">False</span>, allowPOS=(<span class="hljs-string">'ns'</span>, <span class="hljs-string">'n'</span>, <span class="hljs-string">'vn'</span>, <span class="hljs-string">'v'</span>)))<br>print(<span class="hljs-string">"-------------------------------------"</span>)<br>print(analyse.textrank(content, topK=<span class="hljs-number">20</span>, withWeight=<span class="hljs-literal">False</span>, allowPOS=(<span class="hljs-string">'ns'</span>, <span class="hljs-string">'n'</span>)))<br></code></pre></div></td></tr></table></figure>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/NLP/">NLP</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/chinese-process/">chinese process</a>
+                    
+                      <a class="hover-with-bg" href="/tags/basic/">basic</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/2c27ec14.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">个人Linux环境配置</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/80c1e4ba.html">
+                        <span class="hidden-mobile">英文文本处理</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        loader: {
+          load: ['ui/lazy']
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>

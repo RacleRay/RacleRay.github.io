@@ -1,0 +1,713 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="个人博客&amp;笔记">
+  <meta name="author" content="江左时雨">
+  <meta name="keywords" content="机器学习,Machine Learning,自然语言处理,NLP,深度学习,Deep Learning,计算机,Coding,生活随笔">
+  <meta name="description" content="视觉问答任务的定义是对于一张图片和一个跟这幅图片相关的问题，机器需要根据图片信息对问题进行回答。  输入：一张图片和一个关于图片信息的问题，常见的问题形式有选择题，判断题 输出：挑选出正确答案  ​ 视觉问答任务本质上是一个多模态的研究问题。这个任务需要我们结合自然语言处理（NLP）和计算机视觉（CV)的技术来进行回答。  自然语言处理（NLP）  举一个在NLP领域常见的基于">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vision to text">
+<meta property="og:url" content="https://racleray.github.io/posts/88e9ab16.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="视觉问答任务的定义是对于一张图片和一个跟这幅图片相关的问题，机器需要根据图片信息对问题进行回答。  输入：一张图片和一个关于图片信息的问题，常见的问题形式有选择题，判断题 输出：挑选出正确答案  ​ 视觉问答任务本质上是一个多模态的研究问题。这个任务需要我们结合自然语言处理（NLP）和计算机视觉（CV)的技术来进行回答。  自然语言处理（NLP）  举一个在NLP领域常见的基于">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/VQA.assets/image-20200228220029800.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/VQA.assets/image-20200228220726450.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/VQA.assets/image-20200228220844530.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/VQA.assets/image-20200228220942528.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/VQA.assets/image-20200228221149468.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/Image_Captioning.assets/image-20200228213101616.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/Image_Captioning.assets/image-20200228213216469.png">
+<meta property="article:published_time" content="2020-07-07T09:55:15.000Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:31.035Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="visual text">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/VQA.assets/image-20200228220029800.png">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>Vision to text - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Vision to text">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-07-07 17:55" pubdate>
+        2020年7月7日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.9k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      9 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Vision to text</h1>
+            
+            <div class="markdown-body">
+              <p>视觉问答任务的定义是对于一张图片和一个跟这幅图片相关的问题，机器需要根据图片信息对问题进行回答。</p>
+<ul>
+<li>输入：一张图片和一个关于图片信息的问题，常见的问题形式有选择题，判断题</li>
+<li>输出：挑选出正确答案</li>
+</ul>
+<p>​
+视觉问答任务本质上是一个多模态的研究问题。这个任务需要我们结合自然语言处理（NLP）和计算机视觉（CV)的技术来进行回答。</p>
+<ul>
+<li>自然语言处理（NLP）
+<ul>
+<li>举一个在NLP领域常见的基于文本的Q&amp;A问题：how many bridges are
+there in Paris?</li>
+<li>一个NLP Q&amp;A
+系统需要首先识别出这是一个什么类型的问题，比如这里是一个“how many”
+关于计数的问题，所以答案应该是一个数字。之后系统需要提取出哪个物体（object）需要机器去计数，比如这里是
+“bridges“。最后需要我们提取出问题中的背景（context），比如这个问题计数的限定范围是在巴黎这个城市。</li>
+<li>当一个Q&amp;A系统分析完问题，系统需要根据知识库（knowledge
+base）去得到答案。</li>
+</ul></li>
+<li>机器视觉（CV)
+<ul>
+<li>VQA区别于传统的text
+QA在于搜索答案和推理部分都是基于图片的内容。所以系统需要进行目标检测（object
+detection），再进行分类（classification），之后系统需要对图片中物体之间的关系进行推理。</li>
+</ul></li>
+</ul>
+<h2><span id="vqa-notes">VQA Notes</span></h2>
+<h3><span id="基于图像信息和文本信息匹配的vqa">基于图像信息和文本信息匹配的VQA</span></h3>
+<p>通常，一个VQA系统包含了以下三个步骤：</p>
+<ol type="1">
+<li>抽取问题特征</li>
+<li>抽取图片特征</li>
+<li>结合图片和问题特征去生成答案</li>
+</ol>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/VQA.assets/image-20200228220029800.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/VQA.assets/image-20200228220726450.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<h3><span id="基于注意力attention的vqa">基于注意力（attention）的VQA</span></h3>
+<p>​ VQA方案是使用位置注意力（spatial
+attention）去生成关于区域（region）的位置特征，并训练一个CNN网络。一般有两种方法去获得一张图片关于方位的区域。</p>
+<ol type="1">
+<li>划分成网格状（grid），并根据问题与图片特征去预测每一个网格的attention
+weight，将图片的CNN的feature通过加权求和的方式得到attention weighted
+feature，再通过attention weighted feature发现相对比较重要的区域</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/VQA.assets/image-20200228220844530.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:80%;"></p>
+<ol start="2" type="1">
+<li>目标识别的方式生成很多bounding box。</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/VQA.assets/image-20200228220942528.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:80%;"></p>
+<p>根据生成的区域（region），使用问题去找到最相关的区域，并利用这些区域去生成答案。</p>
+<h3><span id="stacked-attention">Stacked Attention</span></h3>
+<p>Stacked Attention，多次重复question-image attention。</p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/VQA.assets/image-20200228221149468.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<ul>
+<li>图片使用CNN 编码 <span class="math display">\[\phi =
+CNN(I)\]</span></li>
+<li>问题使用LSTM编码 <span class="math display">\[s=
+LSTM(E_q)\]</span></li>
+<li>Stacked Attention <span class="math display">\[\alpha_{c,l} \propto
+\exp F_c(s, \phi_l) ,~~  \sum_{l=1}^L \alpha_{c,l}=1, ~~ x_c = \sum_l
+\alpha_{c,l}\phi_l\]</span></li>
+<li>classifier, 其中G=[G_1, G_2, ..., G_M]是两层的全连接层 <span class="math display">\[P(a_i|I,q) \propto \exp G_i(x,s),~~ x=[x_1,
+x2,...,x_C]\]</span></li>
+</ul>
+<h2><span id="image-captioning">Image captioning</span></h2>
+<h3><span id="基本模型">基本模型</span></h3>
+<p>​ 常见的image captioning
+系统是由一个CNN+RNN的编码解码模型完成。类比一下machine
+translation系统，通常由一个RNN encoder + RNN decoder组成。</p>
+<h4><span id="图像编码">图像编码</span></h4>
+<p>​ Vinyals et al. (2014) Show and Tell: A Neural Image Caption
+Generator 这篇文章将seq2seq模型中的LSTM encoder换成CNN
+encoder，用于提取图片的信息，得到一个固定长度的内容向量（context
+vector），之后通过一个RNN decoder，将信息使用文字的方式解码出来。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/Image_Captioning.assets/image-20200228213101616.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:50%;"></p>
+<p>​ 结合注意力机制 - Kelvin et al. (2014) Show, Attend and Tell: Neural
+Image Caption Generation with Visual Attention</p>
+<blockquote>
+<ul>
+<li>类比人看图说话：当人在解说一幅图片的时候，每预测一个字，会关注到图片上的不同位置。</li>
+<li>在解码器预测文字的时候，会关注到跟当前文字内容和图片最相关的位置。</li>
+</ul>
+</blockquote>
+<h5><span id="注意力机制">注意力机制</span></h5>
+<ol type="1">
+<li>一张图片的卷积层中的向量有14x14=196个feature maps <span class="math inline">\(a_i, i=1...196\)</span>，每个feature
+map对应于每个图片中不同的高亮位置。</li>
+<li>注意力机制通过计算每个feature map与当前的hidden
+state计算两者之间的相关度，这里的hidden state <span class="math inline">\(h_{t-1}\)</span>
+总结了已经生成的1到t-1个单词的内容。 <span class="math display">\[e_{ti}=f_{att}(a_i, h_{t-1}) \\ \alpha_{ti} =
+{\exp(e_{ti}) \over \sum_{k=1}^L \exp(e_{tk}) }\]</span></li>
+<li>之后通过加权求和得到注意力内容向量 <span class="math inline">\(\hat{z}_t\)</span>。 <span class="math display">\[\hat{z}_t=\phi(\{a_i\},
+\{\alpha_i\})\]</span></li>
+<li>通过将196个feature maps求平均值去初始化LSTM中的 memory cell <span class="math inline">\(c_0, h_0\)</span></li>
+<li>根据图片及已经生成的部分单词，去预测下一个单词 <span class="math display">\[c_0 = f_{init,c}({1\over L} \sum_i^L a_i) \\ h_0
+= f_{init,h}({1\over L} \sum_i^L a_i) \\  p(y_t|a, y_1^{t-1}) \propto
+\exp(L_o (E y_{t-1} + L_h h_t + L_z \hat{z}_t))\]</span></li>
+</ol>
+<p><a href="https://github.com/RacleRay/Have_Fun/tree/master/image_caption" target="_blank" rel="noopener">show
+attention and tell</a></p>
+<h5><span id="beam-search-优化">beam search 优化</span></h5>
+<p>​
+每次预测下一个单词的时候，计算当前所有路径的log-likelihood并进行排序,
+只保留log-likelihood 最大值的K个beams。</p>
+<h4><span id="目标识别">目标识别</span></h4>
+<p>​ Fang et al 2014， From Captions to Visual Concepts and Back,
+提供了另一个image caption系统的思路。</p>
+<ol type="1">
+<li>预测文字： 使用一个CNN去做目标识别，并且根据bounding
+box生成可能出现的文字</li>
+<li>生成句子：通过一个统计语言模型，生成很多个可能的句子集合</li>
+<li>重新排序已经生成的句子： 通过学习一个Deep Multimodal Similarity
+Model
+（DMSM）去重新排序所有可能的句子集合，取最高分数的句子作为系统输出。</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/Image_Captioning.assets/image-20200228213216469.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:67%;"></p>
+<h3><span id="评估指标">评估指标</span></h3>
+<p>常见的image captioning 系统的评估指标使用的是</p>
+<ul>
+<li>BLEU，
+是常见的机器翻译系统的评估指标，计算的是一句预测的文字与人类标注的参考文字之间的n-gram
+重合度（overlap）。</li>
+<li>METEOR，
+也是常见的机器翻译系统的评估指标，其通过建立一个短语词表（phrase
+table），考虑了输出文本是否使用了相似短语。</li>
+<li>CIDEr， 考虑了句子中的文字与图片的相关性</li>
+<li>ROUGE-L，是text summarization的评估指标</li>
+<li>SPICE 是专门设计出来用于 image caption 问题的。全称是 Semantic
+Propositional Image Caption Evaluation。</li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/NLP/">NLP</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/visual-text/">visual text</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/1074fc0d.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">文本相似性</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/1b390165.html">
+                        <span class="hidden-mobile">Rasa Notes</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        loader: {
+          load: ['ui/lazy']
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>

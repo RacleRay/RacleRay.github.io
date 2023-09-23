@@ -1,0 +1,696 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="记录fast.AI团队开源的 jupytext 与 nbdev 工具的配置。">
+  <meta name="author" content="江左时雨">
+  <meta name="keywords" content="机器学习,Machine Learning,自然语言处理,NLP,深度学习,Deep Learning,计算机,Coding,生活随笔">
+  <meta name="description" content="记录fast.AI团队开源的 jupytext 与 nbdev 工具的配置。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="jupytext and nbdev">
+<meta property="og:url" content="https://racleray.github.io/posts/c1cb8a12.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="记录fast.AI团队开源的 jupytext 与 nbdev 工具的配置。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext-and-nbdev_pic/image-20210112154512001.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext-and-nbdev_pic/image-20210112153908965.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext-and-nbdev_pic/image-20210112154745542.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext-and-nbdev_pic/image-20210112153940284.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext-and-nbdev_pic/image-20210112154102238.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext-and-nbdev_pic/image-20210112154207803.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext-and-nbdev_pic/image-20210112155906188.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext_pic/image-20210112164201446.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext_pic/image-20210112164812568.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext_pic/image-20210112165048834.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext_pic/image-20210112174117546.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext_pic/image-20210112170552588.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext_pic/image-20210112171518061.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext_pic/image-20210112171534844.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext_pic/image-20210112171703161.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext_pic/image-20210112173202161.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext_pic/image-20210112173334030.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext_pic/image-20210112174652843.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext_pic/image-20210112180905111.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext_pic/image-20210112180930480.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext_pic/image-20210112181936329.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext_pic/image-20210112210749768.png">
+<meta property="article:published_time" content="2021-03-24T13:54:30.000Z">
+<meta property="article:modified_time" content="2023-08-07T12:20:13.022Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="tools">
+<meta property="article:tag" content="jupyter">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext-and-nbdev_pic/image-20210112154512001.png">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>jupytext and nbdev - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="jupytext and nbdev">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-03-24 21:54" pubdate>
+        2021年3月24日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.2k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      7 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">jupytext and nbdev</h1>
+            
+            <div class="markdown-body">
+              <h2><span id="jupytext">Jupytext</span></h2>
+<h3><span id="界面点击操作">界面点击操作</span></h3>
+<p>当你 Pair 一种文件，保存时，会自动生成你 pair
+关联的格式的文件。在其中一个文件修改的任何文本都会同步到两个文件中。</p>
+<p>首先你有文件</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext-and-nbdev_pic/image-20210112154512001.png" srcset="/img/loading.gif" lazyload></p>
+<p>然后，在jupyter lab中 ctrl + shift + c，选择pair的文件类型（jupyter
+notebook在功能菜单中找到）</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext-and-nbdev_pic/image-20210112153908965.png" srcset="/img/loading.gif" lazyload></p>
+<p>然后，保存</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext-and-nbdev_pic/image-20210112154745542.png" srcset="/img/loading.gif" lazyload></p>
+<p>关联成功。<strong>py文件可以在自己喜欢IDE环境编辑</strong>，ipynb文件可以同步展示。删除任意一个，都可以再次恢复。</p>
+<p>取消pair，则不会同步。（unpair 取消关联）</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext-and-nbdev_pic/image-20210112153940284.png" srcset="/img/loading.gif" lazyload></p>
+<p>py文件中包含的 metadata 如下格式</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext-and-nbdev_pic/image-20210112154102238.png" srcset="/img/loading.gif" lazyload></p>
+<h3><span id="命令行操作">命令行操作</span></h3>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext-and-nbdev_pic/image-20210112154207803.png" srcset="/img/loading.gif" lazyload></p>
+<p>Notebook to text</p>
+<figure class="highlight routeros"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs routeros">jupytext --to markdown notebook.ipynb<br>jupytext --to<span class="hljs-built_in"> script </span>notebook.ipynb<br></code></pre></div></td></tr></table></figure>
+<p>text to notebook</p>
+<figure class="highlight vim"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs vim">jupytext --<span class="hljs-keyword">to</span> notebook notebook.<span class="hljs-keyword">py</span><br>jupytext --<span class="hljs-keyword">to</span> notebook notebook.md<br></code></pre></div></td></tr></table></figure>
+<p>text to notebook and preserve outputs</p>
+<figure class="highlight vim"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs vim">jupytext --<span class="hljs-keyword">to</span> notebook --<span class="hljs-keyword">update</span> notebook.<span class="hljs-keyword">py</span><br>jupytext --<span class="hljs-keyword">to</span> notebook --<span class="hljs-keyword">update</span> notebook.md<br></code></pre></div></td></tr></table></figure>
+<p>命令行pair操作</p>
+<figure class="highlight css"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs css"><span class="hljs-selector-tag">jupytext</span> <span class="hljs-selector-tag">--set-formats</span> <span class="hljs-selector-tag">ipynb</span>,<span class="hljs-selector-tag">py</span><span class="hljs-selector-pseudo">:percent</span> <span class="hljs-selector-tag">notebook</span><span class="hljs-selector-class">.ipynb</span><br></code></pre></div></td></tr></table></figure>
+<p>同步paired notebooks，当在其他文件中修改后，同步到ipynb</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs mipsasm"><span class="hljs-keyword">jupytext </span>--<span class="hljs-keyword">sync </span>notebook.ipynb<br></code></pre></div></td></tr></table></figure>
+<p>应用code style(flake8, black, isort)</p>
+<figure class="highlight ada"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs ada">jupytext <span class="hljs-comment">--pipe flake8 notebook.ipynb</span><br></code></pre></div></td></tr></table></figure>
+<h3><span id="支持文件格式">支持文件格式</span></h3>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext-and-nbdev_pic/image-20210112155906188.png" srcset="/img/loading.gif" lazyload></p>
+<hr>
+<h2><span id="nbdev开发">NBDEV开发</span></h2>
+<h3><span id="step-1-新建git">step 1 新建git</span></h3>
+<p>使用 <a href="https://github.com/fastai/nbdev_template" target="_blank" rel="noopener">the
+template</a> 创建一个github repo</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext_pic/image-20210112164201446.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:50%;"></p>
+<figure class="highlight cmake"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cmake">pip <span class="hljs-keyword">install</span> nbdev<br></code></pre></div></td></tr></table></figure>
+<p>可选，使用git自带的服务器：在setting中</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext_pic/image-20210112164812568.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:67%;"></p>
+<p>在edit中添加生成的网址</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext_pic/image-20210112165048834.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:50%;"></p>
+<h3><span id="step-2-编辑settingsini">step 2 编辑settings.ini</span></h3>
+<p>编辑settings.ini
+（注意这里的lib_name就是生成的包名，所以有空格很不规范）。前面的个人相关信息基本都要取消注释，后面在git上创建网页展示环境要check。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext_pic/image-20210112174117546.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:80%;"></p>
+<figure class="highlight crmsh"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs crmsh">git <span class="hljs-keyword">clone</span> <span class="hljs-title">https</span>://github.com/RacleRay/Hello_nbdev.git<br></code></pre></div></td></tr></table></figure>
+<h3><span id="step-3-安装git_hooks">step 3 安装git_hooks</span></h3>
+<figure class="highlight ebnf"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs ebnf"><span class="hljs-attribute">nbdev_install_git_hooks</span><br></code></pre></div></td></tr></table></figure>
+<p>出现conflict错误时</p>
+<figure class="highlight css"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs css"><span class="hljs-selector-tag">nbdev_fix_merge</span> <span class="hljs-selector-tag">filename</span><span class="hljs-selector-class">.ipynb</span><br></code></pre></div></td></tr></table></figure>
+<h3><span id="step-4-编辑代码">step 4 编辑代码</span></h3>
+<p>开始编辑ipynb文件</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext_pic/image-20210112170552588.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:50%;"></p>
+<p>标记类别：</p>
+<ul>
+<li>#default_exp <module name></module></li>
+</ul>
+<blockquote>
+<p>对于新创建的 .ipynb，需要加入
+<code>#default_exp target_module_name</code></p>
+<p>这会导出生成以下py文件</p>
+<figure class="highlight vim"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs vim">lib_name/target_module_name.<span class="hljs-keyword">py</span><br></code></pre></div></td></tr></table></figure>
+<p>lib_name与settings时，保持一致</p>
+</blockquote>
+<ul>
+<li>#export：效果如下</li>
+</ul>
+<blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext_pic/image-20210112171518061.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:80%;"></p>
+<p>导出后显示如下</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext_pic/image-20210112171534844.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:80%;"></p>
+<p><strong>如果是类里面的方法</strong>，显示doc需要使用函数 show_doc</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> nbdev,showdoc <span class="hljs-keyword">import</span> show_doc<br></code></pre></div></td></tr></table></figure>
+</blockquote>
+<ul>
+<li>不加标记会显示代码和输出</li>
+</ul>
+<blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext_pic/image-20210112171703161.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:80%;"></p>
+<p>测试代码也可以写在这里，不代标记</p>
+<figure class="highlight java"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">assert</span> <span class="hljs-title">say_hello</span><span class="hljs-params">(<span class="hljs-string">"Jeremy"</span>)</span></span>==<span class="hljs-string">"Hello Jeremy!"</span><br></code></pre></div></td></tr></table></figure>
+</blockquote>
+<h3><span id="step-5-nbdev_build_lib">step 5 nbdev_build_lib</span></h3>
+<figure class="highlight ebnf"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs ebnf"><span class="hljs-attribute">nbdev_build_lib</span><br></code></pre></div></td></tr></table></figure>
+<p>注意，发生keyError时，多半是settings.ini配置不完整</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext_pic/image-20210112173202161.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:80%;"></p>
+<p>生成新的lib包文件夹及py文件</p>
+<p>core.py</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext_pic/image-20210112173334030.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:80%;"></p>
+<h3><span id="step-6-编写index文件">step 6 编写index文件</span></h3>
+<p>编辑index.ipnb</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext_pic/image-20210112174652843.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:67%;"></p>
+<h3><span id="step-7-生成docs文档">step 7 生成docs文档</span></h3>
+<figure class="highlight ebnf"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs ebnf"><span class="hljs-attribute">nbdev_build_docs</span><br></code></pre></div></td></tr></table></figure>
+<p>生成HTML文档</p>
+<h3><span id="step-8-上传git">step 8 上传git</span></h3>
+<figure class="highlight properties"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs properties"><span class="hljs-attr">git</span> <span class="hljs-string">add -A</span><br><span class="hljs-attr">git</span> <span class="hljs-string">status</span><br><span class="hljs-attr">git</span> <span class="hljs-string">commit -m "test"</span><br><span class="hljs-attr">git</span> <span class="hljs-string">push</span><br></code></pre></div></td></tr></table></figure>
+<h3><span id="step-9-bug">step 9 bug</span></h3>
+<p>检查 commits中的问题</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext_pic/image-20210112180905111.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:80%;"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext_pic/image-20210112180930480.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:80%;"></p>
+<p>没有设置keywords，在settings.ini中进行设置。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext_pic/image-20210112181936329.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:60%;"></p>
+<h3><span id="optional-step-10-发布pypi">optional step 10 发布pypi</span></h3>
+<p>上传到pypi</p>
+<ol type="1">
+<li><p>注册pypi</p></li>
+<li><p>在用户家目录下新建<code>~/.pypirc</code></p>
+<figure class="highlight ini"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs ini"><span class="hljs-section">[pypi]</span><br><span class="hljs-attr">username</span> = your_pypi_username<br><span class="hljs-attr">password</span> = your_pypi_password<br></code></pre></div></td></tr></table></figure></li>
+<li><p>pip install twine</p></li>
+<li><p>make release</p></li>
+</ol>
+<hr>
+<h3><span id="附-其他事项">附 其他事项</span></h3>
+<ul>
+<li>安装包，同时同步所有在源码上的编辑</li>
+</ul>
+<figure class="highlight cmake"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cmake">pip <span class="hljs-keyword">install</span> -e .<br></code></pre></div></td></tr></table></figure>
+<ul>
+<li>可以将自己开发的包链接到python包路径下</li>
+</ul>
+<figure class="highlight ebnf"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs ebnf"><span class="hljs-attribute">ln -s lib_path lib_name</span><br></code></pre></div></td></tr></table></figure>
+<ul>
+<li>autoreload</li>
+</ul>
+<figure class="highlight haml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs haml"><span class="hljs-tag">%<span class="hljs-selector-tag">load_ext</span></span> autoreload<br><span class="hljs-tag">%<span class="hljs-selector-tag">autoreload</span></span> 2<br></code></pre></div></td></tr></table></figure>
+<ul>
+<li>在ipynb结尾添加以下代码，用以代替命令行nbdev_build_lib。</li>
+</ul>
+<figure class="highlight clean"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs clean"><span class="hljs-keyword">from</span> nbdev.<span class="hljs-keyword">export</span> <span class="hljs-keyword">import</span> notebook2script; notebook2script()<br></code></pre></div></td></tr></table></figure>
+<ul>
+<li><p>检查可读的notebook</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs ebnf"><span class="hljs-attribute">nbdev_read_nbs</span><br></code></pre></div></td></tr></table></figure></li>
+<li><p>检查可能造成merge conficts的文件，</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs ebnf"><span class="hljs-attribute">nbdev_clean_nbs</span><br></code></pre></div></td></tr></table></figure>
+<p>可能导致cleaned项不通过，此时用，然后再push</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/jupytext_pic/image-20210112210749768.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:50%;"></p></li>
+<li><p>检查notebook和已经导出的lib files之间的是否有差异</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs ebnf"><span class="hljs-attribute">nbdev_diff_nbs</span><br></code></pre></div></td></tr></table></figure></li>
+<li><p>运行notebooks中的测试</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs ebnf"><span class="hljs-attribute">nbdev_test_nbs</span><br></code></pre></div></td></tr></table></figure></li>
+</ul>
+<p><a href="https://nbdev.fast.ai/" target="_blank" rel="noopener">fastai文档</a> <a href="https://github.com/fastai/nbdev" target="_blank" rel="noopener">nbdev git</a></p>
+<p><a href="https://github.com/fastai/nbdev_template" target="_blank" rel="noopener">nbdev_template</a></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Tools/">Tools</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Tools/python/">python</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/tools/">tools</a>
+                    
+                      <a class="hover-with-bg" href="/tags/jupyter/">jupyter</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/aa5b647c.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Joint Extraction of Entities and Relations 2020</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/6875388b.html">
+                        <span class="hidden-mobile">Pointer review</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>

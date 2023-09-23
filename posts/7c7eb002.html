@@ -1,0 +1,730 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="Transformer 中两个任意输入的信号关联的开销会减少到一个固定的运算量级，使用 Multi-Head Attention 注意力机制可以高效地并行化，并堆叠多层的神经网络。">
+  <meta name="author" content="江左时雨">
+  <meta name="keywords" content="机器学习,Machine Learning,自然语言处理,NLP,深度学习,Deep Learning,计算机,Coding,生活随笔">
+  <meta name="description" content="Transformer 中两个任意输入的信号关联的开销会减少到一个固定的运算量级，使用 Multi-Head Attention 注意力机制可以高效地并行化，并堆叠多层的神经网络。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Transformer Model">
+<meta property="og:url" content="https://racleray.github.io/posts/7c7eb002.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="Transformer 中两个任意输入的信号关联的开销会减少到一个固定的运算量级，使用 Multi-Head Attention 注意力机制可以高效地并行化，并堆叠多层的神经网络。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/attention.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/mha.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/transformer.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/compare.png">
+<meta property="article:published_time" content="2020-07-07T09:30:12.000Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:31.035Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="transformer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/attention.png">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>Transformer Model - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Transformer Model">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-07-07 17:30" pubdate>
+        2020年7月7日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      4.2k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      13 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Transformer Model</h1>
+            
+            <div class="markdown-body">
+              <h2><span id="1transformer模型">1.Transformer模型</span></h2>
+<p>​
+序列计算中，传统的RNN在预测下一个符号（token）的时候，会对以往的历史信息有很强的依赖，使得难以充分地并行化，也无法很好地加深网络的层级结构。</p>
+<p>​
+而对于传统的基于CNN的神经机器翻译模型，两个任意输入与输出位置的信号关联所需要的运算数量与它们的位置距离成正比，Facebook提出的CNN
+NMT 为线性增长。</p>
+<p>​ <mark>这两种常见的结构使得学习较远位置的依赖关系（long-term
+dependency）非常困难</mark>。</p>
+<p>​ 在 Transformer
+中，两个任意输入的信号关联的开销会减少到一个固定的运算数量级，使用
+Multi-Head Attention
+注意力机制可以完全脱离RNN及CNN的结构，使得Transformer可以高效地并行化，并堆叠多层的网络。</p>
+<p>​
+自注意力（Self-attention），是一种涉及<mark>单序列不同位置的注意力机制</mark>，并能计算序列的表征。自注意力这种<mark>在序列内部执行
+Attention
+的方法可以视为搜索序列内部的隐藏关系</mark>，这种内部关系对于翻译以及序列任务的性能非常重要。</p>
+<h3><span id="11-编码器-encoder">1.1 编码器 encoder</span></h3>
+<ul>
+<li><p>编码器encoder由6层结构一样的网络层组成，每一层有2个子层：</p>
+<ul>
+<li><p>第一个子层是multi-head self-attention Layer</p></li>
+<li><p>第二个子层是一个<mark>基于位置编码的全连接网络层</mark>（position-wise
+fully connected feed-forward network）</p></li>
+<li><p>会使用残差连接的方式，分别对每个子层的输入加到这个子层的输出上，然后再接一个Layer
+normalization的归一化层。</p>
+<p>​ <span class="math display">\[ \text{LayerNorm}(x+\text{Sublayer}(x))
+\]</span></p></li>
+<li><p>所有的embedding及hidden state的维度都是512</p></li>
+</ul></li>
+</ul>
+<h3><span id="12-解码器-decoder">1.2 解码器 decoder</span></h3>
+<ul>
+<li><p>解码器decoder由6层结构一样的网络层组成，每一层除了跟encode人一样有2个子层以外，还有第3个子层</p>
+<ul>
+<li>第一个子层是multi-head self-attention Layer</li>
+<li>第二个子层是一个基于位置编码的全连接网络层（position-wise fully
+connected feed-forward network）</li>
+<li><font color="red">第三个子层用于对encoder的输出向量进行multi-head
+attention</font></li>
+<li>同样的，会使用残差连接的方式，然后再接一个Layer
+normalization的归一化层。 <span class="math display">\[
+\text{LayerNorm}(x+\text{Sublayer}(x))\\ \]</span></li>
+<li>decoder还需要将还没有生成的后续序列掩盖（masking），这样做是为了防止decoder在做self-attention的时候关注到后续还未生成的单词上去。</li>
+</ul></li>
+</ul>
+<h3><span id="13-注意力机制">1.3 注意力机制</span></h3>
+<ul>
+<li>传统的注意力机制，也称为scaled Dot-Product
+Attention，可以看成是有一个询问的词（query），去跟一堆哈希表中的键值对（key-value
+pair）进行匹配，找到最相关的键（key），之后返回该键所对应的值（value）。通常的，如果只返回一个key所对应的value，称之为hard
+attention。如果对所有的key都计算一个相关系数，（也称之为attention
+weight），可以将所有key对应的value进行加权求和（weighted
+sum）这样的操作称之为soft attention。 <span class="math display">\[\text{Attention}(Q,K,V) =
+\text{softmax}\left({QK^T \over \sqrt{d_k}}\right)V\]</span></li>
+<li>其中所有的query和key都是维度为<span class="math inline">\(d_k\)</span>的向量，将这些向量分别叠在一起形成
+<span class="math inline">\(Q\in\mathbb{R}^{|Q|\times d_k},
+K\in\mathbb{R}^{|K|\times d_k}\)</span>的矩阵。</li>
+<li>所有的value都是维度为<span class="math inline">\(d_v\)</span>的向量，将这些向量叠在一起形成<span class="math inline">\(V\in\mathbb{R}^{|V|\times d_k}\)</span></li>
+<li>这里如果维度<span class="math inline">\(d_k\)</span>很大的时候，两个向量的乘积会变得很大，使得softmax会得到非常小的数值，所以会在这里除以<span class="math inline">\(\sqrt{d_k}\)</span>来抵消这个影响。 <img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/attention.png" srcset="/img/loading.gif" lazyload></li>
+</ul>
+<h3><span id="14-multi-head-attention">1.4 Multi-Head Attention</span></h3>
+<ul>
+<li><p>这里假设<span class="math inline">\(Q,~K,~V\in
+\mathbb{R}^{d_\text{model}}\)</span>都在一个<span class="math inline">\({d_\text{model}}\)</span>维度的空间中</p></li>
+<li><p>使用h个不一样权重的线性映射函数<span class="math inline">\((QW^Q_i, KW^K_i, VW^V_i)\)</span>将Q, K,
+V分别映射到<span class="math inline">\(d_k,~d_k,~d_v\)</span>空间中</p></li>
+<li><p>对映射之后的Q, K, V 做h次attention，并将h个attention
+head连接在一起形成一个新的向量</p></li>
+<li><p>最后再将这个向量映射到<span class="math inline">\(d_\text{model}\)</span>空间，作为下一层的输入</p>
+<p>​ <span class="math display">\[ \text{MultiHead}(Q,K,V) =
+\text{Concat}(\text{head}_1,\cdots, \text{head}_h) W^O \\ \text{head}_i
+= \text{Attention}(QW^Q_i, KW^K_i, VW^V_i) \]</span></p></li>
+<li><p>其中<span class="math inline">\(W^Q_i\in
+\mathbb{R}^{d_\text{model}\times d_k}, W^K_i\in
+\mathbb{R}^{d_\text{model}\times d_k}, W^V_i\in
+\mathbb{R}^{d_\text{model}\times d_v}, W^O\in \mathbb{R}^{hd_v\times
+d_\text{model}}\)</span>, 常见的设置<span class="math inline">\(h=8,d_k=d_v=d_\text{model}/h=64\)</span></p></li>
+<li><p>模型图 <img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/mha.png" srcset="/img/loading.gif" lazyload></p></li>
+<li><p>应用</p>
+<ul>
+<li>将decoder上一个时刻的hidden state
+作为query，将encoder的<mark>最顶层</mark>的所有输出的hidden
+state作为key和value，这样可以类似传统的attention机制一样去发现源语言单词与目标语言单词之间的联系</li>
+<li>encoder本身会对源语言单词进行multi-head self
+attention，其中query，key，value都是一样的，都是上一层中输出的单词的hidden
+state，<strong>每一个时刻计算出来的context
+vector都会作为该层输出的新的单词的hidden
+state，并作为下一层的输入</strong>。</li>
+<li><mark>decoder本身也会类似encoder一样去做self
+attention，不同的是，decoder只对左边已经生成的序列进行attention，对还没有生成的（右边的）序列掩盖（masking）</mark></li>
+</ul></li>
+<li><p>完整的模型图 <img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/transformer.png" srcset="/img/loading.gif" lazyload></p></li>
+</ul>
+<h3><span id="15基于位置的前向神经网络position-wise-feed-forward-networks">1.5
+基于位置的前向神经网络（Position-wise Feed-Forward Networks）</span></h3>
+<ul>
+<li>对于encoder和decoder的每个attention层之后，<mark>还会在连接一个全连接的前向神经网络</mark>。这个网络包含了<mark>两个线性转换</mark>和中间加一个ReLU的激活函数
+<span class="math display">\[FFN(x) =\max(0, xW_1+b_1)
+W_2+b_2\]</span></li>
+<li>这里每一层，都用不同的<span class="math inline">\(W_1,W_2,b_1,b_2\)</span>。</li>
+</ul>
+<h3><span id="16-词向量矩阵及softmax层">1.6 词向量矩阵及Softmax层</span></h3>
+<ul>
+<li>这里使用常见的词向量矩阵，并encoder会把词向量映射到<span class="math inline">\(d_\text{model}\)</span>空间上，作为第一层的输入</li>
+<li>在做预测的时候，会将输出向量映射到一个词表大小的概率空间中，并使用softmax来归一化到一个<span class="math inline">\([0,1]\)</span>之间的概率值。</li>
+</ul>
+<h3><span id="17-位置编码positionembeddings">1.7 位置编码（position
+embeddings）</span></h3>
+<ul>
+<li><p>因为模型没有recurrence及convolution的操作，所以为了<mark>让模型能够分辨不同位置的单词</mark>，需要对单词的位置进行编码。</p>
+<p>​ <span class="math display">\[PE(pos,
+2i)=\sin(pos/10000^{2i/d_\text{model}}) \\ PE(pos,
+2i+1)=\cos(pos/10000^{2i/d_\text{model}})\]</span></p></li>
+<li><p><mark>pos是这个单词在句子中的位置</mark>，<mark>i是这个位置向量的第i个维度的编号</mark>。这样的波长形成了一个从<span class="math inline">\(2\pi\)</span>到<span class="math inline">\(1000\cdot
+2\pi\)</span>的几何级数。这样会使得模型更容易学到相对距离，因为<span class="math inline">\(PE_{pos+k}\)</span>可以表示为<span class="math inline">\(PE_{pos}\)</span>的一个线性变化。</p></li>
+</ul>
+<h3><span id="18-transformer-对比rnn及cnn">1.8 Transformer 对比RNN及CNN</span></h3>
+<ul>
+<li>发现RNN需要进行<span class="math inline">\(O(n)\)</span>个序列操作，而Transformer和CNN只需要<span class="math inline">\(O(1)\)</span>个</li>
+<li>CNN会形成一个层级结构，类似树状，<mark>所以任意两个单词到达的最大路径长度是</mark><span class="math inline">\(O(\log_k(n))\)</span></li>
+<li>如果self-attention只对该单词周围r个单词进行attention操作，可以得到restricted版本的self-attention，
+这样可以减少每一层的计算复杂度，但未增加两个任意词之间到达的最长路径。
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/compare.png" srcset="/img/loading.gif" lazyload></li>
+</ul>
+<h2><span id="2-transformer模型的训练细节">2. Transformer模型的训练细节</span></h2>
+<ol type="1">
+<li>优化方法</li>
+<li>正则化 （regularization）</li>
+<li>label smoothing</li>
+</ol>
+<h3><span id="21-优化方法">2.1 优化方法</span></h3>
+<ul>
+<li>Adam 优化方法，<span class="math inline">\(\beta_1=0.9,
+\beta_2=0.98, \epsilon=10^{-9}\)</span></li>
+<li>learning
+rate是随着训练的过程中，通过以下一个函数进行变化。一开始在前
+warmup_steps个训练迭代中learning
+rate是线性增长的，往后随着步长的增加而下降。 一般会设置 warmup_steps =
+4000 <span class="math display">\[lr = d_\text{model}^{-0.5} \cdot
+\min(\text{step_num}^{-0.5},\text{step_num}\cdot
+\text{warmup_steps}^{-1.5}) \]</span></li>
+</ul>
+<h3><span id="22-正则化-regularization">2.2 正则化 Regularization</span></h3>
+<ul>
+<li>对每一个子层的输出，在<mark>该子层的输出加上该子层的输入之前进行</mark>dropout</li>
+<li>对encoder及decoder，<mark>词向量和位置向量求和之后</mark>都进行dropout</li>
+</ul>
+<h3><span id="23-label-smoothing">2.3 Label Smoothing</span></h3>
+<ul>
+<li>对于<mark>正确的标注label</mark>，在其one-hot表达上，<mark>加上一个均匀分布的向量</mark>，这个smoothing的数值是<span class="math inline">\(\epsilon_{ls}=0.1\)</span></li>
+</ul>
+<h2><span id="3-tranformer-code">3 Tranformer Code</span></h2>
+<p><a href="https://github.com/RacleRay/DeepLearningFoundation/blob/master/2.0-Transformer.ipynb" target="_blank" rel="noopener">TensorFlow
+transformer</a></p>
+<ul>
+<li><a href="https://github.com/tensorflow/models/tree/master/official/transformer" target="_blank" rel="noopener">官方代码</a></li>
+<li><a href="https://github.com/tensorflow/tensor2tensor/blob/master/tensor2tensor/models/transformer.py" target="_blank" rel="noopener">作者代码</a></li>
+<li><a href="https://github.com/OpenNMT/OpenNMT-py/tree/master/onmt" target="_blank" rel="noopener">哈佛NLP组pytorch实现</a></li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/NLP/">NLP</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/transformer/">transformer</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/fc0185e8.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">ChatBot Simple Notes</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/62a02478.html">
+                        <span class="hidden-mobile">Fairseq Notes</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        loader: {
+          load: ['ui/lazy']
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>

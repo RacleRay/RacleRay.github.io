@@ -1,0 +1,934 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="简要记录了知识图谱基本概念，NER模型方法（HMM、MEMM、CRF），关系分类方法，知识表示（Trans系列）等。">
+  <meta name="author" content="江左时雨">
+  <meta name="keywords" content="机器学习,Machine Learning,自然语言处理,NLP,深度学习,Deep Learning,计算机,Coding,生活随笔">
+  <meta name="description" content="简要记录了知识图谱基本概念，NER模型方法（HMM、MEMM、CRF），关系分类方法，知识表示（Trans系列）等。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅涉知识图谱">
+<meta property="og:url" content="https://racleray.github.io/posts/6a1e61f5.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="简要记录了知识图谱基本概念，NER模型方法（HMM、MEMM、CRF），关系分类方法，知识表示（Trans系列）等。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222102729592.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222104606060.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222104900473.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222104922327.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222105818725.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222110635113.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222111734674.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222111814599.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222112025305.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222155638939.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222160002751.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222161015601.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222161949260.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222163809742.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222163856084.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222163946006.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222164236336.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222171941078.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222172633928.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222174150117.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222174400473.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222174449957.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222174524289.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222174739168.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222175358133.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222175435542.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222175455866.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222175610493.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222175643271.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222175711668.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222215144407.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222215235285.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222181049264.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222211314387.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222211327917.png">
+<meta property="article:published_time" content="2021-02-22T13:16:40.000Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:31.047Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="relation extraction">
+<meta property="article:tag" content="NER">
+<meta property="article:tag" content="TransE">
+<meta property="article:tag" content="Knowledge Graph">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1%E6%95%B4%E7%90%86_pic/image-20210222102729592.png">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>浅涉知识图谱 - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="浅涉知识图谱">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-02-22 21:16" pubdate>
+        2021年2月22日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      6k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      19 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">浅涉知识图谱</h1>
+            
+            <div class="markdown-body">
+              <h2><span id="基本概念">基本概念</span></h2>
+<blockquote>
+<p>“A knowledge graph consists of a set of interconnected typed entities
+and their attributes.”</p>
+</blockquote>
+<p>知识图谱由一些相互连接的实体和他们的属性构成的。
+是由一条条知识组成，每条知识表示为一个 SPO 三元组</p>
+<p>技术体系简图：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222102729592.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;"></p>
+<h3><span id="spo相关">SPO相关</span></h3>
+<p>SPO三元组：（实体，关系，实体），（实体，属性，字面量）</p>
+<p>构建的难点之一就是，Schema设计。</p>
+<blockquote>
+<p>设计知识图谱的结构，要构建哪些类别的实体，实体有什么属性，实体间有什么关系，关系有什么属性</p>
+</blockquote>
+<h4><span id="spo的背后">SPO的背后</span></h4>
+<p>RDF(Resource Description
+Framework)，即资源描述框架，其本质是一个数据模型（Data
+Model）。RDF形式上表示为SPO三元组。</p>
+<p>RDF由节点和边组成，节点表示实体/资源、属性，边则表示了实体和实体之间的关系以及实体和属性的关系。</p>
+<p>RDF的表达能力有限，无法区分类和对象，也无法定义和描述类的关系/属性。就是不能反映一个
+类 的特征信息。</p>
+<h4><span id="rdfsowl">RDFS/OWL</span></h4>
+<p>用来描述RDF数据。RDFS/OWL序列化方式和RDF没什么不同，其实在表现形式上，它们就是RDF。</p>
+<p>RDFS，即“Resource Description Framework
+Schema”，是最基础的模式语言。定义了类，将类进行抽象。</p>
+<p>RDFS的表达能力还是相当有限，因此提出了OWL，Web Ontology
+Language。我们也可以把OWL当做是RDFS的一个扩展，其添加了额外的预定义词汇。</p>
+<p>owl区分数据属性和对象属性（对象属性表示实体和实体之间的关系）。</p>
+<p>OWL
+使用场景：本体结构中有大量相互链接的类和属性，设计者想用自动推理机得到里面复杂的关系。需要结合基于规则的推理引擎（rule-based
+reasoning engine）的场合。</p>
+<h2><span id="命名实体识别">命名实体识别</span></h2>
+<h4><span id="概率图方法">概率图方法</span></h4>
+<p>有向图</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222104606060.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;"></p>
+<p>⽆向图</p>
+<blockquote>
+<p>概率⽆无向图模型，⼜称为⻢马尔可夫随机场</p>
+<p>它假设随机场中任意⼀一个结点的赋值，仅仅和它的邻结点的取值有关，和不不相邻的结点的取值无关。⽆向图G中任何两个结点均有边连接的结点⼦集称为团。</p>
+<p>若C是⽆向图的⼀个团，且不能再加进任何一个G的结点使其成为更大的⼀个团，则此C为最⼤团。</p>
+<p>联合概率可以表示为其最大团C 随机变量的函数的乘积。</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222104900473.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222104922327.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;"></p>
+<blockquote>
+<p>成对⻢马尔可夫性：没有直连边的任意两个节点是独立的。</p>
+<p>局部⻢马尔可夫性：给定直连节点时，中心节点和其他节点条件独立。</p>
+<p>全局⻢马尔可夫性：给定一个节点集合将全集划分为两个独立集合时，两个点集的任意子集，是相互独立的。</p>
+</blockquote>
+<h4><span id="hmm">HMM</span></h4>
+<p>HMM是⽤用于描述由隐藏的状态序列列和显性
+的观测序列列组合⽽而成的双重随机过程。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222105818725.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;"></p>
+<p>通过可观测到的数据，预测不不可观测到的状态数据。</p>
+<blockquote>
+<p>HMM的假设⼀：⻢马尔可夫性假设。当前时刻的状态值，仅依赖于前
+⼀时刻的状态值，⽽不依赖于更早时刻的状态值。</p>
+<p>HMM的假设⼆：⻬次性假设。状态转移概率矩阵与时间⽆关。即所
+有时刻共享同⼀个状态转移矩阵。</p>
+<p>HMM的假设三：观测独⽴立性假设。当前时刻的观察值，仅依赖于当
+前时刻的状态值。</p>
+</blockquote>
+<p>此处的问题是，预测隐状态序列（假设模型参数已经学习得到）。实例演示：</p>
+<blockquote>
+<p>已知：</p>
+<p>状态值集合：{晴天，阴天，⾬雨天}；观测值集合：{宅，打球}；</p>
+<p>过去状态值序列：{晴晴晴阴⾬雨晴}；对应观测值序列：{球宅宅球宅宅}；</p>
+<p>从历史数据学习，已得到模型参数为：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222110635113.png" srcset="/img/loading.gif" lazyload alt style="zoom:40%;"></p>
+<p>求当观测序列是{宅球宅}，最有可能的天⽓状况序列？（动态规划求解概率最⼤大路路径）</p>
+<p>求解过程：</p>
+<blockquote>
+<p>定义:</p>
+<p>定义在时刻t状态为i的所有单个路径（i1，i2，... it
+)中的概率最大值为</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222111734674.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;"></p>
+<p>t+1时刻的最大概率:</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222111814599.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;"></p>
+<p>再定义⼀个变量，⽤来回溯最⼤路径：在时刻t状态i的所有单个路径（i1，i2，，，
+it-1,it)中，概率最⼤的路路径第t-1个节点为（在t时刻选出上一个时刻的最优路径）：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222112025305.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;"></p>
+</blockquote>
+<p>计算第一天</p>
+<p><span class="math inline">\(\delta_1\)</span>（雨天）= <span class="math inline">\(\pi\)</span>(雨天) * B(雨天，宅) = 0.28</p>
+<p><span class="math inline">\(\delta_1\)</span>（阴天）= <span class="math inline">\(\pi\)</span>(阴天) * B(阴天，宅) = 0.16</p>
+<p><span class="math inline">\(\delta_1\)</span>（晴天）= <span class="math inline">\(\pi\)</span>(晴天) * B(晴天，宅) = 0.1</p>
+<p>第二天</p>
+<p><span class="math inline">\(\delta_2\)</span>（雨天）= <span class="math inline">\(\max\)</span>( [<span class="math inline">\(\delta_1\)</span>(雨天) * A(雨天，雨天)， <span class="math inline">\(\delta_1\)</span>(阴天) * A(阴天，雨天)， <span class="math inline">\(\delta_1\)</span>(晴天) * A(晴天，雨天)]) *
+B(雨天，打球) = 0.042</p>
+<p>​ 前一时刻选择，雨天</p>
+<p><span class="math inline">\(\delta_2\)</span>（阴天）= <span class="math inline">\(\max\)</span>( [<span class="math inline">\(\delta_1\)</span>(雨天) * A(雨天，阴天)， <span class="math inline">\(\delta_1\)</span>(阴天) * A(阴天，阴天)， <span class="math inline">\(\delta_1\)</span>(晴天) * A(晴天，阴天)]) *
+B(阴天，打球) = 0.0504</p>
+<p>​ 前一时刻选择，雨天</p>
+<p><span class="math inline">\(\delta_2\)</span>（晴天）= <span class="math inline">\(\max\)</span>( [<span class="math inline">\(\delta_1\)</span>(雨天) * A(雨天，晴天)， <span class="math inline">\(\delta_1\)</span>(阴天) * A(阴天，晴天)， <span class="math inline">\(\delta_1\)</span>(晴天) * A(晴天，晴天)]) *
+B(晴天，打球) = 0.028</p>
+<p>​ 前一时刻选择，雨天</p>
+<p>第三天</p>
+<p><span class="math inline">\(\delta_3\)</span>（雨天）= <span class="math inline">\(\max\)</span>( [<span class="math inline">\(\delta_2\)</span>(雨天) * A(雨天，雨天)， <span class="math inline">\(\delta_2\)</span>(阴天) * A(阴天，雨天)， <span class="math inline">\(\delta_2\)</span>(晴天) * A(晴天，雨天)]) *
+B(雨天，打球) = 0.0147</p>
+<p>​ 前一时刻选择，雨天</p>
+<p><span class="math inline">\(\delta_3\)</span>（阴天）= <span class="math inline">\(\max\)</span>( [<span class="math inline">\(\delta_2\)</span>(雨天) * A(雨天，阴天)， <span class="math inline">\(\delta_2\)</span>(阴天) * A(阴天，阴天)， <span class="math inline">\(\delta_2\)</span>(晴天) * A(晴天，阴天)]) *
+B(阴天，打球) = 0.01008</p>
+<p>​ 前一时刻选择，阴天</p>
+<p><span class="math inline">\(\delta_3\)</span>（晴天）= <span class="math inline">\(\max\)</span>( [<span class="math inline">\(\delta_2\)</span>(雨天) * A(雨天，晴天)， <span class="math inline">\(\delta_2\)</span>(阴天) * A(阴天，晴天)， <span class="math inline">\(\delta_2\)</span>(晴天) * A(晴天，晴天)]) *
+B(晴天，打球) = 0.00756</p>
+<p>​ 前一时刻选择，阴天</p>
+<p>最后，选择t3时刻最大路径，雨天。回溯结果为，{雨天，雨天，雨天}</p>
+</blockquote>
+<h5><span id="hmm的缺陷">HMM的缺陷</span></h5>
+<ul>
+<li>⻢尔可夫性（有限历史性）：实际上在NLP领域的文本数据，很多词语都是有⻓依赖的。</li>
+<li>齐次性：序列列不同位置的状态转移矩阵可能会有所变化，即位置信息会影响预测结果。</li>
+<li>观测独立性：观测值和观测值（字与字）之间是有相关性的。</li>
+<li>单向图：只与前序状态有关，和后续状态无关。在NLP任务中，上下文的信息都是必须的。</li>
+<li>标记偏置Label
+Bias：若状态A能够向N种状态转移，状态B能够向M种状态转移。若N&lt;&lt;M，则预测序列更有可能选择状态A，因为A的局部转移概率较大</li>
+</ul>
+<h4><span id="memm最大熵马尔可夫模型">MEMM最大熵马尔可夫模型</span></h4>
+<p>解决了观测独立问题，但是依然存在标记偏置。</p>
+<p>最大熵（熵：分布的不确定性）：</p>
+<blockquote>
+<p>“无知比错误更可取，一个什么都不相信的人比一个相信错误的人离真理更近”</p>
+</blockquote>
+<p>找到最优分布中，最偏向 uniform 的结果，即为最大熵的目标。</p>
+<blockquote>
+<p>H（x）=–∑x log x是凸函数</p>
+</blockquote>
+<p>最大熵模型的likeliihood形式为：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222155638939.png" srcset="/img/loading.gif" lazyload alt style="zoom:80%;"></p>
+<p>求导之后可以发现：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222160002751.png" srcset="/img/loading.gif" lazyload alt style="zoom:60%;"></p>
+<p>MEMM：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222161015601.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;"></p>
+<p>根据历史状态序列，预测当前状态，每一时间步，预测一个状态。</p>
+<h4><span id="crf">CRF</span></h4>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222161949260.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;"></p>
+<p>在给定随机变量序列X的情况下，随机变量Y的条件概率分布P(Y|X)构成条件随机场，即满⾜足马尔可夫性：</p>
+<p>P(Yi| X,Y1,Y2,...Yn) = P(Yi| X,Yi−1,Yi+1)</p>
+<p>则称P(Y|X)为线性链条件随机场。</p>
+<p>传统的CRF定义如下：</p>
+<p>特征函数分为两类</p>
+<ul>
+<li>只和当前节点有关</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222163809742.png" srcset="/img/loading.gif" lazyload alt style="zoom:60%;"></p>
+<ul>
+<li>只和当前节点和上⼀个节点有关，局部特征函数</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222163856084.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;"></p>
+<p>linear-CRF由 tk, λk, sl, µl 共同决定</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222163946006.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;"></p>
+<p>i -- 表示从0到T的序列位置；k, l -- 表示自定义的特征函数编号。</p>
+<p>在深度学习中使用时，用深度模型代替特征函数：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222164236336.png" srcset="/img/loading.gif" lazyload alt style="zoom:80%;"></p>
+<h5><span id="crf相对于hmm的优点">CRF相对于HMM的优点</span></h5>
+<ol type="1">
+<li>规避了马尔可夫性，能够获取长文本的远距离依赖的信息</li>
+<li>规避了齐次性，并且序列的 位置信息会影响预测出的状态序列</li>
+<li>规避了观测独立性，观测值之间的相关性信息能够被提取</li>
+<li>不是单向图，而是无向图，能够充分提取上下文信息作为特 征</li>
+<li>改善了标记偏置Label Bias问题</li>
+<li>CRF的思路是利用多个特征，对状态序列进行预测。HMM
+的表现形式使他无法使⽤多个复杂特征</li>
+</ol>
+<h5><span id="crf的缺点">CRF的缺点</span></h5>
+<ol type="1">
+<li>CRF训练代价大、复杂度高</li>
+<li>需要人为构造特征函数，特征工程对CRF模型的影响很大</li>
+</ol>
+<h2><span id="实体连接">实体连接</span></h2>
+<p>候选实体生成：
+根据输入文本中检测出的实体mention集合M，从给定知识图谱中找到可能属于M的候选实体集合m</p>
+<p>候选实体排序： 负责对候选实体集合m中多个候选实体打分的排序，
+并输出得分最高的候选实体，作为实体链接结果</p>
+<h2><span id="关系分类简介">关系分类简介</span></h2>
+<p>关系抽取:
+从一个句子中判断两个entity是否有关系，一般是一个二分类问题，指定某种关系
+关系分类: 一般是判断一个句子中两个entity是哪种关系，属于多分类问题。</p>
+<blockquote>
+<p>标注工具: BRAT</p>
+<p>BRAT是一个基于web的文本标注工具，主要用于对文本的结构化标注，用BRAT生成的标注结果能够把无结构化的原始文本结构化，供计算机处理。利用该工具可以方便的获得各项NLP任务需要的标
+注语料。</p>
+</blockquote>
+<p>方法：</p>
+<ul>
+<li>基于规则的方法——人工模板</li>
+<li>基于规则的方法——基于统计的方法</li>
+<li>基于监督学习的方法——CNN/RNN</li>
+<li>基于监督学习的方法——PCNN</li>
+<li>半监督学习的方法——自举</li>
+<li>半监督学习的方法——远程监督</li>
+</ul>
+<h4><span id="基于统计的方法">基于统计的方法</span></h4>
+<ol type="1">
+<li>输入关系集合中的一个</li>
+<li>搜索一组实体对，满足关系</li>
+<li>输入实体对，搜索包含实体对的句子，保存</li>
+<li>将保存句子中的实体对，使用同一类关系模版替换</li>
+<li>计算成功替换，模版匹配正确的比例，即概率，作为模版的得分（置信度）。留下得分高的模版</li>
+</ol>
+<h4><span id="神经网络方法">神经网络方法</span></h4>
+<p>输入embedding，可加上相对位置embedding，训练分类器。</p>
+<p>PCNN的<strong>Piecewise Convolutional</strong>，只是使用Piecewise max
+pooling，从实体所在位置处，分段进行pooling。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222171941078.png" srcset="/img/loading.gif" lazyload alt style="zoom:50%;"></p>
+<h4><span id="半监督">半监督</span></h4>
+<h5><span id="bootstrapping">Bootstrapping</span></h5>
+<ol type="1">
+<li><p>创建空的列表；</p></li>
+<li><p>使用精心选择的种子初始化列表；</p></li>
+<li><p>利用列表中的内容从训练语料库中查找更多内容；</p></li>
+<li><p>给那些新发现的内容打分；把得分最高的内容加到列表中。</p></li>
+<li><p>重复步骤3和4，直到达到最大迭代次数或者其它停止条件为止。</p></li>
+</ol>
+<p>Snowball优化了部分的细节</p>
+<p>定义pattern 成为<em>&lt;left, tag1, middle, tag2, right&gt;</em>;
+tuples 为 &lt;tag1 , tag2&gt;</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222172633928.png" srcset="/img/loading.gif" lazyload alt style="zoom:70%;"></p>
+<p>生成新pattern时，评估其与已有pattern的相似性，取一个阈值之上的，加入pattern集合。</p>
+<p>tuples要经过可信度计算，选择可信度高的留下，计算方法看<a href="http://www.mathcs.emory.edu/~eugene/papers/dl00.pdf" target="_blank" rel="noopener">论文</a>或者<a href="https://zhuanlan.zhihu.com/p/101058270" target="_blank" rel="noopener">blog</a>吧。</p>
+<h5><span id="远程监督">远程监督</span></h5>
+<p>将已有的知识对应到丰富的非结构化语料中从而生成大量的训练数据。知识来源：人工标注、现有的知识库、特定的语句结构。</p>
+<p>Distant supervised
+会产生有大量噪音或者被错误标注的数据，直接使用supervised的方法进行关系分
+类，效果很差。</p>
+<h2><span id="知识表示embedding">知识表示Embedding</span></h2>
+<h4><span id="transe">TransE</span></h4>
+<p>TransE，⼀种将实体与关系嵌⼊到低维向量空间中的简单模型
+。该模型已经成为了知识 图谱向量化表示的
+baseline，并衍⽣出不同的变体。原理简述：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222174150117.png" srcset="/img/loading.gif" lazyload alt style="zoom:60%;"></p>
+<p>h，t为实体向量，r为关系向量。</p>
+<p>以L2 距离为例，梯度的计算相对⽐较简单，⽬标函数变为</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222174400473.png" srcset="/img/loading.gif" lazyload alt style="zoom:50%;"></p>
+<p>求解导数：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222174449957.png" srcset="/img/loading.gif" lazyload alt style="zoom:50%;"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222174524289.png" srcset="/img/loading.gif" lazyload alt style="zoom:50%;"></p>
+<p>完整算法：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222174739168.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;"></p>
+<p>评测方法：</p>
+<blockquote>
+<p>在测试时，以⼀个三元组为例，⽤语料中所有实体替换当前三元组的头实体计算距离d(h
+′+l,t)，将结果按升序排序，⽤正确三元组
+的排名情况来评估学习效果（同理对尾实体这样做）。(若替换到在训练集中的三元组，可以选择
+删掉)</p>
+</blockquote>
+<blockquote>
+<p>度量标准选择hits@10和mean rank，前者代表
+命中前10的次数/总查询次数，后者代表 正确结果排名之和/总查询次数</p>
+</blockquote>
+<p>训练速度快、易于实现。另外，可以将word2vec和TransE一起融合训练，此处不作展开。</p>
+<h4><span id="transh">TransH</span></h4>
+<p>虽然 TransE
+模型具有训练速度快、易于实现等优点，但是它不能够解决多对⼀和⼀对多关系的问题。以
+多对⼀关系为例，固定 r 和 t，TransE
+模型为了满⾜三⻆闭包关系，训练出来的头节点的向量会很相似。⽽TransH是⼀种将头尾节点映射到关系平⾯的模型，能够很好地解决这⼀问题。</p>
+<p>对于多对⼀关系，TransH 不在严格要求
+h+r-l=0，⽽是只需要保证头结点和尾节点在关系平
+⾯上的投影在⼀条直线上即可。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222175358133.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222175435542.png" srcset="/img/loading.gif" lazyload alt style="zoom:70%;"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222175455866.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;"></p>
+<h4><span id="transr">TransR</span></h4>
+<p>TransE 和 TransH
+都假设实体和关系嵌⼊在相同的空间中。然⽽，⼀个实体是多种属性的综合体，不同关
+系对应实体的不同属性，即头尾节点和关系可能不在⼀个向量空间中。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222175610493.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222175643271.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222175711668.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;"></p>
+<h4><span id="transd">TransD</span></h4>
+<p>TransR同样有它的问题，首先对于一种关系，它的头实体和尾实体使用同样的变换矩阵映射到关系空间，而头实体和尾实体往往是完全不同类的实体，也应该使用不同的方法进行映射。</p>
+<p>TransD模型对每个实体或关系使用两个向量进行表示，一个向量表示语义，另一个（用下表p表示）用来构建映射矩阵。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222215144407.png" srcset="/img/loading.gif" lazyload alt style="zoom:40%;"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222215235285.png" srcset="/img/loading.gif" lazyload alt style="zoom:40%;"></p>
+<h2><span id="问答应用">问答应用</span></h2>
+<h4><span id="基于知识图谱的问答kbqa">基于知识图谱的问答KBQA</span></h4>
+<p>基本流程：</p>
+<p>⾃然语⾔查询--&gt;意图识别(Intention
+Recognition)--&gt;实体链指(Entity Linking)+关系识别(Relation Detection)
+--&gt; 查询语句拼装(Query Construction)--&gt;返回结果选择(Answering
+Selection)</p>
+<blockquote>
+<p>意图识别(Intention
+Recognition)：预先准备好意图模板，可以通过相似度来匹配，也可以通过机器学习⾥的
+分类问题来解决，这个是所有问答系统都要⾯临的问题。</p>
+<p>实体链指(Entity Linking)+关系识别(Relation
+Detection)：将查询语句中出现的实体和关系映射到知识图谱⾥，本质是⼀个NER问题，只是需要将NER结果进⼀步链接到图谱。</p>
+<p>查询语句拼装(Query
+Construction)：需要根据底层知识图谱的查询语⾔，拼装成对应的query来查询(sparq
+等)，最简单的⽅法就是预先定义好查询模板，根据之前解析出来的<strong>(意图，实体，关系)</strong>填进模板查询即可。</p>
+<p>返回结果选择(Answering
+Selection)：图谱查询之后的结果可能存在多个，需要选择⼀个最合适的答案，可
+以预先指定排序规则去选择答案。</p>
+</blockquote>
+<p>参考：</p>
+<p>实例：<a href="https://github.com/beader/tianchi_nl2sql" target="_blank" rel="noopener">NL2SQL比赛第三名方案</a>，待学习</p>
+<h4><span id="基于知识表示的问答keqa">基于知识表示的问答KEQA</span></h4>
+<p><a href="http://research.baidu.com/Public/uploads/5c1c9a58317b3.pdf" target="_blank" rel="noopener">KEQA</a></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222181049264.png" srcset="/img/loading.gif" lazyload alt style="zoom:80%;"></p>
+<p>KEQA的目标不是直接推断头部实体和谓词，而是联合恢复知识图嵌入空间中问题的头部实体、谓词和尾部实体表示(eh,
+p, et)。分别训练两个模型，一个学习 谓词p 和 实体e
+的表示，一个识别问题中到的Head实体。如下面两个图所示。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222211314387.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;"></p>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222211327917.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;">
+<section class="footnotes">
+<div class="footnote-list">
+<ol>
+<li>
+<span id="fn:1" class="footnote-text"><span>Entity Linking: Finding
+Extracted Entities in a Knowledge Base
+<a href="#fnref:1" rev="footnote" class="footnote-backref">
+↩︎</a></span></span>
+</li>
+<li>
+<span id="fn:2" class="footnote-text"><span>Improved Neural Relation
+Detection for Knowledge Base Question Answering
+<a href="#fnref:2" rev="footnote" class="footnote-backref">
+↩︎</a></span></span>
+</li>
+</ol>
+</div>
+</section>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/NLP/">NLP</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/relation-extraction/">relation extraction</a>
+                    
+                      <a class="hover-with-bg" href="/tags/NER/">NER</a>
+                    
+                      <a class="hover-with-bg" href="/tags/TransE/">TransE</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Knowledge-Graph/">Knowledge Graph</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/4e471b0e.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">有用的python package</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/a954bb00.html">
+                        <span class="hidden-mobile">BERT-flow and more</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        loader: {
+          load: ['ui/lazy']
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>

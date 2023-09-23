@@ -1,0 +1,748 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="记录在Docker中搭建深度学习环境的过程。">
+  <meta name="author" content="江左时雨">
+  <meta name="keywords" content="机器学习,Machine Learning,自然语言处理,NLP,深度学习,Deep Learning,计算机,Coding,生活随笔">
+  <meta name="description" content="记录在Docker中搭建深度学习环境的过程。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux+Docker深度学习环境">
+<meta property="og:url" content="https://racleray.github.io/posts/accc2125.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="记录在Docker中搭建深度学习环境的过程。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://racleray.github.io/images/%E5%88%86%E5%B8%83%E5%BC%8F%E7%8E%AF%E5%A2%83.assets/image-20200412235440785.png">
+<meta property="og:image" content="https://racleray.github.io/images/%E5%88%86%E5%B8%83%E5%BC%8F%E7%8E%AF%E5%A2%83.assets/image-20200412235554201.png">
+<meta property="og:image" content="https://racleray.github.io/images/%E5%88%86%E5%B8%83%E5%BC%8F%E7%8E%AF%E5%A2%83.assets/image-20200412235839399.png">
+<meta property="og:image" content="https://racleray.github.io/images/%E5%88%86%E5%B8%83%E5%BC%8F%E7%8E%AF%E5%A2%83.assets/image-20200413000018058.png">
+<meta property="og:image" content="https://racleray.github.io/images/%E5%88%86%E5%B8%83%E5%BC%8F%E7%8E%AF%E5%A2%83.assets/image-20200413000036658.png">
+<meta property="article:published_time" content="2020-07-06T14:50:10.000Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:31.031Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="NVIDIA Container Toolkit">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://racleray.github.io/images/%E5%88%86%E5%B8%83%E5%BC%8F%E7%8E%AF%E5%A2%83.assets/image-20200412235440785.png">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>Linux+Docker深度学习环境 - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Linux+Docker深度学习环境">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-07-06 22:50" pubdate>
+        2020年7月6日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      8.2k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      26 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Linux+Docker深度学习环境</h1>
+            
+            <div class="markdown-body">
+              <h2><span id="docker中搭建深度学习环境">Docker中搭建深度学习环境</span></h2>
+<h3><span id="宿主机部分">宿主机部分</span></h3>
+<blockquote>
+<p>apt源修改：</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">sudo mv /etc/apt/sources.list /etc/apt/sources.list.bak<br><br>lsb_release -c  <span class="hljs-comment"># 系统版本</span><br><br>sudo vim /etc/apt/sources.list<br></code></pre></div></td></tr></table></figure>
+<p>写入</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">deb http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse<br>deb http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse<br>deb http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse<br>deb http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse<br>deb http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse<br>deb-src http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse<br>deb-src http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse<br>deb-src http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse<br>deb-src http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse<br>deb-src http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">sudo apt-get update<br>sudo apt-get upgrade<br></code></pre></div></td></tr></table></figure>
+</blockquote>
+<p>安装python和pip</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">apt-get install python3<br>apt-get install python3-pip<br></code></pre></div></td></tr></table></figure>
+<p>配置软连接</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">ln -s /usr/<span class="hljs-built_in">local</span>/python3/bin/python3 /usr/bin/python3<br>ln -s /usr/<span class="hljs-built_in">local</span>/python3/bin/pip3 /usr/bin/pip3<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">mkdir ~/.pip<br><span class="hljs-built_in">cd</span> ~/.pip<br>touch pip.conf<br>cat &gt;&gt; ~/.pip/pip.conf &lt;&lt; EOF<br>[global]<br>timeout = 6000<br>index-url = https://pypi.tuna.tsinghua.edu.cn/simple<br>trusted-host = pypi.tuna.tsinghua.edu.cn<br>EOF<br></code></pre></div></td></tr></table></figure>
+<p><a href="https://link.zhihu.com/?target=https%3A//developer.nvidia.com/cuda-toolkit-archive">查询CUDA</a>，按照官网指示安装，可选择不同方法，local或者network等</p>
+<p>注意！！</p>
+<blockquote>
+<p>云主机上安装cuda时，可能需要加上 --no-opengl-libs</p>
+</blockquote>
+<p><a href="https://link.zhihu.com/?target=http%3A//www.nvidia.com/Download/index.aspx">查询驱动版本</a>：可手动下载安装包到本地安装</p>
+<p>首先卸载掉之前的显卡驱动：</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">apt-get remove –purge nvidia*<br></code></pre></div></td></tr></table></figure>
+<p>也可使用命令查看推荐驱动</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">ubuntu-drivers devices<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">sudo apt install --no-install-recommends　&lt;推荐驱动&gt;<br></code></pre></div></td></tr></table></figure>
+<p>下载不了可添加ppa</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">sudo add-apt-repository ppa:graphics-drivers/ppa<br>sudo apt-get update<br>sudo apt install &lt;推荐驱动&gt;<br></code></pre></div></td></tr></table></figure>
+<blockquote>
+<p>之前安装过cuda需要重新安装的话可以选择先卸载，以免和新的 CUDA
+版本产生冲突:</p>
+<p>/usr/local/cuda/bin 目录下有一个 uninstallcuda*.pl 文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">./uninstall_cuda_10.0.pl<br></code></pre></div></td></tr></table></figure>
+<p>可能会卸载不干净, 可以再执行命令删除cuda目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">rm -rf /usr/bin/cuda<br>rm -rf /usr/bin/cuda-10.0<br></code></pre></div></td></tr></table></figure>
+</blockquote>
+<p><a href="https://link.zhihu.com/?target=https%3A//developer.nvidia.com/rdp/cudnn-archive">查询下载cudnn</a></p>
+<p>解压下载的文件，可以看到cuda文件夹，在当前目录打开终端，执行如下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">cp cuda/include/cudnn.h /usr/<span class="hljs-built_in">local</span>/cuda/include/<br>cp cuda/lib64/libcudnn* /usr/<span class="hljs-built_in">local</span>/cuda/lib64/<br><br>chmod a+r /usr/<span class="hljs-built_in">local</span>/cuda/include/cudnn.h<br>chmod a+r /usr/<span class="hljs-built_in">local</span>/cuda/lib64/libcudnn*<br></code></pre></div></td></tr></table></figure>
+<blockquote>
+<p>网络下载速度快也可以参考tensorflow官网的教程：</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-comment"># https://www.tensorflow.org/install/gpu#install_cuda_with_apt</span><br><span class="hljs-comment"># Add NVIDIA package repositories</span><br>wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-repo-ubuntu1804_10.1.243-1_amd64.deb<br>sudo dpkg -i cuda-repo-ubuntu1804_10.1.243-1_amd64.deb<br>sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub<br>sudo apt-get update<br>wget http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb<br>sudo apt install ./nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb<br>sudo apt-get update<br><br><span class="hljs-comment"># Install NVIDIA driver</span><br>sudo apt-get install --no-install-recommends nvidia-driver-418　<span class="hljs-comment"># 可更改为推荐版本</span><br><span class="hljs-comment"># Reboot. Check that GPUs are visible using the command: nvidia-smi</span><br><br><span class="hljs-comment"># Install development and runtime libraries (~4GB)</span><br>sudo apt-get install --no-install-recommends  --no-opengl-libs  \<br> cuda-10-1 \<br> libcudnn7=7.6.4.38-1+cuda10.1  \<br> libcudnn7-dev=7.6.4.38-1+cuda10.1<br><br><span class="hljs-comment"># 执行inference加速的服务器安装，也可开发调试</span><br><span class="hljs-comment"># Install TensorRT. Requires that libcudnn7 is installed above.</span><br>sudo apt-get install -y --no-install-recommends libnvinfer6=6.0.1-1+cuda10.1 \<br> libnvinfer-dev=6.0.1-1+cuda10.1 \<br> libnvinfer-plugin6=6.0.1-1+cuda10.1<br></code></pre></div></td></tr></table></figure>
+</blockquote>
+<hr>
+<h4><span id="云主机挂载新分区">云主机挂载新分区</span></h4>
+<p>查看是否有多余的盘比如<strong>/dev/vdb</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">fdisk -l<br></code></pre></div></td></tr></table></figure>
+<p>如果有则进行分区</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">fdisk /dev/vdb<br></code></pre></div></td></tr></table></figure>
+<p>进入交互：</p>
+<blockquote>
+<p>1.输入 n 并按回车键：创建一个新分区。 2.输入 p
+并按回车键：选择主分区。因为创建的是一个单分区数据盘，所以只需要创建主分区。
+3.输入分区编号并按回车键。可以输入 1。
+4.输入第一个可用的扇区编号：按回车键采用默认值 1。
+5.输入最后一个扇区编号：因为这里仅创建一个分区，所以按回车键采用默认值。
+6.输入 wq 并按回车键，开始分区。</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-comment">#是否有新分区 /dev/vdb1</span><br>fdisk -l<br></code></pre></div></td></tr></table></figure>
+<p>挂载文件系统</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-comment">#/mnt是宿主机的目录</span><br>mount /dev/vdb1 /mnt<br></code></pre></div></td></tr></table></figure>
+<p>查看挂载是否成功</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">df -h<br></code></pre></div></td></tr></table></figure>
+<hr>
+<h3><span id="docker部分">Docker部分</span></h3>
+<p>安装docker ce，根据官网教程</p>
+<hr>
+<h4><span id="nvidia-containertoolkit"></span></h4>
+<p>目前已经不推荐使用nvidia-docker2了，直接使用
+nvidia-container-toolkit　即可。</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-comment"># Add the package repositories</span><br>distribution=$(. /etc/os-release;<span class="hljs-built_in">echo</span> <span class="hljs-variable">$ID</span><span class="hljs-variable">$VERSION_ID</span>)<br>curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -<br>curl -s -L https://nvidia.github.io/nvidia-docker/<span class="hljs-variable">$distribution</span>/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list<br><br>sudo apt-get update &amp;&amp; sudo apt-get install -y nvidia-container-toolkit<br>sudo systemctl restart docker<br></code></pre></div></td></tr></table></figure>
+<p>Usage</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-comment">#### Test nvidia-smi with the latest official CUDA image</span><br>docker run --gpus all nvidia/cuda:10.0１base nvidia-smi<br><br><span class="hljs-comment"># Start a GPU enabled container on two GPUs</span><br>docker run --gpus 2 nvidia/cuda:10.１-base nvidia-smi<br><br><span class="hljs-comment"># Starting a GPU enabled container on specific GPUs</span><br>docker run --gpus <span class="hljs-string">'"device=1,2"'</span> nvidia/cuda:10.１-base nvidia-smi<br>docker run --gpus <span class="hljs-string">'"device=UUID-ABCDEF,1"'</span> nvidia/cuda:10.１-base nvidia-smi<br><br><span class="hljs-comment"># Specifying a capability (graphics, compute, ...) for my container</span><br><span class="hljs-comment"># Note this is rarely if ever used this way</span><br>docker run --gpus all,capabilities=utility nvidia/cuda:10.１-base nvidia-smi<br></code></pre></div></td></tr></table></figure>
+<p>nivdia官方镜像：https://gitlab.com/nvidia/container-images/cuda/blob/master/doc/supported-tags.md</p>
+<p>pytorch镜像：https://hub.docker.com/r/opencompetition/opencompetition</p>
+<p>tensorflow镜像：https://www.tensorflow.org/install/docker</p>
+<hr>
+<h4><span id="optional修改docker本地镜像与容器的存储位置">（Optional）修改Docker本地镜像与容器的存储位置</span></h4>
+<blockquote>
+<p>如果根分区太小的话</p>
+<p>首先停掉Docker服务：</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">systemctl stop docker<br></code></pre></div></td></tr></table></figure>
+<p>然后移动整个/var/lib/docker目录到目的路径：</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">sudo mv /var/lib/docker &lt;目标路径&gt;<br>sudo ln -s &lt;目标路径&gt; /var/lib/docker<br></code></pre></div></td></tr></table></figure>
+<p>然后</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">systemctl start docker<br></code></pre></div></td></tr></table></figure>
+</blockquote>
+<hr>
+<h4><span id="optional修改用户密码">（Optional）修改用户密码</span></h4>
+<p>ubuntu的默认root密码是随机的，每次开机都会有一个新的root密码。</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">sudo passwd<br></code></pre></div></td></tr></table></figure>
+<p>然后会提示输入当前用户的密码。</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">su root<br></code></pre></div></td></tr></table></figure>
+<p>转为root后，修改用户密码</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">sudo passwd user<br></code></pre></div></td></tr></table></figure>
+<hr>
+<h4><span id="常用docker操作">常用Docker操作</span></h4>
+<p>image，镜像，是一个个配置好的环境。
+container，容器，是image的具体实例。</p>
+<p><code>docker run [-it] some-image</code> 创建某个镜像的容器</p>
+<p><code>docker ps</code>列出当前运行的容器</p>
+<p><code>docker ps -a</code>列出所有的容器，包括运行的和不运行的</p>
+<p><code>docker rm container-id</code>删除某个容器</p>
+<p><code>docker start [-i] container-id</code><strong>启动</strong>某个容器，必须是已经创建的</p>
+<blockquote>
+<p><code>　　-i</code><strong>进入交互模式</strong>，还有一种方法：docker
+attach container-id</p>
+</blockquote>
+<blockquote>
+<p>CTRL+D或者输入exit，退出</p>
+</blockquote>
+<p><code>docker cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH</code>
+容器到主机</p>
+<p><code>docker cp [OPTIONS] SRC_PATH CONTAINER:DEST_PATH</code>
+主机到容器</p>
+<p>eg:
+<code>docker cp /home/racle/package_data nlptools:/home/deepspeed/package_data</code></p>
+<p>停止、重启：</p>
+<p><code>docker stop container-id</code></p>
+<p><code>docker restart container-id</code></p>
+<p>给镜像打标签</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">docker tag &lt;image id&gt; username/imagename:version<br></code></pre></div></td></tr></table></figure>
+<hr>
+<h4><span id="映射">映射</span></h4>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">sudo docker run -it /<br>    --gpus all　/<br>    -p 8000:22 /<br>    -p 9999:8888 /<br>    --ipc=host /<br>    -v &lt;主机文件路径&gt;:&lt;容器文件路径&gt; /<br>    --name &lt;名称&gt; /<br>    &lt;image id&gt;<br></code></pre></div></td></tr></table></figure>
+<p>-p 9999:8888 把主机的9999端口映射到容器的8888端口</p>
+<p>-p 8000:22 留一个端口映射到容器22端口，因为SFTP默认使用22端口。</p>
+<p>--ipc=host 让容器与主机共享内存</p>
+<p>-v <主机文件路径>:<容器文件路径> 文件路径映射 e.g.
+<code>/home/racle/dockerVol/:/home/ralce/</code></容器文件路径></主机文件路径></p>
+<p>或者容器启动的时候挂载目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs text">--mount type&#x3D;bind,source&#x3D;paht,target&#x3D;path<br></code></pre></div></td></tr></table></figure>
+<h4><span id="jupyter-notebook">jupyter notebook</span></h4>
+<p>创建了容器之后，启动jupyter notebook：</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">jupyter-notebook --generate-config<br>sed -i <span class="hljs-string">'s/#c.NotebookApp.allow_password_change/c.NotebookApp.allow_password_change/g'</span> ~/.jupyter/jupyter_notebook_config.py<br><br>cat &gt;&gt; ~/.jupyter/jupyter_notebook_config.py &lt;&lt; EOF<br>c = get_config()<br>c.NotebookApp.ip = <span class="hljs-string">'*'</span><br>c.NotebookApp.open_browser = False<br>c.NotebookApp.port = 8888<br>c.NotebookApp.token=<span class="hljs-string">'666666'</span><br>EOF<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">jupyter notebook --no-browser --ip=0.0.0.0 --notebook-dir=<span class="hljs-string">''</span><br></code></pre></div></td></tr></table></figure>
+<p><code>--no-browser</code>即不通过浏览器启动</p>
+<p><code>--allow-root</code>允许root模型运行</p>
+<hr>
+<h4><span id="端口配置">端口配置</span></h4>
+<p>容器里</p>
+<blockquote>
+<p>配置SSH服务，首先安装<code>*openssh-server*</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">apt install -y openssh-server<br></code></pre></div></td></tr></table></figure>
+<p>建立一个配置文件夹并进行必要的配置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">$ mkdir /var/run/sshd<br>$ sudo passwd<br><span class="hljs-comment"># 这里设置的root密码，一定要记住！</span><br><span class="hljs-comment"># 使用其他用户连接，可用root权限设置密码：  passwd username</span><br><br><span class="hljs-comment"># 将#PermitRootLogin prohibit-password 替换为 PermitRootLogin yes</span><br>$ sed -i <span class="hljs-string">'s/#PermitRootLogin prohibit-password/PermitRootLogin yes/'</span> /etc/ssh/sshd_config<br><span class="hljs-comment"># 将session\s*required\s*pam_loginuid.so 替换为 session optional pam_loginuid.so</span><br>$ sed <span class="hljs-string">'s@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g'</span> -i /etc/pam.d/sshd<br><br>$ <span class="hljs-built_in">echo</span> <span class="hljs-string">"export VISIBLE=now"</span> &gt;&gt; /etc/profile<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">$ sudo service ssh restart<br></code></pre></div></td></tr></table></figure>
+</blockquote>
+<p>在服务器（宿主机）上</p>
+<blockquote>
+<p>测试刚刚新建docker容器中端口转发的22端口：</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">$ sudo docker port [your_container_name] 22<br></code></pre></div></td></tr></table></figure>
+</blockquote>
+<p>NOTE：可能ssh默认开启的端口不是22，需要在/etc/ssh/sshd_config中修改
+port 为 22</p>
+<figure class="highlight nginx"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs nginx"><span class="hljs-attribute">netstat</span> -tnlp   <span class="hljs-comment"># 查看当前机器开启的端口</span><br></code></pre></div></td></tr></table></figure>
+<p>测试能否用SSH连接到远程docker：</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">$ ssh root@[your_host_ip] -p 8000<br></code></pre></div></td></tr></table></figure>
+<p>下面就可以通过pychram和jupyter远程连接服务器上的docker了</p>
+<p>本地与服务器的端口映射，从而远程登录jupyter：(远程链接到宿主机被映射的端口)：</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">ssh username@host-ip -L 8888:127.0.0.1:9999<br></code></pre></div></td></tr></table></figure>
+<p>远程可通过宿主机ip的8888端口访问jupyter</p>
+<p>docker重启时也需要重启ssh服务：</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">$ sudo service ssh restart<br></code></pre></div></td></tr></table></figure>
+<hr>
+<h4><span id="备份">备份</span></h4>
+<p>通过<code>docker ps</code>或者<code>docker ps -a</code>来查看你想备份的容器的id，
+然后通过：</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">docker commit -p [your-container-id] [your-backup-name]<br></code></pre></div></td></tr></table></figure>
+<p>来将your-container-id的容器创建成一个镜像快照</p>
+<p>通过<code>docker images</code>就可以查看到刚刚创建好的镜像快照了</p>
+<p>通过：</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">docker save -o [path-you-want-to-save/your-backup-name.tar]] [your-backup-name]<br></code></pre></div></td></tr></table></figure>
+<p>把那个镜像打包成tar文件，保存到服务器上。</p>
+<p>恢复： <code>docker load -i your-backup-name.tar</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">docker run -d -p 80:80 your-backup-name<br></code></pre></div></td></tr></table></figure>
+<hr>
+<h4><span id="pycharm连接">pycharm连接</span></h4>
+<p>PyCharm<code>*Tools &gt; Deployment &gt; Configuration*</code>,
+新建一个<code>*SFTP*</code>服务器，名字自己取</p>
+<figure>
+<img src="/images/分布式环境.assets/image-20200412235440785.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>输入如下图配置</p>
+<figure>
+<img src="/images/分布式环境.assets/image-20200412235554201.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>在<em>Mappings</em>中配置路径，这里的路径是你本地存放代码的路径，与刚刚配置的<em>Root
+Path</em>相互映射（同docker中宿主机与容器的关系）</p>
+<figure>
+<img src="/images/分布式环境.assets/image-20200412235839399.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p><strong>配置远程解释器</strong></p>
+<p>点击PyCharm的<em>File &gt; Setting &gt; Project &gt; Project
+Interpreter</em>右边的设置按钮新建一个项目的远程解释器：</p>
+<figure>
+<img src="/images/分布式环境.assets/image-20200413000018058.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<figure>
+<img src="/images/分布式环境.assets/image-20200413000036658.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>配置完成。配置完成以后需要等本地和远程的环境同步一下。</p>
+<p>本地的文件，修改之后可以随时右键deployment-&gt;upload到远程主机，或者直接在本地调试运行。</p>
+<p>docker容器停了以后里面的SSH服务也会相应停止，</p>
+<p>docker重启时也需要重启ssh服务：</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">$ service ssh restart<br></code></pre></div></td></tr></table></figure>
+<hr>
+<p>参考： <a href="https://zhuanlan.zhihu.com/p/112267407" target="_blank" rel="noopener">Docker中搭建深度学习环境</a></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Tools/">Tools</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Tools/Docker/">Docker</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Linux/">Linux</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Docker/">Docker</a>
+                    
+                      <a class="hover-with-bg" href="/tags/NVIDIA-Container-Toolkit/">NVIDIA Container Toolkit</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/3423f471.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">语言模型</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/2c27ec14.html">
+                        <span class="hidden-mobile">个人Linux环境配置</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>

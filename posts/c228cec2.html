@@ -1,0 +1,654 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="简单学习下BERT Topic Analysis的相关内容，看看Kaggle上的代码实验。">
+  <meta name="author" content="江左时雨">
+  <meta name="keywords" content="机器学习,Machine Learning,自然语言处理,NLP,深度学习,Deep Learning,计算机,Coding,生活随笔">
+  <meta name="description" content="简单学习下BERT Topic Analysis的相关内容，看看Kaggle上的代码实验。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BERT_topic_analysis">
+<meta property="og:url" content="https://racleray.github.io/posts/c228cec2.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="简单学习下BERT Topic Analysis的相关内容，看看Kaggle上的代码实验。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/BERT_topic_analysis_pic/image-20210719222141310.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/BERT_topic_analysis_pic/image-20210719222224964.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/BERT_topic_analysis_pic/image-20210719222310629.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/BERT_topic_analysis_pic/image-20210719222356216.png">
+<meta property="article:published_time" content="2021-07-19T14:26:37.000Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:31.026Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="topic model">
+<meta property="article:tag" content="BERT">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/BERT_topic_analysis_pic/image-20210719222141310.png">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>BERT_topic_analysis - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="BERT_topic_analysis">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-07-19 22:26" pubdate>
+        2021年7月19日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      13k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      41 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">BERT_topic_analysis</h1>
+            
+            <div class="markdown-body">
+              <p>运行 <a href="https://colab.research.google.com/drive/1-p21pW1xaDnYuAyKYwbAw8i3yHKvjRFC?usp=sharing" target="_blank" rel="noopener">Colab</a></p>
+<h2><span id="connect-to-kaggle">Connect to kaggle</span></h2>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">!pip install --user kaggle<br>!mkdir /root/.kaggle<br><br>!mv /content/kaggle.json /root/.kaggle/kaggle.json<br><br>!kaggle competitions download -c commonlitreadabilityprize<br><br>!ls<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> os<br><br><span class="hljs-keyword">for</span> filename <span class="hljs-keyword">in</span> os.listdir(<span class="hljs-string">'.'</span>):<br>    <span class="hljs-keyword">if</span> filename.endswith(<span class="hljs-string">'.zip'</span>):<br>        os.system(<span class="hljs-string">"unzip &#123;&#125;"</span>.format(filename))<br>        os.system(<span class="hljs-string">"rm &#123;&#125;"</span>.format(filename))<br></code></pre></div></td></tr></table></figure>
+<h2><span id="visualization-with-bokeh">Visualization with Bokeh</span></h2>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">!pip install --upgrade pip<br>!pip install --upgrade numpy<br>!pip install --upgrade sentence_transformers<br>!conda install -c conda-forge hdbscan --y<br>!pip install bokeh<br>!pip install --upgrade bertopic[visualization]<br><br><span class="hljs-comment"># !pip uninstall numpy</span><br><span class="hljs-comment"># !pip install numpy</span><br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> bertopic <span class="hljs-keyword">import</span> BERTopic<br><span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd<br><span class="hljs-keyword">from</span> sentence_transformers <span class="hljs-keyword">import</span> SentenceTransformer<br><span class="hljs-keyword">import</span> sklearn.manifold<br><span class="hljs-keyword">import</span> umap<br><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br><span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd<br><span class="hljs-keyword">import</span> random<br><span class="hljs-keyword">from</span> nltk.corpus <span class="hljs-keyword">import</span> stopwords<br><br>random.seed(<span class="hljs-number">42</span>)<br><br><span class="hljs-keyword">from</span> bokeh.io <span class="hljs-keyword">import</span> output_file, show<br><span class="hljs-keyword">from</span> bokeh.models <span class="hljs-keyword">import</span> ColumnDataSource, HoverTool, LinearColorMapper<br><span class="hljs-keyword">from</span> bokeh.palettes <span class="hljs-keyword">import</span> plasma, d3, Turbo256<br><span class="hljs-keyword">from</span> bokeh.plotting <span class="hljs-keyword">import</span> figure<br><span class="hljs-keyword">from</span> bokeh.transform <span class="hljs-keyword">import</span> transform<br><span class="hljs-keyword">import</span> bokeh.io<br>bokeh.io.output_notebook()<br><br><span class="hljs-keyword">import</span> bokeh.plotting <span class="hljs-keyword">as</span> bpl<br><span class="hljs-keyword">import</span> bokeh.models <span class="hljs-keyword">as</span> bmo<br>bpl.output_notebook()<br></code></pre></div></td></tr></table></figure>
+<p>读取数据</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">test = pd.read_csv(<span class="hljs-string">'test.csv'</span>)<br>train = pd.read_csv(<span class="hljs-string">'train.csv'</span>)<br><br>train[<span class="hljs-string">'set'</span>] = <span class="hljs-string">'train'</span><br>test[<span class="hljs-string">'set'</span>] = <span class="hljs-string">'test'</span><br><br>combined = pd.concat([train, test], ignore_index=<span class="hljs-literal">True</span>)<br>combined.target.fillna(<span class="hljs-number">3</span>, inplace=<span class="hljs-literal">True</span>)<br><br>texts = combined.excerpt.values.tolist()<br>targets = combined.target.values.tolist()<br>sets = combined.set.values.tolist()<br></code></pre></div></td></tr></table></figure>
+<p>文本处理（可选）</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment"># def preprocess_tweet_data(data,name):</span><br><span class="hljs-comment">#     # Lowering the case of the words in the sentences</span><br><span class="hljs-comment">#     data[name]=data[name].str.lower()</span><br><span class="hljs-comment">#     # Code to remove the Hashtags from the text</span><br><span class="hljs-comment">#     data[name]=data[name].apply(lambda x:re.sub(r'\B#\S+','',x))</span><br><span class="hljs-comment">#     # Code to remove the links from the text</span><br><span class="hljs-comment">#     data[name]=data[name].apply(lambda x:re.sub(r"http\S+", "", x))</span><br><span class="hljs-comment">#     # Code to remove the Special characters from the text </span><br><span class="hljs-comment">#     data[name]=data[name].apply(lambda x:' '.join(re.findall(r'\w+', x)))</span><br><span class="hljs-comment">#     # Code to substitute the multiple spaces with single spaces</span><br><span class="hljs-comment">#     data[name]=data[name].apply(lambda x:re.sub(r'\s+', ' ', x, flags=re.I))</span><br><span class="hljs-comment">#     # Code to remove all the single characters in the text</span><br><span class="hljs-comment">#     data[name]=data[name].apply(lambda x:re.sub(r'\s+[a-zA-Z]\s+', '', x))</span><br><span class="hljs-comment">#     # Remove the twitter handlers</span><br><span class="hljs-comment">#     data[name]=data[name].apply(lambda x:re.sub('@[^\s]+','',x))</span><br><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">preprocess</span><span class="hljs-params">(data)</span>:</span><br>    excerpt_processed=[]<br>    <span class="hljs-keyword">for</span> e <span class="hljs-keyword">in</span> data[<span class="hljs-string">'excerpt'</span>]:<br>        <span class="hljs-comment"># find alphabets</span><br>        e = re.sub(<span class="hljs-string">"[^a-zA-Z]"</span>, <span class="hljs-string">" "</span>, e)<br>        e = re.sub(<span class="hljs-string">r'\s+'</span>, <span class="hljs-string">' '</span>, e, flags=re.I)<br><br>        <span class="hljs-comment"># # convert to lower case</span><br>        <span class="hljs-comment"># e = e.lower()</span><br>        <br>        <span class="hljs-comment"># tokenize words</span><br>        e = nltk.word_tokenize(e)<br>        <span class="hljs-comment"># remove stopwords</span><br>        e = [word <span class="hljs-keyword">for</span> word <span class="hljs-keyword">in</span> e <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> word.lower() <span class="hljs-keyword">in</span> set(stopwords.words(<span class="hljs-string">"english"</span>))]<br>        <span class="hljs-comment"># lemmatization</span><br>        lemma = nltk.WordNetLemmatizer()<br>        e = [lemma.lemmatize(word) <span class="hljs-keyword">for</span> word <span class="hljs-keyword">in</span> e]<br>        e=<span class="hljs-string">" "</span>.join(e)<br>        <br>        excerpt_processed.append(e)<br>        <br>    <span class="hljs-keyword">return</span> excerpt_processed<br></code></pre></div></td></tr></table></figure>
+<p>使用sentence bert计算文档向量</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">model = SentenceTransformer(<span class="hljs-string">'stsb-distilbert-base'</span>)<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><figcaption><span>id</span></figcaption><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">embeddings = model.encode(texts)<br></code></pre></div></td></tr></table></figure>
+<h3><span id="降维-t-sne-与-umap">降维 t-SNE 与 umap</span></h3>
+<ul>
+<li>t-SNE保留数据中局部结构。</li>
+<li>UMAP保留数据中的本地和大部分全局结构。</li>
+<li>UMAP比tSNE要快得多，当面对更多数据、更高维数据时</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">color_mapper = LinearColorMapper(palette=<span class="hljs-string">'Plasma256'</span>, low=min(targets), high=max(targets))<br>out = sklearn.manifold.TSNE(n_components=<span class="hljs-number">2</span>).fit_transform(embeddings)<br></code></pre></div></td></tr></table></figure>
+<p>绘制Boken。test set标签设置为3。</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">SETS = [<span class="hljs-string">'train'</span>, <span class="hljs-string">'test'</span>]<br>MARKERS = [<span class="hljs-string">'circle'</span>, <span class="hljs-string">'triangle'</span>]<br><br>list_x = out[:,<span class="hljs-number">0</span>]<br>list_y = out[:,<span class="hljs-number">1</span>]<br>desc = texts<br><br>source = ColumnDataSource(data=dict(x=list_x, y=list_y, desc=desc, targets=targets, dset=sets))<br>hover = HoverTool(tooltips=[<br>    (<span class="hljs-string">"index"</span>, <span class="hljs-string">"$index"</span>),<br>    (<span class="hljs-string">"(x,y)"</span>, <span class="hljs-string">"(@x, @y)"</span>),<br>    (<span class="hljs-string">'desc'</span>, <span class="hljs-string">'@desc'</span>),<br>    (<span class="hljs-string">'targets'</span>, <span class="hljs-string">'@targets'</span>),<br>    (<span class="hljs-string">'dset'</span>, <span class="hljs-string">'@dset'</span>)<br>])<br><br>p = figure(plot_width=<span class="hljs-number">800</span>, plot_height=<span class="hljs-number">800</span>, tools=[hover], title=<span class="hljs-string">"First Look at the Data"</span>)<br>p.scatter(<span class="hljs-string">'x'</span>, <span class="hljs-string">'y'</span>, size=<span class="hljs-number">10</span>, source=source, legend=<span class="hljs-string">'dset'</span>, color=&#123;<span class="hljs-string">'field'</span>: <span class="hljs-string">'targets'</span>, <span class="hljs-string">'transform'</span>: color_mapper&#125;,<br>         marker=bokeh.transform.factor_mark(<span class="hljs-string">'dset'</span>, MARKERS, SETS),)<br><br>bpl.show(p)<br></code></pre></div></td></tr></table></figure>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/BERT_topic_analysis_pic/image-20210719222141310.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;"></p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">umap_model = umap.UMAP(n_neighbors=<span class="hljs-number">15</span>, n_components=<span class="hljs-number">2</span>, metric=<span class="hljs-string">'cosine'</span>)<br>out_umap = umap_model.fit_transform(embeddings)<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">SETS = [<span class="hljs-string">'train'</span>, <span class="hljs-string">'test'</span>]<br>MARKERS = [<span class="hljs-string">'circle'</span>, <span class="hljs-string">'triangle'</span>]<br><br>list_x = out_umap[:,<span class="hljs-number">0</span>]<br>list_y = out_umap[:,<span class="hljs-number">1</span>]<br>desc = texts<br><br>source = ColumnDataSource(data=dict(x=list_x, y=list_y, desc=desc, targets=targets, dset=sets))<br>hover = HoverTool(tooltips=[<br>    (<span class="hljs-string">"index"</span>, <span class="hljs-string">"$index"</span>),<br>    (<span class="hljs-string">"(x,y)"</span>, <span class="hljs-string">"(@x, @y)"</span>),<br>    (<span class="hljs-string">'desc'</span>, <span class="hljs-string">'@desc'</span>),<br>    (<span class="hljs-string">'targets'</span>, <span class="hljs-string">'@targets'</span>),<br>    (<span class="hljs-string">'dset'</span>, <span class="hljs-string">'@dset'</span>)<br>])<br><br>p = figure(plot_width=<span class="hljs-number">800</span>, plot_height=<span class="hljs-number">800</span>, tools=[hover], title=<span class="hljs-string">"First Look at the Data"</span>)<br>p.scatter(<span class="hljs-string">'x'</span>, <span class="hljs-string">'y'</span>, size=<span class="hljs-number">10</span>, source=source, legend=<span class="hljs-string">'dset'</span>, color=&#123;<span class="hljs-string">'field'</span>: <span class="hljs-string">'targets'</span>, <span class="hljs-string">'transform'</span>: color_mapper&#125;,<br>         marker=bokeh.transform.factor_mark(<span class="hljs-string">'dset'</span>, MARKERS, SETS),)<br><br>bpl.show(p)<br></code></pre></div></td></tr></table></figure>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/BERT_topic_analysis_pic/image-20210719222224964.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;"></p>
+<h3><span id="kmeans-观察数据">Kmeans 观察数据</span></h3>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> sklearn.decomposition <span class="hljs-keyword">import</span> PCA<br><span class="hljs-keyword">from</span> sklearn.cluster <span class="hljs-keyword">import</span> MiniBatchKMeans<br><span class="hljs-keyword">from</span> sklearn.metrics <span class="hljs-keyword">import</span> silhouette_samples, silhouette_score<br><span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt<br><span class="hljs-keyword">import</span> matplotlib.cm <span class="hljs-keyword">as</span> cm<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">find_optimal_clusters</span><span class="hljs-params">(data, max_k)</span>:</span><br>    iters = range(<span class="hljs-number">2</span>, max_k+<span class="hljs-number">1</span>, <span class="hljs-number">1</span>)<br>    <br>    sse = []  <span class="hljs-comment"># 轮廓系数</span><br>    <span class="hljs-keyword">for</span> k <span class="hljs-keyword">in</span> iters:<br>        cluster = MiniBatchKMeans(n_clusters=k, init_size=<span class="hljs-number">256</span>, batch_size=<span class="hljs-number">512</span>, random_state=<span class="hljs-number">20</span>).fit(data)<br>        silhouette_avg = silhouette_score(data, cluster.labels_)<br>        sse.append(silhouette_avg)<br>        print(<span class="hljs-string">'Fit &#123;&#125; clusters'</span>.format(k))<br>        <br>    f, ax = plt.subplots(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>)<br>    ax.plot(iters, sse, marker=<span class="hljs-string">'o'</span>)<br>    ax.set_xlabel(<span class="hljs-string">'Cluster Centers'</span>)<br>    ax.set_xticks(iters)<br>    ax.set_xticklabels(iters)<br>    ax.set_ylabel(<span class="hljs-string">'SSE'</span>)<br>    ax.set_title(<span class="hljs-string">'SSE by Cluster Center Plot'</span>)<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><figcaption><span>colab</span></figcaption><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">find_optimal_clusters(embeddings, <span class="hljs-number">20</span>)<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">clusters_2 = MiniBatchKMeans(n_clusters=<span class="hljs-number">2</span>, init_size=<span class="hljs-number">256</span>, batch_size=<span class="hljs-number">512</span>, random_state=<span class="hljs-number">20</span>).fit_predict(embeddings)<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">plot_tsne_pca_umap</span><span class="hljs-params">(data, labels)</span>:</span><br>    max_label = max(labels)+<span class="hljs-number">1</span><br>    max_items = np.random.choice(range(data.shape[<span class="hljs-number">0</span>]), size=<span class="hljs-number">2700</span>, replace=<span class="hljs-literal">False</span>)<br>    <br>    <span class="hljs-comment"># reducer = umap.UMAP(n_components=2)</span><br>    pca = PCA(n_components=<span class="hljs-number">2</span>).fit_transform(data[max_items,:])<br>    tsne = sklearn.manifold.TSNE(n_components=<span class="hljs-number">2</span>).fit_transform(embeddings)<br>    uma = umap.UMAP(n_components=<span class="hljs-number">2</span>).fit_transform(embeddings)<br>    <br>    <br>    idx = np.random.choice(range(pca.shape[<span class="hljs-number">0</span>]), size=<span class="hljs-number">320</span>, replace=<span class="hljs-literal">False</span>)<br>    label_subset = labels[max_items]<br>    label_subset = [cm.hsv(i/max_label) <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> label_subset[idx]]<br>    <br>    f, ax = plt.subplots(<span class="hljs-number">1</span>, <span class="hljs-number">3</span>, figsize=(<span class="hljs-number">14</span>, <span class="hljs-number">6</span>))<br>    <br>    ax[<span class="hljs-number">0</span>].scatter(pca[idx, <span class="hljs-number">0</span>], pca[idx, <span class="hljs-number">1</span>], c=label_subset)<br>    ax[<span class="hljs-number">0</span>].set_title(<span class="hljs-string">'PCA Cluster Plot'</span>)<br>    <br>    ax[<span class="hljs-number">1</span>].scatter(tsne[idx, <span class="hljs-number">0</span>], tsne[idx, <span class="hljs-number">1</span>], c=label_subset)<br>    ax[<span class="hljs-number">1</span>].set_title(<span class="hljs-string">'TSNE Cluster Plot'</span>)<br>    <br>    ax[<span class="hljs-number">2</span>].scatter(uma[idx,<span class="hljs-number">0</span>],uma[idx,<span class="hljs-number">1</span>],c=label_subset)<br>    ax[<span class="hljs-number">2</span>].set_title(<span class="hljs-string">'UMAP Cluster Plot'</span>)<br>    <br>plot_tsne_pca_umap(embeddings, clusters_2)<br></code></pre></div></td></tr></table></figure>
+<h2><span id="topic">Topic</span></h2>
+<h3><span id="bert-topic">BERT topic</span></h3>
+<p>BERTopic依赖于句子嵌入和聚类算法，以及降维，生成文档主题簇。</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">model = BERTopic(language=<span class="hljs-string">"english"</span>, min_topic_size=<span class="hljs-number">20</span>)<br>topics, probs = model.fit_transform(texts)<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">topic_words = [<span class="hljs-string">'-1: outlier'</span>]<br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(len(set(topics))<span class="hljs-number">-1</span>):<br>  tpc = model.get_topic(i)[:<span class="hljs-number">8</span>]<br>  words = [x[<span class="hljs-number">0</span>] <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> tpc]<br>  tw = <span class="hljs-string">' '</span>.join([str(i) + <span class="hljs-string">':'</span>] + words)<br>  topic_words.append(tw)<br><br>exp_topics = [topic_words[x+<span class="hljs-number">1</span>] <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> topics]<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">len(set(topics))<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">clrs = random.sample(Turbo256, len(set(topics)))<br>color_map = bmo.CategoricalColorMapper(factors=topic_words, palette=clrs)<br><br>list_x = out[:,<span class="hljs-number">0</span>]<br>list_y = out[:,<span class="hljs-number">1</span>]<br>desc = texts<br><br>source = ColumnDataSource(data=dict(x=list_x, y=list_y, desc=desc, topic=exp_topics, target=targets, dset=sets,))<br>hover = HoverTool(tooltips=[<br>    (<span class="hljs-string">"index"</span>, <span class="hljs-string">"$index"</span>),<br>    (<span class="hljs-string">'desc'</span>, <span class="hljs-string">'@desc'</span>),<br>    (<span class="hljs-string">'topic'</span>, <span class="hljs-string">'@topic'</span>),<br>    (<span class="hljs-string">'target'</span>, <span class="hljs-string">'@target'</span>),<br>    (<span class="hljs-string">'dset'</span>, <span class="hljs-string">'@dset'</span>),<br>])<br><br>p = figure(plot_width=<span class="hljs-number">800</span>, plot_height=<span class="hljs-number">800</span>, tools=[hover], title=<span class="hljs-string">"Topics from BERTopic model"</span>)<br>p.scatter(<span class="hljs-string">'x'</span>, <span class="hljs-string">'y'</span>, size=<span class="hljs-number">10</span>, source=source,<br>         fill_color=transform(<span class="hljs-string">'topic'</span>, color_map),<br>         marker=bokeh.transform.factor_mark(<span class="hljs-string">'dset'</span>, MARKERS, SETS),<br>         legend=<span class="hljs-string">'dset'</span><br>)<br><span class="hljs-comment"># p.legend.location = "top_left"</span><br><span class="hljs-comment"># p.legend.click_policy="hide"</span><br><br>bokeh.plotting.show(p)<br></code></pre></div></td></tr></table></figure>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/BERT_topic_analysis_pic/image-20210719222310629.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;"></p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">topic_df = model.get_topic_freq()<br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_keywords</span><span class="hljs-params">(i)</span>:</span><br>    <span class="hljs-keyword">if</span> i == <span class="hljs-number">-1</span>: <span class="hljs-keyword">return</span> <span class="hljs-string">'outlier'</span><br>    tpc = model.get_topic(i)[:<span class="hljs-number">8</span>]<br>    words = [x[<span class="hljs-number">0</span>] <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> tpc]<br>    tw = <span class="hljs-string">' '</span>.join(words)<br>    <span class="hljs-keyword">return</span> tw<br><br>topic_df[<span class="hljs-string">'keywords'</span>] = topic_df[<span class="hljs-string">'Topic'</span>].apply(get_keywords)<br><br>topic_df<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">model.get_topic(<span class="hljs-number">0</span>)<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">model.visualize_topics()<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment"># model.visualize_distribution(probs)</span><br></code></pre></div></td></tr></table></figure>
+<h3><span id="classic-lda">Classic LDA</span></h3>
+<figure class="highlight python"><figcaption><span>id</span></figcaption><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> os<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">!pip install -Uqq gensim==<span class="hljs-number">3.8</span><span class="hljs-number">.3</span><br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment"># import os       #importing os to set environment variable</span><br><span class="hljs-comment"># def install_java():</span><br><span class="hljs-comment">#   !apt-get install -y openjdk-8-jdk-headless -qq &gt; /dev/null      #install openjdk</span><br><span class="hljs-comment">#   os.environ["JAVA_HOME"] = "/usr/lib/jvm/java-8-openjdk-amd64"     #set environment variable</span><br><span class="hljs-comment">#   !java -version       #check java version</span><br><span class="hljs-comment"># install_java()</span><br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">!wget -q http://mallet.cs.umass.edu/dist/mallet<span class="hljs-number">-2.0</span><span class="hljs-number">.8</span>.zip<br>!unzip -qq mallet<span class="hljs-number">-2.0</span><span class="hljs-number">.8</span>.zip<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">os.environ[<span class="hljs-string">'MALLET_HOME'</span>] = <span class="hljs-string">'/content/mallet-2.0.8'</span><br>mallet_path = <span class="hljs-string">'/content/mallet-2.0.8/bin/mallet'</span> <span class="hljs-comment"># you should NOT need to change this</span><br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> gensim<br><span class="hljs-keyword">import</span> gensim.corpora <span class="hljs-keyword">as</span> corpora<br><span class="hljs-keyword">from</span> gensim.utils <span class="hljs-keyword">import</span> simple_preprocess<br><span class="hljs-keyword">from</span> gensim.models.wrappers <span class="hljs-keyword">import</span> LdaMallet<br><span class="hljs-keyword">from</span> gensim.models.coherencemodel <span class="hljs-keyword">import</span> CoherenceModel<br><span class="hljs-keyword">from</span> gensim <span class="hljs-keyword">import</span> similarities<br><br><span class="hljs-keyword">import</span> os.path<br><span class="hljs-keyword">import</span> re<br><span class="hljs-keyword">import</span> glob<br><br><span class="hljs-keyword">import</span> nltk<br>nltk.download(<span class="hljs-string">'stopwords'</span>)<br><br><span class="hljs-keyword">from</span> nltk.tokenize <span class="hljs-keyword">import</span> RegexpTokenizer<br><span class="hljs-keyword">from</span> nltk.corpus <span class="hljs-keyword">import</span> stopwords<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">preprocess_data</span><span class="hljs-params">(doc_set,extra_stopwords = &#123;&#125;)</span>:</span><br>    <span class="hljs-comment"># adapted from https://www.datacamp.com/community/tutorials/discovering-hidden-topics-python</span><br>    <span class="hljs-comment"># replace all newlines or multiple sequences of spaces with a standard space</span><br>    doc_set = [re.sub(<span class="hljs-string">'\s+'</span>, <span class="hljs-string">' '</span>, doc) <span class="hljs-keyword">for</span> doc <span class="hljs-keyword">in</span> doc_set]<br>    <span class="hljs-comment"># initialize regex tokenizer</span><br>    tokenizer = RegexpTokenizer(<span class="hljs-string">r'\w+'</span>)<br>    <span class="hljs-comment"># create English stop words list</span><br>    en_stop = set(stopwords.words(<span class="hljs-string">'english'</span>))<br>    <span class="hljs-comment"># add any extra stopwords</span><br>    <span class="hljs-keyword">if</span> (len(extra_stopwords) &gt; <span class="hljs-number">0</span>):<br>        en_stop = en_stop.union(extra_stopwords)<br>    <br>    <span class="hljs-comment"># list for tokenized documents in loop</span><br>    texts = []<br>    <span class="hljs-comment"># loop through document list</span><br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> doc_set:<br>        <span class="hljs-comment"># clean and tokenize document string</span><br>        raw = i.lower()<br>        tokens = tokenizer.tokenize(raw)<br>        <span class="hljs-comment"># remove stop words from tokens</span><br>        stopped_tokens = [i <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> tokens <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> i <span class="hljs-keyword">in</span> en_stop]<br>        <span class="hljs-comment"># add tokens to list</span><br>        texts.append(stopped_tokens)<br>    <span class="hljs-keyword">return</span> texts<br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">prepare_corpus</span><span class="hljs-params">(doc_clean)</span>:</span><br>    <span class="hljs-comment"># adapted from https://www.datacamp.com/community/tutorials/discovering-hidden-topics-python</span><br>    <span class="hljs-comment"># Creating the term dictionary of our courpus, where every unique term is assigned an index. dictionary = corpora.Dictionary(doc_clean)</span><br>    dictionary = corpora.Dictionary(doc_clean)<br>    <br>    dictionary.filter_extremes(no_below=<span class="hljs-number">5</span>, no_above=<span class="hljs-number">0.5</span>)<br>    <span class="hljs-comment"># Converting list of documents (corpus) into Document Term Matrix using dictionary prepared above.</span><br>    doc_term_matrix = [dictionary.doc2bow(doc) <span class="hljs-keyword">for</span> doc <span class="hljs-keyword">in</span> doc_clean]<br>    <span class="hljs-comment"># generate LDA model</span><br>    <span class="hljs-keyword">return</span> dictionary,doc_term_matrix<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">doc_clean = preprocess_data(texts,&#123;&#125;)<br>dictionary, doc_term_matrix = prepare_corpus(doc_clean)<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">number_of_topics=<span class="hljs-number">30</span> <span class="hljs-comment"># adjust this to alter the number of topics</span><br>words=<span class="hljs-number">10</span> <span class="hljs-comment">#adjust this to alter the number of words output for the topic below</span><br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">ldamallet = LdaMallet(mallet_path, corpus=doc_term_matrix, num_topics=number_of_topics, id2word=dictionary, alpha=<span class="hljs-number">10</span>)<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment"># topic_words = ldamallet.show_topics(num_topics=number_of_topics,num_words=5)</span><br><span class="hljs-comment"># topic_words = [x[1] for x in topic_words]</span><br><br>topic_words = []<br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(number_of_topics):<br>  tpc = ldamallet.show_topic(i, topn=<span class="hljs-number">7</span>, num_words=<span class="hljs-literal">None</span>)<br>  words = [x[<span class="hljs-number">0</span>] <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> tpc]<br>  tw = <span class="hljs-string">' '</span>.join([str(i) + <span class="hljs-string">':'</span>] + words)<br>  topic_words.append(tw)<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">topic_words<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment"># show result</span><br>topics_docs = list()<br><span class="hljs-keyword">for</span> m <span class="hljs-keyword">in</span> ldamallet[doc_term_matrix[:<span class="hljs-number">1000</span>]]:<br>    topics_docs.append(m)<br><br>x = np.array(topics_docs[:<span class="hljs-number">1000</span>])<br>y = np.delete(x,<span class="hljs-number">0</span>,axis=<span class="hljs-number">2</span>)<br>y = y.squeeze()<br><br>best_topics = np.argmax(y, axis=<span class="hljs-number">1</span>)  <span class="hljs-comment"># 结果是一个分布</span><br>topics = list(best_topics)<br>topics = [topic_words[x] <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> topics]<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">clrs = random.sample(Turbo256, number_of_topics)<br>color_map = bmo.CategoricalColorMapper(factors=topic_words, palette=clrs)<br><br>list_x = out[:,<span class="hljs-number">0</span>]<br>list_y = out[:,<span class="hljs-number">1</span>]<br>desc = texts<br><br>source = ColumnDataSource(data=dict(x=list_x, y=list_y, desc=desc, topic=topics))<br>hover = HoverTool(tooltips=[<br>    (<span class="hljs-string">"index"</span>, <span class="hljs-string">"$index"</span>),<br>    (<span class="hljs-string">'desc'</span>, <span class="hljs-string">'@desc'</span>),<br>    (<span class="hljs-string">'topic'</span>, <span class="hljs-string">'@topic'</span>)<br>])<br><br>p = figure(plot_width=<span class="hljs-number">1200</span>, plot_height=<span class="hljs-number">600</span>, tools=[hover], title=<span class="hljs-string">"Test"</span>)<br>p.circle(<span class="hljs-string">'x'</span>, <span class="hljs-string">'y'</span>, size=<span class="hljs-number">10</span>, source=source,<br>         fill_color=transform(<span class="hljs-string">'topic'</span>, color_map),<br>         <span class="hljs-comment"># legend='topic'</span><br>)<br><span class="hljs-comment"># p.legend.location = "top_left"</span><br><span class="hljs-comment"># p.legend.click_policy="hide"</span><br><br>bpl.show(p)<br></code></pre></div></td></tr></table></figure>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/BERT_topic_analysis_pic/image-20210719222356216.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;">
+看上面的图表，由LDA重新识别的主题内文档不一定相互接近。
+与BERTopic是互补的，可以得到不同的主题表示。</p>
+<p>Bertopic在短文本这类可能只有一个主题的文本中表现较好，而LDA可以更好地处理主题组合较多的文本。
+两者可以互补，因此尝试两者都有意义。</p>
+<p>这和两者的原理是相关的，Bertopic是空间距离的聚类，LDA是统计层面的共现规律分析。</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment"># pyLDAvis可视化</span><br>!pip install -Uqq pyLDAvis==<span class="hljs-number">2.1</span><span class="hljs-number">.2</span><br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">gensimmodel = gensim.models.wrappers.ldamallet.malletmodel2ldamodel(ldamallet)<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> pyLDAvis<br><span class="hljs-keyword">import</span> pyLDAvis.gensim<br><br>pyLDAvis.enable_notebook()<br>p = pyLDAvis.gensim.prepare(gensimmodel, doc_term_matrix, dictionary)<br>p<br></code></pre></div></td></tr></table></figure>
+<p>ref: https://skok.ai/2021/05/27/Topic-Models-Introduction.html</p>
+<h3><span id="bertopic-详解">BERTopic 详解</span></h3>
+<p><a href="https://github.com/MaartenGr/BERTopic" target="_blank" rel="noopener">BERTopic</a>，利用BERT嵌入和c-TF-IDF来创建密集的集群，使话题易于解释，同时在话题描述中保留重要词汇。其核心步骤主要是做三件事：</p>
+<ul>
+<li>用基于BERT的Sentence Transformers提取语句嵌入</li>
+<li>通过UMAP和HDBSCAN，将文档嵌入进行聚类，语义相近的语句将聚集成簇群</li>
+<li>用c-TF-IDF提取主题词</li>
+</ul>
+<p>c-TF-IDF就是将一个主题下的所有文档连接在一起成为一个文档，在主题间计算TF-IDF的方法。</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br><span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd<br><span class="hljs-keyword">import</span> jieba<br><span class="hljs-keyword">import</span> umap<br><span class="hljs-keyword">import</span> hdbscan<br><span class="hljs-keyword">from</span> sentence_transformers <span class="hljs-keyword">import</span> SentenceTransformer<br><span class="hljs-keyword">from</span> sklearn.feature_extraction.text <span class="hljs-keyword">import</span> CountVectorizer<br><span class="hljs-keyword">from</span> sklearn.metrics.pairwise <span class="hljs-keyword">import</span> cosine_similarity<br><span class="hljs-keyword">from</span> tqdm <span class="hljs-keyword">import</span> tqdm<br><span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt<br><br><span class="hljs-comment"># import sys</span><br><span class="hljs-comment"># sys.setrecursionlimit(1000000)</span><br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment"># model = SentenceTransformer(r'my_pretrained_chinese_embeddings')</span><br><span class="hljs-comment"># embeddings = model.encode(data['review'].tolist(), show_progress_bar=True)</span><br><br><span class="hljs-comment">#### 降维</span><br>umap_embeddings = umap.UMAP(<br>      n_neighbors=<span class="hljs-number">25</span>,<br>      n_components=<span class="hljs-number">10</span>,<br>      min_dist=<span class="hljs-number">0.00</span>,<br>      metric=<span class="hljs-string">'cosine'</span>,<br>      random_state=<span class="hljs-number">2020</span>).fit_transform(embeddings)<br><br><br><span class="hljs-comment">#### 聚类</span><br><span class="hljs-comment"># 使用HDBSCAN来寻找高密簇</span><br>cluster = hdbscan.HDBSCAN(<br>      min_cluster_size=<span class="hljs-number">30</span>,<br>      metric=<span class="hljs-string">'euclidean'</span>,<br>      cluster_selection_method=<span class="hljs-string">'eom'</span>, <br>      prediction_data=<span class="hljs-literal">True</span>).fit(umap_embeddings)<br><br><br><span class="hljs-comment">#### c-TF-IDF</span><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">c_tf_idf</span><span class="hljs-params">(documents, m, ngram_range=<span class="hljs-params">(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>)</span>)</span>:</span><br>  my_stopwords =  [i.strip() <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> open(<span class="hljs-string">'stop_words_zh.txt'</span>,encoding=<span class="hljs-string">'utf-8'</span>).readlines()]<br><br>  count = CountVectorizer(<br>      ngram_range=ngram_range,                             <br>      stop_words= my_stopwords).fit(documents)<br><br>  t = count.transform(documents).toarray()<br><br>  w = t.sum(axis=<span class="hljs-number">1</span>)<br>  tf = np.divide(t.T, w)<br>  <br>  sum_t = t.sum(axis=<span class="hljs-number">0</span>)<br>  idf = np.log(np.divide(m, sum_t)).reshape(<span class="hljs-number">-1</span>, <span class="hljs-number">1</span>)<br>  <br>  tf_idf = np.multiply(tf, idf)<br>  <br>  <span class="hljs-keyword">return</span> tf_idf, count<br><br><br><span class="hljs-comment">####  主题归并</span><br><span class="hljs-comment"># 通过比较主题之间的c-TF-IDF向量，合并最相似的向量，最后重新计算c-TF-IDF向量来更新主题的表示</span><br></code></pre></div></td></tr></table></figure>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/NLP/">NLP</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/topic-model/">topic model</a>
+                    
+                      <a class="hover-with-bg" href="/tags/BERT/">BERT</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/372ecc5c.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Practical BERT</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/ff0063e5.html">
+                        <span class="hidden-mobile">Jacobi BP整理</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        loader: {
+          load: ['ui/lazy']
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>

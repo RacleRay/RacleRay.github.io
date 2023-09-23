@@ -1,0 +1,1168 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="记录预训练语言模型的一些总结，包括从ELMo到BERT再到XLNet的小结。没有细化，有点冗长。">
+  <meta name="author" content="江左时雨">
+  <meta name="keywords" content="机器学习,Machine Learning,自然语言处理,NLP,深度学习,Deep Learning,计算机,Coding,生活随笔">
+  <meta name="description" content="记录预训练语言模型的一些总结，包括从ELMo到BERT再到XLNet的小结。没有细化，有点冗长。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="文本表示进阶">
+<meta property="og:url" content="https://racleray.github.io/posts/ec2b8b1f.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="记录预训练语言模型的一些总结，包括从ELMo到BERT再到XLNet的小结。没有细化，有点冗长。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA%E8%BF%9B%E9%98%B6.assets/image-20200225154730458.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA%E8%BF%9B%E9%98%B6.assets/image-20200225155047368.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA%E8%BF%9B%E9%98%B6.assets/image-20200225160513753.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA%E8%BF%9B%E9%98%B6.assets/image-20200225161617614.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA%E8%BF%9B%E9%98%B6.assets/image-20200225163735959.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA%E8%BF%9B%E9%98%B6.assets/image-20200225162533301.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA%E8%BF%9B%E9%98%B6.assets/image-20200225162958568.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA%E8%BF%9B%E9%98%B6.assets/image-20200225171449837.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA%E8%BF%9B%E9%98%B6.assets/image-20200225171721324.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA%E8%BF%9B%E9%98%B6.assets/image-20200225171829882.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA%E8%BF%9B%E9%98%B6.assets/image-20200225172034586.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA%E8%BF%9B%E9%98%B6.assets/image-20200225173609647.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA%E8%BF%9B%E9%98%B6.assets/image-20200225175353963.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA%E8%BF%9B%E9%98%B6.assets/image-20200225175048788.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA%E8%BF%9B%E9%98%B6.assets/image-20200225164948350.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA%E8%BF%9B%E9%98%B6.assets/image-20200225165354702.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA%E8%BF%9B%E9%98%B6.assets/image-20200225165429652.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA%E8%BF%9B%E9%98%B6.assets/image-20200225165500944.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA%E8%BF%9B%E9%98%B6.assets/image-20200225180846077.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA%E8%BF%9B%E9%98%B6.assets/image-20200225180432672.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA%E8%BF%9B%E9%98%B6.assets/image-20200225181341481.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA%E8%BF%9B%E9%98%B6.assets/image-20200225183125560.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA%E8%BF%9B%E9%98%B6.assets/image-20200225183803276.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA%E8%BF%9B%E9%98%B6.assets/image-20200225184340110.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA%E8%BF%9B%E9%98%B6.assets/image-20200225184423666.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA%E8%BF%9B%E9%98%B6.assets/image-20200225184712741.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA%E8%BF%9B%E9%98%B6.assets/image-20200226210601999.png">
+<meta property="article:published_time" content="2020-07-06T15:29:30.000Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:31.046Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="BERT">
+<meta property="article:tag" content="representation">
+<meta property="article:tag" content="pretrained LM">
+<meta property="article:tag" content="XLNet">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA%E8%BF%9B%E9%98%B6.assets/image-20200225154730458.png">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>文本表示进阶 - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="文本表示进阶">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-07-06 23:29" pubdate>
+        2020年7月6日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      12k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      36 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">文本表示进阶</h1>
+            
+            <div class="markdown-body">
+              <h1><span id="文本表示进阶">文本表示进阶</span></h1>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示进阶.assets/image-20200225154730458.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​
+预训练过程是做图像或者视频领域的一种比较常规的做法，这种做法很有效，能明显促进应用的效果。</p>
+<p>​
+两种做法，一种是浅层加载的参数在训练C任务过程中不动，这种方法被称为“Frozen”;另外一种是底层网络参数尽管被初始化了，在C任务训练过程中仍然随着训练的进程不断改变，这种一般叫“Fine-Tuning”。</p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示进阶.assets/image-20200225155047368.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​
+用ImageNet来做网络的预训练，主要有两点，一方面ImageNet是图像领域里有很多事先标注好训练数据的数据集合，是个很大的优势，量越大训练出的参数越靠谱；另外一方面因为ImageNet有1000类，类别多，所以通用性好。</p>
+<p>​
+NLP相对图像的特点在于，词作为NLP的基本要素，比像素的抽象程度更高，已经加入了人类数万年进化而来的抽象经验。</p>
+<p>​ 预训练语言模型的优势在于：</p>
+<ol type="1">
+<li>近乎无限量的优质数据</li>
+<li>无需人工标注</li>
+<li>一次学习多次复用</li>
+<li>学习到的表征可在多个任务中进行快速迁移</li>
+</ol>
+<p>​ <strong>word2vec的问题</strong>：Word
+Embedding本质上是个静态的。不论新句子上下文单词是什么，这个单词的Word
+Embedding不会跟着上下文场景的变化而改变。这就是问题所在，多义性的消失。</p>
+<h2><span id="elmoembedding-fromlanguage-models">ELMo：Embedding from
+Language Models</span></h2>
+<p>​ ELMo采用了典型的两阶段过程，</p>
+<ul>
+<li>第一个阶段是利用语言模型进行预训练；</li>
+<li>第二个阶段是在做下游任务时，从预训练网络中提取对应单词的网络各层的Word
+Embedding作为新特征补充到下游任务中。</li>
+</ul>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示进阶.assets/image-20200225160513753.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<h3><span id="结构">结构</span></h3>
+<p>​ ELMo 为了利用无标记数据，使用了语言模型：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示进阶.assets/image-20200225161617614.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:50%;"></p>
+<p>​ 基本框架是一个双层的
+Bi-LSTM，不过在第一层和第二层之间加入了一个残差结构（一般来说，残差结构能让训练过程更稳定）。做预训练的时候，ELMo
+的训练目标函数为: <span class="math display">\[
+\sum_{k=1}^{N} \log p\left(t_{k} | t_{1}, \ldots, t_{k-1}\right)+\log
+p\left(t_{k} | t_{k+1}, \ldots, t_{N}\right)
+\]</span></p>
+<p>​ Bi-LSTM，一组正向，一组反向。<span class="math inline">\(t_k\)</span>之前的单词序列Context-before称为上文，之后的单词序列Context-after称为下文。</p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示进阶.assets/image-20200225163735959.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<h3><span id="输入层和输出层改进">输入层和输出层改进</span></h3>
+<p>​ ELMo 借鉴了 2016 年 Google Brain 的 Rafal Jozefowicz 等人发表的
+Exploring the Limits of Language Modeling。输入层和输出层不再是
+word，而是变为了一个 <strong>char-based CNN 结构</strong>。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示进阶.assets/image-20200225162533301.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:40%;"></p>
+<h4><span id="输出层">输出层：</span></h4>
+<p>​ 将CBOW中的普通softmax: <span class="math display">\[
+P\left(w_{t} | c_{t}\right)=\frac{\exp
+\left(e^{\prime}\left(w_{t}\right)^{T} x\right)}{\sum_{i=1}^{|V|} \exp
+\left(e^{\prime}\left(w_{i}\right)^{T} x\right)}, x=\sum_{i \in c}
+e\left(w_{i}\right)
+\]</span> ​ 转换为： <span class="math display">\[
+p\left(t_{k} | t_{1}, \ldots, t_{k-1}\right)=\frac{\exp \left(C N
+N\left(t_{k}\right)^{T} h\right)}{\sum_{i=1}^{|V|} \exp \left(C N
+N\left(t_{i}\right)^{T} h\right)}, h=L S T M\left(t_{k} | t_{1}, \ldots,
+t_{k-1}\right)
+\]</span> ​ char-based CNN
+模型是现成已有的，对于任意一个目标词都可以得到一个向量表示 CNN(<span class="math inline">\(t_k\)</span>) 。利用 CNN 解决有三点优势:</p>
+<blockquote>
+<ol type="1">
+<li>CNN 能减少做 Softmax 时全连接层中的必须要有的 |V|* h
+的参数规模，只需保持 CNN 内部的参数大小即可。 (PS: 卷积核参数共享)</li>
+<li>CNN 可以解决 OOV
+（Out-of-Vocabulary）问题，这个在翻译问题中尤其头疼</li>
+<li>在预测阶段，CNN 对于每一个词向量的计算可以预先做好，更能够减轻
+inference 阶段的计算压力。</li>
+</ol>
+</blockquote>
+<h4><span id="输入层">输入层：</span></h4>
+<p>​ 相似结构，不同输出。训练时间会略微增加，因为原来的 look-up
+操作可以做到更快一些。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示进阶.assets/image-20200225162958568.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:60%;"></p>
+<p>​ 句子中每个单词都能得到对应的三个Embedding:</p>
+<p>​ 最底层是单词的Word
+Embedding，往上走是第一层双向LSTM中对应单词位置的Embedding，这层编码单词的句法信息更多一些；再往上走是第二层LSTM中对应单词位置的Embedding，这层编码单词的语义信息更多一些。</p>
+<h4><span id="结果">结果：</span></h4>
+<p>​ 有三层的词向量可以利用：</p>
+<ul>
+<li><p>输入层 CNN 的输出，即是 LSTM 的输入向量，</p></li>
+<li><p>第一层 LSTM 的hidden
+state：这层编码单词的句法信息更多一些</p></li>
+<li><p>第二层的hidden state：这层编码单词的语义信息更多一些</p>
+<p>LSTM 是双向的，因此对于任意一个词，如果 LSTM 的层数为 L
+的话，总共可获得的向量个数为 2L+1。</p></li>
+</ul>
+<p>​ 对于每一个词，可以根据下面的式子得到它的向量，其中 γ 是一个 scale
+因子，加入这个因子主要是想将 ELMo
+的向量与具体任务的向量分布拉平到同一个分布水平： <span class="math display">\[
+\mathbf{E} \mathbf{L} \mathbf{M} \mathbf{o} k^{t a s k}=\gamma^{t a s k}
+\sum j= s_{j}^{t a s k} \mathbf{h}_{k, j}
+\]</span></p>
+<blockquote>
+<p><span class="math inline">\(\mathbf{h}_{k,
+j}\)</span>便是针对每一层的输出向量，利用一个 softmax
+的参数来学习不同层的权值参数<span class="math inline">\(s_{j}^{t a s
+k}\)</span>，因为不同任务需要的词语意义粒度也不一致，一般认为浅层的表征比较倾向于句法，而高层输出的向量比较倾向于语义信息。</p>
+<p>因此通过一个 softmax 的结构让任务自动去学习各层之间的权重。</p>
+</blockquote>
+<h3><span id="计算复杂度">计算复杂度</span></h3>
+<p>​ <strong>基于传统统计的 N-gram 还是普通神经网络的 NNLM
+结构</strong>，都会有一个很严重的问题，那就是计算复杂度随着上下文窗口 N
+大小的增大急剧上升。 N-gram 是指数上升；NNLM 是以 |d| × N
+的形式增加。</p>
+<p>​ <strong>CBOW 和 Skip-gram 以及再后来的 GloVe</strong>
+终于做到了计算复杂度与所选窗口大小无关，<strong>BUT</strong>只是预测单个词的计算时间复杂度，如果是求整个输入序列的话，还是避免不了要与序列长度相关。</p>
+<blockquote>
+<p>​ 这几种方法（N-gram, ...,
+GloVe），它们都受限于所使用的模型表征能力，<strong>某种意义上都只能得到比较偏上下文共现意义上的词向量，并且也很少考虑过词序对于词的意义的影响</strong>。</p>
+</blockquote>
+<p>​</p>
+<p>​ RNN 结构的计算复杂度：</p>
+<ol type="1">
+<li><p>纵向上主要是 RNN 结构本身的时间复杂度</p>
+<ol type="1">
+<li>RNN 结构内部的 hidden state 维度</li>
+<li>模型结构的复杂度</li>
+<li>在 ELMo
+中的话还跟词典大小相关（因为最后一层还是一个词典大小上的分类问题，以及输入也需要维护一个词典大小的
+loop up 操作）</li>
+</ol>
+<p>但是在机器性能提升的情况下，这一部分至少不是阻碍词向量技术发展的最关键的因素了</p></li>
+<li><p>横向上的计算复杂度，就主要是受制于输入序列的长度</p>
+<ol type="1">
+<li>RNN
+结构本身因为在时间序列上共享参数，其自身计算复杂度这一部分不变</li>
+<li>输入序列长度</li>
+</ol></li>
+</ol>
+<h2><span id="从词向量到句子向量">从词向量到句子向量</span></h2>
+<ul>
+<li>无监督句子表示：将句子表示成定长向量</li>
+<li>基线模型：word2vec</li>
+<li>模型：AE(Auto Encoder)，LM(language model)，Skip-Thoughts等
+<ul>
+<li>本身的信息</li>
+<li>上下文的信息</li>
+<li>任务的信息</li>
+</ul></li>
+</ul>
+<h3><span id="pv-dm-和-pv-dbow">PV-DM 和 PV-DBOW</span></h3>
+<p>​ PV-DM 的全称是 Distributed Memory Model of Paragraph Vectors：</p>
+<p>​
+类似CBOW，输入=&gt;&gt;文档向量+上下文向量；输出=&gt;&gt;下一个词向量。有新文档需要再走一遍训练流程</p>
+<p>​ PV-DBOW 的全称则是 Distributed Bag of Words version of Paragraph
+Vector</p>
+<p>​ 和 Skip-gram
+类似，通过文档来预测文档内的词，训练的时候，随机采样一些文本片段，然后再从这个片段中采样一个词，让
+PV-DBOW 模型来预测这个词。</p>
+<blockquote>
+<p>From Mikolov et al. experiment, <strong>PV-DM is consistently better
+than PV-DBOW</strong>.</p>
+<p><strong>Concatenation way is often better</strong> than sum/
+average.</p>
+</blockquote>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示进阶.assets/image-20200225171449837.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​ 问题：很难去表征词语之间的更丰富的语义结构</p>
+<h3><span id="skip-thoughts">Skip-thoughts</span></h3>
+<p>​ Skip-thoughts 直接在句子间进行预测，也就是将 Skip-gram
+中以词为基本单位，替换成了以句子为基本单位</p>
+<p>​
+具体做法就是选定一个窗口，遍历其中的句子，然后分别利用当前句子去预测和输出它的上一句和下一句</p>
+<blockquote>
+<p>对于句子的建模利用的 RNN 的 sequence
+结构，预测上一个和下一个句子时候，也是利用的一个 sequence 的 RNN
+来生成句子中的每一个词，所以这个结构本质上就是一个 Encoder-Decoder
+框架，只不过和普通框架不一样的是，Skip-thoughts 有两个 Decoder。</p>
+</blockquote>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示进阶.assets/image-20200225171721324.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<h3><span id="quick-thoughts">Quick-thoughts</span></h3>
+<p>​ 解决Skip-thoughts中RNN训练太慢的问题</p>
+<p>​ 把 Skip-thoughts
+的生成任务改进成为了一个<strong>分类任务</strong>，具体说来就是把同一个上下文窗口中的句子对标记为正例，把不是出现在同一个上下文窗口中的句子对标记为负例，并将这些句子对输入模型，让模型判断这些句子对是否是同一个上下文窗口中，很明显，这是一个分类任务。</p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示进阶.assets/image-20200225171829882.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<h3><span id="infersent">InferSent</span></h3>
+<p>​ 思想特别简单，先设计一个模型在斯坦福的 SNLI（Stanford Natural
+Language
+Inference）数据集上训练，而后将训练好的模型当做特征提取器，以此来获得一个句子的向量表示，再将这个句子的表示应用在新的分类任务上，来评估句子向量的优劣。</p>
+<p>​ 进行多任务学习，不同任务使得模型学习到不同特征的提取能力。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示进阶.assets/image-20200225172034586.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:60%;"></p>
+<h3><span id="general-purposesentence-representation">General Purpose
+Sentence Representation</span></h3>
+<p>​ 有很多相似的研究：</p>
+<p>​ Learning General Purpose Distributed Sentence Representations via
+Large Scale Multi-task
+Learning，就提出了利用四种不同的监督任务来联合学习句子的表征，这四种任务分别是：Natural
+Language Inference，Skip-thougts，Neural Machine Translation 以及
+Constituency Parsing 等</p>
+<p>​
+训练结束后，将<strong>模型的输出作为句子的表征</strong>（或者把这个联合学习的模型作为特征提取器），然后直接在这个表征上接上非常简单的全连接层做分类器，并且同时<strong>保证最底层的特征提取器中参数不动</strong>（也就是只把它当做特征提取器），再在新的分类任务上做训练（只训练最后接上的全连接层分类器），最后根据训练出来的简单分类器在各自分类任务的测试集上做评估。</p>
+<h3><span id="universal-sentence-encoder">Universal Sentence Encoder</span></h3>
+<p>​ 思路类似General Purpose Sentence
+Representation，只不过作者提出了利用 Transformer 和 DAN（上文提到过的和
+CBOW 相似， *<strong>Deep Unordered Composition Rivals Syntactic Methods
+for Text Classification*</strong>）两种框架作为句子的 Encoder。</p>
+<blockquote>
+<ul>
+<li>Transformer
+结构更为复杂，参数更多，训练也相对比较耗时，但是一般来说效果会更好一些。</li>
+<li>DAN
+结构简单，只有两个隐藏层（甚至可以减小为只需要一个隐藏层），参数比较少，训练相对比较省时省资源，但是一般来说效果会差一些（并不是绝对，论文中也发现某些场景下
+DAN 的效果甚至更好）。</li>
+</ul>
+</blockquote>
+<p>​
+作者既在无标记数据上训练，也在监督数据上训练，最后在十个分类任务上进行迁移学习的评估。</p>
+<p>​ 作者还放出了他们预训练好的
+Encoder，可以供迁移学习的句子特征提取器使用。</p>
+<blockquote>
+<p>预训练
+Encoder：https://tfhub.dev/google/universal-sentence-encoder/2</p>
+</blockquote>
+<h2><span id="ulmfit">ULMFit</span></h2>
+<p>​ <strong>Universal Language Model Fine-tuning for Text
+Classification</strong> 中，提出了ULMFit
+结构，其实这本质上是他们提出的一个方法，而不是具体的某种结构或模型。主要应用于文本分类问题中。</p>
+<p>​ ULMFiT 最终在分类任务上表现惊艳，尤其是只需要 100
+个标记数据，就能够学习到一个表现非常 comparable 的分类器。</p>
+<p>​ 和ELMo基本思路类似，也是预训练完成后在具体任务上进行
+finetune，但不同之处也有很多。</p>
+<p>​ 分为三个阶段：</p>
+<blockquote>
+<ul>
+<li>大规模预训练</li>
+<li>任务数据预训练</li>
+<li>接任务模型部分再次finetune</li>
+</ul>
+</blockquote>
+<p>​ <img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示进阶.assets/image-20200225173609647.png" srcset="/img/loading.gif" lazyload alt="image"></p>
+<h3><span id="averaged-sgd">Averaged SGD</span></h3>
+<p>​ Averaged SGD 是指先将模型训练到一定
+epoch，然后再将其后的每一轮权值进行平均后，得到最终的权值。 <span class="math display">\[
+w_{k+1}=w_{k}-\gamma_{k} \nabla f\left(w_{k}\right)
+\]</span> 变成 <span class="math display">\[
+w=\frac{1}{K-T+1} \sum_{i=T}^{K} w_{i}
+\]</span></p>
+<blockquote>
+<p>​ T 是一个阈值，而 K
+是总共的迭代次数，这个式子的意思就是<strong>把迭代到第 T
+次之后，对该参数在其后的第 T
+轮到最后一轮之间的所有值求平均，从而得到最后模型的该参数值</strong>。</p>
+</blockquote>
+<h3><span id="dropconnect">DropConnect</span></h3>
+<p>​ LSTM
+上一个时刻和下一个时刻之间的隐藏层之间是有连接的，并且这个连接通过一个全连接的矩阵相连，而这个模型则用了
+DropConnect 的方法随机 drop
+掉一些连接，从而减少了一些过拟合的风险，当然在输入层到隐藏层之间也有正常的
+dropout 操作。</p>
+<h3><span id="微调的技巧两次-finetune">微调的技巧(两次 finetune)</span></h3>
+<h4><span id="1-discriminative-fine-tune">1. discriminative fine-tune</span></h4>
+<p>​ 不同层在训练更新参数的时候，赋予不同的学习率。</p>
+<p>​
+不同层的表征有不同的物理含义，比如浅层偏句法信息，高层偏语义信息，因此对于不同层的学习率不同。
+<span class="math display">\[
+\theta_{t}^{l}=\theta_{t-1}^{l}+\eta^{l} \nabla_{\theta^{l}} J(\theta)
+\]</span></p>
+<p><span class="math display">\[
+\eta^{l-1}=\frac{\eta^{l}}{2.6}
+\]</span></p>
+<h4><span id="2-slanted-triangularlearning-rates">2. slanted triangular
+learning rates</span></h4>
+<blockquote>
+<ol type="1">
+<li>在 finetune
+的第一阶段，希望能够先稳定住原来已经在大规模语料集上预训练好的参数，
+选择比较小的 finetune 学习率</li>
+<li>后逐步加大学习率，使得学习过程能够尽量快速。</li>
+<li>当训练接近尾声时，逐步减小学习率，这样让模型逐渐平稳收敛。</li>
+</ol>
+<p>计算：</p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示进阶.assets/image-20200225175353963.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>T -- the number of training iterations； cut_frac -- the fraction of
+iterations we increase lr； cut -- the iteration when we switch
+fromincreasing to decreasing the lr; p -- the fraction ofthe number of
+iterations we have increased or willdecrease the LR respectively; ratio
+-- specifies how much smaller the lowest lr is from the maximum lr <span class="math inline">\(η_{max}\)</span></p>
+<p>一般取：cut_frac= 0.1, ratio= 32 and <span class="math inline">\(η_{max}\)</span>= 0.01</p>
+</blockquote>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示进阶.assets/image-20200225175048788.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<h3><span id="gradual-unfreezing">gradual unfreezing</span></h3>
+<p>​ 预训练模型在新任务上 finetune 时，<strong>逐层解冻模型</strong>，先
+finetune 最后一层，然后再解冻倒数第二层，把倒数第二层和最后一层一起
+finetune，然后再解冻第三层。以此类推，逐层往浅层推进，最终 finetune
+整个模型或者终止到某个中间层。这样做的目的也是为了 finetune
+过程能够更平稳。</p>
+<h2><span id="transformer">Transformer</span></h2>
+<p>​ 因为 Self-attention 的存在，才使得 Transformer
+在做类似翻译问题的时候，可以让其 Encoder
+不用做序列输入，而是将整个序列一次全输入，并且超长序列的输入也变得可能。而具体到
+Self-attention 中，可以用下图表示。<a href="https://jalammar.github.io/illustrated-transformer/" target="_blank" rel="noopener">优质Blog</a></p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示进阶.assets/image-20200225164948350.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​ Self-attention
+中的<strong>多头机制</strong>便是将这样的操作分别进行多次，让句子的表征充分学习到不同的侧重点，最终将这些多头学习出来的表征
+concat 到一起，然后再同一个全连接网络，便可以得到这个句子最终
+Self-attention 下新的表示。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示进阶.assets/image-20200225165354702.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:67%;"></p>
+<blockquote>
+<p>​ 训练时： Decoder 中的输入可以用矩阵形式一次完成当前整个序列的 decode
+过程，因为 ground truth 已经提前知道，只需做好每个词的 mask 就好</p>
+<p>​ inference 的时候：Decoder
+必须按照序列输入，因为在生成每一个词的时候，必须先生成它的前一个词，无法一次将整个序列全部生成</p>
+</blockquote>
+<p>Decoder 的 attention 实际包含两部分：</p>
+<ol type="1">
+<li>第一部分是带有 mask 的 Self-attention，通过 mask 将 decode 阶段的
+attention 限定只会 attention 到已经生成过的词上，因此叫做 Mask
+Self-attention。</li>
+<li>第二部分是普通的 Self-attention 操作，不过这时的 K 和 V
+矩阵已经替换为 Encoder 的输出结果，所以本质上并非一个
+Self-attention。</li>
+</ol>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示进阶.assets/image-20200225165429652.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​ 结构展示：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示进阶.assets/image-20200225165500944.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:75%;"></p>
+<p>​ <a href="https://github.com/RacleRay/DeepLearningFoundation/blob/master/2.0-Transformer.ipynb" target="_blank" rel="noopener">Code</a></p>
+<h2><span id="gpt">GPT</span></h2>
+<p>​ GPT 使用的 Transformer 是只用了
+Decoder，因为对于语言模型来讲，确实不需要 Encoder 的存在。</p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示进阶.assets/image-20200225180846077.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​ 要做超长的序列输入（可以长达 11000
+个词），为了能够高效节省时间和内存的处理如此长的序列，做了一些
+Memory-Compressed 工作，主要是两方面：</p>
+<blockquote>
+<ol type="1">
+<li>通过 CNN 操作，把 K 和 V 压缩到序列长度更小的一个矩阵，同时保持 Q
+不变，这样也能在相当程度上减少计算量</li>
+<li>把一个 batch 内部的序列按长度进行分组，然后分别在每个组内部进行
+self-attention 操作，避免将一些很短的句子也 padding
+到整个语料的最大长度；</li>
+</ol>
+</blockquote>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示进阶.assets/image-20200225180432672.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​ 利用语言模型的目标函数预训练完成后，便可以在具体任务上进行
+finetune，和 ULMFiT 中的 finetune 分为两个阶段的方法不一样的是，GPT
+直接把这两个过程糅合到一个目标函数中： <span class="math display">\[
+L_{3}(C)=L_{2}(C)+\lambda L_{1}(C)
+\]</span> ​ 其中 L2 是 task-specific 的目标函数， L1
+则是语言模型的目标函数。论文中说这种联合学习方式能够让训练效果更好。</p>
+<p>改造任务类型：</p>
+<ul>
+<li>分类问题：直接在原序列的开始和末尾添加表示开始和末尾的符号，</li>
+<li>Text Entailment 问题：将 Premise 和 Hypothesis
+通过一个中间分隔符“$”连接起来成为一个序列，然后同样在开头和末尾添加标记符号。</li>
+<li>文本相似问题：因为序列 1 和序列 2
+没有先后关系，因此将先后关系相反的两个序列作为输入。</li>
+<li>Question Aswering ：将 query 和每个候选的 answer
+都分别连接成一个序列作为输入，最后按各自的打分进行排序。</li>
+</ul>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示进阶.assets/image-20200225181341481.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​ 对输入数据结构进行一定处理。</p>
+<h2><span id="bert">BERT</span></h2>
+<p>​ Bidirectional Encoder Representation from
+Transformers，进一步完善和扩展了 GPT 中设计的通用任务框架，使得 BERT
+能够支持包括：句子对分类任务、单句子分类任务、阅读理解任务和序列标注任务。</p>
+<h3><span id="模型特点">模型特点</span></h3>
+<h4><span id="1-利用了真双向的-transformer">1. 利用了真双向的 Transformer</span></h4>
+<ul>
+<li><p>Encoder 中用了 Self-attention
+机制，而这个机制会将每一个词在整个输入序列中进行加权求和得到新的表征<br>
+</p></li>
+<li><p>更多的 transformer 的 block（意味着经过更多
+Self-attention），那么互相交融的程度将会更高（Base 模型是 12层，Large
+模型是 24层）<br>
+</p></li>
+<li><p>Large 版本 BERT 的多头机制中 Head 个数多达 16
+个，多种关系的学习</p></li>
+<li><p>ELMo 与 GPT 本质上还是一个单向的模型，ELMo
+稍微好一点，将两个单向模型的信息 concat起 来。GPT 则只用了单向模型，
+Decdoer
+的天生基因决定的。显然句子中有的单词的语义会同时依赖于它左右两侧的某些词，仅仅从单方向做encoding是不能描述清楚的。</p></li>
+</ul>
+<h4><span id="2-mask-lm-mask-languagemodel">2. Mask-LM (Mask-Language
+Model)</span></h4>
+<p>​ 将单向预测的LM改变为双向的LM，预测目标变为什么？</p>
+<p>​ 为了利用双向信息，改进了普通语言模型成为完形填空式的 Mask-LM
+(Mask-Language Model)，随机选取15%的词进行Mask，然后预测。</p>
+<blockquote>
+<ul>
+<li>输入序列依然和普通Transformer保持一致，只不过把挖掉的一个词用"[MASK]"替换</li>
+<li>输出层在被挖掉的词位置，接一个分类层做词典大小上的分类问题，得到被
+mask 掉的词概率大小</li>
+</ul>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示进阶.assets/image-20200225183125560.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:67%;"></p>
+<p>​ BERT 针对如何做“[MASK]”，做了一些更深入的研究，它做了如下处理：</p>
+<blockquote>
+<ol type="1">
+<li><p>选取语料中所有词的 15% 进行随机 mask；</p></li>
+<li><p>选中的词在 80% 的概率下被真实 mask；</p></li>
+<li><p>选中的词在 10% 的概率下不做
+mask，而被随机替换成其他一个词；</p></li>
+<li><p>选中的词在 10% 的概率下不做 mask，仍然保留原来真实的词。</p></li>
+</ol>
+</blockquote>
+<h4><span id="3-next-sentenceprediction-任务学习句子级别信息">3. Next Sentence
+Prediction 任务学习句子级别信息</span></h4>
+<p>​
+具体做法则是将两个句子组合成一个序列，组合方式会按照下面将要介绍的方式，然后让模型预测这两个句子是否为先后近邻的两个句子，也就是会把"Next
+Sentence Prediction"问题建模成为一个二分类问题。</p>
+<p>​ 句子级负采样：</p>
+<p>​ 训练的时候，数据中有 50% 的情况这两个句子是先后关系，而另外 50%
+的情况下，这两个句子是随机从语料中凑到一起的，也就是不具备先后关系，以此来构造训练数据。</p>
+<p>​ Multi-task:</p>
+<p>​ 在预训练阶段，因为有两个任务需要训练：Mask-LM 和 Next Sentence
+Prediction</p>
+<h3><span id="输入表示">输入表示</span></h3>
+<p>​ <img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示进阶.assets/image-20200225183803276.png" srcset="/img/loading.gif" lazyload alt="image"></p>
+<ul>
+<li>起始标记都用“[CLS]”来表示，结束标记符用"[SEP]"表示，对于两个句子的输入情况，除了起始标记和结束标记之外，两个句子间通过"[SEP]"来进行区分。</li>
+<li>用两个向量表示当前是句子 A 或句子 B 的。引入了“segment
+embedding”的概念来区分句子。</li>
+<li>引入序列中词的位置信息，也用了 position
+embedding。和Transformer的sin、cos函数编码不同，直接去<strong>训练了一个position
+embedding</strong>。给每个位置词一个随机初始化的词向量，再训练。</li>
+</ul>
+<p>[CLS]作为句子/句对的表示是直接跟分类器的输出层连接的。</p>
+<h3><span id="下游任务">下游任务</span></h3>
+<p>​ NLP的四大任务：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示进阶.assets/image-20200225184340110.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:40%;"></p>
+<ol type="1">
+<li>对于<strong>单序列文本分类任务和序列对的文本分类任务</strong>使用框架基本一致，利用
+Encoder 最后一层的第一个时刻“[CLS]”对应的输出作为分类器的输入</li>
+<li>对于 <strong>SQuAD 1.1
+任务</strong>来说，需要在给定段落中找到正确答案所在区间，这段区间通过一个起始符与终止符来进行标记</li>
+<li><strong>序列标注任务</strong>上进行 finetune，对于序列中的每个 token
+而言，实际上就是一个分类任务。和前面提到的普通分类任务不一样的是，这里的分类需要针对序列中的每个词做分类，参数增加在
+H × K ，这里的 K 是序列标注中标注的种类个数。</li>
+<li>对于 SWAG
+任务来讲，因为需要在给定一个句子后，从四个候选句子中选择一个最有可能是该句子的下一个句子，这里面通常包含了一些常识推理。将前置句子和四个候选句子分别进行组合成一个句子对,
+给每一个候选句子进行打分，从而得到四个候选句子中最有可能是下一个的句子。</li>
+</ol>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示进阶.assets/image-20200225184423666.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​ 对比参数及训练</p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示进阶.assets/image-20200225184712741.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<h2><span id="xlnet">XLNet</span></h2>
+<p>​
+在两阶段新模式（预训练+Finetuning）下，应该会有更多的好工作涌现出来。根本原因在于：这个模式的潜力还没有被充分挖掘，貌似还有很大的提升空间。</p>
+<p>​ XLNet引入了自回归语言模型以及自编码语言模型的方法。</p>
+<h3><span id="自回归语言模型autoregressivelm">自回归语言模型（Autoregressive
+LM）</span></h3>
+<p>​
+自左向右预测下一个词的语言模型任务，或者反过来自右向左，这种类型的LM被称为自回归语言模型。</p>
+<p>​ GPT
+就是典型的自回归语言模型。ELMo是分别有两个方向的自回归LM，然后把LSTM的两个方向的隐节点状态拼接到一起，体现双向语言模型。其实是两个自回归语言模型的拼接，本质上仍然是自回归语言模型。</p>
+<h4><span id="优点">优点</span></h4>
+<ol type="1">
+<li>下游NLP任务有关，比如生成类NLP任务，文本摘要，机器翻译等，在实际生成内容的时候，就是从左向右的，自回归语言模型天然匹配这个过程。</li>
+<li>Bert这种DAE模式，在生成类NLP任务中，就面临训练过程和推断过程（没有Mask）不一致的问题，导致生成类的NLP任务到目前为止都做不太好。</li>
+</ol>
+<blockquote>
+<p>PS：</p>
+<ol type="1">
+<li>DAE（DA Enhanced），Denoising
+Autoencoder：那些被Mask掉的单词就是在输入侧加入的所谓噪音。类似Bert这种预训练模式，被称为DAE
+LM</li>
+<li>AoA, 层叠式注意力机制（Attention-over-Attention）</li>
+</ol>
+</blockquote>
+<h4><span id="缺点">缺点</span></h4>
+<p>​
+只能利用上文或者下文的信息，不能同时利用上文和下文的信息，但是这在sequence
+inference这类任务中却更符合实际。ELMo这种双向都做，因为融合模式过于简单，所以效果其实并不是太好。</p>
+<blockquote>
+<p>​ GPT 2.0的作者却坚持沿用GPT 1.0
+单向语言模型的旧瓶，装进去了更高质量更大规模预训练数据的新酒。</p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示进阶.assets/image-20200226210601999.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​
+而它的实验结果也说明了，如果想改善预训练语言模型，走这条扩充预序列模型训练数据的路子，是个多快好但是不省钱的方向。</p>
+</blockquote>
+<h3><span id="自编码语言模型autoencoderlm">自编码语言模型（Autoencoder
+LM）</span></h3>
+<p>​ DAE
+LM的优缺点正好和自回归LM反过来，它能比较自然地融入双向语言模型。</p>
+<p>​
+Bert的缺点，主要在输入侧引入[Mask]标记，导致预训练阶段和Fine-tuning阶段不一致的问题，因为Fine-tuning阶段是看不到[Mask]标记的。</p>
+<p>​ XLNet的出发点就是：</p>
+<blockquote>
+<ol type="1">
+<li>能否融合自回归LM和DAE LM两者的优点。</li>
+<li>另外一个是，Bert在第一个预训练阶段，假设句子中多个单词被Mask掉，这些<strong>被Mask掉的单词之间没有任何关系，是条件独立的</strong>，而有时候这些单词之间是有关系的，XLNet则考虑了这种关系</li>
+</ol>
+</blockquote>
+<p>​ XLNet共有三个因素：</p>
+<ol type="1">
+<li>Permutation Language
+Model(简称PLM)：将双向信息学习方式，由预测[Mask]，变成对序列进行全排列，根据每种可能排序由前t
+- 1个词预测第t个词。来融入双向语言模型。</li>
+<li>引入了Transformer-XL：相对位置编码以及分段RNN机制。相对位置编码关注相对位置偏差。分段RNN机制，将长文本划分为较短的文本输入transformer，将transformer单元作为RNN的cell，进行RNN方式的序列运算连接。</li>
+<li>增加了预训练阶段使用的数据规模：Bert使用的预训练数据是BooksCorpus和英文Wiki数据，大小13G。XLNet除了使用这些数据外，另外引入了Giga5，ClueWeb以及Common
+Crawl数据，并排掉了其中的一些低质量数据，大小分别是16G,19G和78G。可以看出，在预训练阶段极大扩充了数据规模，并对质量进行了筛选过滤。</li>
+</ol>
+<p>​
+对于长文档的应用，Bert因为<strong>Transformer天然对长文档任务处理有弱点</strong>，所以XLNet对于长文档NLP任务相比Bert应该有直接且比较明显的性能提升作用，它在论文中也证明了这点。</p>
+<h2><span id="总结">总结</span></h2>
+<p>​ 如何使用这些预训练好的模型。一般来说，可以有三种方式来使用：</p>
+<ol type="1">
+<li><p>将预训练模型当做一个特征提取器，直接将预训练模型的输出层去掉，然后使用去掉输出层之后的最后一层输出作为特征，输入到我们自己精心设计好的
+Task-specific 模型中去。</p>
+<blockquote>
+<div class="hljs code-wrapper"><pre><code>   在训练过程中，作为特征提取器的部分（比如 BERT Encoder）的参数是不变的。</code></pre></div>
+</blockquote></li>
+<li><p>将预训练模型整体接入 Task-specific
+模型，继而重新在新的数据集上整体重新训练。</p>
+<blockquote>
+<div class="hljs code-wrapper"><pre><code>   当然训练技巧可以有很多种，比如 ULMFiT 的三角学习率和逐层解冻或者是 Transformer 的 warmup 策略（上文都有提到），这些训练技巧非常重要，需要好好把控，否则很容易学崩了，甚至让原有预训练语言模型的优势都被新的 finetune 抹去了，因此需要实验设计一个比较好的 finetune 策略。</code></pre></div>
+</blockquote></li>
+<li><p>保留预训练模型的一部分，另外一部分则和 Task-specific 模型一起
+finetune。</p>
+<blockquote>
+<div class="hljs code-wrapper"><pre><code>   训练数据不算太多的情况，这个时候一方面要保证预训练模型在大规模语料上曾经学习到的表征，另一方面因为又要做新数据下的迁移，但是数据量比较少，重新 finetune 整个模型可能不太合适，容易导致模型的鲁棒性不高，那么似乎选择最后的一些层进行选择性的 finetune 会是比较好的方案</code></pre></div>
+</blockquote></li>
+</ol>
+<p>​ 以 BERT
+为代表的模型，简单粗暴，与人类语言习得过程中的轻量、泛化和低功耗截然相反。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/NLP/">NLP</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/BERT/">BERT</a>
+                    
+                      <a class="hover-with-bg" href="/tags/representation/">representation</a>
+                    
+                      <a class="hover-with-bg" href="/tags/pretrained-LM/">pretrained LM</a>
+                    
+                      <a class="hover-with-bg" href="/tags/XLNet/">XLNet</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/f4b85348.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">文本分类传统机器学习方法</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/2af352b4.html">
+                        <span class="hidden-mobile">文本表示</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        loader: {
+          load: ['ui/lazy']
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>

@@ -1,0 +1,700 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="记录从多输入单pattern文本匹配算法KMP，到多输入多pattern文本匹配算法AC自动机。">
+  <meta name="author" content="江左时雨">
+  <meta name="keywords" content="机器学习,Machine Learning,自然语言处理,NLP,深度学习,Deep Learning,计算机,Coding,生活随笔">
+  <meta name="description" content="记录从多输入单pattern文本匹配算法KMP，到多输入多pattern文本匹配算法AC自动机。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="字符串匹配从KMP到AC自动机">
+<meta property="og:url" content="https://racleray.github.io/posts/51024bbf.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="记录从多输入单pattern文本匹配算法KMP，到多输入多pattern文本匹配算法AC自动机。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/KMP_pic/image-20210227193218134.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/KMP_pic/image-20210227193710919.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/KMP_pic/image-20210227193736017.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/KMP_pic/image-20210227193758057.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/KMP_pic/image-20210227193848847.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/KMP_pic/image-20210227193946401.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/KMP_pic/image-20210227200042977.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/KMP_pic/image-20210227203239999.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/KMP_pic/image-20210227204247991.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/KMP_pic/image-20210227204406853.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/KMP_pic/image-20210227204848941.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/KMP_pic/image-20210227205003068.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/KMP_pic/image-20210227220403902.png">
+<meta property="article:published_time" content="2021-02-27T15:21:03.000Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:31.040Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="algorithm">
+<meta property="article:tag" content="kmp">
+<meta property="article:tag" content="trie">
+<meta property="article:tag" content="Aho-Corasick">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/KMP_pic/image-20210227193218134.png">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>字符串匹配从KMP到AC自动机 - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="字符串匹配从KMP到AC自动机">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-02-27 23:21" pubdate>
+        2021年2月27日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      6k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      19 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">字符串匹配从KMP到AC自动机</h1>
+            
+            <div class="markdown-body">
+              <h2><span id="knuth-morris-pratt"><strong>Knuth-Morris-Pratt</strong></span></h2>
+<p>在一个字符串<code>S</code>内查找一个词<code>W</code>的出现位置。KMP目的是什么？比如是暴力匹配（两个for循环）最坏的情况，O(m*n)：</p>
+<figure class="highlight avrasm"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs avrasm"><span class="hljs-symbol">S:</span> aaaaaaaaaaaaaa<br><span class="hljs-symbol">W:</span> aaab<br></code></pre></div></td></tr></table></figure>
+<p>想法，不匹配就只是个结果，没有其它信息产生吗？显然，如果有一部分匹配，后续搜索应该可以利用。</p>
+<p>怎么利用？</p>
+<p>首先，有一部分匹配，才可以操作，才有多的信息嘛。</p>
+<p>那么，目的就是保证已经匹配的部分，在S中，不再重复匹配。</p>
+<figure class="highlight avrasm"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs avrasm"><span class="hljs-symbol">S:</span> aaaaaababaaaaa<br><span class="hljs-symbol">W:</span> ababc<br></code></pre></div></td></tr></table></figure>
+<p>比如，上例，abab匹配，c不匹配，重新回退4个位置匹配吗？W的信息我们是知道的，这末端abc不匹配，里面还有aba啊，并且从S当前匹配的信息，发现aba，已经再次匹配，S的指针不需要回退！</p>
+<p>现在的问题，是W的信息怎么表示？需要什么信息？部分子串前缀和后缀相同的信息。</p>
+<p>只需要一个数组，告诉我们，当出现不匹配字符时，可以跳过那些重复的一定会再次匹配的部分。</p>
+<p>现在，问题就是：找到 W 对应的回退数组N，顺序匹配 S 与 W，按照 N
+的信息回退。</p>
+<p>时间复杂度：O(|S|+|W|)</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;vector&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;string&gt;</span></span><br><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">get_backoff</span><span class="hljs-params">(<span class="hljs-built_in">string</span> &amp;pattern, <span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; &amp;book)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>, j = <span class="hljs-number">0</span>; i &lt; (<span class="hljs-keyword">int</span>)pattern.<span class="hljs-built_in">size</span>(); i++)<br>    &#123;<br>        <span class="hljs-keyword">while</span> (j &amp;&amp; pattern[i] != pattern[j])<br>        &#123;<br>            <span class="hljs-comment">// 不匹配，回退到上一个相同前缀</span><br>            j = book[j - <span class="hljs-number">1</span>];<br>        &#125;<br>        <span class="hljs-comment">// 匹配，更新相同的前缀的最后一个index</span><br>        <span class="hljs-keyword">if</span> (pattern[i] == pattern[j])<br>            j++;<br><br>        <span class="hljs-comment">// 更新book，记录相同的前缀的最后一个index</span><br>        book[i] = j;<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">kmp</span><span class="hljs-params">(<span class="hljs-built_in">string</span> &amp;s, <span class="hljs-built_in">string</span> &amp;p, <span class="hljs-keyword">int</span> <span class="hljs-built_in">begin</span>)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">int</span> res = <span class="hljs-number">-1</span>;<br>    <span class="hljs-function"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; <span class="hljs-title">book</span><span class="hljs-params">(p.<span class="hljs-built_in">size</span>())</span></span>;<br><br>    get_backoff(p, book);<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-built_in">begin</span>, j = <span class="hljs-number">0</span>; i &lt; (<span class="hljs-keyword">int</span>)s.<span class="hljs-built_in">size</span>(); ++i)<br>    &#123;<br>        <span class="hljs-keyword">while</span> (j &amp;&amp; s[i] != p[j]) <span class="hljs-comment">// 回退p</span><br>            j = book[j - <span class="hljs-number">1</span>];<br>        <span class="hljs-keyword">if</span> (s[i] == p[j])<br>            j++;<br>        <span class="hljs-keyword">if</span> (j == (<span class="hljs-keyword">int</span>)p.<span class="hljs-built_in">size</span>())<br>        &#123;<br>            res = i - p.<span class="hljs-built_in">size</span>() + <span class="hljs-number">1</span>;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> res;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> *argv[])</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-built_in">string</span> s = <span class="hljs-string">"abskajakajkafkkakaj"</span>;<br>    <span class="hljs-built_in">string</span> p = <span class="hljs-string">"kkakaj"</span>;<br><br>    <span class="hljs-built_in">string</span> pre = <span class="hljs-string">"abskajakajkaf"</span>;<br><br>    <span class="hljs-built_in">cout</span> &lt;&lt; kmp(s, p, <span class="hljs-number">0</span>) &lt;&lt; <span class="hljs-built_in">endl</span>;<br>    <span class="hljs-built_in">cout</span> &lt;&lt; pre.<span class="hljs-built_in">size</span>() &lt;&lt; <span class="hljs-built_in">endl</span>;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h2><span id="trie前缀树或字典树">Trie前缀树或字典树</span></h2>
+<p>从头到尾，使用输入串中的一个字符来确定要进入的下一个状态。选择标记有相同字符的边缘以行走。每一步都消耗一个字符。</p>
+<p>一个节点的所有子孙都有相同的前缀，也就是这个节点对应的字符。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/KMP_pic/image-20210227193218134.png" srcset="/img/loading.gif" lazyload alt style="zoom:50%;"></p>
+<p>有什么强的？</p>
+<p>从根到叶遍历所需的时间不取决于数据库的大小，而是与键的长度成比例。因此，在一般情况下，它通常比B树或任何基于比较的索引方法快得多。它的时间复杂度与哈希技术相当。</p>
+<p>除了效率外，在拼写错误的情况下，trie还提供了搜索最近路径的灵活性。</p>
+<p>能做什么？</p>
+<p>多patttern匹配</p>
+<p>比如，你有<strong>很多个pattern</strong>，要同时在一个string
+s中查找，是否出现。使用Trie保存pattern，作为索引，在string中搜索，可以加快效率。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/KMP_pic/image-20210227193710919.png" srcset="/img/loading.gif" lazyload alt style="zoom:50%;"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/KMP_pic/image-20210227193736017.png" srcset="/img/loading.gif" lazyload alt style="zoom:40%;"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/KMP_pic/image-20210227193758057.png" srcset="/img/loading.gif" lazyload alt style="zoom:40%;"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/KMP_pic/image-20210227193848847.png" srcset="/img/loading.gif" lazyload alt style="zoom:40%;"></p>
+<p>。。。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/KMP_pic/image-20210227193946401.png" srcset="/img/loading.gif" lazyload alt style="zoom:40%;"></p>
+<blockquote>
+<p>brute force需要 O(|Text| *|Patterns|)</p>
+<p>Trie需要 O(|Text| * |Len of Longest Pattern|) 加上构造 Trie 的
+O(|Patterns|)。</p>
+<p>需要额外空间复杂度，O(|Patterns|)。</p>
+</blockquote>
+<p>怎么实现？</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/KMP_pic/image-20210227200042977.png" srcset="/img/loading.gif" lazyload alt style="zoom:30%;"></p>
+<p>最基础的实现方式如上图。实现：</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;bits/stdc++.h&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;<br><br><span class="hljs-keyword">int</span> trie[STACSIZE][N]; <span class="hljs-comment">//手动开辟栈空间</span><br><span class="hljs-comment">// 或者</span><br><span class="hljs-comment">// vector&lt;map&lt;char,int&gt;&gt; trie[STACSIZE][N]; //手动开辟栈空间</span><br><span class="hljs-comment">// 或者</span><br><span class="hljs-comment">// vector&lt;unordered_map&lt;char,int&gt;&gt; trie[STACSIZE][N]; //手动开辟栈空间</span><br><br><span class="hljs-keyword">int</span> counts[STACSIZE];  <span class="hljs-comment">//计数</span><br><span class="hljs-keyword">int</span> idx = <span class="hljs-number">0</span>;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">insert</span><span class="hljs-params">(<span class="hljs-built_in">string</span> &amp;s)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">int</span> p = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; s.<span class="hljs-built_in">size</span>(); i++)<br>    &#123;<br>        <span class="hljs-keyword">int</span> c = s[i] - <span class="hljs-string">'a'</span>;<br>        <span class="hljs-keyword">if</span> (trie[p][c] == <span class="hljs-number">0</span>)<br>            trie[p][c] = ++idx; <span class="hljs-comment">//没有节点，创造节点，指定在栈空间的位置</span><br>        p = trie[p][c];         <span class="hljs-comment">//更新当前位置，进入c节点</span><br>    &#125;<br>    counts[p]++; <span class="hljs-comment">//更新计数</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">query</span><span class="hljs-params">(<span class="hljs-built_in">string</span> &amp;s)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">int</span> p = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; s.<span class="hljs-built_in">size</span>(); i++)<br>    &#123;<br>        <span class="hljs-keyword">int</span> c = s[i] - <span class="hljs-string">'a'</span>;<br>        <span class="hljs-keyword">if</span> (!trie[p][c])<br>            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>        p = trie[p][c];<br>    &#125;<br>    <span class="hljs-keyword">return</span> counts[p];<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> **argv)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; i++)<br>    &#123;<br>        <span class="hljs-built_in">string</span> s;<br>        <span class="hljs-built_in">cin</span> &gt;&gt; s;<br>        insert(s);<br>    &#125;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; i++)<br>    &#123;<br>        <span class="hljs-built_in">string</span> s;<br>        <span class="hljs-built_in">cin</span> &gt;&gt; s;<br>        <span class="hljs-built_in">cout</span> &lt;&lt; query(s) &lt;&lt; <span class="hljs-built_in">endl</span>;<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>以上方法，就空间使用而言，这是相当奢侈的，因为在trie中，大多数节点只有几个分支，而大多数表单元格为空白。更紧凑的方案是使用链表存储每个状态的转换。但是由于是线性搜索，导致访问速度变慢。</p>
+<p>因此，大佬设计出了快速访问的表压缩技术来解决该问题。</p>
+<p>Double-Array
+Trie：包含base和check两个数组。base数组的每个元素表示一个Trie节点，即一个状态
+；check数组表示某个状态的前驱状态。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/KMP_pic/image-20210227203239999.png" srcset="/img/loading.gif" lazyload alt style="zoom:50%;"></p>
+<p>示意图所示，构造两个数组，一个base对应一个前驱check。</p>
+<p>一步状态转移逻辑为：</p>
+<blockquote>
+<p>t := base [ s ] + c ;</p>
+<p>如果 check[ t ] = s， 则 next s := t</p>
+<p>如果 check[ t ] = -s， 则 next s := t 且 t
+是一个终止状态（比如表示一个词的结尾）</p>
+<p>否则 转移失败</p>
+</blockquote>
+<p>实现，就暂时不研究了。</p>
+<h3><span id="more-about-多个pattern匹配">More about 多个pattern匹配</span></h3>
+<p>除了Trie，还有针对 string s 建树的 Suffix Trie.</p>
+<p>对 string：p a n a m a b a n an a s。构建后缀Trie</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/KMP_pic/image-20210227204247991.png" srcset="/img/loading.gif" lazyload alt style="zoom:80%;"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/KMP_pic/image-20210227204406853.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;"></p>
+<p>将 pattern 逐个输入，进行匹配。此时，不需要匹配到叶子节点。</p>
+<p>额外空间复杂度，和 string s 有关。压缩无分支后缀之后，就成了Suffix
+Tree。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/KMP_pic/image-20210227204848941.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;"></p>
+<p>若再压缩空间，可以将suffix 变成 idx + length。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/KMP_pic/image-20210227205003068.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;"></p>
+<p>额外空间复杂度为，O(|Text|)。使用 Suffix
+Trie，多pattern匹配的时间复杂度为：</p>
+<p>O(|Text| + |Patterns|)，Trie 为 O(|Text| * |Len of Longest
+Pattern|)。</p>
+<p>额外空间复杂度为 O(|Text|)，Trie 为 O(|Patterns|)。只是 O(|Text|)
+的系数约为20，当文本很长时，还是算了吧。</p>
+<h2><span id="ac自动机">AC自动机</span></h2>
+<p>还是，多 pattern 匹配问题，在只是使用Trie，在string
+s上暴力遍历，只是寻找成功的那一刻，失败的匹配那都是没有意义的吗？</p>
+<p>不不不，得让失败的存在，这东西越混沌，信息熵越高，有用。</p>
+<p>AC自动机，Trie +
+KMP，加速多pattern匹配过程。匹配过程时间复杂度O（|Text| *
+Trie树高）。</p>
+<blockquote>
+<ol type="1">
+<li>构建 patterns 的 Trie</li>
+<li>构建 fail 指针</li>
+<li>开始匹配</li>
+</ol>
+</blockquote>
+<h3><span id="构建-fail-指针">构建 fail 指针</span></h3>
+<ol type="1">
+<li>在Trie中，BFS遍历，第一层，fail指针都指向 root</li>
+<li>第一层之后，每个节点的 fail 指针，指向
+【<strong>该节点的父节点</strong>】 的
+【<strong>fail指针指向的节点</strong>】 的
+【<strong>儿子节点</strong>】中
+【<strong>和该节点（自己）同字符的节点</strong>】。如果没有找到，【<strong>fail指针指向的节点</strong>】继续向上找
+fail 节点，直到 root。</li>
+</ol>
+<p>啥是 fail ？ 当前单词的最长后缀。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/KMP_pic/image-20210227220403902.png" srcset="/img/loading.gif" lazyload alt style="zoom:50%;"></p>
+<h3><span id="匹配过程">匹配过程</span></h3>
+<ol type="1">
+<li>输入string s，trie从 root开始，进行匹配</li>
+<li>当匹配失败，跳转到fail指针指向的节点，如果fail到
+root，输入此位置之后的string s的部分，继续查找。</li>
+<li>当匹配成功（Trie标记的节点），也跳转到fail指针指向的节点，如果此时跳转到
+root，进行回溯到前一个最长的trie路径节点。</li>
+</ol>
+<p>跳转，就是在匹配后缀。</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;bits/stdc++.h&gt;</span></span><br><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;<br><br><span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> idx = <span class="hljs-number">0</span>;<br><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">trieNode</span></span><br><span class="hljs-class">&#123;</span><br>    <span class="hljs-keyword">int</span> son[<span class="hljs-number">26</span>] = &#123;<span class="hljs-number">0</span>&#125;;<br>    <span class="hljs-keyword">int</span> counts = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">int</span> fail = <span class="hljs-number">-1</span>;<br>&#125;;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">insert</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-built_in">string</span> &amp;s, <span class="hljs-built_in">vector</span>&lt;trieNode&gt; &amp;trie)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">int</span> p = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; s.<span class="hljs-built_in">size</span>(); i++)<br>    &#123;<br>        <span class="hljs-keyword">int</span> cha = s[i] - <span class="hljs-string">'a'</span>;<br>        <span class="hljs-keyword">if</span> (!trie[p].son[cha])<br>            trie[p].son[cha] = ++idx;<br>        p = trie[p].son[cha];<br>    &#125;<br>    trie[p].counts++;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">build_fail</span><span class="hljs-params">(<span class="hljs-built_in">vector</span>&lt;trieNode&gt; &amp;trie)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-built_in">queue</span>&lt;<span class="hljs-keyword">int</span>&gt; q;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">26</span>; i++)<br>    &#123;<br>        <span class="hljs-keyword">if</span> (trie[<span class="hljs-number">0</span>].son[i] != <span class="hljs-number">0</span>)<br>        &#123; <span class="hljs-comment">//儿子节点</span><br>            <span class="hljs-keyword">int</span> son = trie[<span class="hljs-number">0</span>].son[i];<br>            trie[son].fail = <span class="hljs-number">0</span>; <span class="hljs-comment">//第一层 fail</span><br>            q.push(son);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">while</span> (q.<span class="hljs-built_in">size</span>())<br>    &#123;<br>        <span class="hljs-keyword">int</span> father = q.front();<br>        q.pop();<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">26</span>; i++)<br>        &#123;<br>            <span class="hljs-keyword">if</span> (trie[father].son[i] != <span class="hljs-number">0</span>)<br>            &#123;<br>                <span class="hljs-keyword">int</span> cur = trie[father].son[i];        <span class="hljs-comment">// 要找fail的儿子</span><br>                <span class="hljs-keyword">int</span> failOfFather = trie[father].fail; <span class="hljs-comment">// 父节点的fail</span><br>                <span class="hljs-comment">// ~(0): -1,   ~(-1): 0</span><br>                <span class="hljs-comment">//不是根节点且没有找到目标同字符</span><br>                <span class="hljs-keyword">while</span> (~failOfFather &amp;&amp; !trie[father].son[i])<br>                    failOfFather = trie[failOfFather].fail;<br><br>                <span class="hljs-keyword">if</span> (~failOfFather) <span class="hljs-comment">//找到目标同字符</span><br>                    trie[cur].fail = trie[failOfFather].son[i];<br>                <span class="hljs-keyword">else</span> <span class="hljs-comment">// 根节点</span><br>                    trie[cur].fail = <span class="hljs-number">0</span>;<br>                q.push(cur);<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">query</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-built_in">string</span> &amp;s, <span class="hljs-built_in">vector</span>&lt;trieNode&gt; &amp;trie)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">int</span> ans = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">int</span> ptr = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; s.<span class="hljs-built_in">size</span>(); i++)<br>    &#123;<br>        <span class="hljs-keyword">int</span> <span class="hljs-keyword">word</span> = s[i] - <span class="hljs-string">'a'</span>;<br>        <span class="hljs-comment">// 儿子不存在且fail不是根节点，跳转 fail</span><br>        <span class="hljs-keyword">while</span> (!trie[ptr].son[<span class="hljs-keyword">word</span>] &amp;&amp; ~trie[ptr].fail)<br>            ptr = trie[ptr].fail;<br>        <span class="hljs-keyword">if</span> (trie[ptr].son[<span class="hljs-keyword">word</span>]) <span class="hljs-comment">// 儿子存在，匹配，进入节点，继续查找</span><br>            ptr = trie[ptr].son[<span class="hljs-keyword">word</span>];<br>        <span class="hljs-keyword">else</span> <span class="hljs-comment">// 是根节点，下一个 s 字符</span><br>            <span class="hljs-keyword">continue</span>;<br><br>        <span class="hljs-keyword">int</span> ptr_temp = ptr;          <span class="hljs-comment">// copt ptr，ptr为回溯位置</span><br>        <span class="hljs-keyword">while</span> (~trie[ptr_temp].fail) <span class="hljs-comment">//到根节点退出，下一个外层for回溯</span><br>        &#123;<br>            ans += trie[ptr_temp].counts; <span class="hljs-comment">// counts在不是目标处为0</span><br>            ptr_temp = trie[ptr_temp].fail;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> ans;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> **argv)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-built_in">vector</span>&lt;trieNode&gt; trie;<br>    trie.resize(<span class="hljs-number">50</span>);<br><br>    insert(<span class="hljs-string">"she"</span>, trie);<br>    <span class="hljs-built_in">string</span> s = <span class="hljs-string">"he"</span>;<br>    insert(s, trie);<br>    insert(<span class="hljs-string">"her"</span>, trie);<br>    insert(<span class="hljs-string">"is"</span>, trie);<br>    insert(<span class="hljs-string">"this"</span>, trie);<br>    insert(<span class="hljs-string">"his"</span>, trie);<br><br>    build_fail(trie);<br><br>    <span class="hljs-built_in">cout</span> &lt;&lt; query(<span class="hljs-string">"sherthis"</span>, trie) &lt;&lt; <span class="hljs-built_in">endl</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/Algorithm/">Algorithm</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/algorithm/">algorithm</a>
+                    
+                      <a class="hover-with-bg" href="/tags/kmp/">kmp</a>
+                    
+                      <a class="hover-with-bg" href="/tags/trie/">trie</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Aho-Corasick/">Aho-Corasick</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/548512d6.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">实体识别模型与策略2020</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/cdee5c8d.html">
+                        <span class="hidden-mobile">浅涉python与分布式</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        loader: {
+          load: ['ui/lazy']
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>

@@ -1,0 +1,754 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="记录2020几篇关系抽取论文，包括CasRel、TPlinker和Two-are-better-than-one。其思路很机智。">
+  <meta name="author" content="江左时雨">
+  <meta name="keywords" content="机器学习,Machine Learning,自然语言处理,NLP,深度学习,Deep Learning,计算机,Coding,生活随笔">
+  <meta name="description" content="记录2020几篇关系抽取论文，包括CasRel、TPlinker和Two-are-better-than-one。其思路很机智。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Joint Extraction of Entities and Relations 2020">
+<meta property="og:url" content="https://racleray.github.io/posts/aa5b647c.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="记录2020几篇关系抽取论文，包括CasRel、TPlinker和Two-are-better-than-one。其思路很机智。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E4%B8%80%E4%BA%9B%E5%85%B3%E7%B3%BB%E6%8A%BD%E5%8F%96model_pic/image-20210324205241218.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E4%B8%80%E4%BA%9B%E5%85%B3%E7%B3%BB%E6%8A%BD%E5%8F%96model_pic/image-20210324210312814.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E4%B8%80%E4%BA%9B%E5%85%B3%E7%B3%BB%E6%8A%BD%E5%8F%96model_pic/image-20210324211459890.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E4%B8%80%E4%BA%9B%E5%85%B3%E7%B3%BB%E6%8A%BD%E5%8F%96model_pic/image-20210324213705783.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E4%B8%80%E4%BA%9B%E5%85%B3%E7%B3%BB%E6%8A%BD%E5%8F%96model_pic/image-20210324214913819.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E4%B8%80%E4%BA%9B%E5%85%B3%E7%B3%BB%E6%8A%BD%E5%8F%96model_pic/image-20210324215304975.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E4%B8%80%E4%BA%9B%E5%85%B3%E7%B3%BB%E6%8A%BD%E5%8F%96model_pic/image-20210324225007546.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E4%B8%80%E4%BA%9B%E5%85%B3%E7%B3%BB%E6%8A%BD%E5%8F%96model_pic/image-20210324225525330.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E4%B8%80%E4%BA%9B%E5%85%B3%E7%B3%BB%E6%8A%BD%E5%8F%96model_pic/image-20210324225748873.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E4%B8%80%E4%BA%9B%E5%85%B3%E7%B3%BB%E6%8A%BD%E5%8F%96model_pic/image-20210324230418560.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E4%B8%80%E4%BA%9B%E5%85%B3%E7%B3%BB%E6%8A%BD%E5%8F%96model_pic/image-20210324230736097.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E4%B8%80%E4%BA%9B%E5%85%B3%E7%B3%BB%E6%8A%BD%E5%8F%96model_pic/image-20210324230850746.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E4%B8%80%E4%BA%9B%E5%85%B3%E7%B3%BB%E6%8A%BD%E5%8F%96model_pic/image-20210324230944854.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E4%B8%80%E4%BA%9B%E5%85%B3%E7%B3%BB%E6%8A%BD%E5%8F%96model_pic/image-20210324231145240.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E4%B8%80%E4%BA%9B%E5%85%B3%E7%B3%BB%E6%8A%BD%E5%8F%96model_pic/image-20210324232211689.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E4%B8%80%E4%BA%9B%E5%85%B3%E7%B3%BB%E6%8A%BD%E5%8F%96model_pic/image-20210324232521827.png">
+<meta property="article:published_time" content="2021-03-24T15:37:55.000Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:31.030Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="relation extraction">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E4%B8%80%E4%BA%9B%E5%85%B3%E7%B3%BB%E6%8A%BD%E5%8F%96model_pic/image-20210324205241218.png">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>Joint Extraction of Entities and Relations 2020 - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Joint Extraction of Entities and Relations 2020">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-03-24 23:37" pubdate>
+        2021年3月24日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.9k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      9 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Joint Extraction of Entities and Relations 2020</h1>
+            
+            <div class="markdown-body">
+              <h2><span id="casrel">CasRel</span></h2>
+<p><a href="https://github.com/weizhepei/CasRel" target="_blank" rel="noopener">git</a></p>
+<p>实体识别和关系分类一体化，使用一个model解决两个问题。优势在于，通过两个任务的相关性，设计model，减少两阶段预测中的级联误差。虽然，也有两阶段模型实际效果可以很好。</p>
+<p>除了解决级联误差，还需要解决什么问题？</p>
+<ul>
+<li>Overlapping
+relations：一个实体可以出现则同一文本中的多个关系中。</li>
+<li>Nested relations：不同的三元组可能包含或共享嵌套实体。</li>
+</ul>
+<table>
+<colgroup>
+<col style="width: 17%">
+<col style="width: 41%">
+<col style="width: 41%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>Texts</th>
+<th style="text-align: left;">Triplets</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Normal</td>
+<td>[The United States] President [Trump] will meet [Xi Jinping], the
+president of [China].</td>
+<td style="text-align: left;">(The United States, <em>president</em>,
+Trump) <br>(China, <em>president</em>, Xi Jinping)</td>
+</tr>
+<tr class="even">
+<td>Single Entity Overlapping</td>
+<td>Two of them, [Jeff Francoeur] and [Brian McCann], are from
+<strong>[Atlanta]</strong>.</td>
+<td style="text-align: left;">(Jeff Francoeur, <em>live in</em>,
+<strong>Atlanta</strong>) <br>(Brian McCann, <em>live in</em>,
+<strong>Atlanta</strong>)</td>
+</tr>
+<tr class="odd">
+<td>Entity Pair Overlapping</td>
+<td>The new mayor of [<strong>New York City</strong>] [<strong>De
+Blasio</strong>] is native-born.</td>
+<td style="text-align: left;">(<strong>New York City</strong>,
+<em>mayor</em>, <strong>De Blasio</strong>) <br>(<strong>De
+Blasio</strong>, <em>born in</em>, <strong>New York City</strong>)</td>
+</tr>
+<tr class="even">
+<td>Nested</td>
+<td>The new mayor of <strong>[[New York] City]</strong> [De Blasio] is
+native-born.</td>
+<td style="text-align: left;">(De Blasio, <em>live in</em>, <strong>New
+York City</strong>) <br>(De Blasio, <em>live in</em>, <strong>New
+York</strong>) (<strong>New York</strong>, <em>contains</em>,
+<strong>New York City</strong>)</td>
+</tr>
+</tbody>
+</table>
+<p>同时，还存在的问题有：预测标签的不平衡，相同实体出现不同关系时model难以拟合。</p>
+<h3><span id="framework">framework</span></h3>
+<p>CasRel是一种framework，将关系预测从标注分类转化为一个隐式变换，参与模型训练：
+<span class="math display">\[
+f(s, o) \rightarrow r
+\]</span> 本来是subject + object推断relation，变化为： <span class="math display">\[
+f_r(s) \rightarrow o
+\]</span> 将relation建模成一种function。</p>
+<p>将likelihood变成以下形式：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/一些关系抽取model_pic/image-20210324205241218.png" srcset="/img/loading.gif" lazyload alt style="zoom:50%;"></p>
+<p>模型整体架构</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/一些关系抽取model_pic/image-20210324210312814.png" srcset="/img/loading.gif" lazyload alt style="zoom:60%;"></p>
+<p>模型在多个关系抽取任务上，效果提升明显。</p>
+<h2><span id="tplinker">TPlinker</span></h2>
+<p><a href="https://github.com/131250208/TPlinker-joint-extraction" target="_blank" rel="noopener">git</a></p>
+<p>TPlinker是不同于现有模型的一种一体式关系抽取模型。解码方式独特。</p>
+<ul>
+<li>通过实体边界词，区分嵌套实体：New York City -&gt; (New, City), New
+York -&gt; (New, York)</li>
+<li>通过实体边界，分解三元组：(De Blasio, <em>live in</em>, New York
+City) -&gt; (De, <em>live in</em>, New) and (Blasio, <em>live in</em>,
+City)</li>
+</ul>
+<blockquote>
+<p>两种常见的处理 relation overlapping 的模式：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/一些关系抽取model_pic/image-20210324211459890.png" srcset="/img/loading.gif" lazyload alt></p>
+<p>都同时存在两个问题：</p>
+<ul>
+<li><strong>暴漏偏差（exposure bias）</strong>
+：指在训练阶段是gold实体输入进行关系预测，而在推断阶段是上一步的预测实体输入进行关系判断；导致训练和推断存在不一<strong>致</strong></li>
+<li><strong>嵌套实体（nested
+entities）</strong>：并没有有效处理嵌套实体关系。</li>
+</ul>
+</blockquote>
+<h3><span id="tplinker的标注方式">TPlinker的标注方式</span></h3>
+<p>首先对不同的关系，分别进行标注。每种关系的标注方式相同。</p>
+<p>三类标记：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/一些关系抽取model_pic/image-20210324213705783.png" srcset="/img/loading.gif" lazyload alt></p>
+<p>紫色标记：单个实体的头尾对应关系。和关系类型无关。shape: len(text) *
+len(text)</p>
+<p>红色标记：对应 subject和object 的
+start对应标记。每种关系一个单独标记矩阵。shape: R * len(text) *
+len(text)</p>
+<p>蓝色标记：对应 subject和object 的
+end对应标记。每种关系一个单独标记矩阵。shape: R * len(text) *
+len(text)</p>
+<p>同时，红色标记和蓝色标记，在len(text) *
+len(text)的矩阵中，存在两个对称的标记，比如（New, De）与 (De,
+New)。为了提高效率，将下三角部分映射到上三角部分，同时值变成2。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/一些关系抽取model_pic/image-20210324214913819.png" srcset="/img/loading.gif" lazyload alt></p>
+<p>模型为：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/一些关系抽取model_pic/image-20210324215304975.png" srcset="/img/loading.gif" lazyload alt style="zoom:70%;"></p>
+<p>图中 Handshaking Kernel，就是将 标记矩阵展开得到的一维编码。token
+pair 遍历了所有可能的 对应关系。图中S -- subject；O -- object; H --
+head; T -- tail； E -- entity</p>
+<p>通过这些标记，训练模型计算损失，token pair的encoder
+output拼接在一起，输入softmax，每个关系类型都有一个softmax。</p>
+<h3><span id="解码过程">解码过程</span></h3>
+<ol type="1">
+<li>预测模型计算结果</li>
+<li>结果EH-to-ET可以得到句子中所有的实体，EH的 token
+idx作为key，EH-to-ET的entity作为value，存入 D 中，得到可选实体；</li>
+<li>开始遍历 不同关系；</li>
+<li>结果SH-to-OH可以得到某种关系可选的 head 对应关系，取这些head
+index，从 D 中，取出对应实体对 token pair 存于 D2；</li>
+<li>结果ST-to-OT可以得到某种关系可选的 tail 对应关系，将这个对应关系的
+token pair 存入 E；</li>
+<li>遍历D2，并检查 每一个 D2中的 token pair 的 tail 是否存在于 E
+中，若存在，那么输出 该关系下的该三元组信息。</li>
+</ol>
+<h3><span id="more">More</span></h3>
+<p>实体对输出的embedding表示是直接
+concatenate，那么如果两个实体的context相似，那么理论上会影响预测效果。</p>
+<p>由于要预测 N 个词中选 2 的排列个
+pair，所以对于长文本，代价会很大。</p>
+<h2><span id="two-are-better-than-one">Two-are-better-than-one</span></h2>
+<p><a href="https://github.com/LorrinWWW/two-are-better-than-one" target="_blank" rel="noopener">git</a></p>
+<p>统一NER和RE任务到一个表格标记预测任务。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/一些关系抽取model_pic/image-20210324225007546.png" srcset="/img/loading.gif" lazyload alt style="zoom:70%;"></p>
+<p>标记形式很直观。只是这在14年就已经有这种方法的尝试了。这篇论文作者是对其进行了改进。</p>
+<p>除了一些关系抽取任务常见的问题，这种标记方式还有一个问题：</p>
+<ul>
+<li>现有的基于Table-Filling方法，会将<strong>表结构</strong>转化成一个序列结构，表结构的标记方式直接退化。</li>
+</ul>
+<h3><span id="结构设计">结构设计</span></h3>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/一些关系抽取model_pic/image-20210324225525330.png" srcset="/img/loading.gif" lazyload alt style="zoom:70%;"></p>
+<p>首先是 Text
+Embedding：Glove词向量、LSTM字符向量和BERT词向量的共同构成。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/一些关系抽取model_pic/image-20210324225748873.png" srcset="/img/loading.gif" lazyload alt style="zoom:80%;"></p>
+<p>Table Encoder：学习表格中每个位置的向量表达，shape: len(text) *
+len(text)。表格第 i 行第 j 列的向量表示，与句子中的第 i 个和第 j
+个词相对应。</p>
+<p>使用 MD-RNN 融合表格中上下左右的信息。接收 Sequence Encoder 编码的
+当前 第 i 、第 j 个词的向量表示。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/一些关系抽取model_pic/image-20210324230418560.png" srcset="/img/loading.gif" lazyload alt style="zoom:80%;"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/一些关系抽取model_pic/image-20210324230736097.png" srcset="/img/loading.gif" lazyload alt style="zoom:80%;"></p>
+<p>但是，论文实验发现，不必计算四组，只需要两组，就能达到几乎无损的效果。只计算
+a 和 c。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/一些关系抽取model_pic/image-20210324230850746.png" srcset="/img/loading.gif" lazyload alt style="zoom:80%;"></p>
+<p>Sequence Encoder：Sequence
+Encoder的结构与Transformer类似，不同之处在于将Transformer中的scaled
+dot-product attention 替换为 table-guided attention。</p>
+<p>原 transformer 的 attention ：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/一些关系抽取model_pic/image-20210324230944854.png" srcset="/img/loading.gif" lazyload alt style="zoom:80%;"></p>
+<p>变为：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/一些关系抽取model_pic/image-20210324231145240.png" srcset="/img/loading.gif" lazyload alt style="zoom:80%;"></p>
+<p>直接使用 <span class="math inline">\(T_{l,i,j}\)</span>节省了计算量，同时交互两个部分信息。</p>
+<p>Pre-trained Attention Weights：利用预训练的 BERT 中每一层的 attention
+信息，得到 <span class="math inline">\(T^l\)</span> ，联合 S
+构成MD-RNN的初始输入 。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/一些关系抽取model_pic/image-20210324232211689.png" srcset="/img/loading.gif" lazyload alt style="zoom:80%;"></p>
+<p>预测结果表示为：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/一些关系抽取model_pic/image-20210324232521827.png" srcset="/img/loading.gif" lazyload alt style="zoom:80%;"></p>
+<p>表格中对称位置，在预测时直接求和，得到一个关系的得分。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/NLP/">NLP</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/relation-extraction/">relation extraction</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/aa316e6c.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Self-supervised methods note</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/c1cb8a12.html">
+                        <span class="hidden-mobile">jupytext and nbdev</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        loader: {
+          load: ['ui/lazy']
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>

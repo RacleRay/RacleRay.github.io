@@ -1,0 +1,743 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="记录对BERT-flow模型论文的一点思考，以及记录苏剑林提出的更简单的矩阵空间变换方法解决句子向量表达能力不理想的问题。">
+  <meta name="author" content="江左时雨">
+  <meta name="keywords" content="机器学习,Machine Learning,自然语言处理,NLP,深度学习,Deep Learning,计算机,Coding,生活随笔">
+  <meta name="description" content="记录对BERT-flow模型论文的一点思考，以及记录苏剑林提出的更简单的矩阵空间变换方法解决句子向量表达能力不理想的问题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BERT-flow and more">
+<meta property="og:url" content="https://racleray.github.io/posts/a954bb00.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="记录对BERT-flow模型论文的一点思考，以及记录苏剑林提出的更简单的矩阵空间变换方法解决句子向量表达能力不理想的问题。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/BERT-flow%20and%20more_pic/image-20210113230557038.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/BERT-flow%20and%20more_pic/image-20210116231825051.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/BERT-flow%20and%20more_pic/image-20210116232216359.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/BERT-flow%20and%20more_pic/image-20210116232538391.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/BERT-flow%20and%20more_pic/image-20210116234831917.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/BERT-flow%20and%20more_pic/image-20210120014758397.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/BERT-flow%20and%20more_pic/image-20210120014921100.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/BERT-flow%20and%20more_pic/image-20210120015103566.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/BERT-flow%20and%20more_pic/image-20210120015440557.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/BERT-flow%20and%20more_pic/image-20210212231503716.png">
+<meta property="article:published_time" content="2021-02-12T16:10:19.000Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:31.025Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="BERT">
+<meta property="article:tag" content="sentence embedding">
+<meta property="article:tag" content="nlp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/BERT-flow%20and%20more_pic/image-20210113230557038.png">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>BERT-flow and more - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="BERT-flow and more">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-02-13 00:10" pubdate>
+        2021年2月13日 凌晨
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      4.2k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      13 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">BERT-flow and more</h1>
+            
+            <div class="markdown-body">
+              <h1><span id="论文on-the-sentence-embeddings-from-pre-trained-language-models">论文:
+On the Sentence Embeddings from Pre-trained Language Models</span></h1>
+<p>Author: Bohan Li, Hao Zhou, Junxian He, Mingxuan Wang, Yiming Yang,
+Lei Li</p>
+<p>Organization: ByteDance AI Lab; Language Technologies Institute,
+Carnegie Mellon University</p>
+<hr>
+<h2><span id="info">Info:</span></h2>
+<ul>
+<li><p>类别: BERT语义表示应用优化</p></li>
+<li><p>研究目标：将原本BERT训练模式下生成的语义表示的各向异性空间，通过设计的无监督方法，转化为各向同性的语义表示空间。</p></li>
+<li><p>研究成果：结合Flow based
+model，使用无监督方式提升语义表示的效果。</p></li>
+<li><p>存在的问题：按文章的思路，就是将BERT sentence
+embedding做一个转化，从非正交（orthogonal
+space）转化到正交的空间，以满足cos
+similarity适用的条件，以提高效果。但是一定需要Flow based
+方法来实现吗？有没有更好的方法？</p></li>
+<li><p>关键词：BERT；Flow based model；semantic similarity</p></li>
+</ul>
+<hr>
+<h2><span id="brief-summary">Brief Summary:</span></h2>
+<p>首先解释了直接基于BERT生成的sentence
+embedding为什么其语义表达能力较差，然后提出一种在不引入更多监督数据条件下，提升其语义表达能力的方法，flow
+based model。</p>
+<hr>
+<h2><span id="outline">Outline:</span></h2>
+<ol type="1">
+<li>搞清楚BERT-induced sentence embedding的空间有什么特性</li>
+<li>BERT-flow怎么设计的</li>
+<li>[来自苏剑林的质疑]
+BERT-flow？没必要那么复杂，BERT-whitening更优雅</li>
+</ol>
+<hr>
+<h2><span id="main-thought">Main Thought:</span></h2>
+<p>首先是flow based
+model在干什么，这首先是一个生成网络（以下图片内容来自李宏毅老师课程）：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/BERT-flow and more_pic/image-20210113230557038.png" srcset="/img/loading.gif" lazyload alt style="zoom:40%;"></p>
+<p>这是一种直接在object
+function基础之上优化计算的方法，粗暴但是实现起来并不简单。直接从<span class="math inline">\(\pi(z)\)</span>，由设计的网络<span class="math inline">\(x=f(z)\)</span>，直接逼近data分布<span class="math inline">\(p(x)\)</span>。原理如下：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/BERT-flow and more_pic/image-20210116231825051.png" srcset="/img/loading.gif" lazyload alt style="zoom:28%;"></p>
+<p>相应变量的微小变化，导致的面积变化是一致的。扩展到二维变量，其变化相乘变成了面积的<span class="math inline">\(\Delta
+s\)</span>。而矩阵的行列式就表示二维空间中图像代表的面积，所以有以下推导：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/BERT-flow and more_pic/image-20210116232216359.png" srcset="/img/loading.gif" lazyload alt style="zoom:25%;"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/BERT-flow and more_pic/image-20210116232538391.png" srcset="/img/loading.gif" lazyload alt style="zoom:25%;"></p>
+<p>式中矩阵就是Jacobian matrix，自然得到： <span class="math inline">\(p(x&#39;)=\pi(z&#39;)|\frac{1}{det(J_f)}|\)</span>
+那么由<span class="math inline">\(z\)</span>的分布就可以求出<span class="math inline">\(x\)</span>的分布。只是这个网络<span class="math inline">\(G\)</span>的设计有一点麻烦，需要保证参数矩阵需要是逆变换不复杂且Jacobian
+matrix容易计算。因为： <span class="math inline">\(p(x&#39;)=\pi(z&#39;)|det(J_{G^{-1}})|\)</span>
+以及 <span class="math inline">\(z&#39;=G^{-1}(x&#39;)\)</span></p>
+<p>都需要转化成与输入相关的函数（网络）。</p>
+<p>同时flow的网络设计，真的是有点低效，参数空间内将参数分组进行更新。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/BERT-flow and more_pic/image-20210116234831917.png" srcset="/img/loading.gif" lazyload alt style="zoom:25%;"></p>
+<p>如图，上下两部分不是同时更新，而是分步更新计算。</p>
+<h3><span id="key-sentences">Key sentences:</span></h3>
+<ol type="1">
+<li>用BERT将一个句子编码成一个固定长度的向量，方法是计算BERT最后几层中context
+embeddings的平均值，或者在[CLS]标记的位置提取。一般前一种方法效果更好。但是在语义表示性能上还不及averaged
+GloVe embeddings方法。</li>
+</ol>
+<h3><span id="1语义相似度与bert预训练的关系">1.
+语义相似度与BERT预训练的关系</span></h3>
+<p>​ 首先，BERT将传统的auto regressive LM的目标，修改为masked predict：
+<span class="math display">\[
+log(p(x_{1:T}))=\sum_{t=1}^{T}logp(x_t|context_t)
+\]</span> 变为： <span class="math display">\[
+p(x_{masked}|context_{of\ masked})=\sum_{t=1}^{T}mask_t \times
+p(x_t|context_t)
+\]</span> 两者建立model的共同形式如下： <span class="math display">\[
+p(x|context)=\frac{\exp(VectorFromNet_{context}^TEmbedding_x)}{\sum_{x&#39;}\exp(VectorFromNet_{context}^TEmbedding_{x&#39;})}
+\]</span> 这种表达形式的关键在<span class="math inline">\(VectorFromNet_{context}^TEmbedding_x\)</span>，以下简单写作<span class="math inline">\(h_c^Tw_x\)</span>。<a href="https://arxiv.org/abs/1711.03953" target="_blank" rel="noopener">这篇论文</a>证明了： <span class="math display">\[
+h_c^Tw_x\approx\log p^*(x|c) + \lambda_c=PMI(x,c)+\log p(x)+\lambda_c
+\]</span> ​ PMI指point wise mutual
+information。这种共现特征通常可以捕捉到语义信息，只是在“word”层面而言。</p>
+<p>​ 同时，<span class="math inline">\(h_c\)</span>随着网路参数的更新而更新，不同的context在训练过程中相互影响，可视为一种高阶的high-order共现语义信息捕捉。</p>
+<h3><span id="2-问题所在">2. 问题所在</span></h3>
+<blockquote>
+<p>用BERT将一个句子编码成一个固定长度的向量，方法是计算BERT最后几层中context
+embeddings的平均值，或者在[CLS]标记的位置提取。一般前一种方法效果更好。但是在语义表示性能上还不及averaged
+GloVe embeddings方法。</p>
+</blockquote>
+<p>为什么效果不及averaged GloVe embeddings？</p>
+<p>文章 <a href="https://arxiv.org/abs/1909.00512" target="_blank" rel="noopener">How Contextual are
+Contextualized Word Representations? Comparing the Geometry of BERT,
+ELMo, and GPT-2 Embeddings</a> 比较了预训练LM的word
+embedding，有如下结论：</p>
+<blockquote>
+<ol type="1">
+<li>Contextualized
+representations(模型每一层输出)在每一个非输入层都是各向异性的，即非标准正交空间；</li>
+<li>高层的各向异性更显著；</li>
+<li>高层的Contextualized
+representations更与context相关，不同context下的数值表示相差更大。同时不同词与context相关的相关程度不同，比如，stop
+words与context的相关性会很大；</li>
+<li>不同模型的每一层输出间的相关性也不同：EMLo的低层和高层的输出更相似一些；BERT的低层和高层的输出变化较大，<strong>同时句子内词的表示会更接近，和其他句子中词的表示相对更差异化一些</strong>；GPT-2的输出不同，某一个输出与当前句子内的词的相似性和当前句子之外的词的相似性，是接近的。</li>
+</ol>
+</blockquote>
+<p>BERT-flow文中给出的理由：</p>
+<ol type="1">
+<li>词频差异使得低频词和高频词的学习程度不同，公式7可以作为一个依据；</li>
+<li>低频词的表示更偏稀疏，而高频词的表示更稠密。</li>
+</ol>
+<h3><span id="3-可逆变换到standardgaussian-latent-space">3. 可逆变换到standard
+Gaussian latent space</span></h3>
+<p>借鉴Glow模型的实现方式，实现flow-based generative
+model。将BERT参数固定，只学习可逆变换的网络参数。只使用了add coupling
+layer，将1x1卷积变成直接permutation。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/BERT-flow and more_pic/image-20210120014758397.png" srcset="/img/loading.gif" lazyload alt style="zoom:30%;"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/BERT-flow and more_pic/image-20210120014921100.png" srcset="/img/loading.gif" lazyload alt style="zoom:33%;"></p>
+<p>求z为：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/BERT-flow and more_pic/image-20210120015103566.png" srcset="/img/loading.gif" lazyload alt style="zoom:33%;"></p>
+<p>以上将D维向量，分为两部分计算更新。同时z的先验为标准正态分布。那么</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/BERT-flow and more_pic/image-20210120015440557.png" srcset="/img/loading.gif" lazyload alt style="zoom:70%;"></p>
+<p><span class="math inline">\(f^{-1}\)</span>和<span class="math inline">\(J_{f^{-1}}\)</span>都是可以计算的，目标函数就可以表示。</p>
+<h3><span id="4-lexicalsimilarity在不同模型中的规律实验">4. Lexical
+Similarity在不同模型中的规律实验</span></h3>
+<p>论文通过一组简单的对比实验，得出以下结论：</p>
+<blockquote>
+<p>BERT-Induced Similarity的与Lexical Similarity存在着过度的相关性。</p>
+<p>Flow-Induced Similarity 与Lexical Similarity的相关性较低。</p>
+</blockquote>
+<p>方法是通过Similarity与Edit distance的对应关系，实验结果如图：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/BERT-flow and more_pic/image-20210212231503716.png" srcset="/img/loading.gif" lazyload alt style="zoom:60%;"></p>
+<hr>
+<h2><span id="confusion">Confusion:</span></h2>
+<h3><span id="正交标准化标准化协方差矩阵">正交标准化？标准化协方差矩阵？</span></h3>
+<p>求一个线性变换<span class="math inline">\(W\)</span>使得BERT输出的向量矩阵成一个标准化的矩阵。直接达到正交化的目的，是否也是可行？</p>
+<p>首先求原始协方差矩阵： <span class="math display">\[
+\mu=\frac{1}{N}\sum_{k=1}^Nxi
+\]</span> 那么 <span class="math display">\[
+\Sigma=\frac{1}{N}\sum_{k=1}^N(x_i-\mu)^T(x_i-\mu)
+\]</span> 变换<span class="math inline">\(W\)</span>满足： <span class="math display">\[
+W^T\Sigma W=I
+\]</span> 其中<span class="math inline">\(\Sigma\)</span>为一个正交对称矩阵。对其SVD，有如下关系：
+<span class="math display">\[
+\Sigma=U\Lambda U^T=(W^{-1})^TW^{-1}
+\]</span> 得到变换<span class="math inline">\(W\)</span>为： <span class="math display">\[
+W=U\sqrt{\Lambda^{-1}}
+\]</span> <a href="https://spaces.ac.cn/archives/8069" target="_blank" rel="noopener">作者</a>实验的结果显示，该方法简洁，且效果与flow模型相差无几。</p>
+<p>作者称该方法为BERT-whitening。</p>
+<p>核心代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">compute_w_bias</span><span class="hljs-params">(vecs, n_components)</span>:</span><br>    vecs = np.concatenate(vecs, axis=<span class="hljs-number">0</span>)<br>    mu = vecs.mean(axis=<span class="hljs-number">0</span>, keepdims=<span class="hljs-literal">True</span>)<br>    cov = np.cov(vecs.T)<br>    u, s, vh = np.linalg.svd(cov)<br>    W = np.np.dot(u, np.diag(<span class="hljs-number">1</span>/np.sqrt(s)))<br>    <span class="hljs-keyword">return</span> W[:, :n_components], -mu<br></code></pre></div></td></tr></table></figure>
+<p>标准化</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">transform_and_normalize</span><span class="hljs-params">(vecs, kernel=None, bias=None)</span>:</span><br>    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> (kernel <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span> <span class="hljs-keyword">or</span> bias <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>):<br>        vecs = (vecs + bias).dot(kernel)<br>    <span class="hljs-keyword">return</span> vecs / (vecs**<span class="hljs-number">2</span>).sum(axis=<span class="hljs-number">1</span>, keepdims=<span class="hljs-literal">True</span>)**<span class="hljs-number">0.5</span><br></code></pre></div></td></tr></table></figure>
+<h3><span id="实现细节">实现细节</span></h3>
+<ol type="1">
+<li>大语料计算内存问题？</li>
+</ol>
+<p>句子向量均值递归计算 <span class="math display">\[
+\mu_{n+1}=\frac{n}{n+1}\mu_n+\frac{1}{n+1}x_{n+1}
+\]</span> 协方差递归计算 <span class="math display">\[
+\Sigma_{n+1}=\frac{n}{n+1}\Sigma_n+\frac{1}{n+1}(x_{n+1}-\mu)^T(x_{n+1}-\mu)
+\]</span></p>
+<ol start="2" type="1">
+<li>BERT模型在任务数据上，先微调</li>
+</ol>
+<p>论文中先在任务数据上微调，比如先进行情感分类任务，再用来计算句子向量。</p>
+<ol start="3" type="1">
+<li>flow做不到的简单的句子向量降维</li>
+</ol>
+<p>SVD中直接取<span class="math inline">\(W\)</span>前n个维度，即PCA，得到降维的结果。该结果将更具任务语境特征的维度提取出来。不仅提升了句子向量间相似度的速度，还可能提升预测的效果。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/NLP/">NLP</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/BERT/">BERT</a>
+                    
+                      <a class="hover-with-bg" href="/tags/sentence-embedding/">sentence embedding</a>
+                    
+                      <a class="hover-with-bg" href="/tags/nlp/">nlp</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/6a1e61f5.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">浅涉知识图谱</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/e798f591.html">
+                        <span class="hidden-mobile">语言模型Sampling方法</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        loader: {
+          load: ['ui/lazy']
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>

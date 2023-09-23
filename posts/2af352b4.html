@@ -1,0 +1,939 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="计算机做不到直接对文本字符串进行语义理解和表示，因此需要进行数值化或者向量化。良好的文本表示形式可以极大的提升机器学习算法效果。记录一下常见的文本表示方法。">
+  <meta name="author" content="江左时雨">
+  <meta name="keywords" content="机器学习,Machine Learning,自然语言处理,NLP,深度学习,Deep Learning,计算机,Coding,生活随笔">
+  <meta name="description" content="计算机做不到直接对文本字符串进行语义理解和表示，因此需要进行数值化或者向量化。良好的文本表示形式可以极大的提升机器学习算法效果。记录一下常见的文本表示方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="文本表示">
+<meta property="og:url" content="https://racleray.github.io/posts/2af352b4.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="计算机做不到直接对文本字符串进行语义理解和表示，因此需要进行数值化或者向量化。良好的文本表示形式可以极大的提升机器学习算法效果。记录一下常见的文本表示方法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA.assets/image-20200224205921462.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA.assets/image-20200224210202562.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA.assets/image-20200224212732985.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA.assets/image-20200224213858892.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA.assets/image-20200224214508047.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA.assets/image-20200224215744317.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA.assets/image-20200224220227855.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA.assets/image-20200224220549264.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA.assets/image-20200225224943995.png">
+<meta property="article:published_time" content="2020-07-06T15:11:07.000Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:31.045Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="fastText">
+<meta property="article:tag" content="representation">
+<meta property="article:tag" content="word2vec">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA.assets/image-20200224205921462.png">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>文本表示 - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="文本表示">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-07-06 23:11" pubdate>
+        2020年7月6日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      7.5k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      23 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">文本表示</h1>
+            
+            <div class="markdown-body">
+              <h1><span id="文本表示">文本表示</span></h1>
+<p>​
+计算机做不到直接对文本字符串进行语义理解和表示，因此需要进行数值化或者向量化。良好的文本表示形式可以极大的提升机器学习算法效果。</p>
+<h2><span id="1表示方法">1.表示方法</span></h2>
+<ul>
+<li>离散表示
+<ul>
+<li>one-hot表示</li>
+<li>multi-hot表示</li>
+</ul></li>
+<li>分布式表示
+<ul>
+<li>基于矩阵
+<ul>
+<li>基于降维的方法</li>
+<li>基于聚类的方法</li>
+</ul></li>
+<li>基于神经网络
+<ul>
+<li>CBOW</li>
+<li>Skip-gram</li>
+<li>NNLM</li>
+<li>C&amp;W</li>
+</ul></li>
+</ul></li>
+</ul>
+<h2><span id="2文本离散表示">2.文本离散表示</span></h2>
+<h3><span id="bag-of-words">bag of words</span></h3>
+<p>​ 将字符串视为一个 <strong>“装满字符（词）的袋子”</strong> ，袋子里的
+<strong>词语是随便摆放的</strong>。</p>
+<p>​ [1,0,1,1,1,0,0,1,…] --
+向量的<strong>每个维度唯一对应着词表中的一个词</strong>。可见这个向量的大部分位置是0值，这种情况叫作<strong>“稀疏”</strong>。为了减少存储空间，我们也可以只储存非零值的位置。</p>
+<h4><span id="优缺点">优缺点</span></h4>
+<p>优点：</p>
+<ol type="1">
+<li>简单，方便，快速</li>
+<li>在语料充足的前提下，对于简单的自然语言处理任务效果不错。如文本分类。</li>
+</ol>
+<p>缺点：</p>
+<ol type="1">
+<li>其准确率往往比较低。凡是出现在文本中的词一视同仁，不能体现不同词在一句话中的不同的重要性。</li>
+<li><strong>无法关注词语之间的顺序关系，这是词袋子模型最大的缺点</strong>。如“武松打老虎”跟“老虎打武松”在词袋子模型中是认为一样的。</li>
+</ol>
+<h3><span id="tf-idf">TF-IDF</span></h3>
+<p>​ 词频——TF（term frequency）：在当前文档中的词频</p>
+<p>​
+统计逆文档频率——IDF：基本假设是<strong>如果一个词语在不同的文档中反复出现，那么它对于识别该文本并不重要</strong>。</p>
+<p>​ <span class="math display">\[-log({出现该词语的文档占总文档出现的频率})\]</span></p>
+<p>​
+IDF可以进行平滑：假设存在一个文档，包含所有的词。计算IDF时，分子分母都加一。</p>
+<h2><span id="3文本分布式表示">3.文本分布式表示</span></h2>
+<p>​ one-hot
+vector：假设我们的词库总共有n个词，那我们开一个1*n的高维向量。</p>
+<p>​ <span class="math display">\[ w^{aardcark}=
+\begin{bmatrix}
+​     1  \\
+​     0  \\
+​     0 \\
+​     \vdots \\
+​     0
+\end{bmatrix} ,
+w^{a}=
+\begin{bmatrix}
+​     0  \\
+​     1  \\
+​     0 \\
+​     \vdots \\
+​     0
+\end{bmatrix}\]</span></p>
+<p>​ 向量没办法给我们任何形式的词组相似性权衡。例如:</p>
+<p>​ <span class="math display">\[(w^{hotel})^Tw^{motel}=0\]</span></p>
+<p>​
+一个极高维度的空间，然后每个词语都会占据一个维度，因此没有办法在空间中关联起来。</p>
+<h3><span id="基于svd降维的表示方法">基于SVD降维的表示方法</span></h3>
+<p>​ 建立一个词组文档矩阵<span class="math inline">\(X\)</span>，具体是这么做的：遍历海量的文件，每次词组i出现在文件j中时，将<span class="math inline">\(X_{ij}\)</span>的值加1。这会是个很大的矩阵<span class="math inline">\(R^{|V|
+×M}\)</span>，而且矩阵大小还和文档个数M有关系。</p>
+<h4><span id="基于窗口的共现矩阵x">基于窗口的共现矩阵X</span></h4>
+<p>​
+规定一个固定大小的滑动窗口，然后统计每个中心词所在窗口中相邻词的词频。</p>
+<blockquote>
+<ol type="1">
+<li>I enjoy flying.</li>
+<li>I like NLP.</li>
+<li>I like deep learning.</li>
+</ol>
+<p>有：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示.assets/image-20200224205921462.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:50%;"></p>
+</blockquote>
+<p>​ 对X做奇异值分解，只保留前k个维度：</p>
+<p>​ 把子矩阵<span class="math inline">\(U_{1:|V|,1:k}\)</span>视作我们的词嵌入矩阵。也就是说，对于词表中的每一个词，我们都用一个k维的向量来表达了。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示.assets/image-20200224210202562.png" srcset="/img/loading.gif" lazyload></p>
+<p>​ 问题在于：</p>
+<blockquote>
+<ul>
+<li>矩阵的维度会经常变化（新的词语经常会增加，语料库的大小也会随时变化）。</li>
+<li>矩阵是非常稀疏的，因为大多数词并不同时出现。</li>
+<li>矩阵的维度通常非常高（<span class="math inline">\(≈10^6×10^6\)</span>）</li>
+<li>训练需要<span class="math inline">\(O(n^2)\)</span>的复杂度（比如SVD）</li>
+<li>需要专门对矩阵X进行特殊处理，以应对词组频率的极度不平衡的状况</li>
+</ul>
+</blockquote>
+<p>​ 有一些办法可以缓解一下上述提到的问题：</p>
+<blockquote>
+<ul>
+<li>忽视诸如“he”、“the” 、“has”等功能词。</li>
+<li>应用“倾斜窗口”（ramp
+window），即:根据文件中词组之间的距离给它们的共现次数增加相应的权重。</li>
+<li>使用皮尔森的相关性（Pearson
+correlation），将0记为负数，而不是它原来的数值。</li>
+</ul>
+</blockquote>
+<h3><span id="基于神经网络的表示方法">基于神经网络的表示方法</span></h3>
+<blockquote>
+<p>​ 如果数据量不足，不要从零开始训练自己的词向量</p>
+</blockquote>
+<h4><span id="连续词袋模型cbow">连续词袋模型（CBOW）</span></h4>
+<p>以上下文，预测中心词。</p>
+<ul>
+<li><span class="math inline">\(w_i\)</span>:单词表V中的第i个单词，i维是1其他维是0的one-hot向量</li>
+<li><span class="math inline">\(v\in R^{n*|V|}\)</span>：输入词矩阵</li>
+<li><span class="math inline">\(v_i\)</span>：V的第i列，单词<span class="math inline">\(w_i\)</span>的输入向量</li>
+<li><span class="math inline">\(u\in R^{|V|*n}\)</span>：输出词矩阵</li>
+<li><span class="math inline">\(u_i\)</span>：U的第i行，单词<span class="math inline">\(w_i\)</span>的输出向量</li>
+<li><span class="math inline">\(n\)</span>：“嵌入空间”（embedding
+space）的维度</li>
+</ul>
+<p>整个过程:</p>
+<ol type="1">
+<li>对于m个词长度的窗口，one-hot向量（<span class="math inline">\(x^{(c-m)},\cdots,x^{(c-1)},x^{(c+1)},\cdots,x^{(c+m)}\)</span>）。</li>
+<li>上下文的嵌入词向量（<span class="math inline">\(v_{c-m+1}=Vx^{(c-m+1)},\cdots,
+v_{c+m}=Vx^{(c+m)}\)</span> ）</li>
+<li>将这些向量取平均<span class="math inline">\(\hat
+v={v_{c-m}+v_{c-m+1}+\cdots+v_{c+m}\over2m}\)</span></li>
+<li>产生一个logits向量 <span class="math inline">\(z=U\hat
+v\)</span></li>
+<li>将得分向量转换成概率分布形式<span class="math inline">\(\hat
+y=softmax(z)\)</span></li>
+<li><span class="math inline">\(y\)</span>是 <span class="math inline">\(x^{c}\)</span> 的one-hot向量。计算损失<span class="math display">\[H(\hat y,y)=-\sum_{j=1}^{|V|}y_jlog(\hat
+y_j)\]</span></li>
+</ol>
+<p>y只是一个one-hot向量，于是上面的损失函数就可以简化为：</p>
+<p>​ <span class="math display">\[H(\hat y,y)=-y_ilog(\hat
+y_i)\]</span></p>
+<p>最终的优化目标为：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示.assets/image-20200224212732985.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:50%;"></p>
+<p>用梯度下降法去更新每一个相关的词向量𝑢𝑐和𝑣𝑗</p>
+<h4><span id="skip-gram">Skip-Gram</span></h4>
+<p>以中心词预测上下文。</p>
+<ul>
+<li><span class="math inline">\(w_i\)</span>:单词表V中的第i个单词，i维是1其他维是0的one-hot向量</li>
+<li><span class="math inline">\(v\in R^{n*|V|}\)</span>：输入词矩阵</li>
+<li><span class="math inline">\(v_i\)</span>：V的第i列，单词<span class="math inline">\(w_i\)</span>的输入向量</li>
+<li><span class="math inline">\(u\in R^{|V|*n}\)</span>：输出词矩阵</li>
+<li><span class="math inline">\(u_i\)</span>：U的第i行，单词<span class="math inline">\(w_i\)</span>的输出向量</li>
+<li><span class="math inline">\(n\)</span>：“嵌入空间”（embedding
+space）的维度</li>
+</ul>
+<p>整个过程:</p>
+<ol type="1">
+<li>生成one-hot输入向量x。</li>
+<li>得到上下文的嵌入词向量<span class="math inline">\(v_c=Vx\)</span>。</li>
+<li>不需要取平均值的操作，所以直接是<span class="math inline">\(v_c\)</span>。</li>
+<li>通过<span class="math inline">\(u=Uv_c\)</span>产生2m个logits向量<span class="math inline">\(u_{c-m},\cdots,u_{c-1},u_{c+1},\cdots,u_{(c+m)}\)</span>。</li>
+<li>将logits向量转换成概率分布形式<span class="math inline">\(y=softmax(u)\)</span>。</li>
+<li>产生的概率分布与真实概率分布<span class="math inline">\(y^{c-m},\cdots,y^{c-1},,y^{c+1}\cdots,y^{c+m}\)</span>计算交叉熵损失。</li>
+</ol>
+<p>最终的优化目标为：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示.assets/image-20200224213858892.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:50%;"></p>
+<p>不同的地方是我们这里需要引入朴素贝叶斯假设来将联合概率拆分成独立概率相乘。</p>
+<h4><span id="负例采样negative-sampling">负例采样（Negative Sampling）</span></h4>
+<p>​
+对整个单词表|V|求和的计算量是非常巨大的，任何一个对目标函数的更新和求值操作都会有O(|V|)的时间复杂度。我们需要一个思路去简化一下，我们想办法去求它的近似。</p>
+<p>​ Mikolov ET AL.在他的《Distributed Representations of Words and
+Phrases and their Compositionality》中提出了负例采样。</p>
+<p>​ 考虑一个“词-上下文”对（w,c），令P(D = 1|w, c)为(w,
+c)来自于语料库的概率。相应的，P(D = 0|w, c)
+则是不来自于语料库的概率。对P(D = 1|w, c)用sigmoid函数建模：</p>
+<p>​ <span class="math display">\[p(D=1|w,c,\theta)=
+{1\over{1+e^{(-v_c^Tv_w)}}}\]</span></p>
+<p>​ 建立一个新的目标函数。如果(w,
+c)真是来自于语料库，目标函数能够最大化P(D = 1|w, c)。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示.assets/image-20200224214508047.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:67%;"></p>
+<p>​ <span class="math inline">\(\tilde
+D\)</span>表示不来自于语料库的数据。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示.assets/image-20200224215744317.png" srcset="/img/loading.gif" lazyload></p>
+<p>​ 在skip gram中，对于<span class="math inline">\(c - m +
+j\)</span>位置的context 和 center word
+的目标函数为：（所有上下文还要求和）</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示.assets/image-20200224220227855.png" srcset="/img/loading.gif" lazyload></p>
+<p>​ K -- 为负例样本的个数。</p>
+<p>​ 这样将 <span class="math inline">\(|V|\)</span>
+words中的softmax，变成了 K个负例中进行 sigmoid
+，减少了计算量。多分类目标变为二分类目标。</p>
+<p>​ 在CBOW中为：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示.assets/image-20200224220549264.png" srcset="/img/loading.gif" lazyload></p>
+<p>​ 负例采样在word的词频分布的3/4次方上进行采样。使得分布更平滑。</p>
+<h4><span id="hierarchical-softmax">Hierarchical Softmax</span></h4>
+<p>​ 对CBOW或者Skip gram的最后一层损失求解方式改进。目标不是目标单词的one
+hot编码，而是在所有单词预先构建好的Huffam tree中的huffman编码。</p>
+<p>​ 损失函数由Huffam
+tree中每个node的sigmoid函数预测结果和实际的huffman编码之间计算求得。</p>
+<p>​ Huffman tree保证了任何一个单词的编码不会是另一个单词的前缀。</p>
+<blockquote>
+<p>​ 构建流程：</p>
+<ol type="1">
+<li>根据所有单词的词频构建最小堆。</li>
+<li>取出前两个最小单词（left child and right
+child），将二者词频之和作为新节点插入最小堆。</li>
+<li>构建哈夫曼树，建立新树节点作为left child and right
+child的父节点，将上一步的left child and right
+child二者词频之和作为的该父节点的值，构建tree。</li>
+<li>重复2、3步骤，直到min
+heap中只有一个node，此时，将这一个node作为tree的root。Huffam
+tree构建完毕。</li>
+</ol>
+</blockquote>
+<p>​ huffman编码：从root到leaf node的路径，走left child编码加入0，走right
+child编码加入1。最终编码为该leaf node对应的编码。</p>
+<p>​ 越常用的词（词频越高的词）拥有更短的编码。</p>
+<p>​
+word2vec中正好采用了相反的编码规则，规定沿着左子树走，那么就是负类(哈夫曼树编码1)，沿着右子树走，那么就是正类(哈夫曼树编码0)。</p>
+<p>​ 每个tree node处：</p>
+<p>​ <span class="math display">\[p(+)=
+{1\over{1+e^{(-v_w^T\theta)}}}\]</span></p>
+<p>​ 每个tree node都有参数<span class="math inline">\(\theta\)</span>，输入是skip
+gram模型最终输出的向量<span class="math inline">\(v_w\)</span>。</p>
+<h4><span id="glove">Glove</span></h4>
+<p>​ 加入了global statistics，用某个大小window中两个单词的共现次数<span class="math inline">\(X_{ij}\)</span>表示。</p>
+<ul>
+<li>目标函数由cross entropy变为least square。</li>
+<li>用<span class="math inline">\(log(X_{ij})\)</span>作为“normalization
+cost”。（<span class="math inline">\(X_{ij}\)</span> : number of times
+word j occur in the context of word i）</li>
+<li><span class="math inline">\(v_i\)</span>和<span class="math inline">\(u_j\)</span>相乘，不需要用指数函数。(推导结果)</li>
+<li>加入weighted function <span class="math inline">\(f(X_{ij})\)</span></li>
+</ul>
+<p>损失函数： <span class="math display">\[
+J=\sum_{i=1}^{V} \sum_{j=1}^{V} f\left(X_{i j}\right)\left(w_{i}^{T}
+w_{j}+b_{i}+b_{j}-\log X_{i j}\right)^{2}
+\]</span></p>
+<blockquote>
+<p><span class="math inline">\(X_{ij}\)</span> --<span class="math inline">\(i\ \textrm{and}\
+j\)</span>在某个窗口大小中的共现频率<br>
+<span class="math inline">\(f(X_{ij})\)</span>--权重系数，共现越多的
+pair
+对于目标函数贡献应该越大，但是又不能无限制增大，所以对共现频率过于大的
+pair 限定最大值，以防训练的时候被这些频率过大的 pair
+主导了整个目标函数。<br>
+b --两个偏置项<br>
+<span class="math inline">\(w_{i}\)</span> --当前词的向量， <span class="math inline">\(w_{j}\)</span>
+--对应的是与其在同一个窗口中出现的共现词的词向量，两者的向量点乘要去尽量拟合它们共现频率的对数值</p>
+</blockquote>
+<p>​
+如果两个词共现频率越高，那么其对数值当然也越高，因而算法要求二者词向量的点乘也越大。</p>
+<p>​ 而两个词向量的点乘越大，其实包含了两层含义：</p>
+<blockquote>
+<ul>
+<li>第一，要求各自词向量的模越大，通常来说，除去频率非常高的词（比如停用词），对于有明确语义的词来说，它们的<strong>词向量模长会随着词频增大而增大</strong>，因此两个词共现频率越大，要求各自词向量模长越大是有直觉意义的</li>
+<li>第二，要求这两个词向量的夹角越小，这也是符合直觉的，因为<strong>出现在同一个语境下频率越大，说明这两个词的语义越接近，因而词向量的夹角也偏向于越小</strong>。</li>
+</ul>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示.assets/image-20200225224943995.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:67%;"></p>
+<h4><span id="fasttext">fastText</span></h4>
+<p>​ word2vec 和 GloVe
+都不需要人工标记的监督数据，只需要语言内部存在的监督信号即可以完成训练。而与此相对应的，<strong>fastText
+则是利用带有监督标记的文本分类数据完成训练。</strong></p>
+<p>​ 类似CBOW，但不同点在于：</p>
+<ol type="1">
+<li>在输入数据上，CBOW
+输入的是一段区间中除去目标词之外的所有其他词的向量加和或平均，而
+<strong>fastText 为了利用更多的语序信息</strong>，将 bag-of-words 变成了
+bag-of-features，也就是输入 x
+不再仅仅是一个词，还可以<strong>加上字符级别的 bigram 或者是 trigram
+的信息</strong>等等。</li>
+<li>第二个不同在于，CBOW 预测目标是语境中的一个词，而 <strong>fastText
+预测目标是当前这段输入文本的类别</strong>，正因为需要这个文本类别，因此才说
+fastText 是一个监督模型。</li>
+</ol>
+<p>​ fastText 的网络结构和 CBOW 基本一致，同时在输出层的分类上也使用了
+Hierachical Softmax 技巧来加速训练。</p>
+<p>​ 目标函数： <span class="math display">\[
+-\frac{1}{N} \sum_{n=1}^{N} y_{n} \log f\left(B A x_{n}\right)
+\]</span></p>
+<p><span class="math display">\[
+x_{n}=\sum_{i=1}^{l_{n}} x_{n, i}
+\]</span></p>
+<blockquote>
+<p><span class="math inline">\(x_{n, i}\)</span> --语料当中第 n
+篇文档的第 i 个（词 或者 char N-gram）</p>
+<p>A --最终可以获取的词向量信息</p>
+</blockquote>
+<h3><span id="词向量的作用与获取">词向量的作用与获取</span></h3>
+<p>​ 高阶的深度学习自然语言处理任务，都可以用词向量作为基础。可以从<a href="https://github.com/Embedding/Chinese-Word-Vectors" target="_blank" rel="noopener">开源链接</a>获取。</p>
+<h4><span id="词向量的意义">词向量的意义</span></h4>
+<ul>
+<li>基于词与其他词的某种共现关系
+<ul>
+<li>skip-gram with negative-sampling 与 PMI矩阵
+的等价性证明《Neural-Word-Embeddings-as-Implicit-Matrix-Factorization》
+<ul>
+<li>神经网络与SVD的求解方法只是降维方式的不同</li>
+<li>神经网络更像MF，而MF与SVD的降维的约束条件不同，神经网络的目标函数与MF的目标函数也不同</li>
+</ul></li>
+<li>GloVe与MF关系更近
+<ul>
+<li>目标函数更像</li>
+<li>CBOW没有类似的降维矩阵对应</li>
+</ul></li>
+</ul></li>
+<li>基于语言模型
+<ul>
+<li>词向量与语言模型本来是两个独立的NLP问题领域，因为深度学习联系在了一起。</li>
+<li>基于词向量构建成句子向量进而进而完成语言模型的任务</li>
+</ul></li>
+<li>基于其他监督学习任务
+<ul>
+<li>词向量并不只是语言模型可以得到，基于有监督学习也可以得到：C&amp;W<a href="http://licstar.net/archives/328#s22" target="_blank" rel="noopener">了解</a></li>
+<li>基于词向量构建成句子向量进而完成文本分类或文本相似度判断的任务</li>
+</ul></li>
+</ul>
+<hr>
+<h2><span id="4关键词提取">4.关键词提取</span></h2>
+<h3><span id="tf-idf文本关键词抽取方法">TF-IDF文本关键词抽取方法</span></h3>
+<p>（1）
+对于给定的文本D进行分词、词性标注和去除停用词等数据预处理操作。得到n个候选关键词，即D=[t1,t2,…,tn]
+；</p>
+<p>（2） 计算词语ti 在文本D中的词频；</p>
+<p>（3） 计算词语ti 在整个语料的IDF=log (Dn /(Dt +1))，Dt
+为语料库中词语ti 出现的文档个数；</p>
+<p>（4） 计算得到词语ti
+的TF-IDF=TF*IDF，并重复（2）—（4）得到所有候选关键词的TF-IDF数值；</p>
+<p>（5）
+对候选关键词计算结果进行倒序排列，得到排名前TopN个词汇作为文本关键词。</p>
+<h3><span id="基于textrank的文本关键词抽取方法">基于TextRank的文本关键词抽取方法</span></h3>
+<p>（1）
+对于给定的文本D进行分词、词性标注和去除停用词等数据预处理操作。得到n个候选关键词，即D=[t1,t2,…,tn]
+；</p>
+<p>（2）
+构建候选关键词图G=(V,E)，其中V为节点集，由候选关键词组成，并采用共现关系构造任两点之间的边，两个节点之间仅当它们对应的词汇在长度为K的窗口中共现则存在边，K表示窗口大小即最多共现K个词汇；</p>
+<p>（3）
+根据公式迭代计算各节点的权重，直至收敛；(见中文文本处理部分)</p>
+<p>（4）
+对节点权重进行倒序排列，得到排名前TopN个词汇作为文本关键词。</p>
+<h3><span id="基于word2vec词聚类的文本关键词抽取方法">基于Word2Vec词聚类的文本关键词抽取方法</span></h3>
+<p>（1） 对Wiki中文语料进行Word2vec模型训练，<a href="./code/gensim-word2vec.html">代码</a></p>
+<p>（2）
+对于给定的文本D进行分词、词性标注和去除停用词等数据预处理操作。得到n个候选关键词，即D=[t1,t2,…,tn]
+；</p>
+<p>（3）
+遍历候选关键词，从词向量文件中抽取候选关键词的词向量表示，即WV=[v1，v2，…，vm]；</p>
+<p>（4） 对候选关键词进行K-Means聚类，得到各个类别的聚类中心；</p>
+<p>（5）
+计算各类别下，组内词语与聚类中心的距离（欧几里得距离），按聚类大小进行升序排序；</p>
+<p>（6） 对候选关键词计算结果得到排名前TopN个词汇作为文本关键词。</p>
+<p>步骤（4）中需要人为给定聚类的个数，具体参考文档主题的个数。</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> sklearn.cluster <span class="hljs-keyword">import</span> KMeans<br><span class="hljs-keyword">from</span> sklearn.decomposition <span class="hljs-keyword">import</span> PCA<br><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">getkeywords_kmeans</span><span class="hljs-params">(data,topK)</span>:</span><br>    words = data[<span class="hljs-string">"word"</span>] <span class="hljs-comment"># 词汇</span><br>    vecs = data.ix[:,<span class="hljs-number">1</span>:] <span class="hljs-comment"># 向量表示</span><br><br>    kmeans = KMeans(n_clusters=<span class="hljs-number">1</span>,random_state=<span class="hljs-number">10</span>).fit(vecs)<br>    labels = kmeans.labels_ <span class="hljs-comment">#类别结果标签</span><br>    labels = pd.DataFrame(labels,columns=[<span class="hljs-string">'label'</span>])<br>    new_df = pd.concat([labels,vecs],axis=<span class="hljs-number">1</span>)<br>    vec_center = kmeans.cluster_centers_ <span class="hljs-comment">#聚类中心</span><br>    <br>    <span class="hljs-comment"># 计算距离（相似性） 采用欧几里得距离（欧式距离）</span><br>    distances = []<br>    vec_words = np.array(vecs) <span class="hljs-comment"># 候选关键词向量，dataFrame转array</span><br>    vec_center = vec_center[<span class="hljs-number">0</span>] <span class="hljs-comment"># 第一个类别聚类中心,本例只有一个类别</span><br>    length = len(vec_center) <span class="hljs-comment"># 向量维度</span><br>    <span class="hljs-keyword">for</span> index <span class="hljs-keyword">in</span> range(len(vec_words)): <span class="hljs-comment"># 候选关键词个数</span><br>        cur_wordvec = vec_words[index] <span class="hljs-comment"># 当前词语的词向量</span><br>        dis = <span class="hljs-number">0</span> <span class="hljs-comment"># 向量距离</span><br>        <span class="hljs-keyword">for</span> index2 <span class="hljs-keyword">in</span> range(length):<br>            dis += (vec_center[index2]-cur_wordvec[index2])*(vec_center[index2]-cur_wordvec[index2])<br>        dis = math.sqrt(dis)<br>        distances.append(dis)<br>    distances = pd.DataFrame(distances,columns=[<span class="hljs-string">'dis'</span>])<br><br>    result = pd.concat([words, labels ,distances], axis=<span class="hljs-number">1</span>) <span class="hljs-comment"># 拼接词语与其对应中心点的距离</span><br>    result = result.sort_values(by=<span class="hljs-string">"dis"</span>,ascending = <span class="hljs-literal">True</span>) <span class="hljs-comment"># 按照距离大小进行升序排序</span><br></code></pre></div></td></tr></table></figure>
+<p>可使用PCA降维，但具体视效果而定。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/NLP/">NLP</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/fastText/">fastText</a>
+                    
+                      <a class="hover-with-bg" href="/tags/representation/">representation</a>
+                    
+                      <a class="hover-with-bg" href="/tags/word2vec/">word2vec</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/ec2b8b1f.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">文本表示进阶</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/3423f471.html">
+                        <span class="hidden-mobile">语言模型</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        loader: {
+          load: ['ui/lazy']
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>

@@ -1,0 +1,649 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="个人博客&amp;笔记">
+  <meta name="author" content="江左时雨">
+  <meta name="keywords" content="机器学习,Machine Learning,自然语言处理,NLP,深度学习,Deep Learning,计算机,Coding,生活随笔">
+  <meta name="description" content="概率语言模型，如最大熵模型和概率神经模型，在参数估计时，都有计算量大的问题，词汇表实在是太大了。这让配分函数的计算量大得就想优化它。 只看NCE和Negative Sampling（以下简写为NS），就不说其他的方法了。 NCE和NS刚接触时，看着好像一样一样的。再看，还真是大意了，不够严谨。（废话真多） 标准开头 假设以下是一个模型，根据上下文 \(c\) 预测词表 \(V\) 中的词">
+<meta property="og:type" content="article">
+<meta property="og:title" content="再看NCE">
+<meta property="og:url" content="https://racleray.github.io/posts/68340e67.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="概率语言模型，如最大熵模型和概率神经模型，在参数估计时，都有计算量大的问题，词汇表实在是太大了。这让配分函数的计算量大得就想优化它。 只看NCE和Negative Sampling（以下简写为NS），就不说其他的方法了。 NCE和NS刚接触时，看着好像一样一样的。再看，还真是大意了，不够严谨。（废话真多） 标准开头 假设以下是一个模型，根据上下文 \(c\) 预测词表 \(V\) 中的词">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-04-08T15:41:42.000Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:31.039Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="NCE">
+<meta property="article:tag" content="language model">
+<meta name="twitter:card" content="summary_large_image">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>再看NCE - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="再看NCE">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-04-08 23:41" pubdate>
+        2021年4月8日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.7k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      8 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">再看NCE</h1>
+            
+            <div class="markdown-body">
+              <p>概率语言模型，如最大熵模型和概率神经模型，在参数估计时，都有计算量大的问题，词汇表实在是太大了。这让配分函数的计算量大得就想优化它。</p>
+<p>只看NCE和Negative Sampling（以下简写为NS），就不说其他的方法了。</p>
+<p>NCE和NS刚接触时，看着好像一样一样的。再看，还真是大意了，不够严谨。（废话真多）</p>
+<h2><span id="标准开头">标准开头</span></h2>
+<p>假设以下是一个模型，根据上下文 <span class="math inline">\(c\)</span>
+预测词表 <span class="math inline">\(V\)</span> 中的词 <span class="math inline">\(w\)</span>。 <span class="math display">\[
+p_{\theta}(w \mid c)=\frac{u_{\theta}(w, c)}{\sum_{w^{\prime} \in V}
+u_{\theta}\left(w^{\prime}, c\right)}=\frac{u_{\theta}(w,
+c)}{Z_{\theta}(c)}
+\]</span> 假设 <span class="math inline">\(u_\theta = \exp(s_\theta(w,
+c))\)</span>，<span class="math inline">\(Z_\theta(c)\)</span>自然是配分函数。<span class="math inline">\(s_\theta\)</span> 假设是一个可微的函数。</p>
+<p>如果了解概率图模型，应该见过使用 Importance Sampling + MC
+的方式近似配分函数的期望的法子。NCE走得就是这条路，只是稍稍改进了些。</p>
+<p>其他定义：</p>
+<p>经验分布表示为 <span class="math inline">\(\hat{p}(w|c)\)</span> 和
+<span class="math inline">\(\hat{p}(c)\)</span></p>
+<p>模型表示的分布<span class="math inline">\(p_\theta(w|c)\)</span></p>
+<p>NCE的目的就是通过一个 噪声分布 <span class="math inline">\(q(w)\)</span>
+（w的均匀分布，也可以是对每个概率取幂0&lt; α
+&lt;1和再normalize得到），得到配分函数的渐进无偏估计。</p>
+<h2><span id="nce">NCE</span></h2>
+<p>方法：通过建立二分类模型，区分来自经验分布（训练数据）和噪声分布的数据，得到最优的模型参数，就是需要的参数求解结果。</p>
+<h3><span id="数据生成">数据生成</span></h3>
+<p>Label d = ｛0，1｝，表示数据属于噪声或者真实数据。分布表示为： <span class="math display">\[
+p(d, w \mid c)=\left\{\begin{array}{ll}
+\frac{k}{1+k} \times q(w) &amp; \text { if } d=0 \\
+\frac{1}{1+k} \times \tilde{p}(w \mid c) &amp; \text { if } d=1
+\end{array}\right.
+\]</span> 转换成 d 关于 c 和 w 的条件分布（定义直接推导）： <span class="math display">\[
+\begin{aligned}
+p(d=0 \mid c, w) &amp;=\frac{\frac{k}{1+k} \times q(w)}{\frac{1}{1+k}
+\times \tilde{p}(w \mid c)+\frac{k}{1+k} \times q(w)} \\
+&amp;=\frac{k \times q(w)}{\tilde{p}(w \mid c)+k \times q(w)} \\
+p(d=1 \mid c, w) &amp;=\frac{\tilde{p}(w \mid c)}{\tilde{p}(w \mid c)+k
+\times q(w)}
+\end{aligned}
+\]</span> 以上是构建的"proxy
+corpus"代理的训练数据分布，那么把模型拟合的分布<span class="math inline">\(p_\theta(w|c)\)</span>带入，替换掉经验分布 <span class="math inline">\(\hat{p}(w|c)\)</span>，就可以得到一个可以操作的目标。</p>
+<h3><span id="方法">方法</span></h3>
+<p>但是，<span class="math inline">\(\hat{p}(w|c)\)</span>还是有 <span class="math inline">\(Z_\theta(c)\)</span>
+啊，这不相当于构造这么多都白干了？</p>
+<p>所以NCE继续改进，将 <span class="math inline">\(Z_\theta(c)\)</span>
+整体但做一个关于 c 的参数，参数化。然后<a href="https://arxiv.org/abs/1206.6426" target="_blank" rel="noopener">一通操作</a>，发现在神经网络模型这种参数巨多的情况下，将
+<span class="math inline">\(Z_\theta(c)\)</span> 直接设为 1
+，反而是一种有效且高效的做法，文章里叫做 self-normalized。</p>
+<p>所以，得到的关于 参数 <span class="math inline">\(\theta\)</span>
+的分布表示为： <span class="math display">\[
+\begin{aligned}
+p(d=0 \mid c, w) &amp;=\frac{k \times q(w)}{u_{\theta}(w, c)+k \times
+q(w)} \\
+p(d=1 \mid c, w) &amp;=\frac{u_{\theta}(w, c)}{u_{\theta}(w, c)+k \times
+q(w)}
+\end{aligned}
+\]</span> 直接操作掉了求和配分项。目标也变成了一个二分类： <span class="math display">\[
+\mathcal{L}_{\mathrm{NCE}_{k}}=\sum_{(w, c) \in \mathcal{D}}\left(\log
+p(d=1 \mid c, w)+k \mathbb{E}_{\bar{w} \sim q} \log p(d=0 \mid c,
+\bar{w})\right)
+\]</span>
+只是，其中求期望的部分需要所有单词在噪声分布下求值，得到期望，这显然是低效的。简单的办法，直接MC，期望转Sampling：
+<span class="math display">\[
+\begin{aligned}
+\mathcal{L}_{\mathrm{NCE}_{k}}^{\mathrm{MC}} &amp;=\sum_{(w, c) \in
+\mathcal{D}}\left(\log p(d=1 \mid c, w)+k \times \sum_{i=1, \bar{w} \sim
+q}^{k} \frac{1}{k} \times \log p(d=0 \mid c, \bar{w})\right) \\
+&amp;=\sum_{(w, c) \in \mathcal{D}}\left(\log p(d=1 \mid c,
+w)+\sum_{i=1, \bar{w} \sim q}^{k} \log p(d=0 \mid c, \bar{w})\right)
+\end{aligned}
+\]</span> 完</p>
+<p>可以证明（求极值点嘛，再分析一波k趋于无穷的极限），这个目标函数的最优时，就是模型所表示的分布和经验分布匹配的时候。</p>
+<h2><span id="nsnegative-sampling">NS(Negative Sampling)</span></h2>
+<p>word2vec使用过的方法，直接可以写出目标条件分布： <span class="math display">\[
+\begin{array}{l}
+p(d=0 \mid c, w)=\frac{1}{u_{\theta}(w, c)+1} \\
+p(d=1 \mid c, w)=\frac{u_{\theta}(w, c)}{u_{\theta}(w, c)+1}
+\end{array}
+\]</span> 可以看成 k = |V| 且 q 为均匀分布的NCE特殊情况。在分析一次像
+<span class="math inline">\(\mathcal{L}_{\mathrm{NCE}_{k}}\)</span>
+的损失函数，或者是hinge
+loss形式的损失函数，求导分析极值，可以发现它最优时，模型所表示的分布和经验分布并不匹配，可以不一致。</p>
+<p>也就是说，NS虽然在word2vec训练时，可以学习到word的representation，但是它并不适用于语言模型等更general的情景。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/ML/">ML</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/NCE/">NCE</a>
+                    
+                      <a class="hover-with-bg" href="/tags/language-model/">language model</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/62f6fe86.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Knowledge Distillation Note</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/d4b0eecc.html">
+                        <span class="hidden-mobile">UDA & MixMatch</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        loader: {
+          load: ['ui/lazy']
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>

@@ -1,0 +1,635 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="记录传统的文本相似性匹配方法（编辑距离、SimHash等），与word2vec等方法。">
+  <meta name="author" content="江左时雨">
+  <meta name="keywords" content="机器学习,Machine Learning,自然语言处理,NLP,深度学习,Deep Learning,计算机,Coding,生活随笔">
+  <meta name="description" content="记录传统的文本相似性匹配方法（编辑距离、SimHash等），与word2vec等方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="文本相似性">
+<meta property="og:url" content="https://racleray.github.io/posts/1074fc0d.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="记录传统的文本相似性匹配方法（编辑距离、SimHash等），与word2vec等方法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E7%9B%B8%E4%BC%BC%E6%80%A7.assets/image-20200228225047923.png">
+<meta property="article:published_time" content="2020-07-07T10:19:49.000Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:31.044Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="word2vec">
+<meta property="article:tag" content="text similarity">
+<meta property="article:tag" content="doc2vec">
+<meta property="article:tag" content="SimHash">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E7%9B%B8%E4%BC%BC%E6%80%A7.assets/image-20200228225047923.png">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>文本相似性 - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="文本相似性">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-07-07 18:19" pubdate>
+        2020年7月7日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      9.4k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      29 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">文本相似性</h1>
+            
+            <div class="markdown-body">
+              <h2><span id="基于字符串匹配的文本相似度">基于字符串匹配的文本相似度</span></h2>
+<ol type="1">
+<li>Hamming distance</li>
+</ol>
+<p>​ 两个相同长度的字符串，有多少个位置是不同的token. e.g., d(cap, cat) =
+1</p>
+<ol start="2" type="1">
+<li>编辑距离</li>
+</ol>
+<p>​
+给定两个句子，最少需要经过多少步操作（删除，添加，替换）能够从一个句子转化成另一个句子</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本相似性.assets/image-20200228225047923.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:67%;"></p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">editDistDP</span><span class="hljs-params">(s1, s2)</span>:</span> <br>    <span class="hljs-string">"""编辑距离计算</span><br><span class="hljs-string">    params：文本1，string</span><br><span class="hljs-string">            文本2，string</span><br><span class="hljs-string">    """</span><br>    m = len(s1.strip())<br>    n = len(s2.strip())<br>    <span class="hljs-comment"># 创建一张表格记录所有子问题的答案</span><br>    dp = [[<span class="hljs-number">0</span> <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> range(n+<span class="hljs-number">1</span>)] <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> range(m+<span class="hljs-number">1</span>)] <br>    <span class="hljs-comment"># 从上往下填充DP表格</span><br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(m+<span class="hljs-number">1</span>):<br>        <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> range(n+<span class="hljs-number">1</span>):<br>            <span class="hljs-keyword">if</span> i == <span class="hljs-number">0</span> <span class="hljs-keyword">or</span> j == <span class="hljs-number">0</span>:<br>                dp[i][j] = max(i, j)<br>            <span class="hljs-comment"># 如果两个字符串结尾字母相同，距离不变</span><br>            <span class="hljs-keyword">elif</span> s1[i<span class="hljs-number">-1</span>] == s2[j<span class="hljs-number">-1</span>]:<br>                dp[i][j] = dp[i<span class="hljs-number">-1</span>][j<span class="hljs-number">-1</span>]<br>            <span class="hljs-comment"># 如果结尾字母不同，那我们就需要考虑三种情况，取最小的编辑距离</span><br>            <span class="hljs-comment"># 替换，添加，删除</span><br>            <span class="hljs-keyword">else</span>:<br>                dp[i][j] = <span class="hljs-number">1</span> + min(dp[i<span class="hljs-number">-1</span>][j<span class="hljs-number">-1</span>], dp[i][j<span class="hljs-number">-1</span>], dp[i<span class="hljs-number">-1</span>][j])<br>    <br>    <span class="hljs-keyword">return</span> dp[m][n]<br></code></pre></div></td></tr></table></figure>
+<ol start="3" type="1">
+<li>Jaccard Similarity</li>
+</ol>
+<p>​
+给定两句话，把两句话中出现的单词取交集和并集，交集和并集的大小之商即为Jaccard
+Similarity。</p>
+<p>​ Jaccard
+Similarity只考虑单词出现与否，忽略每个单词的含义，忽略单词的顺序，没有考虑单词出现的次数。</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">jaccard_sim</span><span class="hljs-params">(s1, s2)</span>:</span><br>    <span class="hljs-string">"""交并比"""</span><br>    a = set(s1.strip().split())<br>    b = set(s2.strip().split())<br>    c = a.intersection(b)<br>    <span class="hljs-keyword">return</span> float(len(c) / (len(a) + len(b) - len(c)))<br></code></pre></div></td></tr></table></figure>
+<h2><span id="基于文本特征的相似度计算方法">基于文本特征的相似度计算方法</span></h2>
+<h3><span id="simhash">SimHash</span></h3>
+<ol type="1">
+<li>选择一个hashsize，例如32</li>
+<li>V = [0] * 32</li>
+<li>把一段text变成features (shingles)</li>
+<li>把每个feature都hash成32位</li>
+<li>对于每个hash的每个位置，如果位置上是1就把V[i]加1，如果不是就把V[i]减1</li>
+<li>最后，如果V[i]&gt;0就设为1，否则设为0，得到的V就是我们想要的simhash值
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> re<br><span class="hljs-keyword">import</span> sys<br><span class="hljs-keyword">import</span> hashlib<br><span class="hljs-keyword">import</span> logging<br><span class="hljs-keyword">import</span> numbers<br><span class="hljs-keyword">import</span> collections<br><span class="hljs-keyword">from</span> itertools <span class="hljs-keyword">import</span> groupby<br><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">_hashfunc</span><span class="hljs-params">(x)</span>:</span> <span class="hljs-comment"># 使用的hash函数</span><br>    <span class="hljs-keyword">return</span> int(hashlib.md5(x).hexdigest(), <span class="hljs-number">16</span>)<br><br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Simhash</span><span class="hljs-params">(object)</span>:</span><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self,</span></span><br><span class="hljs-function"><span class="hljs-params">                 value,</span></span><br><span class="hljs-function"><span class="hljs-params">                 f=<span class="hljs-number">64</span>,</span></span><br><span class="hljs-function"><span class="hljs-params">                 reg=<span class="hljs-string">r'[\w\u4e00-\u9fcc]+'</span>,</span></span><br><span class="hljs-function"><span class="hljs-params">                 hashfunc=None,</span></span><br><span class="hljs-function"><span class="hljs-params">                 log=None)</span>:</span><br>        <span class="hljs-string">"""</span><br><span class="hljs-string">        `f` is the dimensions of fingerprints</span><br><span class="hljs-string"></span><br><span class="hljs-string">        `reg` is meaningful only when `value` is str and describes</span><br><span class="hljs-string">        what is considered to be a letter inside parsed string. Regexp</span><br><span class="hljs-string">        object can also be specified (some attempt to handle any letters</span><br><span class="hljs-string">        is to specify reg=re.compile(r'\w', re.UNICODE))</span><br><span class="hljs-string"></span><br><span class="hljs-string">        `hashfunc` accepts a utf-8 encoded string and returns a unsigned</span><br><span class="hljs-string">        integer in at least `f` bits.</span><br><span class="hljs-string">        """</span><br><br>        self.f = f<br>        self.reg = reg<br>        self.value = <span class="hljs-literal">None</span><br><br>        <span class="hljs-keyword">if</span> hashfunc <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:<br>            self.hashfunc = _hashfunc<br>        <span class="hljs-keyword">else</span>:<br>            self.hashfunc = hashfunc<br><br>        <span class="hljs-keyword">if</span> log <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:<br>            self.log = logging.getLogger(<span class="hljs-string">"simhash"</span>)<br>        <span class="hljs-keyword">else</span>:<br>            self.log = log<br><br>        <span class="hljs-keyword">if</span> isinstance(value, Simhash):<br>            self.value = value.value<br>        <span class="hljs-keyword">elif</span> isinstance(value, str):<br>            <span class="hljs-comment">#  print("build by text")</span><br>            self.build_by_text(str(value))<br>        <span class="hljs-keyword">elif</span> isinstance(value, collections.Iterable):<br>            self.build_by_features(value)<br>        <span class="hljs-keyword">elif</span> isinstance(value, numbers.Integral):<br>            self.value = value<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-keyword">raise</span> Exception(<span class="hljs-string">'Bad parameter with type &#123;&#125;'</span>.format(type(value)))<br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__eq__</span><span class="hljs-params">(self, other)</span>:</span><br>        <span class="hljs-string">"""</span><br><span class="hljs-string">        Compare two simhashes by their value.</span><br><span class="hljs-string"></span><br><span class="hljs-string">        :param Simhash other: The Simhash object to compare to</span><br><span class="hljs-string">        """</span><br>        <span class="hljs-keyword">return</span> self.value == other.value<br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">_slide</span><span class="hljs-params">(self, content, width=<span class="hljs-number">4</span>)</span>:</span><br>        <span class="hljs-keyword">return</span> [<br>            content[i:i + width]<br>            <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(max(len(content) - width + <span class="hljs-number">1</span>, <span class="hljs-number">1</span>))<br>        ]<br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">_tokenize</span><span class="hljs-params">(self, content)</span>:</span><br>        content = content.lower()<br>        content = <span class="hljs-string">''</span>.join(re.findall(self.reg, content))<br>        ans = self._slide(content)<br>        <span class="hljs-keyword">return</span> ans<br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">build_by_text</span><span class="hljs-params">(self, content)</span>:</span><br>        features = self._tokenize(content)<br>        features = &#123;k: sum(<span class="hljs-number">1</span> <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> g) <span class="hljs-keyword">for</span> k, g <span class="hljs-keyword">in</span> groupby(sorted(features))&#125;<br>        <span class="hljs-keyword">return</span> self.build_by_features(features)<br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">build_by_features</span><span class="hljs-params">(self, features)</span>:</span><br>        <span class="hljs-string">"""</span><br><span class="hljs-string">        核心方法</span><br><span class="hljs-string">        `features` might be a list of unweighted tokens (a weight of 1</span><br><span class="hljs-string">                   will be assumed), a list of (token, weight) tuples or</span><br><span class="hljs-string">                   a token -&gt; weight dict.</span><br><span class="hljs-string">        """</span><br>        v = [<span class="hljs-number">0</span>] * self.f  <span class="hljs-comment"># 初始化 [0,0,0,...]</span><br>        masks = [<span class="hljs-number">1</span> &lt;&lt; i <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(self.f)]  <span class="hljs-comment"># 二进制下[1000, 0100, 0010, ...]</span><br>        <br>        <span class="hljs-keyword">if</span> isinstance(features, dict):<br>            features = features.items()<br>        <br>        <span class="hljs-keyword">for</span> f <span class="hljs-keyword">in</span> features:<br>            <span class="hljs-keyword">if</span> isinstance(f, str):<br>                h = self.hashfunc(f.encode(<span class="hljs-string">'utf-8'</span>))  <span class="hljs-comment"># hash成32位</span><br>                w = <span class="hljs-number">1</span><br>            <span class="hljs-keyword">else</span>:<br>                <span class="hljs-keyword">assert</span> isinstance(f, collections.Iterable)<br>                h = self.hashfunc(f[<span class="hljs-number">0</span>].encode(<span class="hljs-string">'utf-8'</span>))<br>                w = f[<span class="hljs-number">1</span>]<br>            <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(self.f):<br>                <span class="hljs-comment"># mask位置为1，则vi加上w，否则减去w</span><br>                v[i] += w <span class="hljs-keyword">if</span> h &amp; masks[i] <span class="hljs-keyword">else</span> -w<br>        <br>        ans = <span class="hljs-number">0</span><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(self.f):<br>            <span class="hljs-keyword">if</span> v[i] &gt; <span class="hljs-number">0</span>:  <span class="hljs-comment"># 如果大于0，就把那一位变成1</span><br>                ans |= masks[i]<br>        self.value = ans<br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">distance</span><span class="hljs-params">(self, another)</span>:</span><br>        <span class="hljs-string">"""计算两个vector有多少个位置不一样"""</span><br>        <span class="hljs-keyword">assert</span> self.f == another.f<br>        x = (self.value ^ another.value) &amp; ((<span class="hljs-number">1</span> &lt;&lt; self.f) - <span class="hljs-number">1</span>)  <span class="hljs-comment"># (1 &lt;&lt; self.f) - 1: self.f个位的1</span><br>        ans = <span class="hljs-number">0</span><br>        <span class="hljs-keyword">while</span> x: <span class="hljs-comment"># bin(x)不全为0，即x非0</span><br>            ans += <span class="hljs-number">1</span>  <br>            x &amp;= x - <span class="hljs-number">1</span>   <span class="hljs-comment"># bin计算，每算一次，低位的第一个1变为0</span><br>        <span class="hljs-keyword">return</span> ans<br></code></pre></div></td></tr></table></figure></li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SimhashIndex</span><span class="hljs-params">(object)</span>:</span><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, objs, f=<span class="hljs-number">64</span>, k=<span class="hljs-number">2</span>, log=None)</span>:</span><br>        <span class="hljs-string">"""</span><br><span class="hljs-string">        使用Simhash进行相似字符串检索</span><br><span class="hljs-string">        `objs` is a list of (obj_id, simhash)</span><br><span class="hljs-string">        obj_id is a string, simhash is an instance of Simhash</span><br><span class="hljs-string">        `f` is the same with the one for Simhash</span><br><span class="hljs-string">        `k` is the tolerance</span><br><span class="hljs-string">        """</span><br>        self.k = k<br>        self.f = f<br>        count = len(objs)<br><br>        <span class="hljs-keyword">if</span> log <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:<br>            self.log = logging.getLogger(<span class="hljs-string">"simhash"</span>)<br>        <span class="hljs-keyword">else</span>:<br>            self.log = log<br><br>        self.log.info(<span class="hljs-string">'Initializing %s data.'</span>, count)<br><br>        self.bucket = collections.defaultdict(set)<br><br>        <span class="hljs-keyword">for</span> i, q <span class="hljs-keyword">in</span> enumerate(objs):<br>            <span class="hljs-keyword">if</span> i % <span class="hljs-number">10000</span> == <span class="hljs-number">0</span> <span class="hljs-keyword">or</span> i == count - <span class="hljs-number">1</span>:<br>                self.log.info(<span class="hljs-string">'%s/%s'</span>, i + <span class="hljs-number">1</span>, count)<br>            self.add(*q)<br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_near_dups</span><span class="hljs-params">(self, simhash)</span>:</span><br>        <span class="hljs-string">"""</span><br><span class="hljs-string">        `simhash` is an instance of Simhash</span><br><span class="hljs-string">        return a list of obj_id, which is in type of str</span><br><span class="hljs-string">        """</span><br>        <span class="hljs-keyword">assert</span> simhash.f == self.f<br><br>        ans = set()<br><br>        <span class="hljs-keyword">for</span> key <span class="hljs-keyword">in</span> self.get_keys(simhash):<br>            dups = self.bucket[key]<br>            self.log.debug(<span class="hljs-string">'key:%s'</span>, key)<br>            <span class="hljs-keyword">if</span> len(dups) &gt; <span class="hljs-number">200</span>:<br>                self.log.warning(<span class="hljs-string">'Big bucket found. key:%s, len:%s'</span>, key,<br>                                 len(dups))<br><br>            <span class="hljs-keyword">for</span> dup <span class="hljs-keyword">in</span> dups:<br>                sim2, obj_id = dup.split(<span class="hljs-string">','</span>, <span class="hljs-number">1</span>)<br>                sim2 = Simhash(int(sim2, <span class="hljs-number">16</span>), self.f)<br><br>                d = simhash.distance(sim2)<br>                <span class="hljs-keyword">if</span> d &lt;= self.k:<br>                    ans.add(obj_id)<br>        <span class="hljs-keyword">return</span> list(ans)<br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">add</span><span class="hljs-params">(self, obj_id, simhash)</span>:</span><br>        <span class="hljs-string">"""</span><br><span class="hljs-string">        `obj_id` is a string</span><br><span class="hljs-string">        `simhash` is an instance of Simhash</span><br><span class="hljs-string">        """</span><br>        <span class="hljs-keyword">assert</span> simhash.f == self.f<br><br>        <span class="hljs-keyword">for</span> key <span class="hljs-keyword">in</span> self.get_keys(simhash):<br>            v = <span class="hljs-string">'%x,%s'</span> % (simhash.value, obj_id)<br>            self.bucket[key].add(v)<br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">delete</span><span class="hljs-params">(self, obj_id, simhash)</span>:</span><br>        <span class="hljs-string">"""</span><br><span class="hljs-string">        `obj_id` is a string</span><br><span class="hljs-string">        `simhash` is an instance of Simhash</span><br><span class="hljs-string">        """</span><br>        <span class="hljs-keyword">assert</span> simhash.f == self.f<br><br>        <span class="hljs-keyword">for</span> key <span class="hljs-keyword">in</span> self.get_keys(simhash):<br>            v = <span class="hljs-string">'%x,%s'</span> % (simhash.value, obj_id)<br>            <span class="hljs-keyword">if</span> v <span class="hljs-keyword">in</span> self.bucket[key]:<br>                self.bucket[key].remove(v)<br><br><span class="hljs-meta">    @property</span><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">offsets</span><span class="hljs-params">(self)</span>:</span><br>        <span class="hljs-string">"""</span><br><span class="hljs-string">        You may optimize this method according to &lt;http://www.wwwconference.org/www2007/papers/paper215.pdf&gt;</span><br><span class="hljs-string">        """</span><br>        <span class="hljs-keyword">return</span> [self.f // (self.k + <span class="hljs-number">1</span>) * i <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(self.k + <span class="hljs-number">1</span>)]<br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_keys</span><span class="hljs-params">(self, simhash)</span>:</span><br>        <span class="hljs-keyword">for</span> i, offset <span class="hljs-keyword">in</span> enumerate(self.offsets):<br>            <span class="hljs-keyword">if</span> i == (len(self.offsets) - <span class="hljs-number">1</span>):<br>                m = <span class="hljs-number">2</span>**(self.f - offset) - <span class="hljs-number">1</span><br>            <span class="hljs-keyword">else</span>:<br>                m = <span class="hljs-number">2</span>**(self.offsets[i + <span class="hljs-number">1</span>] - offset) - <span class="hljs-number">1</span><br>            c = simhash.value &gt;&gt; offset &amp; m<br>            <span class="hljs-keyword">yield</span> <span class="hljs-string">'%x:%x'</span> % (c, i)<br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">bucket_size</span><span class="hljs-params">(self)</span>:</span><br>        <span class="hljs-keyword">return</span> len(self.bucket)<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">data = &#123;<br>    <span class="hljs-number">1</span>: <span class="hljs-string">u'How are you? I am fine. blar blar blar blar blar Thanks.'</span>,<br>    <span class="hljs-number">2</span>: <span class="hljs-string">u'How are you i am fine. blar blar blar blar blar Thanks.'</span>,<br>    <span class="hljs-number">3</span>: <span class="hljs-string">u'This is a simhash test'</span>,<br>&#125;<br><br><span class="hljs-comment"># 序号和hash值保存</span><br>objs = [(str(k), Simhash(v)) <span class="hljs-keyword">for</span> k, v <span class="hljs-keyword">in</span> data.items()]<br><br><span class="hljs-comment"># 建立SimhashIndex对象，`k` is the tolerance</span><br>index = SimhashIndex(objs, k=<span class="hljs-number">10</span>)<br>print(<span class="hljs-string">"相似文本Bucket数量："</span>, index.bucket_size())<br><br><span class="hljs-comment"># 输入需要查找的文本的hash值，get_near_dups获取相似文本</span><br>s1 = Simhash(<span class="hljs-string">u'How are you i am fine. blar blar blar blar blar thanks'</span>)<br>print(<span class="hljs-string">"相似文本id："</span>, index.get_near_dups(s1))<br><br><span class="hljs-comment"># 加入data文本</span><br>index.add(<span class="hljs-string">'4'</span>, s1)<br>print(<span class="hljs-string">"相似文本id："</span>, index.get_near_dups(s1))<br><br>s2 = Simhash(<span class="hljs-string">u'How are you i am fine. blar blar blar thanks'</span>)<br>index.add(<span class="hljs-string">'5'</span>, s2)<br>print(<span class="hljs-string">"相似文本id："</span>, index.get_near_dups(s1))<br></code></pre></div></td></tr></table></figure>
+<h3><span id="cosine-similarity">Cosine Similarity</span></h3>
+<ol type="1">
+<li>将文本转化为feature vectors。（bag of words或者TF-IDF）</li>
+<li>利用feature vectors计算文本相似度</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> sklearn.feature_extraction.text <span class="hljs-keyword">import</span> CountVectorizer<br><span class="hljs-keyword">from</span> sklearn.metrics.pairwise <span class="hljs-keyword">import</span> cosine_similarity<br><br><span class="hljs-comment"># bow</span><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">bow_cosine</span><span class="hljs-params">(s1, s2)</span>:</span><br>    <span class="hljs-string">"""返回值为ndarray类型"""</span><br>    vectorizer = CountVectorizer()    <br>    vectorizer.fit([s1, s2])      <span class="hljs-comment"># 词频统计词表</span><br>    X = vectorizer.transform([s1, s2])<br>    print(X.toarray())<br>    <span class="hljs-keyword">return</span> cosine_similarity(X[<span class="hljs-number">0</span>], X[<span class="hljs-number">1</span>])<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> sklearn.feature_extraction.text <span class="hljs-keyword">import</span> TfidfVectorizer<br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">tfidf_cosine</span><span class="hljs-params">(s1, s2)</span>:</span><br>    vectorizer = TfidfVectorizer()<br>    vectorizer.fit([s1, s2])<br>    X = vectorizer.transform([s1, s2])<br>    print(X.toarray())<br>    <span class="hljs-keyword">return</span> cosine_similarity(X[<span class="hljs-number">0</span>], X[<span class="hljs-number">1</span>])<br></code></pre></div></td></tr></table></figure>
+<h3><span id="word2vec">Word2Vec</span></h3>
+<p>​ 利用句子中的单词做Word Averaging计算句子相似度。</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> gensim<br><span class="hljs-keyword">import</span> gensim.downloader <span class="hljs-keyword">as</span> api<br><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br><span class="hljs-keyword">from</span> sklearn.metrics.pairwise <span class="hljs-keyword">import</span> cosine_similarity<br><br>model = api.load(<span class="hljs-string">"glove-twitter-25"</span>)<br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">wordavg</span><span class="hljs-params">(model, words)</span>:</span><br>    <span class="hljs-string">"""计算句子每个词的平均词向量"""</span><br>    res = np.mean([model.get_vector(w) <span class="hljs-keyword">for</span> w <span class="hljs-keyword">in</span> words <span class="hljs-keyword">if</span> w <span class="hljs-keyword">in</span> model.vocab], <span class="hljs-number">0</span>)<br>    <span class="hljs-keyword">return</span> res<br><br>s1_vec = wordavg(model, s1.lower().split())<br>s2_vec = wordavg(model, s2.lower().split())<br><br>cosine_similarity(s1_vec.reshape((<span class="hljs-number">1</span>, <span class="hljs-number">-1</span>)), s2_vec.reshape((<span class="hljs-number">1</span>, <span class="hljs-number">-1</span>)))<br></code></pre></div></td></tr></table></figure>
+<h3><span id="doc2vec">Doc2Vec</span></h3>
+<p>​ 类似word2vec，只是在输入时加入一个全局的doc vec和word
+vec一起输入，doc vec由doc id和doc
+matrix相乘生成。计算方法有两种，DM(Distributed
+Memory)算法类似CBOW，DBOW(Distributed Bag of Words)类似Skip
+gram(只输入doc vec预测随机抽取词的概率分布)。</p>
+<blockquote>
+<p>gensim官方文档：https://radimrehurek.com/gensim/models/doc2vec.html</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> gensim.models <span class="hljs-keyword">as</span> g<br><span class="hljs-keyword">from</span> gensim.corpora <span class="hljs-keyword">import</span> WikiCorpus<br><span class="hljs-keyword">import</span> logging<br><span class="hljs-keyword">from</span> hanziconv <span class="hljs-keyword">import</span> HanziConv<br><br>docvec_size=<span class="hljs-number">192</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TaggedWikiDocument</span><span class="hljs-params">(object)</span>:</span><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, wiki)</span>:</span><br>        self.wiki = wiki<br>        self.wiki.metadata = <span class="hljs-literal">True</span><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__iter__</span><span class="hljs-params">(self)</span>:</span><br>        <span class="hljs-keyword">import</span> jieba<br>        <span class="hljs-comment"># tags信息是word2vec没有的，辅助训练</span><br>        <span class="hljs-keyword">for</span> content, (page_id, title) <span class="hljs-keyword">in</span> self.wiki.get_texts():<br>            <span class="hljs-keyword">yield</span> g.doc2vec.LabeledSentence(words=[w <span class="hljs-keyword">for</span> c <span class="hljs-keyword">in</span> content <span class="hljs-keyword">for</span> w <span class="hljs-keyword">in</span> jieba.cut(HanziConv.toSimplified(c))], tags=[title])<br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">my_function</span><span class="hljs-params">()</span>:</span><br>    zhwiki_name = <span class="hljs-string">'./data/zhwiki-latest-pages-articles.xml.bz2'</span><br>    wiki = WikiCorpus(zhwiki_name, lemmatize=<span class="hljs-literal">False</span>, dictionary=&#123;&#125;)<br>    documents = TaggedWikiDocument(wiki)<br><br>    model = g.Doc2Vec(documents, dm=<span class="hljs-number">0</span>, dbow_words=<span class="hljs-number">1</span>, size=docvec_size, window=<span class="hljs-number">8</span>, min_count=<span class="hljs-number">19</span>, iter=<span class="hljs-number">5</span>, workers=<span class="hljs-number">8</span>)<br>    model.save(<span class="hljs-string">'data/zhiwiki_news.doc2vec'</span>)<br></code></pre></div></td></tr></table></figure>
+<p>模型的推断。根据输入文档，在doc
+matrix的中infer出最后结果，要指定infer_epoch。</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> gensim.models <span class="hljs-keyword">as</span> g<br><span class="hljs-keyword">import</span> codecs<br><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">SimlarityCalu</span><span class="hljs-params">(Vector1,Vector2)</span>:</span><br>    Vector1Mod=np.sqrt(Vector1.dot(Vector1))<br>    Vector2Mod=np.sqrt(Vector2.dot(Vector2))<br>    <span class="hljs-keyword">if</span> Vector2Mod!=<span class="hljs-number">0</span> <span class="hljs-keyword">and</span> Vector1Mod!=<span class="hljs-number">0</span>:<br>        simlarity=(Vector1.dot(Vector2))/(Vector1Mod*Vector2Mod)<br>    <span class="hljs-keyword">else</span>:<br>        simlarity=<span class="hljs-number">0</span><br>    <span class="hljs-keyword">return</span> simlarity<br><br><span class="hljs-comment">#parameters</span><br>model=<span class="hljs-string">'toy_data/model.bin'</span><br>test_docs=<span class="hljs-string">'toy_data/t_docs.txt'</span><br>output_file=<span class="hljs-string">'toy_data/test_vectors.txt'</span><br><br><span class="hljs-comment">#inference hyper-parameters</span><br>start_alpha=<span class="hljs-number">0.01</span><br>infer_epoch=<span class="hljs-number">1000</span><br><br><span class="hljs-comment">#load model</span><br>m = g.Doc2Vec.load(model)<br>test_docs = [x.strip().split() <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> codecs.open(test_docs, <span class="hljs-string">'r'</span>, <span class="hljs-string">'utf-8'</span>).readlines()]<br><br><span class="hljs-comment">#infer test vectors</span><br>output = open(output_file, <span class="hljs-string">'w'</span>)<br>a=[]<br><br><span class="hljs-keyword">for</span> d <span class="hljs-keyword">in</span> test_docs:<br>    output.write(<span class="hljs-string">' '</span>.join([str(x) <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> m.infer_vector(d, alpha=start_alpha, steps=infer_epoch)]) + <span class="hljs-string">'\n'</span> )<br>    a.append(m.infer_vector(d, alpha=start_alpha, steps=infer_epoch))<br>output.flush()<br>output.close()<br>print(SimlarityCalu(a[<span class="hljs-number">0</span>],a[<span class="hljs-number">1</span>]))<br></code></pre></div></td></tr></table></figure>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/NLP/">NLP</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/word2vec/">word2vec</a>
+                    
+                      <a class="hover-with-bg" href="/tags/text-similarity/">text similarity</a>
+                    
+                      <a class="hover-with-bg" href="/tags/doc2vec/">doc2vec</a>
+                    
+                      <a class="hover-with-bg" href="/tags/SimHash/">SimHash</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/bad75bd3.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">文本相似性深度学习方法</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/88e9ab16.html">
+                        <span class="hidden-mobile">Vision to text</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        loader: {
+          load: ['ui/lazy']
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>

@@ -1,0 +1,815 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="记录 Capsule Net 相关概率思想，虽然很少用到，但是它的网络设计挺有意思的。">
+  <meta name="author" content="江左时雨">
+  <meta name="keywords" content="机器学习,Machine Learning,自然语言处理,NLP,深度学习,Deep Learning,计算机,Coding,生活随笔">
+  <meta name="description" content="记录 Capsule Net 相关概率思想，虽然很少用到，但是它的网络设计挺有意思的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Capsule Net">
+<meta property="og:url" content="https://racleray.github.io/posts/cd141949.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="记录 Capsule Net 相关概率思想，虽然很少用到，但是它的网络设计挺有意思的。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110163026495.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110155508014.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1_pic/image-20200707222128481.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/1570955897796.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110170411374.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/1570956636011.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1_pic/image-20200707222554055.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110164629017.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110164449384.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110151624084.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110163730310.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110164114175.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110165736553.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110170300458.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1_pic/image-20200707222308871.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1_pic/image-20200707222324475.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110162131283.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/1570958302422.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110160905390.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110161236308.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110161436562.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110171656945.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110172223944.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/1570958488870.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/1570988099970.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/1570988796272.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110152353504.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110152747324.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110152955662.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110153704495.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110153837670.png">
+<meta property="article:published_time" content="2020-07-07T11:55:17.000Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:31.028Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="capsule">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet%E5%92%8C%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1.assets/image-20191110163026495.png">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>Capsule Net - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Capsule Net">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-07-07 19:55" pubdate>
+        2020年7月7日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      8.6k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      27 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Capsule Net</h1>
+            
+            <div class="markdown-body">
+              <p>一个 capsule 是一组神经元，capsule activity vector
+表示特定类型的实体（例如对象或对象部分）的实例化参数。activity
+vector的长度来表示实体存在的概率，方向表示实例化参数。前一层capsule通过转换矩阵对下一层capsule的实例化参数进行预测。该网络相比于CNN，对于重叠的目标，识别效果更好且能分离出重叠目标。算法使用
+iterative routing-by-agreement mechanism，高层级的capsule的activity
+vector的计算过程将接收低层capsule的计算结果。</p>
+<p>相比于CNN，Caps Net用vector-output capsules代替CNN的scalar-output
+feature detectors，并使用routing-by-agreement代替max-pooling</p>
+<h3><span id="motivation">Motivation</span></h3>
+<p>​
+人的视觉系统通常之关注图像中很小部分的重要信息，这部分信息视觉系统通过高分辨率处理，而其他不重要的信息常常就忽略掉。</p>
+<p>​ 处理这部分重要信息的模型，文章叫做single fixation。假设single
+fixation可以提取的信息不仅仅是某一个事物的特征，而是某一个类型的特征信息，并且在建模过程中忽略每一个fixation之间相互左右的规律。只要求模型解析出每一个single
+fixation。</p>
+<p>​
+一个capsule代表图像中一个部分的目标信息，并且文章中提到“感知拥挤“的研究，来支撑
+一个capsule只代表一个目标信息的合理性。</p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet和动态路由.assets/image-20191110163026495.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​
+capsule可以代表目标的很多信息，文章将capsule输出vector的长度约束在1以内，代表存在概率；vector的方向代表目标的特征。</p>
+<p>​
+capsule的学习的信息具有一种全局的相关性。这样可以解决以下的问题。CNN倾向于局部特征的检测，整体上的空间关系对其预测结果的影响较小。实际上不是人脸的照片，在此处都检测为正确。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet和动态路由.assets/image-20191110155508014.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:50%;"></p>
+<hr>
+<h3><span id="vector-inputs-andoutputs-of-a-capsule">Vector inputs and
+outputs of a capsule</span></h3>
+<p>​ 根据长度代表出现概率的思路，文章提出了以下“激活函数”：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/1-CapsuleNet和动态路由_pic/image-20200707222128481.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:80%;"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet和动态路由.assets/1570955897796.png" srcset="/img/loading.gif" lazyload></p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet和动态路由.assets/image-20191110170411374.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​ 输出将确保short vectors长度趋于0，long
+vectors长度趋于1。角度代表的信息由矩阵变换和低层不同特征的向量加权求和得到。</p>
+<p>​ u来自低层级的capsule的输出。<span class="math inline">\(c_{ij}\)</span>由iterative dynamic routing
+process计算。<span class="math inline">\(b_{ij}\)</span>首先作为log先验概率初始化，在每一步迭代中更新概率。
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet和动态路由.assets/1570956636011.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/1-CapsuleNet和动态路由_pic/image-20200707222554055.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:80%;"></p>
+<p>​ <span class="math inline">\(c_{ij}\)</span>相当于CNN中max
+pooling干的事。感觉有点像attention，iterative attention。</p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet和动态路由.assets/image-20191110164629017.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet和动态路由.assets/image-20191110164449384.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​
+这种“routing-by-agreement”应该比通过max-pooling实现的非常原始的路由形式更加有效。后者可以使一层中的神经元忽略该层中除了最活跃的特征之外的所有特征。前者层层迭代，层层parsing，信息损失自然更少。</p>
+<p>​ 之后，Hinton又提出了EM routing[Matrix capsules with EM routing. ICLR
+(2018)]。 通过计算Existence
+probability和概率分布完成不同层间的计算，简单示意图如下。<a href="https://github.com/yl-1993/Matrix-Capsules-EM-PyTorch" target="_blank" rel="noopener">code
+reference</a></p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet和动态路由.assets/image-20191110151624084.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<h4><span id="max-pooling-problem">max-pooling problem</span></h4>
+<p>​ max-pooling还存在以下问题：</p>
+<ol type="1">
+<li><p>甚至不能区分左和右</p></li>
+<li><p>对rotation不敏感，不能学习到方向信息</p></li>
+<li><p>一次只能‘看到’一个object</p></li>
+<li><p>max-pooling只做到spatial invariance</p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet和动态路由.assets/image-20191110163730310.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>而不能做到spatial equivariance</p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet和动态路由.assets/image-20191110164114175.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>capsule net通过：</p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet和动态路由.assets/image-20191110165736553.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>计算下一层capsule经过W变换后的u，进行组合，得到不同的结果。错误的预测route被裁剪(pruned)，模型具有一定的spatial
+equivariance。</p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet和动态路由.assets/image-20191110170300458.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure></li>
+</ol>
+<hr>
+<h3><span id="margin-loss-for-digitexistence">Margin loss for digit
+existence</span></h3>
+<p>​
+分别对每个类别计算损失，同时注意只有capsule对应的部分出现某类目标，才计算损失。</p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/1-CapsuleNet和动态路由_pic/image-20200707222308871.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​ <span class="math inline">\(T_k\)</span>只有在class
+k出现的时候等于1。</p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/1-CapsuleNet和动态路由_pic/image-20200707222324475.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​ <span class="math inline">\(\lambda\)</span>是为了防止，限制vector长度后在训练开始阶段由于没有识别到目标导致的学习停滞问题，取0.5。总体存在性检测loss是所有类别capsule的损失之和。</p>
+<p>​ 整体损失，还要加上capsule重构图像特征的损失。</p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet和动态路由.assets/image-20191110162131283.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<hr>
+<h3><span id="capsnet-architecture">CapsNet architecture</span></h3>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet和动态路由.assets/1570958302422.png" srcset="/img/loading.gif" lazyload></p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet和动态路由.assets/image-20191110160905390.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet和动态路由.assets/image-20191110161236308.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​ 32个capsule，每个8维。</p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet和动态路由.assets/image-20191110161436562.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​ 转换后，每个class
+capsule16维，不同而维度影响重构图像的不同特征。</p>
+<p>​ routing-by-agreement的迭代过程就是不同的route
+squash结果进行裁剪的过程，计算结果相差大的route逐渐被移除。</p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet和动态路由.assets/image-20191110171656945.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​ EM route则是计算primry结果和route squash结果分布的差异。</p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet和动态路由.assets/image-20191110172223944.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​
+capsule输出vector的长度约束在1以内，代表存在概率；vector的方向代表目标的特征。</p>
+<p>​
+其中每个capsule的转化矩阵都是独立的不同的，每个class对应一个capsule。</p>
+<p>​ A simple CapsNet with 3 layers.
+PrimaryCaps计算第一层capsules的输入， DigitCaps计算部分使用iterative
+dynamic routing，计算输出capsules。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet和动态路由.assets/1570958488870.png" srcset="/img/loading.gif" lazyload></p>
+<p>​
+重构图像网络，采用训练好的DigitCaps，在此基础上训练重构网络，计算图像特征重构损失。只需要将true
+label的capsule提取出来进行重构计算即可。因此，多个数字重合的重构也能实现。</p>
+<hr>
+<h3><span id="code">Code</span></h3>
+<p>​ 重要的网络构建代码如下，<a href="https://github.com/RacleRay/DeepLearningFoundation/tree/master/CapsNet" target="_blank" rel="noopener">完整代码</a></p>
+<p>​ Caps Net训练相对于CNN慢很多，并且只使用一层dynamic
+routing，参数量也更大，batch
+size相比CNN也要取得小一些，在相同条件下。</p>
+<p>​
+网络收敛比较快，而且计算过程损失的变化相对稳定。下图为第一轮训练结果。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet和动态路由.assets/1570988099970.png" srcset="/img/loading.gif" lazyload></p>
+<p>​ 第二轮计算结果</p>
+<p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet和动态路由.assets/1570988796272.png" srcset="/img/loading.gif" lazyload></p>
+<p>​ 相关layer定义，以下代码参考了
+https://github.com/XifengGuo/CapsNet-Pytorch
+，https://github.com/naturomics/CapsNet-Tensorflow.git。
+在其上修改了写网络计算过程。</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> torch.nn <span class="hljs-keyword">as</span> nn<br><span class="hljs-keyword">import</span> torch.nn.functional <span class="hljs-keyword">as</span> F<br><span class="hljs-keyword">from</span> torch.autograd <span class="hljs-keyword">import</span> Variable<br><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">squash</span><span class="hljs-params">(inputs, axis=<span class="hljs-number">-1</span>)</span>:</span><br>    <span class="hljs-string">"""capsule输出的激活函数"""</span><br>    norm = torch.norm(inputs, dim=axis, keepdim=<span class="hljs-literal">True</span>)<br>    scale = norm ** <span class="hljs-number">2</span> / (<span class="hljs-number">1</span> + norm ** <span class="hljs-number">2</span>) / (norm + <span class="hljs-number">1e-8</span>)<br>    <span class="hljs-keyword">return</span> scale * inputs<br><br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PrimaryCaps</span><span class="hljs-params">(nn.Module)</span>:</span><br>    <span class="hljs-string">"""计算第一层capsules的输入，转换成32*6*6个8维的capsule vector</span><br><span class="hljs-string">    in_channels：原文中256</span><br><span class="hljs-string">    out_channels：卷积后的通道数，原文中256</span><br><span class="hljs-string">    dim_caps: PrimaryCaps输出的每个capsule的维度</span><br><span class="hljs-string">    kernel_size：原文中9 * 9</span><br><span class="hljs-string">    stride：2</span><br><span class="hljs-string">    """</span><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, in_channels, out_channels, dim_caps, kernel_size, stride=<span class="hljs-number">1</span>, padding=<span class="hljs-number">0</span>)</span>:</span><br>        super(PrimaryCaps, self).__init__()<br>        self.dim_caps = dim_caps<br>        self.conv2d = nn.Conv2d(in_channels,<br>                                out_channels,<br>                                kernel_size=kernel_size,<br>                                stride=stride,<br>                                padding=padding)<br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">forward</span><span class="hljs-params">(self, input)</span>:</span><br>        <span class="hljs-string">"""转换成32*6*6个8维的capsule vector, output size=[batch_size, num_caps, dim_caps]"""</span><br>        output = self.conv2d(input)<br>        output = output.view(input.size(<span class="hljs-number">0</span>), <span class="hljs-number">-1</span>, self.dim_caps)<br>        <span class="hljs-keyword">return</span> squash(output)<br><br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DenseCaps</span><span class="hljs-params">(nn.Module)</span>:</span><br>    <span class="hljs-string">"""iterative dynamic routing计算capsule目标识别结果vector。</span><br><span class="hljs-string">    input size = [None, in_num_caps, in_dim_caps]，</span><br><span class="hljs-string">    output size = [None, out_num_caps, out_dim_caps]。</span><br><span class="hljs-string"></span><br><span class="hljs-string">    in_num_caps: 第一层的输入capsule数量，32*6*6</span><br><span class="hljs-string">    in_dim_caps：第一层的输入capsule维度，8</span><br><span class="hljs-string">    out_num_caps：iterative dynamic routing时及输出的capsule数量，10</span><br><span class="hljs-string">    out_dim_caps：iterative dynamic routing时及输出的capsule维度，16</span><br><span class="hljs-string">    iterations：dynamic routing轮次</span><br><span class="hljs-string">    weight：由32*6*6个8维的capsule vector计算10个16维的capsule vector的transform matrix，在每个[6 * 6]</span><br><span class="hljs-string">            单元内的capsule是共享权重的。</span><br><span class="hljs-string">    """</span><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, in_num_caps, in_dim_caps, out_num_caps, out_dim_caps, iterations=<span class="hljs-number">3</span>)</span>:</span><br>        super(DenseCaps, self).__init__()<br>        self.in_num_caps = in_num_caps<br>        self.in_dim_caps = in_dim_caps<br>        self.out_num_caps = out_num_caps<br>        self.out_dim_caps = out_dim_caps<br>        self.iterations = iterations<br>        self.weight = nn.Parameter(<span class="hljs-number">0.01</span> * torch.randn(<span class="hljs-number">1</span>,<br>                                                      in_num_caps,<br>                                                      out_num_caps * out_dim_caps,<br>                                                      in_dim_caps,<br>                                                      <span class="hljs-number">1</span>))<br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">forward</span><span class="hljs-params">(self, u)</span>:</span><br>        <span class="hljs-string">"""u_hat在不同layer的capsules之间传递，每层capsules只能是才c，b在更新。文中结构只接上了一层</span><br><span class="hljs-string">        dynamic routing capsules layer。"""</span><br>        <span class="hljs-comment"># self.weight * u</span><br>        <span class="hljs-comment">#     [1    , in_num_caps, out_num_caps * out_dim_caps, in_dim_caps, 1]</span><br>        <span class="hljs-comment">#     [batch, in_num_caps, out_num_caps * out_dim_caps, in_dim_caps, 1]</span><br>        <span class="hljs-comment"># =&gt;&gt; [batch, in_num_caps, out_num_caps * out_dim_caps, in_dim_caps, 1]</span><br>        <span class="hljs-comment"># 按元素相乘，然后在reduce sum</span><br>        u_hat = u[:, :, <span class="hljs-literal">None</span>, :, <span class="hljs-literal">None</span>]<br>        u_hat = self.weight * u_hat.repeat(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, self.out_num_caps * self.out_dim_caps, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>)<br>        u_hat = torch.sum(u_hat, dim=<span class="hljs-number">3</span>)<br>        <span class="hljs-comment"># [batch, in_num_caps, out_num_caps, out_dim_caps]</span><br>        u_hat = torch.squeeze(u_hat.view(<span class="hljs-number">-1</span>,<br>                                         self.in_num_caps,<br>                                         self.out_num_caps,<br>                                         self.out_dim_caps,<br>                                         <span class="hljs-number">1</span>))<br>        u_hat_for_route = u_hat.detach()<br><br>        <span class="hljs-comment"># coupling coefficient initialize</span><br>        <span class="hljs-comment"># [batch, in_num_caps, out_num_caps]</span><br>        b = Variable(torch.zeros(u.size(<span class="hljs-number">0</span>), self.in_num_caps, self.out_num_caps)).cuda()<br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(self.iterations):<br>            c = F.softmax(b, dim=<span class="hljs-number">2</span>)  <span class="hljs-comment"># [batch, in_num_caps, out_num_caps]</span><br>            <span class="hljs-keyword">if</span> i &lt; self.iterations - <span class="hljs-number">1</span>:<br>                <span class="hljs-comment"># u   [batch, in_num_caps, out_num_caps, out_dim_caps]</span><br>                <span class="hljs-comment"># c   [batch, in_num_caps, out_num_caps, 1]</span><br>                <span class="hljs-comment"># =&gt;&gt; [batch, 1, out_num_caps, out_dim_caps]</span><br>                outputs = squash(torch.sum(torch.unsqueeze(c, <span class="hljs-number">3</span>) * u_hat_for_route, dim=<span class="hljs-number">1</span>, keepdims=<span class="hljs-literal">True</span>))<br>                b = b + torch.sum(outputs * u_hat_for_route, dim=<span class="hljs-number">-1</span>)<br>            <span class="hljs-keyword">else</span>:<br>                <span class="hljs-comment"># 此时进入bp计算</span><br>                outputs = squash(torch.sum(torch.unsqueeze(c, <span class="hljs-number">3</span>) * u_hat, dim=<span class="hljs-number">1</span>, keepdims=<span class="hljs-literal">True</span>))<br><br>        <span class="hljs-comment"># [batch, out_num_caps, out_dim_caps]</span><br>        <span class="hljs-keyword">return</span> torch.squeeze(outputs, dim=<span class="hljs-number">1</span>)<br><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">caps_loss</span><span class="hljs-params">(y_true, y_pred, x, x_reconstruct, lamada)</span>:</span><br>    <span class="hljs-string">"""Capsule loss = Margin loss + lamada * reconstruction loss.</span><br><span class="hljs-string">    y shape [batch, classes], x shape [batch, channels, height, width]"""</span><br>    L = y_true * torch.clamp(<span class="hljs-number">0.9</span> - y_pred, min=<span class="hljs-number">0</span>) ** <span class="hljs-number">2</span> + \<br>        <span class="hljs-number">0.5</span> * (<span class="hljs-number">1</span> - y_true) * torch.clamp(y_pred - <span class="hljs-number">0.1</span>, min=<span class="hljs-number">0</span>) ** <span class="hljs-number">2</span><br><br>    L_margin = L.sum(dim=<span class="hljs-number">1</span>).mean()<br>    L_recon = nn.MSELoss()(x_reconstruct, x)<br><br>    <span class="hljs-keyword">return</span> L_margin + lamada * L_recon<br></code></pre></div></td></tr></table></figure>
+<p>​ 网络定义</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> torch.nn.functional <span class="hljs-keyword">as</span> F<br><span class="hljs-keyword">from</span> torch.autograd <span class="hljs-keyword">import</span> Variable<br><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> nn<br><span class="hljs-keyword">from</span> layers <span class="hljs-keyword">import</span> DenseCaps, PrimaryCaps<br><br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CapsuleNet</span><span class="hljs-params">(nn.Module)</span>:</span><br>    <span class="hljs-string">"""</span><br><span class="hljs-string">    Input: (batch, channels, width, height)</span><br><span class="hljs-string">    Output:((batch, classes), (batch, channels, width, height))</span><br><span class="hljs-string"></span><br><span class="hljs-string">    input_size: [channels, width, height]</span><br><span class="hljs-string">    classes: number of classes</span><br><span class="hljs-string">    iterations：dynamic routing iterations</span><br><span class="hljs-string">    """</span><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, input_size, classes, iterations)</span>:</span><br>        super(CapsuleNet, self).__init__()<br>        self.input_size = input_size<br>        self.classes = classes<br>        self.iterations = iterations<br><br>        <span class="hljs-comment"># Layer 1: Just a conventional Conv2D layer</span><br>        self.conv1 = nn.Conv2d(input_size[<span class="hljs-number">0</span>], <span class="hljs-number">256</span>, kernel_size=<span class="hljs-number">9</span>, stride=<span class="hljs-number">1</span>, padding=<span class="hljs-number">0</span>)<br><br>        <span class="hljs-comment"># Layer 2: Conv2D layer with `squash` activation, then reshape to [None, num_caps, dim_caps]</span><br>        self.primarycaps = PrimaryCaps(<span class="hljs-number">256</span>, <span class="hljs-number">256</span>, <span class="hljs-number">8</span>, kernel_size=<span class="hljs-number">9</span>, stride=<span class="hljs-number">2</span>, padding=<span class="hljs-number">0</span>)<br><br>        <span class="hljs-comment"># Layer 3: Capsule layer. iterative dynamic routing.</span><br>        self.digitcaps = DenseCaps(in_num_caps=<span class="hljs-number">32</span>*<span class="hljs-number">6</span>*<span class="hljs-number">6</span>, in_dim_caps=<span class="hljs-number">8</span>,<br>                                      out_num_caps=classes, out_dim_caps=<span class="hljs-number">16</span>, iterations=iterations)<br><br>        <span class="hljs-comment"># reconstruction net</span><br>        self.reconstructor = nn.Sequential(<br>            nn.Linear(<span class="hljs-number">16</span>*classes, <span class="hljs-number">512</span>),<br>            nn.ReLU(inplace=<span class="hljs-literal">True</span>),<br>            nn.Linear(<span class="hljs-number">512</span>, <span class="hljs-number">1024</span>),<br>            nn.ReLU(inplace=<span class="hljs-literal">True</span>),<br>            nn.Linear(<span class="hljs-number">1024</span>, input_size[<span class="hljs-number">0</span>] * input_size[<span class="hljs-number">1</span>] * input_size[<span class="hljs-number">2</span>]),<br>            nn.Sigmoid()<br>        )<br>        self.relu = nn.ReLU()<br><br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">forward</span><span class="hljs-params">(self, x, y=None)</span>:</span><br>        x = self.relu(self.conv1(x))<br>        x = self.primarycaps(x)<br>        x = self.digitcaps(x)  <span class="hljs-comment"># [batch, out_num_caps, out_dim_caps]</span><br>        length = x.norm(dim=<span class="hljs-number">-1</span>)  <span class="hljs-comment"># vector lenght代表存在概率 [batch, out_num_caps, 1]</span><br><br>        <span class="hljs-keyword">if</span> y <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:  <span class="hljs-comment"># during testing, no label given. create one-hot coding using `length`</span><br>            index = length.max(dim=<span class="hljs-number">1</span>)[<span class="hljs-number">1</span>]<br>            <span class="hljs-comment"># 将index处，更改为1</span><br>            y = Variable(torch.zeros(length.size()).scatter_(<span class="hljs-number">1</span>, index.view(<span class="hljs-number">-1</span>, <span class="hljs-number">1</span>).cpu().data, <span class="hljs-number">1.</span>).cuda())<br><br>        <span class="hljs-comment"># y[:, :, None]: mask</span><br>        reconstruction = self.reconstructor((x * y[:, :, <span class="hljs-literal">None</span>]).view(x.size(<span class="hljs-number">0</span>), <span class="hljs-number">-1</span>))<br>        <span class="hljs-comment"># 存在概率预测，重构图像像素</span><br>        <span class="hljs-keyword">return</span> length, reconstruction.view(<span class="hljs-number">-1</span>, *self.input_size)<br></code></pre></div></td></tr></table></figure>
+<hr>
+<h3><span id="other-capsules">Other capsules</span></h3>
+<h4><span id="text">Text</span></h4>
+<p>​ 使用capsule nets处理文本的简单架构[Investigating capsule networks
+with dynamic routing for text classification. EMNLP
+(2018)]，如下图所示。</p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet和动态路由.assets/image-20191110152353504.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<h4><span id="graph">Graph</span></h4>
+<p>​ 结合GNN的简单网络示意[Capsule Graph Neural Network. ICLR
+(2018)]。</p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet和动态路由.assets/image-20191110152747324.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<h4><span id="3d-point-cloud">3D point cloud</span></h4>
+<p>​ 3D重构[3D Point-Capsule Networks. CVPR, (2019)]</p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet和动态路由.assets/image-20191110152955662.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<h3><span id="applications">Applications</span></h3>
+<p>​ Relation extraction，Adversary detection，Brain tumor
+classification，Classification of Breast Cancer.</p>
+<p>​ 比如，Relation extraction方面的研究[Multi-labeled Relation
+Extraction with Attentive Capsule Network. AAAI (2018)]</p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet和动态路由.assets/image-20191110153704495.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<p>​ [Attention-Based Capsule Networks with Dynamic Routing for Relation
+Extraction. EMNLP 2018]</p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/1-CapsuleNet和动态路由.assets/image-20191110153837670.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<h3><span id="problems">Problems</span></h3>
+<ol type="1">
+<li>Optimizing routing</li>
+<li>当存在较多class时，参数量很大</li>
+<li>不能驾驭大规模数据集</li>
+</ol>
+<h3><span id="resources">Resources</span></h3>
+<ol type="1">
+<li><a href="https://www.crcv.ucf.edu/cvpr2019-tutorial/resources.html" target="_blank" rel="noopener">CVPR2019
+Tutorial</a></li>
+</ol>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/DL/">DL</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/capsule/">capsule</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/b7fe0c52.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">C++ Project使用外部库</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/8be3b59a.html">
+                        <span class="hidden-mobile">A Sentence Embedding Baseline</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        loader: {
+          load: ['ui/lazy']
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>

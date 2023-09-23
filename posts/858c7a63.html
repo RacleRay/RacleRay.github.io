@@ -1,0 +1,792 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="记录 hadoop + spark 的Linux环境配置。">
+  <meta name="author" content="江左时雨">
+  <meta name="keywords" content="机器学习,Machine Learning,自然语言处理,NLP,深度学习,Deep Learning,计算机,Coding,生活随笔">
+  <meta name="description" content="记录 hadoop + spark 的Linux环境配置。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hadoop+spark环境配置">
+<meta property="og:url" content="https://racleray.github.io/posts/858c7a63.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="记录 hadoop + spark 的Linux环境配置。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/hadoop-spark%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE_pic/image-20201029171626529.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/hadoop-spark%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE_pic/image-20201029172711979.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/hadoop-spark%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE_pic/image-20201030010622615.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/hadoop-spark%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE_pic/image-20201030010705348.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/hadoop-spark%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE_pic/image-20201030010732578.png">
+<meta property="article:published_time" content="2020-10-30T08:56:36.000Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:31.036Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="spark">
+<meta property="article:tag" content="tools">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/hadoop-spark%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE_pic/image-20201029171626529.png">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>hadoop+spark环境配置 - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="hadoop+spark环境配置">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-10-30 16:56" pubdate>
+        2020年10月30日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      9.7k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      30 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">hadoop+spark环境配置</h1>
+            
+            <div class="markdown-body">
+              <h3><span id="单节点hadoop">单节点Hadoop</span></h3>
+<h4><span id="1安装jdk"><strong>1.安装JDK</strong></span></h4>
+<figure class="highlight sql"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sql">sudo apt-get <span class="hljs-keyword">update</span><br><br>sudo apt-<span class="hljs-keyword">get</span> <span class="hljs-keyword">install</span> <span class="hljs-keyword">default</span>-jdk<br><br><span class="hljs-keyword">java</span> -<span class="hljs-keyword">version</span><br></code></pre></div></td></tr></table></figure>
+<p>查看安装路径</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs pgsql"><span class="hljs-keyword">update</span>-alternatives <span class="hljs-comment">--display java</span><br></code></pre></div></td></tr></table></figure>
+<h4><span id="2设定-ssh无密码登入"><strong>2.设定 SSH无密码登入</strong></span></h4>
+<figure class="highlight routeros"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs routeros">sudo apt-<span class="hljs-builtin-name">get</span> install ssh<br><br>sudo apt-<span class="hljs-builtin-name">get</span> install rsync<br><br>ssh-keygen -t dsa -P <span class="hljs-string">''</span> -f ~/.ssh/id_dsa<br>ll ~/.ssh<br></code></pre></div></td></tr></table></figure>
+<p>为了无密码登录本机，加入公匙到许可证文件</p>
+<figure class="highlight arcade"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs arcade">cat ~<span class="hljs-regexp">/.ssh/i</span>d_dsa.pub &gt;&gt; ~<span class="hljs-regexp">/.ssh/</span>authorized_keys<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight css"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs css"><span class="hljs-selector-tag">systemctl</span> <span class="hljs-selector-tag">restart</span> <span class="hljs-selector-tag">sshd</span><span class="hljs-selector-class">.service</span><br></code></pre></div></td></tr></table></figure>
+<h4><span id="3下载安装hadoop"><strong>3.下载安装Hadoop</strong></span></h4>
+<figure class="highlight angelscript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs angelscript">wget https:<span class="hljs-comment">//www.apache.org/dyn/closer.cgi/hadoop/common/hadoop-2.9.2/hadoop-2.9.2.tar.gz</span><br><br>sudo tar -zxvf hadoop<span class="hljs-number">-2.9</span><span class="hljs-number">.2</span>.tar.gz<br><br>sudo mv hadoop<span class="hljs-number">-2.9</span><span class="hljs-number">.2</span> /usr/local/hadoop<br><br>ll /usr/local/hadoop<br></code></pre></div></td></tr></table></figure>
+<h4><span id="4设定hadoop环境变数"><strong>4.设定Hadoop环境变数</strong></span></h4>
+<p>修改~/.bashrc</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs jboss-cli">sudo gedit ~<span class="hljs-string">/.bashrc</span><br></code></pre></div></td></tr></table></figure>
+<p>输入下列内容</p>
+<figure class="highlight routeros"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs routeros"><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">JAVA_HOME</span>=/usr/lib/jvm/java-8-openjdk-amd64<br><br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">HADOOP_HOME</span>=/usr/local/hadoop<br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">PATH</span>=<span class="hljs-variable">$PATH</span>:$HADOOP_HOME/bin<br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">PATH</span>=<span class="hljs-variable">$PATH</span>:$HADOOP_HOME/sbin<br><br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">HADOOP_MAPRED_HOME</span>=<span class="hljs-variable">$HADOOP_HOME</span><br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">HADOOP_COMMON_HOME</span>=<span class="hljs-variable">$HADOOP_HOME</span><br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">HADOOP_HDFS_HOME</span>=<span class="hljs-variable">$HADOOP_HOME</span><br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">YARN_HOME</span>=<span class="hljs-variable">$HADOOP_HOME</span><br><br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">HADOOP_COMMON_LIB_NATIVE_DIR</span>=<span class="hljs-variable">$HADOOP_HOME</span>/lib/native<br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">HADOOP_OPTS</span>=<span class="hljs-string">"-Djava.library.path=<span class="hljs-variable">$HADOOP_HOME</span>/lib"</span><br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">JAVA_LIBRARY_PATH</span>=<span class="hljs-variable">$HADOOP_HOME</span>/lib/native:$JAVA_LIBRARY_PATH<br></code></pre></div></td></tr></table></figure>
+<p>让~/.bashrc修改生效</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">source</span> ~/.bashrc<br></code></pre></div></td></tr></table></figure>
+<h4><span id="5修改hadoop组态设定档"><strong>5.修改Hadoop组态设定档</strong></span></h4>
+<p>Step1 修改hadoop-env.sh配置文件</p>
+<figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">sudo gedit <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/hadoop/</span>etc<span class="hljs-regexp">/hadoop/</span>hadoop-env.sh<br></code></pre></div></td></tr></table></figure>
+<p>输入下列内容:</p>
+<figure class="highlight routeros"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs routeros"><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">JAVA_HOME</span>=/usr/lib/jvm/java-8-openjdk-amd64<br></code></pre></div></td></tr></table></figure>
+<p>Step2 修改core-site.xml，设置HDFS名称</p>
+<figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">sudo gedit <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/hadoop/</span>etc<span class="hljs-regexp">/hadoop/</span>core-site.xml<br></code></pre></div></td></tr></table></figure>
+<p>在之间，输入下列内容:</p>
+<figure class="highlight xml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>fs.default.name<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>hdfs://localhost:9000<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span><br></code></pre></div></td></tr></table></figure>
+<p>Step3 修改yarn-site.xml</p>
+<figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">sudo gedit <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/hadoop/</span>etc<span class="hljs-regexp">/hadoop/y</span>arn-site.xml<br></code></pre></div></td></tr></table></figure>
+<p>在之间，输入下列内容:</p>
+<figure class="highlight xml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>yarn.nodemanager.aux-services<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span> <br>	<span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>mapreduce_shuffle<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span> <br><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>yarn.nodemanager.aux-services.mapreduce.shuffle.class<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>org.apache.hadoop.mapred.ShuffleHandler<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br></code></pre></div></td></tr></table></figure>
+<p>Step4 修改mapred-site.xml，监控Map和reduce程序的JobTracker</p>
+<figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">sudo cp <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/hadoop/</span>etc<span class="hljs-regexp">/hadoop/m</span>apred-site.xml.template <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/hadoop/</span>etc<span class="hljs-regexp">/hadoop/m</span>apred-site.xml<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">sudo gedit <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/hadoop/</span>etc<span class="hljs-regexp">/hadoop/m</span>apred-site.xml<br></code></pre></div></td></tr></table></figure>
+<p>在之间，输入下列内容:</p>
+<figure class="highlight xml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>mapreduce.framework.name<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span> <br>	<span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>yarn<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span> <br><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br></code></pre></div></td></tr></table></figure>
+<p>Step5 修改hdfs-site.xml</p>
+<figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">sudo gedit <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/hadoop/</span>etc<span class="hljs-regexp">/hadoop/</span>hdfs-site.xml<br></code></pre></div></td></tr></table></figure>
+<p>在之间，输入下列内容:
+dfs.replication设置blocks在其他节点的备份数量</p>
+<figure class="highlight dts"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs dts"><span class="hljs-params">&lt;property&gt;</span><br>	<span class="hljs-params">&lt;name&gt;</span>dfs.replication<span class="hljs-params">&lt;/name&gt;</span> <br>	<span class="hljs-params">&lt;value&gt;</span><span class="hljs-number">3</span><span class="hljs-params">&lt;/value&gt;</span> <br><span class="hljs-params">&lt;/property&gt;</span><br><span class="hljs-params">&lt;property&gt;</span><br>	<span class="hljs-params">&lt;name&gt;</span>dfs.namenode.name.dir<span class="hljs-params">&lt;/name&gt;</span> <br>	<span class="hljs-params">&lt;value&gt;</span>file:<span class="hljs-meta-keyword">/usr/</span>local<span class="hljs-meta-keyword">/hadoop/</span>hadoop_data<span class="hljs-meta-keyword">/hdfs/</span>namenode<span class="hljs-params">&lt;/value&gt;</span> <br><span class="hljs-params">&lt;/property&gt;</span><br><span class="hljs-params">&lt;property&gt;</span><br>	<span class="hljs-params">&lt;name&gt;</span>dfs.datanode.data.dir<span class="hljs-params">&lt;/name&gt;</span> <br>	<span class="hljs-params">&lt;value&gt;</span>file:<span class="hljs-meta-keyword">/usr/</span>local<span class="hljs-meta-keyword">/hadoop/</span>hadoop_data<span class="hljs-meta-keyword">/hdfs/</span>datanode<span class="hljs-params">&lt;/value&gt;</span> <br><span class="hljs-params">&lt;/property&gt;</span><br><span class="hljs-params">&lt;property&gt;</span><br>  <span class="hljs-params">&lt;name&gt;</span>dfs.http.address<span class="hljs-params">&lt;/name&gt;</span><br>  <span class="hljs-params">&lt;value&gt;</span><span class="hljs-number">0.0</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span>:<span class="hljs-number">50070</span><span class="hljs-params">&lt;/value&gt;</span><br><span class="hljs-params">&lt;/property&gt;</span><br></code></pre></div></td></tr></table></figure>
+<h4><span id="6建立与格式化hdfs目录"><strong>6.建立与格式化HDFS
+目录</strong></span></h4>
+<figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">sudo mkdir -p <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/hadoop/</span>hadoop_data<span class="hljs-regexp">/hdfs/</span>namenode<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">sudo mkdir -p <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/hadoop/</span>hadoop_data<span class="hljs-regexp">/hdfs/</span>datanode<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight groovy"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs groovy">sudo chown <span class="hljs-string">ray:</span>ray -R <span class="hljs-regexp">/usr/</span>local/hadoop<br></code></pre></div></td></tr></table></figure>
+<p>chown要根据当前用户名进行修改</p>
+<p>格式化</p>
+<figure class="highlight dos"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs dos">hadoop namenode -<span class="hljs-built_in">format</span><br></code></pre></div></td></tr></table></figure>
+<h4><span id="7启动hadoop"><strong>7.启动Hadoop</strong></span></h4>
+<p>启动start-dfs.sh，再启动 start-yarn.sh</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs crmsh"><span class="hljs-literal">start</span>-dfs.sh<br><br><span class="hljs-literal">start</span>-yarn.sh<br></code></pre></div></td></tr></table></figure>
+<p>或 启动全部</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs pgsql"><span class="hljs-keyword">start</span>-<span class="hljs-keyword">all</span>.sh<br></code></pre></div></td></tr></table></figure>
+<p>查看目前所执行的行程</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs ebnf"><span class="hljs-attribute">jps</span><br></code></pre></div></td></tr></table></figure>
+<p>stop-dfs.sh</p>
+<p>stop-yarn.sh</p>
+<p>stop-all.sh</p>
+<h4><span id="8开启hadoopresourcemanagerweb接口"><strong>8.开启Hadoop
+Resource­ManagerWeb接口</strong></span></h4>
+<p>Hadoop Resource­Manager Web接口网址 http://localhost:8088/</p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/hadoop-spark环境配置_pic/image-20201029171626529.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<h4><span id="9namenode-hdfsweb接口"><strong>9.NameNode HDFS
+Web接口</strong></span></h4>
+<p>开启HDFS Web UI网址 http://localhost:50070/</p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/hadoop-spark环境配置_pic/image-20201029172711979.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<h3><span id="多节点hadoop">多节点Hadoop</span></h3>
+<ul>
+<li>由多台电脑组成:有一台主要的电脑master，在HDFS担任NameNode角色，在MapReduce2(YARN)担任ResourceManager角色</li>
+<li>有多台的电脑data1、data2、data3，在HDFS担任DataNode角色，在MapReduce2(YARN)担任NodeManager角色</li>
+</ul>
+<p>Hadoop Multi NodeCluster规划，整理如下表格:</p>
+<table>
+<thead>
+<tr class="header">
+<th><strong>伺服器名称</strong></th>
+<th><strong>IP</strong></th>
+<th><strong>HDFS</strong></th>
+<th><strong>YARN</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>master</strong></td>
+<td>192.168.0.100</td>
+<td>NameNode</td>
+<td>ResourceManager</td>
+</tr>
+<tr class="even">
+<td>data1</td>
+<td>192.168.0.101</td>
+<td>DataNode</td>
+<td>NodeManager</td>
+</tr>
+<tr class="odd">
+<td>data2</td>
+<td>192.168.0.102</td>
+<td>DataNode</td>
+<td>NodeManager</td>
+</tr>
+<tr class="even">
+<td>data3</td>
+<td>192.168.0.103</td>
+<td>DataNode</td>
+<td>NodeManager</td>
+</tr>
+</tbody>
+</table>
+<h4><span id="1复制single-nodecluster到data1">1复制Single Node
+Cluster到data1</span></h4>
+<p>将之前所建立的Single Node Cluster VirtualBox
+hadoop虚拟机器复制到data1</p>
+<h4><span id="2设定data1伺服器">2设定data1伺服器</span></h4>
+<p>编辑网路设定档设定固定IP</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs angelscript">sudo gedit /etc/network/<span class="hljs-built_in">int</span>erfaces<br></code></pre></div></td></tr></table></figure>
+<p>输入下列内容 :</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs angelscript"># <span class="hljs-built_in">int</span>erfaces(<span class="hljs-number">5</span>) file used by ifup(<span class="hljs-number">8</span>) <span class="hljs-keyword">and</span> ifdown(<span class="hljs-number">8</span>)<br><br><span class="hljs-built_in">auto</span> lo<br>iface lo inet loopback<br><br><span class="hljs-built_in">auto</span> eth0<br>iface eth0 inet static<br>address <span class="hljs-number">192.168</span><span class="hljs-number">.0</span><span class="hljs-number">.101</span><br>netmask <span class="hljs-number">255.255</span><span class="hljs-number">.255</span><span class="hljs-number">.0</span><br>network <span class="hljs-number">192.168</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span><br>gateway <span class="hljs-number">192.168</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span><br>dns-nameservers <span class="hljs-number">192.168</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span><br></code></pre></div></td></tr></table></figure>
+<figure class="highlight reasonml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs reasonml">sudo vim /etc/NetworkManager/<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">NetworkManager</span>.</span></span>conf<br></code></pre></div></td></tr></table></figure>
+<p>将<code>managed=false</code>修改成<code>managed=true</code></p>
+<figure class="highlight routeros"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs routeros">sudo<span class="hljs-built_in"> service </span>network-manager restart<br></code></pre></div></td></tr></table></figure>
+<p>重启</p>
+<p>设定hostname</p>
+<figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">sudo gedit <span class="hljs-regexp">/etc/</span>hostname<br></code></pre></div></td></tr></table></figure>
+<p>输入下列内容:</p>
+<figure class="highlight powershell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs powershell"><span class="hljs-keyword">data</span>1<br></code></pre></div></td></tr></table></figure>
+<p>设定hosts档案</p>
+<figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">sudo gedit <span class="hljs-regexp">/etc/</span>hosts<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight accesslog"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs accesslog"><span class="hljs-number">127.0.0.1</span> localhost<br><span class="hljs-number">127.0.1.1</span> hadoop<br><br><span class="hljs-number">192.168.0.100</span> master<br><span class="hljs-number">192.168.0.101</span> data1<br><span class="hljs-number">192.168.0.102</span> data2<br><span class="hljs-number">192.168.0.103</span> data3<br># The following lines are desirable for IPv6 capable hosts<br>::<span class="hljs-number">1</span> ip6-localhost ip6-loopback<br>fe00::<span class="hljs-number">0</span> ip6-localnet<br>ff00::<span class="hljs-number">0</span> ip6-mcastprefix<br>ff02::<span class="hljs-number">1</span> ip6-allnodes<br>ff02::<span class="hljs-number">2</span> ip6-allrouters<br></code></pre></div></td></tr></table></figure>
+<p>修改core-site.xml</p>
+<figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">sudo gedit <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/hadoop/</span>etc<span class="hljs-regexp">/hadoop/</span>core-site.xml<br></code></pre></div></td></tr></table></figure>
+<p>在之间，输入下列内容:</p>
+<figure class="highlight xml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>fs.default.name<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span> <br>	<span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>hdfs://master:9000<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span> <br><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br></code></pre></div></td></tr></table></figure>
+<p>修改yarn-site.xml</p>
+<figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">sudo gedit <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/hadoop/</span>etc<span class="hljs-regexp">/hadoop/y</span>arn-site.xml<br></code></pre></div></td></tr></table></figure>
+<p>在之间，输入下列内容:</p>
+<figure class="highlight xml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>yarn.resourcemanager.resource-tracker.address<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span> <br>	<span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>master:8025<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span> <br><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>yarn.resourcemanager.scheduler.address<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span> <br>	<span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>master:8030<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span> <br><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>yarn.resourcemanager.address<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span> <br>	<span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>master:8050<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span> <br><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br></code></pre></div></td></tr></table></figure>
+<p>修改mapred-site.xml</p>
+<figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">sudo gedit <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/hadoop/</span>etc<span class="hljs-regexp">/hadoop /m</span>apred-site.xml<br></code></pre></div></td></tr></table></figure>
+<p>在之间，输入下列内容:</p>
+<figure class="highlight xml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>mapred.job.tracker<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span> <br>	<span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>master:54311<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span> <br><span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span><br></code></pre></div></td></tr></table></figure>
+<p>修改hdfs-site.xml</p>
+<figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">sudo gedit <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/hadoop/</span>etc<span class="hljs-regexp">/hadoop/</span>hdfs-site.xml<br></code></pre></div></td></tr></table></figure>
+<p>在之间，输入下列内容:</p>
+<figure class="highlight dts"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs dts"><span class="hljs-params">&lt;property&gt;</span><br>	<span class="hljs-params">&lt;name&gt;</span>dfs.replication<span class="hljs-params">&lt;/name&gt;</span> <br>	<span class="hljs-params">&lt;value&gt;</span><span class="hljs-number">3</span><span class="hljs-params">&lt;/value&gt;</span> <br><span class="hljs-params">&lt;/property&gt;</span><br><span class="hljs-params">&lt;property&gt;</span><br>	<span class="hljs-params">&lt;name&gt;</span>dfs.datanode.data.dir<span class="hljs-params">&lt;/name&gt;</span> <br>	<span class="hljs-params">&lt;value&gt;</span>file:<span class="hljs-meta-keyword">/usr/</span>local<span class="hljs-meta-keyword">/hadoop/</span>hadoop_data<span class="hljs-meta-keyword">/hdfs/</span>datanode<span class="hljs-params">&lt;/value&gt;</span> <br><span class="hljs-params">&lt;/property&gt;</span><br></code></pre></div></td></tr></table></figure>
+<h4><span id="3复制data1伺服器至data2-data3-master">3复制data1伺服器至data2、data3、master</span></h4>
+<h4><span id="4设定data2-data3伺服器">4设定data2、data3伺服器</span></h4>
+<p>设定data2固定IP</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs angelscript">sudo gedit /etc/network/<span class="hljs-built_in">int</span>erfaces<br></code></pre></div></td></tr></table></figure>
+<p>输入下列内容</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs angelscript"># <span class="hljs-built_in">int</span>erfaces(<span class="hljs-number">5</span>) file used by ifup(<span class="hljs-number">8</span>) <span class="hljs-keyword">and</span> ifdown(<span class="hljs-number">8</span>)<br><span class="hljs-built_in">auto</span> lo<br>iface lo inet loopback<br><br><span class="hljs-built_in">auto</span> eth0<br>iface eth0 inet static<br>address <span class="hljs-number">192.168</span><span class="hljs-number">.0</span><span class="hljs-number">.102</span><br>netmask <span class="hljs-number">255.255</span><span class="hljs-number">.255</span><span class="hljs-number">.0</span><br>network <span class="hljs-number">192.168</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span><br>gateway <span class="hljs-number">192.168</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span><br>dns-nameservers <span class="hljs-number">192.168</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span><br></code></pre></div></td></tr></table></figure>
+<p>设定hostname</p>
+<figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">sudo gedit <span class="hljs-regexp">/etc/</span>hostname<br></code></pre></div></td></tr></table></figure>
+<p>输入下列内容:</p>
+<figure class="highlight powershell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs powershell"><span class="hljs-keyword">data</span>2<br></code></pre></div></td></tr></table></figure>
+<p>设定data3固定IP</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs angelscript">sudo gedit /etc/network/<span class="hljs-built_in">int</span>erfaces<br></code></pre></div></td></tr></table></figure>
+<p>输入下列内容</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs angelscript"># <span class="hljs-built_in">int</span>erfaces(<span class="hljs-number">5</span>) file used by ifup(<span class="hljs-number">8</span>) <span class="hljs-keyword">and</span> ifdown(<span class="hljs-number">8</span>)<br><span class="hljs-built_in">auto</span> lo<br>iface lo inet loopback<br><br><span class="hljs-built_in">auto</span> eth0<br>iface eth0 inet static<br>address <span class="hljs-number">192.168</span><span class="hljs-number">.0</span><span class="hljs-number">.103</span><br>netmask <span class="hljs-number">255.255</span><span class="hljs-number">.255</span><span class="hljs-number">.0</span><br>network <span class="hljs-number">192.168</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span><br>gateway <span class="hljs-number">192.168</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span><br>dns-nameservers <span class="hljs-number">192.168</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span><br></code></pre></div></td></tr></table></figure>
+<p>设定hostname</p>
+<figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">sudo gedit <span class="hljs-regexp">/etc/</span>hostname<br></code></pre></div></td></tr></table></figure>
+<p>输入下列内容:</p>
+<figure class="highlight powershell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs powershell"><span class="hljs-keyword">data</span>3<br></code></pre></div></td></tr></table></figure>
+<h4><span id="5设定master伺服器">5设定master伺服器</span></h4>
+<p>设定master固定IP</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs angelscript">sudo gedit /etc/network/<span class="hljs-built_in">int</span>erfaces<br></code></pre></div></td></tr></table></figure>
+<p>输入下列内容</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs angelscript"># <span class="hljs-built_in">int</span>erfaces(<span class="hljs-number">5</span>) file used by ifup(<span class="hljs-number">8</span>) <span class="hljs-keyword">and</span> ifdown(<span class="hljs-number">8</span>)<br><span class="hljs-built_in">auto</span> lo<br>iface lo inet loopback<br><br><span class="hljs-built_in">auto</span> eth0<br>iface eth0 inet static<br>address <span class="hljs-number">192.168</span><span class="hljs-number">.0</span><span class="hljs-number">.100</span><br>netmask <span class="hljs-number">255.255</span><span class="hljs-number">.255</span><span class="hljs-number">.0</span><br>network <span class="hljs-number">192.168</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span><br>gateway <span class="hljs-number">192.168</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span><br>dns-nameservers <span class="hljs-number">192.168</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span><br></code></pre></div></td></tr></table></figure>
+<p>设定hostname</p>
+<figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">sudo gedit <span class="hljs-regexp">/etc/</span>hostname<br></code></pre></div></td></tr></table></figure>
+<p>输入下列内容:</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs crmsh"><span class="hljs-literal">master</span><br></code></pre></div></td></tr></table></figure>
+<p>修改hdfs-site.xml</p>
+<figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">sudo gedit <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/hadoop/</span>etc<span class="hljs-regexp">/hadoop/</span>hdfs-site.xml<br></code></pre></div></td></tr></table></figure>
+<p>在之间，输入下列内容:</p>
+<figure class="highlight dts"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs dts"><span class="hljs-params">&lt;property&gt;</span><br>	<span class="hljs-params">&lt;name&gt;</span>dfs.replication<span class="hljs-params">&lt;/name&gt;</span> <br>	<span class="hljs-params">&lt;value&gt;</span><span class="hljs-number">3</span><span class="hljs-params">&lt;/value&gt;</span> <br><span class="hljs-params">&lt;/property&gt;</span><br><span class="hljs-params">&lt;property&gt;</span><br>	<span class="hljs-params">&lt;name&gt;</span>dfs.namenode.data.dir<span class="hljs-params">&lt;/name&gt;</span> <br>	<span class="hljs-params">&lt;value&gt;</span>file:<span class="hljs-meta-keyword">/usr/</span>local<span class="hljs-meta-keyword">/hadoop/</span>hadoop_data<span class="hljs-meta-keyword">/hdfs/</span>namenode<span class="hljs-params">&lt;/value&gt;</span> <br><span class="hljs-params">&lt;/property&gt;</span><br></code></pre></div></td></tr></table></figure>
+<p>设定master档案</p>
+<figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">sudo gedit <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/hadoop/</span>etc<span class="hljs-regexp">/hadoop/m</span>aster<br></code></pre></div></td></tr></table></figure>
+<p>输入下列内容:</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs crmsh"><span class="hljs-literal">master</span><br></code></pre></div></td></tr></table></figure>
+<p>设定slaves档案</p>
+<figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">sudo gedit <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/hadoop/</span>etc<span class="hljs-regexp">/hadoop/</span>slaves<br></code></pre></div></td></tr></table></figure>
+<p>输入下列内容:</p>
+<figure class="highlight powershell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs powershell"><span class="hljs-keyword">data</span>1<br><span class="hljs-keyword">data</span>2<br><span class="hljs-keyword">data</span>3<br></code></pre></div></td></tr></table></figure>
+<h4><span id="6master连线至data1-data2-data3建立hdfs目录">6
+master连线至data1、data2、data3建立HDFS目录</span></h4>
+<p>master SSH连线至data1并建立HDFS目录</p>
+<figure class="highlight dts"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs dts">ssh data1<br><br><span class="hljs-meta"># 删除hdfs目录</span><br>sudo rm -rf <span class="hljs-meta-keyword">/usr/</span>local<span class="hljs-meta-keyword">/hadoop/</span>hadoop_data/hdfs<br><br><span class="hljs-meta"># 创建datanode目录</span><br>sudo mkdir -p <span class="hljs-meta-keyword">/usr/</span>local<span class="hljs-meta-keyword">/hadoop/</span>hadoop_data<span class="hljs-meta-keyword">/hdfs/</span>datanode<br><br><span class="hljs-meta"># 更改所有者为当前用户</span><br>sudo chown ray:ray -R <span class="hljs-meta-keyword">/usr/</span>local/hadoop<br></code></pre></div></td></tr></table></figure>
+<p>回到master端</p>
+<figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk"><span class="hljs-keyword">exit</span><br></code></pre></div></td></tr></table></figure>
+<p>master SSH连线至data2并建立HDFS目录</p>
+<figure class="highlight dts"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs dts">ssh data2<br><br><span class="hljs-meta"># 删除hdfs目录</span><br>sudo rm -rf <span class="hljs-meta-keyword">/usr/</span>local<span class="hljs-meta-keyword">/hadoop/</span>hadoop_data/hdfs<br><br><span class="hljs-meta"># 创建datanode目录</span><br>sudo mkdir -p <span class="hljs-meta-keyword">/usr/</span>local<span class="hljs-meta-keyword">/hadoop/</span>hadoop_data<span class="hljs-meta-keyword">/hdfs/</span>datanode<br><br><span class="hljs-meta"># 更改所有者为当前用户</span><br>sudo chown ray:ray -R <span class="hljs-meta-keyword">/usr/</span>local/hadoop<br></code></pre></div></td></tr></table></figure>
+<p>回到master端</p>
+<figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk"><span class="hljs-keyword">exit</span><br></code></pre></div></td></tr></table></figure>
+<p>master SSH连线至data3并建立HDFS目录</p>
+<figure class="highlight dts"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs dts">ssh data3<br><br><span class="hljs-meta"># 删除hdfs目录</span><br>sudo rm -rf <span class="hljs-meta-keyword">/usr/</span>local<span class="hljs-meta-keyword">/hadoop/</span>hadoop_data/hdfs<br><br><span class="hljs-meta"># 创建datanode目录</span><br>sudo mkdir -p <span class="hljs-meta-keyword">/usr/</span>local<span class="hljs-meta-keyword">/hadoop/</span>hadoop_data<span class="hljs-meta-keyword">/hdfs/</span>datanode<br><br><span class="hljs-meta"># 更改所有者为当前用户</span><br>sudo chown ray:ray -R <span class="hljs-meta-keyword">/usr/</span>local/hadoop<br></code></pre></div></td></tr></table></figure>
+<p>回到master端</p>
+<figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk"><span class="hljs-keyword">exit</span><br></code></pre></div></td></tr></table></figure>
+<h4><span id="7建立与格式化namenodehdfs目录">7建立与格式化NameNode
+HDFS目录</span></h4>
+<figure class="highlight dts"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs dts"><span class="hljs-meta"># 删除hdfs目录</span><br>sudo rm -rf <span class="hljs-meta-keyword">/usr/</span>local<span class="hljs-meta-keyword">/hadoop/</span>hadoop_data/hdfs<br><br><span class="hljs-meta"># 创建datanode目录</span><br>sudo mkdir -p <span class="hljs-meta-keyword">/usr/</span>local<span class="hljs-meta-keyword">/hadoop/</span>hadoop_data<span class="hljs-meta-keyword">/hdfs/</span>namenode<br><br><span class="hljs-meta"># 更改所有者为当前用户</span><br>sudo chown ray:ray -R <span class="hljs-meta-keyword">/usr/</span>local/hadoop<br></code></pre></div></td></tr></table></figure>
+<p>格式化NameNode HDFS目录</p>
+<figure class="highlight dos"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs dos">hadoop namenode -<span class="hljs-built_in">format</span><br></code></pre></div></td></tr></table></figure>
+<h4><span id="8启动hadoop-multi-nodecluster">8启动Hadoop Multi Node
+cluster</span></h4>
+<p>启动start-dfs.sh，再启动 start-yarn.sh</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs crmsh"><span class="hljs-literal">start</span>-dfs.sh<br><br><span class="hljs-literal">start</span>-yarn.sh<br></code></pre></div></td></tr></table></figure>
+<p>或 启动全部</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs pgsql"><span class="hljs-keyword">start</span>-<span class="hljs-keyword">all</span>.sh<br></code></pre></div></td></tr></table></figure>
+<p>查看目前所执行的行程</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs ebnf"><span class="hljs-attribute">jps</span><br></code></pre></div></td></tr></table></figure>
+<p>停止</p>
+<p>stop-dfs.sh</p>
+<p>stop-yarn.sh</p>
+<p>stop-all.sh</p>
+<h4><span id="9开启hadoopresource-manager-web介面">9开启Hadoop
+Resource-Manager Web介面</span></h4>
+<p>http://master:8088/</p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/hadoop-spark环境配置_pic/image-20201030010622615.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<h4><span id="10开启namenodeweb介面">10开启NameNodeWeb介面</span></h4>
+<p>HDFS Web UI网址 http://master:50070/</p>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/hadoop-spark环境配置_pic/image-20201030010705348.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<figure>
+<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/hadoop-spark环境配置_pic/image-20201030010732578.png" srcset="/img/loading.gif" lazyload alt="image">
+<figcaption aria-hidden="true">image</figcaption>
+</figure>
+<h3><span id="常用命令">常用命令</span></h3>
+<figure class="highlight dos"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs dos">hadoop <span class="hljs-built_in">fs</span> -<span class="hljs-built_in">mkdir</span><br>hadoop <span class="hljs-built_in">fs</span> -ls<br>hadoop <span class="hljs-built_in">fs</span> -copyFromLocal # 复制到hdfs，提醒有重名<br>hadoop <span class="hljs-built_in">fs</span> -put   # 复制到hdfs，但是直接覆盖重名<br>hadoop <span class="hljs-built_in">fs</span> -cat<br>hadoop <span class="hljs-built_in">fs</span> -copyToLocal  # 复制到本地，提醒有重名<br>hadoop <span class="hljs-built_in">fs</span> -get   # 复制到本地，但是直接覆盖重名<br>hadoop <span class="hljs-built_in">fs</span> -cp<br>hadoop <span class="hljs-built_in">fs</span> -rm<br></code></pre></div></td></tr></table></figure>
+<h3><span id="pyspark">pyspark</span></h3>
+<h4><span id="scale">scale</span></h4>
+<figure class="highlight angelscript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs angelscript">tar xvf scala<span class="hljs-number">-2.11</span><span class="hljs-number">.12</span>.tgz<br><br>sudo mv scala<span class="hljs-number">-2.11</span><span class="hljs-number">.12</span> /usr/local/scala<br><br>sudo gedit .bashrc<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight routeros"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs routeros"><span class="hljs-comment"># 写入</span><br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">SCALA_HOME</span>=/usr/local/scala<br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">PATH</span>=<span class="hljs-variable">$PATH</span>:$SCALA_HOME/bin<br></code></pre></div></td></tr></table></figure>
+<h4><span id="spark">spark</span></h4>
+<figure class="highlight angelscript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs angelscript">tar xvf spark<span class="hljs-number">-2.4</span><span class="hljs-number">.7</span>-bin-without-hadoop.tgz <br>sudo mv spark<span class="hljs-number">-2.4</span><span class="hljs-number">.7</span>-bin-without-hadoop /usr/local/spark<br>sudo gedit .bashrc<br></code></pre></div></td></tr></table></figure>
+<p>写入</p>
+<figure class="highlight routeros"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs routeros"><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">SPARK_HOME</span>=/usr/local/spark<br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">PATH</span>=<span class="hljs-variable">$PATH</span>:$SPARK_HOME/bin:$SPARK_HOME/sbin<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">source</span> .bashrc<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight stata"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs stata"><span class="hljs-keyword">cd</span> /usr/<span class="hljs-keyword">local</span>/spark/<br>cp ./<span class="hljs-keyword">conf</span>/spark-env.<span class="hljs-keyword">sh</span>.template ./<span class="hljs-keyword">conf</span>/spark-env.<span class="hljs-keyword">sh</span><br><br>sudo gedit ./<span class="hljs-keyword">conf</span>/spark-env.<span class="hljs-keyword">sh</span><br></code></pre></div></td></tr></table></figure>
+<p>写入</p>
+<figure class="highlight routeros"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs routeros"><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">SPARK_DIST_CLASSPATH</span>=$(/usr/local/hadoop/bin/hadoop classpath)<br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">HADOOP_CONF_DIR</span>=/usr/local/hadoop/etc/hadoop<br><br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">PYSPARK_PYTHON</span>=/usr/bin/python3<br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">PYSPARK_DRIVER_PYTHON</span>=/usr/bin/ipython3<br><span class="hljs-comment"># 在notebook中运行pyspark</span><br><span class="hljs-comment"># export PYSPARK_DRIVER_PYTHON_OPTS="notebook"</span><br></code></pre></div></td></tr></table></figure>
+<p>使用HDFS中文件时，先要启动Hadoop</p>
+<h4><span id="测试">测试</span></h4>
+<p>master机器上</p>
+<figure class="highlight stata"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs stata"><span class="hljs-keyword">cd</span> ~<br><span class="hljs-keyword">mkdir</span> wordcount/<span class="hljs-keyword">input</span> -p<br>cp /usr/<span class="hljs-keyword">local</span>/hadoop/LICENSE.txt ~/wordcount/<span class="hljs-keyword">input</span><br></code></pre></div></td></tr></table></figure>
+<figure class="highlight pgsql"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs pgsql"><span class="hljs-keyword">start</span>-<span class="hljs-keyword">all</span>.sh<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">hadoop fs -mkdir -p <span class="hljs-regexp">/user/</span>ray<span class="hljs-regexp">/wordcount/i</span>nput<br>cd ~<span class="hljs-regexp">/wordcount/i</span>nput<br>hadoop fs -copyFromLocal LICENSE.txt <span class="hljs-regexp">/user/</span>ray<span class="hljs-regexp">/wordcount/i</span>nput<br>hadoop fs -ls <span class="hljs-regexp">/user/</span>ray<span class="hljs-regexp">/wordcount/i</span>nput<br></code></pre></div></td></tr></table></figure>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Tools/">Tools</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Tools/spark/">spark</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/spark/">spark</a>
+                    
+                      <a class="hover-with-bg" href="/tags/tools/">tools</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/798499bc.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">CRF--SimpleNote</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/5de6e8e6.html">
+                        <span class="hidden-mobile">神经网络normalization</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>
