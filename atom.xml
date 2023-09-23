@@ -111,7 +111,7 @@
     <link href="https://racleray.github.io/posts/aeaec6fb.html"/>
     <id>https://racleray.github.io/posts/aeaec6fb.html</id>
     <published>2022-01-23T12:59:29.000Z</published>
-    <updated>2023-09-23T13:10:10.761Z</updated>
+    <updated>2023-09-23T13:44:56.485Z</updated>
     
     
     <summary type="html">测试框架：catch2、doctes、googletest、cmocka</summary>
@@ -344,9 +344,9 @@ multi-task finetuning. 3. inference&lt;/p&gt;
     <category term="NLP" scheme="https://racleray.github.io/categories/Notes/NLP/"/>
     
     
-    <category term="topic model" scheme="https://racleray.github.io/tags/topic-model/"/>
-    
     <category term="BERT" scheme="https://racleray.github.io/tags/BERT/"/>
+    
+    <category term="topic model" scheme="https://racleray.github.io/tags/topic-model/"/>
     
   </entry>
   
