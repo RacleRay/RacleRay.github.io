@@ -6,7 +6,7 @@
   <link href="https://racleray.github.io/atom.xml" rel="self"/>
   
   <link href="https://racleray.github.io/"/>
-  <updated>2024-01-09T04:08:34.948Z</updated>
+  <updated>2024-01-09T05:02:02.176Z</updated>
   <id>https://racleray.github.io/</id>
   
   <author>
@@ -17,11 +17,55 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>C sharp</title>
+    <link href="https://racleray.github.io/posts/abda3b00.html"/>
+    <id>https://racleray.github.io/posts/abda3b00.html</id>
+    <published>2023-02-09T12:58:02.000Z</published>
+    <updated>2024-01-09T05:02:02.176Z</updated>
+    
+    
+    <summary type="html">C# basic types</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="C#" scheme="https://racleray.github.io/categories/Notes/C/"/>
+    
+    
+    <category term="C-sharp" scheme="https://racleray.github.io/tags/C-sharp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>kali hack tools</title>
+    <link href="https://racleray.github.io/posts/886c7636.html"/>
+    <id>https://racleray.github.io/posts/886c7636.html</id>
+    <published>2023-01-09T04:59:21.000Z</published>
+    <updated>2024-01-09T04:56:09.953Z</updated>
+    
+    
+    <summary type="html">kali linux hack tools</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="hack" scheme="https://racleray.github.io/categories/Notes/hack/"/>
+    
+    
+    <category term="hack" scheme="https://racleray.github.io/tags/hack/"/>
+    
+    <category term="kali" scheme="https://racleray.github.io/tags/kali/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Cpp性能测试</title>
     <link href="https://racleray.github.io/posts/f692d883.html"/>
     <id>https://racleray.github.io/posts/f692d883.html</id>
     <published>2022-12-09T05:04:05.000Z</published>
-    <updated>2024-01-09T04:08:34.948Z</updated>
+    <updated>2024-01-09T04:08:55.737Z</updated>
     
     
     <summary type="html">C++高性能编程测试用环境</summary>
@@ -205,7 +249,7 @@
     <link href="https://racleray.github.io/posts/d207ef0b.html"/>
     <id>https://racleray.github.io/posts/d207ef0b.html</id>
     <published>2022-03-02T16:02:59.000Z</published>
-    <updated>2024-01-09T03:11:52.029Z</updated>
+    <updated>2024-01-09T05:01:58.427Z</updated>
     
     
     <summary type="html">一图流简易epoll实现机制</summary>
@@ -293,14 +337,14 @@
   </entry>
   
   <entry>
-    <title>数据结构整理-part2</title>
-    <link href="https://racleray.github.io/posts/4121feda.html"/>
-    <id>https://racleray.github.io/posts/4121feda.html</id>
+    <title>数据结构整理-part3</title>
+    <link href="https://racleray.github.io/posts/3626ce4c.html"/>
+    <id>https://racleray.github.io/posts/3626ce4c.html</id>
     <published>2021-10-08T13:30:33.000Z</published>
-    <updated>2023-08-07T11:54:31.042Z</updated>
+    <updated>2023-08-07T11:54:31.043Z</updated>
     
     
-    <summary type="html">常见基本数据结构整理第二部分，使用C语言编写。</summary>
+    <summary type="html">常见基本数据结构整理第三部分，使用C语言编写。</summary>
     
     
     
@@ -316,14 +360,14 @@
   </entry>
   
   <entry>
-    <title>数据结构整理-part3</title>
-    <link href="https://racleray.github.io/posts/3626ce4c.html"/>
-    <id>https://racleray.github.io/posts/3626ce4c.html</id>
+    <title>数据结构整理-part2</title>
+    <link href="https://racleray.github.io/posts/4121feda.html"/>
+    <id>https://racleray.github.io/posts/4121feda.html</id>
     <published>2021-10-08T13:30:33.000Z</published>
-    <updated>2023-08-07T11:54:31.043Z</updated>
+    <updated>2023-08-07T11:54:31.042Z</updated>
     
     
-    <summary type="html">常见基本数据结构整理第三部分，使用C语言编写。</summary>
+    <summary type="html">常见基本数据结构整理第二部分，使用C语言编写。</summary>
     
     
     
@@ -439,52 +483,6 @@ multi-task finetuning. 3. inference&lt;/p&gt;
     
     
     <category term="BERT" scheme="https://racleray.github.io/tags/BERT/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>BERT_topic_analysis</title>
-    <link href="https://racleray.github.io/posts/c228cec2.html"/>
-    <id>https://racleray.github.io/posts/c228cec2.html</id>
-    <published>2021-07-19T14:26:37.000Z</published>
-    <updated>2023-08-07T11:54:31.026Z</updated>
-    
-    
-    <summary type="html">简单学习下BERT Topic Analysis的相关内容，看看Kaggle上的代码实验。</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="NLP" scheme="https://racleray.github.io/categories/Notes/NLP/"/>
-    
-    
-    <category term="BERT" scheme="https://racleray.github.io/tags/BERT/"/>
-    
-    <category term="topic model" scheme="https://racleray.github.io/tags/topic-model/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Jacobi BP整理</title>
-    <link href="https://racleray.github.io/posts/ff0063e5.html"/>
-    <id>https://racleray.github.io/posts/ff0063e5.html</id>
-    <published>2021-06-18T13:54:30.000Z</published>
-    <updated>2023-08-07T11:54:31.030Z</updated>
-    
-    
-    <summary type="html">从Jabobi Matrix角度，梳理神经网络反向传播过程。</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="DL" scheme="https://racleray.github.io/categories/Notes/DL/"/>
-    
-    
-    <category term="BP" scheme="https://racleray.github.io/tags/BP/"/>
-    
-    <category term="deep learning" scheme="https://racleray.github.io/tags/deep-learning/"/>
     
   </entry>
   
