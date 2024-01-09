@@ -20,8 +20,8 @@
   <meta name="keywords" content="机器学习,Machine Learning,自然语言处理,NLP,深度学习,Deep Learning,计算机,Coding,生活随笔">
   <meta name="description" content="个人博客&amp;笔记">
 <meta property="og:type" content="website">
-<meta property="og:title" content="归档">
-<meta property="og:url" content="https://racleray.github.io/archives/2021/09/index.html">
+<meta property="og:title" content="Racle&#96;s Story">
+<meta property="og:url" content="https://racleray.github.io/page/12/index.html">
 <meta property="og:site_name" content="Racle&#96;s Story">
 <meta property="og:description" content="个人博客&amp;笔记">
 <meta property="og:locale" content="zh_CN">
@@ -39,7 +39,7 @@
   
      <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
   
-  <title>归档 - Racle`s Story</title>
+  <title>Racle`s Story</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
 
@@ -75,7 +75,7 @@
 
 
 <body>
-  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 60vh;">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 100vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
@@ -195,18 +195,22 @@
 </nav>
 
     <div class="banner" id="banner" parallax=true
-         style="background: url('/img/5.jpg') no-repeat center center;
+         style="background: url('/img/36.jpg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="归档">
+            <span class="h2" id="subtitle" title="Recording &amp; Thinking &amp; Story telling">
               
             </span>
 
             
           </div>
 
+          
+            <div class="scroll-down-bar">
+              <i class="iconfont icon-arrowdown"></i>
+            </div>
           
         </div>
       </div>
@@ -217,30 +221,63 @@
     
       <div class="container nopadding-x-md">
         <div class="py-5" id="board"
-          >
+          style=margin-top:0>
           
           <div class="container">
             <div class="row">
               <div class="col-12 col-md-10 m-auto">
                 
 
-<div class="list-group">
-  <p class="h4">共计 67 篇文章</p>
-  <hr>
-  
-  
+
+  <div class="row mx-auto index-card">
     
-      
-      <p class="h5">2021</p>
     
-    <a href="/posts/9e991c30.html" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">Embedding &amp; Searching</span>
-      <time style="float: right;">09-05</time>
-    </a>
-  
-</div>
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/3610a686.html" target="_self">
+          <img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/img/lovewallpaper/2021/09/08/20-58-30-3631a1.jpg" srcset="/img/loading.gif" lazyload alt="hello">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/3610a686.html" target="_self">
+          hello
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/posts/3610a686.html" target="_self">
+          
+          
+            
+          
+          第一篇Blog，测试用。
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-04-16 00:41" pubdate>
+              2020-04-16
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
 
 
+
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <a class="extend prev" rel="prev" href="/page/11/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/#board">10</a><a class="page-number" href="/page/11/#board">11</a><span class="page-number current">12</span>
+    </span>
+  </nav>
 
 
 
@@ -356,7 +393,34 @@
       var typing = Fluid.plugins.typing;
       var title = document.getElementById('subtitle').title;
       
-      typing(title)
+      jQuery.ajax({
+        type: 'GET',
+        url: 'https://v1.jinrishici.com/all.json',
+        headers: {},
+        dataType: 'json',
+        success: function (result) {
+          var text;
+          if (result) {
+            var keys = 'content'.split('.')
+            if (result instanceof Array) {
+              result = result[0]
+            }
+            for (const k of keys) {
+              var value = result[k]
+              if (typeof value === 'string') {
+                text = value
+                break
+              } else if (value instanceof Object) {
+                result = value
+              }
+            }
+          }
+          text ? typing(text) : typing(title);
+        },
+        error: function () {
+          typing(title)
+        }
+      })
       
     })(window, document);
   </script>

@@ -1,0 +1,648 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="C++高性能编程测试用环境">
+  <meta name="author" content="HeRui">
+  <meta name="keywords" content="C++,性能测试">
+  <meta name="description" content="C++高性能编程测试用环境">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cpp性能测试">
+<meta property="og:url" content="https://racleray.github.io/posts/f692d883.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="C++高性能编程测试用环境">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-12-09T05:04:05.000Z">
+<meta property="article:modified_time" content="2024-01-09T04:08:34.948Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="性能测试">
+<meta name="twitter:card" content="summary_large_image">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>Cpp性能测试 - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Cpp性能测试">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-12-09 13:04" pubdate>
+        2022年12月9日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      23k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      71 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Cpp性能测试</h1>
+            
+            <div class="markdown-body">
+              <h2><span id="实验一">实验一</span></h2>
+<ul>
+<li>先确定测量指标</li>
+<li>从实际运行搜集输入</li>
+<li>不要对性能进行假设</li>
+<li>使用微基准测试深入理解代码</li>
+<li>部分有益的优化，可能对程序整体有害</li>
+<li>高性能程序的开发与优化，不是线性过程，可能需要在高级概览和低级细节中反复迭代测试</li>
+<li>在性能方面，没有什么是显而易见的</li>
+<li>看似不必要的代码，删除之后，可能会导致性能下降，请搞清楚如何有效利用
+CPU 以获得性能提升</li>
+</ul>
+<h3><span id="pre-requirements">Pre-requirements</span></h3>
+<figure class="highlight sh"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sh">sudo pacman -S gperftools<br><br>git <span class="hljs-built_in">clone</span> https://github.com/google/benchmark.git --depth=1<br><br><span class="hljs-built_in">cd</span> benchmark<br>cmake -E make_directory <span class="hljs-string">"build"</span><br>cmake -E <span class="hljs-built_in">chdir</span> <span class="hljs-string">"build"</span> cmake -DBENCHMARK_DOWNLOAD_DEPENDENCIES=on -DCMAKE_BUILD_TYPE=Release ../<br>cmake --build <span class="hljs-string">"build"</span> --config Release<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sh">// code<br>git <span class="hljs-built_in">clone</span> git@github.com:PacktPublishing/The-Art-of-Writing-Efficient-Programs.git<br></code></pre></div></td></tr></table></figure>
+<h3><span id="gperftools">gperftools</span></h3>
+<figure class="highlight sh"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sh">clang++ -g -O3 -mavx2 -Wall -pedantic 02_substring_sort.C -o example &amp;&amp; CPUPROFILE=prof.data ./example &amp;&amp; pprof --text ./example prof.data<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sh">clang++ -g -O3 -mavx2 -Wall -pedantic 03_substring_sort.C -o example &amp;&amp; CPUPROFILE=prof.data ./example &amp;&amp; pprof --text ./example prof.data<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sh">clang++ -g -O3 -mavx2 -Wall -pedantic 04_substring_sort.C -o example &amp;&amp; CPUPROFILE=prof.data ./example &amp;&amp; pprof --text ./example prof.data<br></code></pre></div></td></tr></table></figure>
+<blockquote>
+<p>clang++ 13 在 -O3 下的结果，和 clang++-11 的结果不同。</p>
+<p>对 compare 函数的优化，13 实在是太厉害了。</p>
+</blockquote>
+<h3><span id="perf">perf</span></h3>
+<p>使用硬件性能计数器和基于时间的采样。</p>
+<figure class="highlight sh"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sh">// 可选事件列表<br>perf list<br><br>perf <span class="hljs-built_in">stat</span> ./example<br><br>// 性能分析器<br>perf record ./example<br>perf report<br></code></pre></div></td></tr></table></figure>
+<p>由于编译器优化，指令重排等，perf
+显示的汇编代码和源代码的对应关系并不准确。</p>
+<h3><span id="google-performance">Google Performance</span></h3>
+<figure class="highlight sh"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sh">// -lprofiler<br>clang++ -g -O3 -mavx2 -Wall -pedantic -lprofiler 02_substring_sort.C -o example<br><br>CPUPROFILE=prof.data CPUPROFILE_FREQUENCY=1000 ./example<br><br>pprof ./example prof.data<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sh">// 调用图<br>pprof --pdf ./example prof.data &gt; prof.pdf<br></code></pre></div></td></tr></table></figure>
+<h3><span id="微基准测试">微基准测试</span></h3>
+<p>大型程序性能测试：</p>
+<ul>
+<li>整体编译时间长</li>
+<li>性能关键部分不那么明显</li>
+<li>目标上下文发生的概率可能较小，比如特定的网络请求时发生</li>
+</ul>
+<p>微基准测试，关注某个函数的测试。通过设置函数的起始条件，轻松调用此代码片段。</p>
+<p>另外，<strong>微基准测试</strong>
+严重依赖运行代码时，程序所处的上下文环境。测试时，将目标函数放单独在一个编译单元编译，可以缓解编译器优化，对目标函数的运行结果的影响。</p>
+<p>微基准测试，不可不信，不可全信。</p>
+<h3><span id="编译器优化">编译器优化</span></h3>
+<p>C++ 标准中，定义了一个关键概念：可观察行为（observable
+behavior）。</p>
+<p>编译器可以对程序进行任何它想要的更改，<strong>只要这些更改的结果不会改变可观察行为的结果</strong>。</p>
+<ul>
+<li>volatile 对象的访问，严格按照表达式的语义，不会对其重新排序</li>
+<li>程序终止时，写入文件时，严格按照程序写入的方式执行</li>
+<li>发送到交互设备的提示文本，将在程序等待输入之前，输出显示。输入和输出操作不能被省略或者重排</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;chrono&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdlib&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstring&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;memory&gt;</span></span><br><br><span class="hljs-keyword">using</span> <span class="hljs-built_in">std</span>::chrono::duration_cast;<br><span class="hljs-keyword">using</span> <span class="hljs-built_in">std</span>::chrono::microseconds;<br><span class="hljs-keyword">using</span> <span class="hljs-built_in">std</span>::chrono::system_clock;<br><span class="hljs-keyword">using</span> <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span>;<br><span class="hljs-keyword">using</span> <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;<br><span class="hljs-keyword">using</span> <span class="hljs-built_in">std</span>::<span class="hljs-built_in">unique_ptr</span>;<br><br><span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">compare1</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* s1, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* s2)</span> </span>&#123;<br>    <span class="hljs-keyword">int</span> i1 = <span class="hljs-number">0</span>, i2 = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">char</span> c1, c2;<br>    <span class="hljs-keyword">while</span> (<span class="hljs-number">1</span>) &#123;<br>        c1 = s1[i1]; c2 = s2[i2];<br>        <span class="hljs-keyword">if</span> (c1 != c2) <span class="hljs-keyword">return</span> c1 &gt; c2;<br>        ++i1; ++i2;<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">compare2</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* s1, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* s2)</span> </span>&#123;<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> i1 = <span class="hljs-number">0</span>, i2 = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">char</span> c1, c2;<br>    <span class="hljs-keyword">while</span> (<span class="hljs-number">1</span>) &#123;<br>        c1 = s1[i1]; c2 = s2[i2];<br>        <span class="hljs-keyword">if</span> (c1 != c2) <span class="hljs-keyword">return</span> c1 &gt; c2;<br>        ++i1; ++i2;<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">constexpr</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> N = <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">20</span>;<br>    <span class="hljs-keyword">constexpr</span> <span class="hljs-keyword">int</span> NI = <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">11</span>;<br>    unique_ptr&lt;char[]&gt; s(new char[2*N]);<br>    ::<span class="hljs-built_in">memset</span>(s.get(), <span class="hljs-string">'a'</span>, <span class="hljs-number">2</span>*N*<span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">char</span>));<br>    s[<span class="hljs-number">2</span>*N<span class="hljs-number">-1</span>] = <span class="hljs-number">0</span>;<br>    system_clock::time_point t0 = system_clock::now();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; NI; ++i) &#123;<br>        compare1(s.get(), s.get() + N);<br>    &#125;<br>    system_clock::time_point t1 = system_clock::now();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; NI; ++i) &#123;<br>        compare2(s.get(), s.get() + N);<br>    &#125;<br>    system_clock::time_point t2 = system_clock::now();<br>    <span class="hljs-built_in">cout</span> &lt;&lt; duration_cast&lt;microseconds&gt;(t1 - t0).count() &lt;&lt; <span class="hljs-string">"us "</span> &lt;&lt; duration_cast&lt;microseconds&gt;(t2 - t1).count() &lt;&lt; <span class="hljs-string">"us"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>这段程序，compare1、compare2 不会改变程序中 s
+的可观察行为。编译器直接跳过执行。输出时间是 0。</p>
+<p>使用 volatile 可以正常执行测试：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;chrono&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdlib&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstring&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;memory&gt;</span></span><br><br><span class="hljs-keyword">using</span> <span class="hljs-built_in">std</span>::chrono::duration_cast;<br><span class="hljs-keyword">using</span> <span class="hljs-built_in">std</span>::chrono::microseconds;<br><span class="hljs-keyword">using</span> <span class="hljs-built_in">std</span>::chrono::system_clock;<br><span class="hljs-keyword">using</span> <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span>;<br><span class="hljs-keyword">using</span> <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;<br><span class="hljs-keyword">using</span> <span class="hljs-built_in">std</span>::<span class="hljs-built_in">unique_ptr</span>;<br><br><span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">compare1</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* s1, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* s2)</span> </span>&#123;<br>    <span class="hljs-keyword">int</span> i1 = <span class="hljs-number">0</span>, i2 = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">char</span> c1, c2;<br>    <span class="hljs-keyword">while</span> (<span class="hljs-number">1</span>) &#123;<br>        c1 = s1[i1]; c2 = s2[i2];<br>        <span class="hljs-keyword">if</span> (c1 != c2) <span class="hljs-keyword">return</span> c1 &gt; c2;<br>        ++i1; ++i2;<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">compare2</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* s1, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* s2)</span> </span>&#123;<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> i1 = <span class="hljs-number">0</span>, i2 = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">char</span> c1, c2;<br>    <span class="hljs-keyword">while</span> (<span class="hljs-number">1</span>) &#123;<br>        c1 = s1[i1]; c2 = s2[i2];<br>        <span class="hljs-keyword">if</span> (c1 != c2) <span class="hljs-keyword">return</span> c1 &gt; c2;<br>        ++i1; ++i2;<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">constexpr</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> N = <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">20</span>;<br>    <span class="hljs-keyword">constexpr</span> <span class="hljs-keyword">int</span> NI = <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">11</span>;<br>    unique_ptr&lt;char[]&gt; s(new char[2*N]);<br>    ::<span class="hljs-built_in">memset</span>(s.get(), <span class="hljs-string">'a'</span>, <span class="hljs-number">2</span>*N*<span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">char</span>));<br>    s[<span class="hljs-number">2</span>*N<span class="hljs-number">-1</span>] = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">volatile</span> <span class="hljs-keyword">bool</span> sink;  <span class="hljs-comment">// difference</span><br>    system_clock::time_point t0 = system_clock::now();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; NI; ++i) &#123;<br>        sink = compare1(s.get(), s.get() + N);  <span class="hljs-comment">// difference</span><br>    &#125;<br>    system_clock::time_point t1 = system_clock::now();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; NI; ++i) &#123;<br>        sink = compare2(s.get(), s.get() + N);  <span class="hljs-comment">// difference</span><br>    &#125;<br>    system_clock::time_point t2 = system_clock::now();<br>    <span class="hljs-built_in">cout</span> &lt;&lt; duration_cast&lt;microseconds&gt;(t1 - t0).count() &lt;&lt; <span class="hljs-string">"us "</span> &lt;&lt; duration_cast&lt;microseconds&gt;(t2 - t1).count() &lt;&lt; <span class="hljs-string">"us"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h3><span id="google-benchmark">Google benchmark</span></h3>
+<figure class="highlight sh"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sh">git <span class="hljs-built_in">clone</span> https://github.com/google/benchmark.git --depth=1<br><br><span class="hljs-built_in">cd</span> benchmark<br>cmake -E make_directory <span class="hljs-string">"build"</span><br>cmake -E <span class="hljs-built_in">chdir</span> <span class="hljs-string">"build"</span> cmake -DBENCHMARK_DOWNLOAD_DEPENDENCIES=on -DCMAKE_BUILD_TYPE=Release ../<br>cmake --build <span class="hljs-string">"build"</span> --config Release<br><br><span class="hljs-built_in">export</span> GBEN_INC=xxx/benchmark/include/<br><span class="hljs-built_in">export</span> GBEN_LIB=xxx/benchmark/build/src/<br><br>clang++ -g -O3 -mavx2 -Wall -pedantic -I<span class="hljs-variable">$GBEN_INC</span> -lpthread -lrt -lm 10a_compare_mbm.C <span class="hljs-variable">$GBEN_LIB</span>/libbenchmark.a -o benchmark<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sh">./benchmark<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdlib&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstring&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;memory&gt;</span></span><br><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"benchmark/benchmark.h"</span></span><br><br><span class="hljs-keyword">using</span> <span class="hljs-built_in">std</span>::<span class="hljs-built_in">unique_ptr</span>;<br><br><span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">compare_int</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* s1, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* s2)</span> </span>&#123;<br>    <span class="hljs-keyword">char</span> c1, c2;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i1 = <span class="hljs-number">0</span>, i2 = <span class="hljs-number">0</span>; ; ++i1, ++i2) &#123;<br>        c1 = s1[i1]; c2 = s2[i2];<br>        <span class="hljs-keyword">if</span> (c1 != c2) <span class="hljs-keyword">return</span> c1 &gt; c2;<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">compare_uint</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* s1, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* s2)</span> </span>&#123;<br>    <span class="hljs-keyword">char</span> c1, c2;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> i1 = <span class="hljs-number">0</span>, i2 = <span class="hljs-number">0</span>; ; ++i1, ++i2) &#123;<br>        c1 = s1[i1]; c2 = s2[i2];<br>        <span class="hljs-keyword">if</span> (c1 != c2) <span class="hljs-keyword">return</span> c1 &gt; c2;<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">compare_uint_l</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* s1, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* s2, <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> l)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (s1 == s2) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>    <span class="hljs-keyword">char</span> c1, c2;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> i1 = <span class="hljs-number">0</span>, i2 = <span class="hljs-number">0</span>; i1 &lt; l; ++i1, ++i2) &#123;<br>        c1 = s1[i1]; c2 = s2[i2];<br>        <span class="hljs-keyword">if</span> (c1 != c2) <span class="hljs-keyword">return</span> c1 &gt; c2;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">BM_loop_int</span><span class="hljs-params">(benchmark::State&amp; state)</span> </span>&#123;<br>    <span class="hljs-keyword">const</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> N = state.range(<span class="hljs-number">0</span>);<br>    unique_ptr&lt;char[]&gt; s(new char[2*N]);<br>    ::<span class="hljs-built_in">memset</span>(s.get(), <span class="hljs-string">'a'</span>, <span class="hljs-number">2</span>*N*<span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">char</span>));<br>    s[<span class="hljs-number">2</span>*N<span class="hljs-number">-1</span>] = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* s1 = s.get(), *s2 = s1 + N;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> _ : state) &#123;<br>        benchmark::DoNotOptimize(compare_int(s1, s2));<br>    &#125;<br>    state.SetItemsProcessed(N*state.iterations());<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">BM_loop_uint</span><span class="hljs-params">(benchmark::State&amp; state)</span> </span>&#123;<br>    <span class="hljs-keyword">const</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> N = state.range(<span class="hljs-number">0</span>);<br>    unique_ptr&lt;char[]&gt; s(new char[2*N]);<br>    ::<span class="hljs-built_in">memset</span>(s.get(), <span class="hljs-string">'a'</span>, <span class="hljs-number">2</span>*N*<span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">char</span>));<br>    s[<span class="hljs-number">2</span>*N<span class="hljs-number">-1</span>] = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* s1 = s.get(), *s2 = s1 + N;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> _ : state) &#123;<br>        benchmark::DoNotOptimize(compare_uint(s1, s2));<br>    &#125;<br>    state.SetItemsProcessed(N*state.iterations());<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">BM_loop_uint_l</span><span class="hljs-params">(benchmark::State&amp; state)</span> </span>&#123;<br>    <span class="hljs-keyword">const</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> N = state.range(<span class="hljs-number">0</span>);<br>    unique_ptr&lt;char[]&gt; s(new char[2*N]);<br>    ::<span class="hljs-built_in">memset</span>(s.get(), <span class="hljs-string">'a'</span>, <span class="hljs-number">2</span>*N*<span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">char</span>));<br>    s[<span class="hljs-number">2</span>*N<span class="hljs-number">-1</span>] = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* s1 = s.get(), *s2 = s1 + N;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> _ : state) &#123;<br>        benchmark::DoNotOptimize(compare_uint_l(s1, s2, <span class="hljs-number">2</span>*N));<br>    &#125;<br>    state.SetItemsProcessed(N*state.iterations());<br>&#125;<br><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> ARGS -&gt;Arg(1&lt;&lt;20)</span><br><br>BENCHMARK(BM_loop_int) ARGS;<br>BENCHMARK(BM_loop_uint) ARGS;<br>BENCHMARK(BM_loop_uint_l) ARGS;<br><br>BENCHMARK_MAIN();<br></code></pre></div></td></tr></table></figure>
+<p><code>benchmark::State&amp; state</code> :
+入参；<code>state.SetItemsProcessed</code> :
+报告代码每秒处理的字符数；<code>-&gt;Arg(1&lt;&lt;20)</code> : 向
+BENCHMARK 宏传递参数。</p>
+<p><code>benchmark::DoNotOptimize</code> : 类似 volatile sink
+的作用，不会将 compare_uint
+函数调用优化掉，但是函数内部逻辑还是会进行优化。</p>
+<h2><span id="实验二-高效利用-cpu-资源">实验二 高效利用 CPU 资源</span></h2>
+<h3><span id="cpu-指令运行优化">CPU 指令运行优化</span></h3>
+<ul>
+<li><p>对于每次循环，独立地，对寄存器中相同的数据，进行不同的操作，是可以指令级并行的。</p></li>
+<li><p>数据依赖依靠流水线技术，错位执行。每个循环使用相同的寄存器，对于同一个寄存器不能在一个周期内既读又写。但是这是对于编译器而言，实际上硬件上的寄存器并不一定相同。寄存器重命名，可以使得相同寄存器名称实际在运行时可以对应到不同的硬件寄存器。</p></li>
+<li><p>流水线技术需要足够多的指令才能发挥出其性能优势。如果出现分支，那么需要分支预测，来尽可能提供更多的指令来运行。</p></li>
+<li><p>分支预测 +
+推测执行，处理器会根据历史运行结果，推测是否需要执行某个分支的指令。如果预测正确，并行化提高了性能；如果预测错误，就需要冲刷流水线，丢弃预测错误的指令。</p>
+<blockquote>
+<p>perf stat ./benchmark</p>
+<p>可以查看分支预测的情况</p>
+</blockquote></li>
+<li><p>推测执行可能会出现问题，比如 *ptr 解引用了 NULL 指针，但是由于
+CPU 会在缓冲区进行推测执行，但是 CPU 会假装从未发生。</p></li>
+<li><p>循环展开也许会对现代编译器下的代码产生有益的影响，但是不是一定的。因为许多向量化编译器，会使用
+SSE 或者 AVX
+指令来优化循环的执行，一次处理多个元素。所以，手动循环展开，不一定会更高效。</p></li>
+</ul>
+<p>测试运算指令：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;string.h&gt;</span></span><br><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"benchmark/benchmark.h"</span></span><br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">BM_add</span><span class="hljs-params">(benchmark::State&amp; state)</span> </span>&#123;<br>    srand(<span class="hljs-number">1</span>);<br>    <span class="hljs-keyword">const</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> N = state.range(<span class="hljs-number">0</span>);<br>    std::vector&lt;unsigned long&gt; v1(N), v2(N);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>        v1[i] = rand();<br>        v2[i] = rand();<br>    &#125;<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p1 = v1.data();<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p2 = v2.data();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> _ : state) &#123;<br>        <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> a1 = <span class="hljs-number">0</span>, a2 = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>            a1 += p1[i] + p2[i];<br>        &#125;<br>        <span class="hljs-comment">// 不让编译器对 state 次相同的操作，进行优化</span><br>        <span class="hljs-comment">// 但是内层循环的运算操作的优化，仍然生效</span><br>        benchmark::DoNotOptimize(a1);<br>        benchmark::DoNotOptimize(a2);<br>        <span class="hljs-comment">// 强制写出结果到内存，高效的 内存屏障</span><br>        benchmark::ClobberMemory();<br>    &#125;<br>    state.SetItemsProcessed(N*state.iterations());<br>    <span class="hljs-comment">//state.SetBytesProcessed(N*sizeof(unsigned long)*state.iterations());</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">BM_multiply</span><span class="hljs-params">(benchmark::State&amp; state)</span> </span>&#123;<br>    srand(<span class="hljs-number">1</span>);<br>    <span class="hljs-keyword">const</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> N = state.range(<span class="hljs-number">0</span>);<br>    std::vector&lt;unsigned long&gt; v1(N), v2(N);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>        v1[i] = rand();<br>        v2[i] = rand();<br>    &#125;<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p1 = v1.data();<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p2 = v2.data();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> _ : state) &#123;<br>        <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> a1 = <span class="hljs-number">0</span>, a2 = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>            a2 += p1[i] * p2[i];<br>        &#125;<br>        benchmark::DoNotOptimize(a1);<br>        benchmark::DoNotOptimize(a2);<br>        benchmark::ClobberMemory();<br>    &#125;<br>    state.SetItemsProcessed(N*state.iterations());<br>    <span class="hljs-comment">//state.SetBytesProcessed(N*sizeof(unsigned long)*state.iterations());</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">BM_divide</span><span class="hljs-params">(benchmark::State&amp; state)</span> </span>&#123;<br>    srand(<span class="hljs-number">1</span>);<br>    <span class="hljs-keyword">const</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> N = state.range(<span class="hljs-number">0</span>);<br>    std::vector&lt;unsigned long&gt; v1(N), v2(N);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>        v1[i] = rand();<br>        v2[i] = rand() + <span class="hljs-number">1</span>;<br>    &#125;<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p1 = v1.data();<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p2 = v2.data();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> _ : state) &#123;<br>        <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> a1 = <span class="hljs-number">0</span>, a2 = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>            a2 += p1[i] / p2[i];<br>        &#125;<br>        benchmark::DoNotOptimize(a1);<br>        benchmark::DoNotOptimize(a2);<br>        benchmark::ClobberMemory();<br>    &#125;<br>    state.SetItemsProcessed(N*state.iterations());<br>    <span class="hljs-comment">//state.SetBytesProcessed(N*sizeof(unsigned long)*state.iterations());</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">BM_add_multiply</span><span class="hljs-params">(benchmark::State&amp; state)</span> </span>&#123;<br>    srand(<span class="hljs-number">1</span>);<br>    <span class="hljs-keyword">const</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> N = state.range(<span class="hljs-number">0</span>);<br>    std::vector&lt;unsigned long&gt; v1(N), v2(N);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>        v1[i] = rand();<br>        v2[i] = rand();<br>    &#125;<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p1 = v1.data();<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p2 = v2.data();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> _ : state) &#123;<br>        <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> a1 = <span class="hljs-number">0</span>, a2 = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>            a1 += p1[i] + p2[i];<br>            a2 += p1[i] * p2[i];<br>        &#125;<br>        benchmark::DoNotOptimize(a1);<br>        benchmark::DoNotOptimize(a2);<br>        benchmark::ClobberMemory();<br>    &#125;<br>    state.SetItemsProcessed(N*state.iterations());<br>    <span class="hljs-comment">//state.SetBytesProcessed(N*sizeof(unsigned long)*state.iterations());</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">BM_add_multiply2</span><span class="hljs-params">(benchmark::State&amp; state)</span> </span>&#123;<br>    srand(<span class="hljs-number">1</span>);<br>    <span class="hljs-keyword">const</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> N = state.range(<span class="hljs-number">0</span>);<br>    std::vector&lt;unsigned long&gt; v1(N), v2(N);<br>    std::vector&lt;unsigned long&gt; v3(N), v4(N);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>        v1[i] = rand();<br>        v2[i] = rand();<br>        v3[i] = rand();<br>        v4[i] = rand();<br>    &#125;<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p1 = v1.data();<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p2 = v2.data();<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p3 = v3.data();<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p4 = v4.data();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> _ : state) &#123;<br>        <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> a1 = <span class="hljs-number">0</span>, a2 = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>            a1 += p1[i] + p2[i];<br>            a2 += p3[i] * p4[i];<br>        &#125;<br>        benchmark::DoNotOptimize(a1);<br>        benchmark::DoNotOptimize(a2);<br>        benchmark::ClobberMemory();<br>    &#125;<br>    state.SetItemsProcessed(N*state.iterations());<br>    <span class="hljs-comment">//state.SetBytesProcessed(N*sizeof(unsigned long)*state.iterations());</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">BM_add2_multiply_sub_shift</span><span class="hljs-params">(benchmark::State&amp; state)</span> </span>&#123;<br>    srand(<span class="hljs-number">1</span>);<br>    <span class="hljs-keyword">const</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> N = state.range(<span class="hljs-number">0</span>);<br>    std::vector&lt;unsigned long&gt; v1(N), v2(N);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>        v1[i] = rand();<br>        v2[i] = rand();<br>    &#125;<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p1 = v1.data();<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p2 = v2.data();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> _ : state) &#123;<br>        <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> a1 = <span class="hljs-number">0</span>, a2 = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> a3 = <span class="hljs-number">0</span>, a4 = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>            a1 += p1[i] + p2[i];<br>            a2 += p1[i] * p2[i];<br>            a3 += p1[i] &lt;&lt; <span class="hljs-number">2</span>;<br>            a4 += p2[i] - p1[i];<br>        &#125;<br>        benchmark::DoNotOptimize(a1);<br>        benchmark::DoNotOptimize(a2);<br>        benchmark::DoNotOptimize(a3);<br>        benchmark::DoNotOptimize(a4);<br>        benchmark::ClobberMemory();<br>    &#125;<br>    state.SetItemsProcessed(N*state.iterations());<br>    <span class="hljs-comment">//state.SetBytesProcessed(N*sizeof(unsigned long)*state.iterations());</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">BM_instructions1</span><span class="hljs-params">(benchmark::State&amp; state)</span> </span>&#123;<br>    srand(<span class="hljs-number">1</span>);<br>    <span class="hljs-keyword">const</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> N = state.range(<span class="hljs-number">0</span>);<br>    std::vector&lt;unsigned long&gt; v1(N), v2(N);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>        v1[i] = rand();<br>        v2[i] = rand();<br>    &#125;<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p1 = v1.data();<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p2 = v2.data();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> _ : state) &#123;<br>        <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> a1 = <span class="hljs-number">0</span>, a2 = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> a3 = <span class="hljs-number">0</span>, a4 = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> a5 = <span class="hljs-number">0</span>, a6 = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>            a1 += p1[i] + p2[i];<br>            a2 += p1[i] * p2[i];<br>            a3 += p1[i] &lt;&lt; <span class="hljs-number">2</span>;<br>            a4 += p2[i] - p1[i];<br>            a5 += p2[i] &lt;&lt; <span class="hljs-number">1</span>;<br>            a6 += (p2[i] - <span class="hljs-number">3</span>);<br>        &#125;<br>        benchmark::DoNotOptimize(a1);<br>        benchmark::DoNotOptimize(a2);<br>        benchmark::DoNotOptimize(a3);<br>        benchmark::DoNotOptimize(a4);<br>        benchmark::DoNotOptimize(a5);<br>        benchmark::DoNotOptimize(a6);<br>        benchmark::ClobberMemory();<br>    &#125;<br>    state.SetItemsProcessed(N*state.iterations());<br>    <span class="hljs-comment">//state.SetBytesProcessed(N*sizeof(unsigned long)*state.iterations());</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">BM_instructions2</span><span class="hljs-params">(benchmark::State&amp; state)</span> </span>&#123;<br>    srand(<span class="hljs-number">1</span>);<br>    <span class="hljs-keyword">const</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> N = state.range(<span class="hljs-number">0</span>);<br>    std::vector&lt;unsigned long&gt; v1(N), v2(N);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>        v1[i] = rand();<br>        v2[i] = rand();<br>    &#125;<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p1 = v1.data();<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p2 = v2.data();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> _ : state) &#123;<br>        <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> a1 = <span class="hljs-number">0</span>, a2 = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> a3 = <span class="hljs-number">0</span>, a4 = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> a5 = <span class="hljs-number">0</span>, a6 = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>            a1 += p1[i] + p2[i];<br>            a2 += p1[i] * p2[i];<br>            a3 += p1[i] &lt;&lt; <span class="hljs-number">2</span>;<br>            a4 += p2[i] - p1[i];<br>            a5 += (p2[i] &lt;&lt; <span class="hljs-number">1</span>)*p2[i];<br>            a6 += (p2[i] - <span class="hljs-number">3</span>)*p1[i];<br>        &#125;<br>        benchmark::DoNotOptimize(a1);<br>        benchmark::DoNotOptimize(a2);<br>        benchmark::DoNotOptimize(a3);<br>        benchmark::DoNotOptimize(a4);<br>        benchmark::DoNotOptimize(a5);<br>        benchmark::DoNotOptimize(a6);<br>        benchmark::ClobberMemory();<br>    &#125;<br>    state.SetItemsProcessed(N*state.iterations());<br>    <span class="hljs-comment">//state.SetBytesProcessed(N*sizeof(unsigned long)*state.iterations());</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">BM_add2_multiply_sub_shift4</span><span class="hljs-params">(benchmark::State&amp; state)</span> </span>&#123;<br>    srand(<span class="hljs-number">1</span>);<br>    <span class="hljs-keyword">const</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> N = state.range(<span class="hljs-number">0</span>);<br>    std::vector&lt;unsigned long&gt; v1(N), v2(N);<br>    std::vector&lt;unsigned long&gt; v3(N), v4(N);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>        v1[i] = rand();<br>        v2[i] = rand();<br>        v3[i] = rand();<br>        v4[i] = rand();<br>    &#125;<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p1 = v1.data();<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p2 = v2.data();<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p3 = v3.data();<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p4 = v4.data();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> _ : state) &#123;<br>        <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> a1 = <span class="hljs-number">0</span>, a2 = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> a3 = <span class="hljs-number">0</span>, a4 = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>            a1 += p1[i] + p2[i];<br>            a2 += p2[i] * p3[i];<br>            a3 += p4[i] &lt;&lt; <span class="hljs-number">2</span>;<br>            a4 += p3[i] - p4[i];<br>        &#125;<br>        benchmark::DoNotOptimize(a1);<br>        benchmark::DoNotOptimize(a2);<br>        benchmark::DoNotOptimize(a3);<br>        benchmark::DoNotOptimize(a4);<br>        benchmark::ClobberMemory();<br>    &#125;<br>    state.SetItemsProcessed(N*state.iterations());<br>    <span class="hljs-comment">//state.SetBytesProcessed(N*sizeof(unsigned long)*state.iterations());</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">BM_max</span><span class="hljs-params">(benchmark::State&amp; state)</span> </span>&#123;<br>    srand(<span class="hljs-number">1</span>);<br>    <span class="hljs-keyword">const</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> N = state.range(<span class="hljs-number">0</span>);<br>    std::vector&lt;unsigned long&gt; v1(N), v2(N);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>        v1[i] = rand();<br>        v2[i] = rand();<br>    &#125;<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p1 = v1.data();<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p2 = v2.data();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> _ : state) &#123;<br>        <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> a1 = <span class="hljs-number">0</span>, a2 = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>            a2 += (p1[i] &gt; p2[i]) ? p1[i] : p2[i];<br>        &#125;<br>        benchmark::DoNotOptimize(a1);<br>        benchmark::DoNotOptimize(a2);<br>        benchmark::ClobberMemory();<br>    &#125;<br>    state.SetItemsProcessed(N*state.iterations());<br>    <span class="hljs-comment">//state.SetBytesProcessed(N*sizeof(unsigned long)*state.iterations());</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">BM_add_multiply_dep</span><span class="hljs-params">(benchmark::State&amp; state)</span> </span>&#123;<br>    srand(<span class="hljs-number">1</span>);<br>    <span class="hljs-keyword">const</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> N = state.range(<span class="hljs-number">0</span>);<br>    std::vector&lt;unsigned long&gt; v1(N), v2(N);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>        v1[i] = rand();<br>        v2[i] = rand();<br>    &#125;<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p1 = v1.data();<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p2 = v2.data();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> _ : state) &#123;<br>        <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> a1 = <span class="hljs-number">0</span>, a2 = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>            a1 += (p1[i] + p2[i]) * (p1[i] - p2[i]);<br>            <span class="hljs-comment">//a1 += (p1[i] * p2[i]);</span><br>        &#125;<br>        benchmark::DoNotOptimize(a1);<br>        benchmark::DoNotOptimize(a2);<br>        benchmark::ClobberMemory();<br>    &#125;<br>    state.SetItemsProcessed(N*state.iterations());<br>    <span class="hljs-comment">//state.SetBytesProcessed(N*sizeof(unsigned long)*state.iterations());</span><br>&#125;<br><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> ARGS \</span><br>    -&gt;Arg(<span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">22</span>)<br><br>BENCHMARK(BM_add) ARGS;<br>BENCHMARK(BM_multiply) ARGS;<br>BENCHMARK(BM_divide) ARGS;<br>BENCHMARK(BM_add_multiply) ARGS;<br>BENCHMARK(BM_add_multiply2) ARGS;<br>BENCHMARK(BM_add2_multiply_sub_shift) ARGS;<br>BENCHMARK(BM_instructions1) ARGS;<br>BENCHMARK(BM_instructions2) ARGS;<br>BENCHMARK(BM_add2_multiply_sub_shift4) ARGS;<br>BENCHMARK(BM_max) ARGS;<br>BENCHMARK(BM_add_multiply_dep) ARGS;<br><br>BENCHMARK_MAIN();<br></code></pre></div></td></tr></table></figure>
+<h3><span id="无分支计算">无分支计算</span></h3>
+<p>无分支计算可以消除或者减轻分支预测失败带来的性能损失。</p>
+<p>但是，如果消除分支的代价是，增加了非内联的复杂函数的调用次数，那么函数调用的代价会比分支预测失败的代价大。</p>
+<p>因为函数调用本身就会中断流水线，这也是内联函数高效地一个原因之一。</p>
+<figure class="highlight sh"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sh">// 编译命令<br>clang++ -g -O3 -mavx2 -Wall -pedantic -I<span class="hljs-variable">$GBEN_INC</span> -lpthread -lrt -lm 02_branch.C <span class="hljs-variable">$GBEN_LIB</span>/libbenchmark.a -o benchmar<br>k<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;string.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MCA_START __asm volatile(<span class="hljs-meta-string">"# LLVM-MCA-BEGIN"</span>);</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MCA_END __asm volatile(<span class="hljs-meta-string">"# LLVM-MCA-END"</span>);</span><br><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"benchmark/benchmark.h"</span></span><br></code></pre></div></td></tr></table></figure>
+<h4><span id="例一">例一</span></h4>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">BM_branched</span><span class="hljs-params">(benchmark::State&amp; state)</span> </span>&#123;<br>    srand(<span class="hljs-number">1</span>);<br>    <span class="hljs-keyword">const</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> N = state.range(<span class="hljs-number">0</span>);<br>    std::vector&lt;unsigned long&gt; v1(N), v2(N);<br>    <span class="hljs-function"><span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; <span class="hljs-title">c1</span><span class="hljs-params">(N)</span></span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>        v1[i] = rand();<br>        v2[i] = rand();<br>        c1[i] = rand() &amp; <span class="hljs-number">0x1</span>;<br>    &#125;<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p1 = v1.data();<br>    <span class="hljs-keyword">int</span>* b1 = c1.data();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> _ : state) &#123;<br>        <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> a1 = <span class="hljs-number">0</span>, a2 = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br><span class="hljs-meta">#<span class="hljs-meta-keyword">if</span> 0</span><br>            (b1[i] ? a1 : a2) += p1[i];<br><span class="hljs-meta">#<span class="hljs-meta-keyword">else</span></span><br>            <span class="hljs-keyword">if</span> (b1[i]) &#123;<br>                a1 += p1[i];<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                a2 += p1[i];<br>            &#125;<br><span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span> <span class="hljs-comment">// 1</span></span><br>        &#125;<br>        benchmark::DoNotOptimize(a1);<br>        benchmark::DoNotOptimize(a2);<br>        benchmark::ClobberMemory();<br>    &#125;<br>    state.SetItemsProcessed(N*state.iterations());<br>    <span class="hljs-comment">//state.SetBytesProcessed(N*sizeof(unsigned long)*state.iterations());</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>使用数组，消除分支，通过索引在不同的内存单元进行计算。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">BM_branchless</span><span class="hljs-params">(benchmark::State&amp; state)</span> </span>&#123;<br>    srand(<span class="hljs-number">1</span>);<br>    <span class="hljs-keyword">const</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> N = state.range(<span class="hljs-number">0</span>);<br>    std::vector&lt;unsigned long&gt; v1(N), v2(N);<br>    <span class="hljs-function"><span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; <span class="hljs-title">c1</span><span class="hljs-params">(N)</span></span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>        v1[i] = rand();<br>        v2[i] = rand();<br>        c1[i] = rand() &amp; <span class="hljs-number">0x1</span>;<br>    &#125;<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p1 = v1.data();<br>    <span class="hljs-keyword">int</span>* b1 = c1.data();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> _ : state) &#123;<br>        <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> a1 = <span class="hljs-number">0</span>, a2 = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* a[<span class="hljs-number">2</span>] = &#123; &amp;a2, &amp;a1 &#125;;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>            a[b1[i]] += p1[i];<br>        &#125;<br>        benchmark::DoNotOptimize(a1);<br>        benchmark::DoNotOptimize(a2);<br>        benchmark::ClobberMemory();<br>    &#125;<br>    state.SetItemsProcessed(N*state.iterations());<br>    <span class="hljs-comment">//state.SetBytesProcessed(N*sizeof(unsigned long)*state.iterations());</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+<blockquote>
+<p>(b1[i] ? a1 : a2)
+在某些编译器中，会使用查找数组的方式优化，也就是上面的方式。所以，比使用条件分支代码更高效。</p>
+</blockquote>
+<h4><span id="例二">例二</span></h4>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">BM_branched1</span><span class="hljs-params">(benchmark::State&amp; state)</span> </span>&#123;<br>    srand(<span class="hljs-number">1</span>);<br>    <span class="hljs-keyword">const</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> N = state.range(<span class="hljs-number">0</span>);<br>    std::vector&lt;unsigned long&gt; v1(N), v2(N);<br>    <span class="hljs-function"><span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; <span class="hljs-title">c1</span><span class="hljs-params">(N)</span></span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>        v1[i] = rand();<br>        v2[i] = rand();<br>        c1[i] = rand() &amp; <span class="hljs-number">0x1</span>;<br>    &#125;<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p1 = v1.data();<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p2 = v2.data();<br>    <span class="hljs-keyword">int</span>* b1 = c1.data();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> _ : state) &#123;<br>        <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> a1 = <span class="hljs-number">0</span>, a2 = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>            <span class="hljs-keyword">if</span> (b1[i]) &#123;<br>                a1 += p1[i];<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                a2 += p2[i];<br>            &#125;<br>        &#125;<br>        benchmark::DoNotOptimize(a1);<br>        benchmark::DoNotOptimize(a2);<br>        benchmark::ClobberMemory();<br>    &#125;<br>    state.SetItemsProcessed(N*state.iterations());<br>    <span class="hljs-comment">//state.SetBytesProcessed(N*sizeof(unsigned long)*state.iterations());</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>使用两个中间值数组，进行分支消除。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">BM_branchless1</span><span class="hljs-params">(benchmark::State&amp; state)</span> </span>&#123;<br>    srand(<span class="hljs-number">1</span>);<br>    <span class="hljs-keyword">const</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> N = state.range(<span class="hljs-number">0</span>);<br>    std::vector&lt;unsigned long&gt; v1(N), v2(N);<br>    <span class="hljs-function"><span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; <span class="hljs-title">c1</span><span class="hljs-params">(N)</span></span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>        v1[i] = rand();<br>        v2[i] = rand();<br>        c1[i] = rand() &amp; <span class="hljs-number">0x1</span>;<br>    &#125;<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p1 = v1.data();<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p2 = v2.data();<br>    <span class="hljs-keyword">int</span>* b1 = c1.data();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> _ : state) &#123;<br>        <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> a1 = <span class="hljs-number">0</span>, a2 = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>            <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> s1[<span class="hljs-number">2</span>] = &#123;     <span class="hljs-number">0</span>, p1[i] &#125;;<br>            <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> s2[<span class="hljs-number">2</span>] = &#123; p2[i],     <span class="hljs-number">0</span> &#125;;<br>            a1 += s1[b1[i]];<br>            a2 += s2[b1[i]];<br>        &#125;<br>        benchmark::DoNotOptimize(a1);<br>        benchmark::DoNotOptimize(a2);<br>        benchmark::ClobberMemory();<br>    &#125;<br>    state.SetItemsProcessed(N*state.iterations());<br>    <span class="hljs-comment">//state.SetBytesProcessed(N*sizeof(unsigned long)*state.iterations());</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h4><span id="例三">例三</span></h4>
+<p>基于随机值条件分支的版本，处理器不能对其进行高效正确率高的分支预测。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">BM_branched2</span><span class="hljs-params">(benchmark::State&amp; state)</span> </span>&#123;<br>    srand(<span class="hljs-number">1</span>);<br>    <span class="hljs-keyword">const</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> N = state.range(<span class="hljs-number">0</span>);<br>    std::vector&lt;unsigned long&gt; v1(N), v2(N);<br>    <span class="hljs-function"><span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; <span class="hljs-title">c1</span><span class="hljs-params">(N)</span></span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>        v1[i] = rand();<br>        v2[i] = rand();<br>        c1[i] = rand() &amp; <span class="hljs-number">0x1</span>;<br>    &#125;<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p1 = v1.data();<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p2 = v2.data();<br>    <span class="hljs-keyword">int</span>* b1 = c1.data();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> _ : state) &#123;<br>        <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> a1 = <span class="hljs-number">0</span>, a2 = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>            <span class="hljs-keyword">if</span> (b1[i]) &#123;<br>                a1 += p1[i] - p2[i];<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                a2 += p1[i] * p2[i];<br>            &#125;<br>        &#125;<br>        benchmark::DoNotOptimize(a1);<br>        benchmark::DoNotOptimize(a2);<br>        benchmark::ClobberMemory();<br>    &#125;<br>    state.SetItemsProcessed(N*state.iterations());<br>    <span class="hljs-comment">//state.SetBytesProcessed(N*sizeof(unsigned long)*state.iterations());</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>基于bool值条件分支的版本，处理器可以进行高效正确率高的分支预测，程序会被处理器优化执行，实测性能与无分支版本相当，甚至更好。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">BM_branched2_predicted</span><span class="hljs-params">(benchmark::State&amp; state)</span> </span>&#123;<br>    srand(<span class="hljs-number">1</span>);<br>    <span class="hljs-keyword">const</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> N = state.range(<span class="hljs-number">0</span>);<br>    std::vector&lt;unsigned long&gt; v1(N), v2(N);<br>    <span class="hljs-function"><span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; <span class="hljs-title">c1</span><span class="hljs-params">(N)</span></span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>        v1[i] = rand();<br>        v2[i] = rand();<br>        c1[i] = rand() &gt; <span class="hljs-number">0</span>;<br>    &#125;<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p1 = v1.data();<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p2 = v2.data();<br>    <span class="hljs-keyword">int</span>* b1 = c1.data();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> _ : state) &#123;<br>        <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> a1 = <span class="hljs-number">0</span>, a2 = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>            <span class="hljs-keyword">if</span> (b1[i]) &#123;<br>                a1 += p1[i] - p2[i];<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                a2 += p1[i] * p2[i];<br>            &#125;<br>        &#125;<br>        benchmark::DoNotOptimize(a1);<br>        benchmark::DoNotOptimize(a2);<br>        benchmark::ClobberMemory();<br>    &#125;<br>    state.SetItemsProcessed(N*state.iterations());<br>    <span class="hljs-comment">//state.SetBytesProcessed(N*sizeof(unsigned long)*state.iterations());</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>无分支版本：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">BM_branchless2</span><span class="hljs-params">(benchmark::State&amp; state)</span> </span>&#123;<br>    srand(<span class="hljs-number">1</span>);<br>    <span class="hljs-keyword">const</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> N = state.range(<span class="hljs-number">0</span>);<br>    std::vector&lt;unsigned long&gt; v1(N), v2(N);<br>    <span class="hljs-function"><span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; <span class="hljs-title">c1</span><span class="hljs-params">(N)</span></span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>        v1[i] = rand();<br>        v2[i] = rand();<br>        c1[i] = rand() &amp; <span class="hljs-number">0x1</span>;<br>    &#125;<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p1 = v1.data();<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p2 = v2.data();<br>    <span class="hljs-keyword">int</span>* b1 = c1.data();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> _ : state) &#123;<br>        <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> a1 = <span class="hljs-number">0</span>, a2 = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>            <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> s1[<span class="hljs-number">2</span>] = &#123;             <span class="hljs-number">0</span>, p1[i] - p2[i] &#125;;<br>            <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> s2[<span class="hljs-number">2</span>] = &#123; p1[i] * p2[i],             <span class="hljs-number">0</span> &#125;;<br>            a1 += s1[b1[i]];<br>            a2 += s2[b1[i]];<br>        &#125;<br>        benchmark::DoNotOptimize(a1);<br>        benchmark::DoNotOptimize(a2);<br>        benchmark::ClobberMemory();<br>    &#125;<br>    state.SetItemsProcessed(N*state.iterations());<br>    <span class="hljs-comment">//state.SetBytesProcessed(N*sizeof(unsigned long)*state.iterations());</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">BM_branchless2a</span><span class="hljs-params">(benchmark::State&amp; state)</span> </span>&#123;<br>    srand(<span class="hljs-number">1</span>);<br>    <span class="hljs-keyword">const</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> N = state.range(<span class="hljs-number">0</span>);<br>    std::vector&lt;unsigned long&gt; v1(N), v2(N);<br>    <span class="hljs-function"><span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; <span class="hljs-title">c1</span><span class="hljs-params">(N)</span></span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>        v1[i] = rand();<br>        v2[i] = rand();<br>        c1[i] = rand() &amp; <span class="hljs-number">0x1</span>;<br>    &#125;<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p1 = v1.data();<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* p2 = v2.data();<br>    <span class="hljs-keyword">int</span>* b1 = c1.data();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> _ : state) &#123;<br>        <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> a1 = <span class="hljs-number">0</span>, a2 = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>* a[<span class="hljs-number">2</span>] = &#123; &amp;a2, &amp;a1 &#125;;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; ++i) &#123;<br>            <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> s[<span class="hljs-number">2</span>] = &#123; p1[i] * p2[i], p1[i] - p2[i] &#125;;<br>            a[b1[i]] += s[b1[i]];<br>        &#125;<br>        benchmark::DoNotOptimize(a1);<br>        benchmark::DoNotOptimize(a2);<br>        benchmark::ClobberMemory();<br>    &#125;<br>    state.SetItemsProcessed(N*state.iterations());<br>    <span class="hljs-comment">//state.SetBytesProcessed(N*sizeof(unsigned long)*state.iterations());</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/C/">C++</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/C/">C++</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Optimize/">Optimize</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/ae73e7a0.html">
+                        <span class="hidden-mobile">深入C++对象模型笔记</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
