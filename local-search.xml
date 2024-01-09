@@ -62,6 +62,33 @@
   
   
   <entry>
+    <title>系统设计笔记</title>
+    <link href="/posts/598ff250.html"/>
+    <url>/posts/598ff250.html</url>
+    
+    <content type="html"><![CDATA[<h2><span id="与面向对象">与面向对象</span></h2><p>面向对象：具体细化的设计 系统设计：高屋建瓴，系统架构</p><h2><span id="示例设计-twitter-系统">示例：设计 twitter 系统</span></h2><p>首先，先交流，比如用户规模、硬件条件等。</p><ol type="1"><li>可行性 work solution</li><li>special case</li><li>analysis</li><li>tradeoff</li><li>knowledge base</li></ol><h3><span id="4s分析">4S分析</span></h3><p>Scenario, Service, Storage, Scale</p><ul><li>Scenario 场景<ul><li>说人话：需要设计哪些功能，设计得多牛</li><li>Ask / Features / QPS / DAU / Interfaces<br></li></ul></li><li>Service 服务<ul><li>说人话：将大系统拆分为小服务</li><li>Split / Application / Module</li></ul></li><li>Storage 存储<ul><li>说人话：数据如何存储与访问</li><li>Schema / Data / SQL / NoSQL / File System</li></ul></li><li>Scale 升级<ul><li>说人话：解决缺陷，处理可能遇到的问题</li><li>Sharding / Optimize / Special Case</li></ul></li></ul><blockquote><p>Work solution . NOT perfect solution.</p></blockquote><h3><span id="scenario">Scenario</span></h3><p>需要什么功能；多大的访问量（Daily active users, Monthly active users...） 第一步 enumerate，罗列功能：</p><ol type="1"><li>Register / Login</li><li>User Profile Display / Edit</li><li>Upload Image / Video *</li><li>Search *</li><li>Post / Share a tweet</li><li>Timeline / News Feed</li><li>Follow / Unfollow a user 第二步 sort，选出核心功能：</li><li>Post a Tweet</li><li>Timeline</li><li>News Feed</li><li>Follow / Unfollow a user</li><li>Register / Login 第三步 analysis &amp; predict:</li><li>并发用户 concurrent user:<ol type="1"><li>日活跃 = 每个用户平均请求次数 / 一天多少秒</li><li>峰值 Peak = average concurrent user * 3</li><li>对于快速增长的产品：MAX peak in 3 months = peak users * 2</li></ol></li><li>读频率 read qps</li><li>写频率 write qps</li></ol><h4><span id="qps">QPS</span></h4><ul><li>QPS = 100 用你的笔记本做 Web 服务器就好了</li><li>QPS = 1k 用一台好点的 Web 服务器就差不多了，需要考虑 Single PointFailure</li><li>QPS = 1m 需要建设一个1000台 Web 服务器的集群 ，需要考虑如何Maintainance（某一台挂了怎么办</li><li>QPS 和 Web Server (服务器) / Database (数据库) 之间的关系<ul><li>一台 Web Server 约承受量是 1k 的 QPS（考虑到逻辑处理时间以及数据库查询的瓶颈）</li><li>一台 SQL Database 约承受量是 1k 的 QPS（如果 JOIN 和 INDEXquery比较多的话，这个值会更小）</li><li>一台 NoSQL Database (Cassandra) 约承受量是 10k 的 QPS</li><li>一台 NoSQL Database (Memcached) 约承受量是 1M 的 QPS</li></ul></li></ul><h3><span id="service-服务">Service 服务</span></h3><p>差分系统：</p><ol type="1"><li>replay 重放需求。比如，User Service, Tweet Service, Media Service,Friendship Service<ol type="1"><li>针对需求，添加服务</li><li>归并相同服务</li></ol></li><li>merge 归并需求</li></ol><h3><span id="storage-存储">Storage 存储</span></h3><ul><li>数据库系统：对文件系统的一层包装，提供更丰富、功能更强大的接口<ul><li>关系型数据库：用户信息</li><li>非关系型数据库：推文、社交图谱</li></ul></li><li>文件系统<ul><li>图片、视频</li></ul></li><li>缓存<ul><li>不支持数据持久化 nonpersistent</li><li>效率高，内存级访问速度</li></ul></li></ul><p>第一步 select：选择合适的存储结构 第二步 schema：细化数据表结构</p><p>程序 = 算法 + 数据结构 系统 = 服务 + 数据存储</p><p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/15-35-fecbaafb887f280d641ac94c2375f517-397b3c.png" style="zoom:60%;"></p><p>设计 schema：</p><p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/15-36-e60f1f8ce500cd08bcc9d64de12ddcfc-f16b2e.png" style="zoom:60%;"></p><h4><span id="news-feed-如何存储">News Feed 如何存储</span></h4><p>登录之后看到的信息流。每个人看到的内容时不同的。</p><h4><span id="pull-model">Pull Model</span></h4><p>主动拉取 算法：将每个好友的前100条信息，合并出100条news feed。 MergeK Sorted Arrays. 复杂度：N个关注对象，N次DB Reads 时间 + 归并时间。Posta tweet 是一次 DB Write 的时间。</p><p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/15-36-820299b2ecd55af72024c4ff1f48cd61-a8cf3c.png" style="zoom:60%;"></p><p>缺陷：</p><ol type="1"><li>N次 DB Reads非常慢</li></ol><h4><span id="push-model">Push Model</span></h4><p>算法：</p><ol type="1"><li>每个用户一个 List 存储个人的 News Feed 信息</li><li>好友发出 tweet ，同步到每个用户的 List 中 （即 fanout 过程）</li><li>用户查询时，只需要从List中读取100条最新的信息 复杂度：</li><li>查询，执行一次 DB read</li><li>post，N个粉丝，执行N次DB write。可异步执行。</li></ol><p>新建 News Feed Table 可设计如下</p><p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/15-37-5cc5fe7fbe20d8b014d8219ebafbc25f-195873.png" style="zoom:60%;"></p><p>建立索引：对于很大的 table，可建立复合索引，先按x排序，x相同的再按照y排序，查询可以更高效。</p><p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/15-38-d641db3c4305fee4309d02ecc45cb483-393cb6.png" style="zoom:60%;"></p><h4><span id="比较">比较</span></h4><p>Social App的模型</p><ul><li>Facebook – Pull</li><li>Instagram – Push + Pull</li><li>Twitter -- Pull</li><li>朋友圈 -- Push</li></ul><p>为了更好的 ranking，一般使用 Pull 模型。</p><h3><span id="scale-扩展">Scale 扩展</span></h3><p>优化系统</p><p>第一步 optimize：设计缺陷；功能设计；特殊情况 第二步 maintenance:鲁棒性；扩展性</p><h4><span id="pull-缺陷">Pull 缺陷</span></h4><ol type="1"><li>DB reads 前加入 cache<ol type="1"><li>cache 每个用户的 timeline：trade off，cache多少</li><li>cache 每个用户的 news feed：没有 cache时，读取，归并，然后取100；有cache时，归并N个用户在某个时间戳之后的tweets</li></ol></li></ol><blockquote><p>Quest: 对比 MySQL 与 Memcahed QPS</p></blockquote><h4><span id="push-缺陷">Push 缺陷</span></h4><ol type="1"><li>消耗更多的 Disk 空间，BUT disk is cheap. （Pull 取数据存在 内存中）</li><li>InactiveUsers：粉丝排序，比如按登录时间顺序排序，先fanout活跃用户</li><li>异步的一种潜在缺陷：Unfollow 之后，刷新 timeline 存在延迟</li></ol><h4><span id="结合">结合</span></h4><ol type="1"><li>在现有模型的基础上，做最小的改，比如用更多的机器进行 Push的fanout</li><li>对长期的增长进行估计，评估是否值得转换模型</li></ol><p>结合方案：</p><ol type="1"><li>普通用户：Push</li><li>明星用户：不进行 Push</li><li>当用户需要的时候，从明星用户的timeline里取，并合并到 news feed中</li></ol><p>出现问题：如何定义 明星用户？当明星用户突然变成普通用户从 Pull模型转换为 Push 模式，如何保证前明星用户的信息推送到粉丝 news feed中？</p><ol type="1"><li>是不是明星不能在线动态计算，要离线计算<ol type="1"><li>为 User 增加一个 is_superstar 的属性</li><li>一个用户被标记为 superstar 之后，就不能再被取消标记</li></ol></li></ol><p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/15-39-2e4b229a8cbb526f81b01c9a0de5503a-89464d.png" style="zoom:60%;"></p><h4><span id="选择-tradeoff">选择 tradeoff</span></h4><p>什么时候用 Push ？</p><ol type="1"><li>资源少</li><li>少写代码</li><li>实时性要求不高</li><li>用户发帖少</li><li>双向好友关系，没有明星问题（朋友圈）</li></ol><p>什么时候用 Pull ?</p><ol type="1"><li>资源充足</li><li>实时性要求高</li><li>用户发帖很多</li><li>单向好友关系，有明星问题</li></ol><h4><span id="其他通用问题">其他通用问题</span></h4><ol type="1"><li>数据库服务器挂了怎么办？</li><li>用户逐渐增加怎么办？<ol type="1"><li>服务器顶不住压力</li><li>数据库顶不住压力</li></ol></li></ol><h3><span id="系统设计总结">系统设计总结</span></h3><ol type="1"><li>No more no less</li><li>Work solution first</li><li>Analysis is important than solution</li></ol><h4><span id="拓展问题normalize-vsdenormalize">拓展问题：Normalize VSDenormalize</span></h4><h4><span id="扩展问题惊群现象-thunderingherd">扩展问题：惊群现象 ThunderingHerd</span></h4><p>通常会使用缓存来作为数据库的“挡箭牌”，优化一些经常读取的数据的访问速度。在高并发情况下，如果一条非常热的数据，因为 “缓存过期” 或者“被淘汰算法淘汰”， 缓存之后，会导致短时间内（&lt;1s）,大量的数据请求会出现 “缓存穿透”（Cache Miss），因为数据从 DB 到 Cache需要时间，从而这些请求都会去访问数据库，导致数据库处理不过来而崩溃，从而影响到其他数据的访问而导致整个网站崩溃。</p><blockquote><p>解决办法及参考资料 Memcache Lease Get - 《Scaling Memcache atFacebook》http://bit.ly/1jDzKZK Facebook如何解决惊群效应的：https://bit.ly/1Q3t3P7 Redis 防雪崩架构设计https://bit.ly/2KFneb</p></blockquote><h4><span id="消息队列">消息队列</span></h4><ol type="1"><li>先进先出的任务队列</li><li>做任务的worker进程共享一个列表</li><li>worker从任务列表中获取任务，做完之后反馈给队列服务器</li><li>队列服务器是做异步任务必须要有的组成部分常用：RabbitMQ、ZeroMQ、Redis、Kafka</li></ol><h4><span id="其他问题">其他问题</span></h4><ol type="1"><li>news feed 如何实现 分页 pagination？</li><li>twitter pull 用 cache 来存 timeline 时，如何保存实时性问题？</li></ol>]]></content>
+    
+    
+    <categories>
+      
+      <category>Notes</category>
+      
+      <category>System Design</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>System Design</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>RPC笔记</title>
     <link href="/posts/4ac86dd1.html"/>
     <url>/posts/4ac86dd1.html</url>
@@ -109,9 +136,9 @@
     
     <tags>
       
-      <tag>Nginx</tag>
-      
       <tag>System Design</tag>
+      
+      <tag>Nginx</tag>
       
     </tags>
     
@@ -768,9 +795,9 @@
     
     <tags>
       
-      <tag>topic model</tag>
-      
       <tag>BERT</tag>
+      
+      <tag>topic model</tag>
       
     </tags>
     

@@ -6,7 +6,7 @@
   <link href="https://racleray.github.io/atom.xml" rel="self"/>
   
   <link href="https://racleray.github.io/"/>
-  <updated>2024-01-09T06:53:11.919Z</updated>
+  <updated>2024-01-09T07:18:23.162Z</updated>
   <id>https://racleray.github.io/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://racleray.github.io/posts/3465c9da.html"/>
     <id>https://racleray.github.io/posts/3465c9da.html</id>
     <published>2023-11-09T06:43:14.000Z</published>
-    <updated>2024-01-09T06:53:11.919Z</updated>
+    <updated>2024-01-09T07:18:23.162Z</updated>
     
     
     <summary type="html">HTTP 技术迭代演进</summary>
@@ -44,7 +44,7 @@
     <link href="https://racleray.github.io/posts/a20f1877.html"/>
     <id>https://racleray.github.io/posts/a20f1877.html</id>
     <published>2023-09-12T14:54:34.000Z</published>
-    <updated>2024-01-09T07:18:01.967Z</updated>
+    <updated>2024-01-09T07:18:23.156Z</updated>
     
     
     <summary type="html">B+、B-link、LSM 数据结构分析</summary>
@@ -63,11 +63,32 @@
   </entry>
   
   <entry>
+    <title>系统设计笔记</title>
+    <link href="https://racleray.github.io/posts/598ff250.html"/>
+    <id>https://racleray.github.io/posts/598ff250.html</id>
+    <published>2023-07-13T11:19:37.000Z</published>
+    <updated>2024-01-09T07:40:14.737Z</updated>
+    
+    
+    <summary type="html">系统设计分析</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="System Design" scheme="https://racleray.github.io/categories/Notes/System-Design/"/>
+    
+    
+    <category term="System Design" scheme="https://racleray.github.io/tags/System-Design/"/>
+    
+  </entry>
+  
+  <entry>
     <title>RPC笔记</title>
     <link href="https://racleray.github.io/posts/4ac86dd1.html"/>
     <id>https://racleray.github.io/posts/4ac86dd1.html</id>
     <published>2023-07-09T13:33:13.000Z</published>
-    <updated>2024-01-09T06:41:22.195Z</updated>
+    <updated>2024-01-09T07:18:23.165Z</updated>
     
     
     <summary type="html">RPC技术学习笔记</summary>
@@ -102,9 +123,9 @@
     <category term="System Design" scheme="https://racleray.github.io/categories/Notes/System-Design/"/>
     
     
-    <category term="Nginx" scheme="https://racleray.github.io/tags/Nginx/"/>
-    
     <category term="System Design" scheme="https://racleray.github.io/tags/System-Design/"/>
+    
+    <category term="Nginx" scheme="https://racleray.github.io/tags/Nginx/"/>
     
   </entry>
   
@@ -446,29 +467,6 @@
     <category term="deep learning" scheme="https://racleray.github.io/tags/deep-learning/"/>
     
     <category term="contrastive learning" scheme="https://racleray.github.io/tags/contrastive-learning/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>设计模式Notes</title>
-    <link href="https://racleray.github.io/posts/97f88c07.html"/>
-    <id>https://racleray.github.io/posts/97f88c07.html</id>
-    <published>2021-10-25T12:14:37.000Z</published>
-    <updated>2023-08-07T11:54:31.049Z</updated>
-    
-    
-    <summary type="html">GOF中23中设计模式整理。</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="Design Patterns" scheme="https://racleray.github.io/categories/Notes/Design-Patterns/"/>
-    
-    
-    <category term="cs basic" scheme="https://racleray.github.io/tags/cs-basic/"/>
-    
-    <category term="design patterns" scheme="https://racleray.github.io/tags/design-patterns/"/>
     
   </entry>
   
