@@ -6,7 +6,7 @@
   <link href="https://racleray.github.io/atom.xml" rel="self"/>
   
   <link href="https://racleray.github.io/"/>
-  <updated>2024-01-09T08:55:40.194Z</updated>
+  <updated>2024-01-09T10:20:42.807Z</updated>
   <id>https://racleray.github.io/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://racleray.github.io/posts/dd6997a0.html"/>
     <id>https://racleray.github.io/posts/dd6997a0.html</id>
     <published>2023-12-02T13:48:25.000Z</published>
-    <updated>2024-01-09T08:55:40.194Z</updated>
+    <updated>2024-01-09T10:20:42.807Z</updated>
     
     
     <summary type="html">为什么C++协程标准库来得这么晚捏？</summary>
@@ -44,7 +44,7 @@
     <link href="https://racleray.github.io/posts/3465c9da.html"/>
     <id>https://racleray.github.io/posts/3465c9da.html</id>
     <published>2023-11-09T06:43:14.000Z</published>
-    <updated>2024-01-09T07:18:23.162Z</updated>
+    <updated>2024-01-09T10:21:38.146Z</updated>
     
     
     <summary type="html">HTTP 技术迭代演进</summary>
@@ -67,7 +67,7 @@
     <link href="https://racleray.github.io/posts/a20f1877.html"/>
     <id>https://racleray.github.io/posts/a20f1877.html</id>
     <published>2023-09-12T14:54:34.000Z</published>
-    <updated>2024-01-09T08:03:23.985Z</updated>
+    <updated>2024-01-09T10:20:30.376Z</updated>
     
     
     <summary type="html">B+、B-link、LSM 数据结构分析</summary>
@@ -90,7 +90,7 @@
     <link href="https://racleray.github.io/posts/24f0dc1c.html"/>
     <id>https://racleray.github.io/posts/24f0dc1c.html</id>
     <published>2023-09-12T14:53:11.000Z</published>
-    <updated>2024-01-09T08:55:40.187Z</updated>
+    <updated>2024-01-09T10:17:59.359Z</updated>
     
     
     <summary type="html">现代 C++ 多线程笔记</summary>
@@ -113,7 +113,7 @@
     <link href="https://racleray.github.io/posts/244a647.html"/>
     <id>https://racleray.github.io/posts/244a647.html</id>
     <published>2023-08-15T15:14:28.000Z</published>
-    <updated>2024-01-09T08:55:40.182Z</updated>
+    <updated>2024-01-09T10:18:30.974Z</updated>
     
     
     <summary type="html">CUDA笔记</summary>
@@ -134,7 +134,7 @@
     <link href="https://racleray.github.io/posts/598ff250.html"/>
     <id>https://racleray.github.io/posts/598ff250.html</id>
     <published>2023-07-13T11:19:37.000Z</published>
-    <updated>2024-01-09T07:40:40.481Z</updated>
+    <updated>2024-01-09T10:21:47.068Z</updated>
     
     
     <summary type="html">系统设计分析</summary>
@@ -155,7 +155,7 @@
     <link href="https://racleray.github.io/posts/4ac86dd1.html"/>
     <id>https://racleray.github.io/posts/4ac86dd1.html</id>
     <published>2023-07-09T13:33:13.000Z</published>
-    <updated>2024-01-09T07:18:23.165Z</updated>
+    <updated>2024-01-09T10:21:27.146Z</updated>
     
     
     <summary type="html">RPC技术学习笔记</summary>
@@ -174,11 +174,57 @@
   </entry>
   
   <entry>
+    <title>C++访存优化</title>
+    <link href="https://racleray.github.io/posts/d47a1979.html"/>
+    <id>https://racleray.github.io/posts/d47a1979.html</id>
+    <published>2023-06-19T14:30:42.000Z</published>
+    <updated>2024-01-09T09:34:17.090Z</updated>
+    
+    
+    <summary type="html">C++ 内存访问优化</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="C++" scheme="https://racleray.github.io/categories/Notes/C/"/>
+    
+    
+    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
+    
+    <category term="memory manage" scheme="https://racleray.github.io/tags/memory-manage/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>C++模版元编程</title>
+    <link href="https://racleray.github.io/posts/9de18668.html"/>
+    <id>https://racleray.github.io/posts/9de18668.html</id>
+    <published>2023-06-02T14:34:53.000Z</published>
+    <updated>2024-01-09T10:17:20.120Z</updated>
+    
+    
+    <summary type="html">C++ 模版元编程</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="C++" scheme="https://racleray.github.io/categories/Notes/C/"/>
+    
+    
+    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
+    
+    <category term="Template" scheme="https://racleray.github.io/tags/Template/"/>
+    
+  </entry>
+  
+  <entry>
     <title>CMake Tips</title>
     <link href="https://racleray.github.io/posts/50880878.html"/>
     <id>https://racleray.github.io/posts/50880878.html</id>
     <published>2023-05-21T11:11:52.000Z</published>
-    <updated>2024-01-09T08:55:40.189Z</updated>
+    <updated>2024-01-09T10:19:03.624Z</updated>
     
     
     <summary type="html">CMake 笔记</summary>
@@ -203,7 +249,7 @@
     <link href="https://racleray.github.io/posts/f78760c9.html"/>
     <id>https://racleray.github.io/posts/f78760c9.html</id>
     <published>2023-05-12T14:25:36.000Z</published>
-    <updated>2024-01-09T08:55:40.184Z</updated>
+    <updated>2024-01-09T10:19:48.220Z</updated>
     
     
     <summary type="html">C++编译器优化笔记</summary>
@@ -226,7 +272,7 @@
     <link href="https://racleray.github.io/posts/6940af88.html"/>
     <id>https://racleray.github.io/posts/6940af88.html</id>
     <published>2023-04-12T06:24:12.000Z</published>
-    <updated>2024-01-09T08:56:38.938Z</updated>
+    <updated>2024-01-09T09:29:28.417Z</updated>
     
     
     <summary type="html">CAP 学习笔记</summary>
@@ -247,7 +293,7 @@
     <link href="https://racleray.github.io/posts/c47fc989.html"/>
     <id>https://racleray.github.io/posts/c47fc989.html</id>
     <published>2023-03-09T05:26:42.000Z</published>
-    <updated>2024-01-09T06:28:30.533Z</updated>
+    <updated>2024-01-09T10:22:16.160Z</updated>
     
     
     <summary type="html">一个简单系统设计问题分析</summary>
@@ -270,7 +316,7 @@
     <link href="https://racleray.github.io/posts/dd44df07.html"/>
     <id>https://racleray.github.io/posts/dd44df07.html</id>
     <published>2023-02-25T05:11:15.000Z</published>
-    <updated>2024-01-09T07:46:01.456Z</updated>
+    <updated>2024-01-09T10:20:52.091Z</updated>
     
     
     <summary type="html">Linux内核链表设计</summary>
@@ -293,7 +339,7 @@
     <link href="https://racleray.github.io/posts/467a9cda.html"/>
     <id>https://racleray.github.io/posts/467a9cda.html</id>
     <published>2023-02-16T13:07:45.000Z</published>
-    <updated>2024-01-09T08:55:40.173Z</updated>
+    <updated>2024-01-09T10:19:24.630Z</updated>
     
     
     <summary type="html">C++ 实践经验</summary>
@@ -314,7 +360,7 @@
     <link href="https://racleray.github.io/posts/4df195e7.html"/>
     <id>https://racleray.github.io/posts/4df195e7.html</id>
     <published>2023-02-10T05:04:22.000Z</published>
-    <updated>2024-01-09T05:14:12.047Z</updated>
+    <updated>2024-01-09T10:22:44.130Z</updated>
     
     
     <summary type="html">C语言程序内存安全，静态检查和动态检查</summary>
@@ -335,7 +381,7 @@
     <link href="https://racleray.github.io/posts/abda3b00.html"/>
     <id>https://racleray.github.io/posts/abda3b00.html</id>
     <published>2023-02-09T12:58:02.000Z</published>
-    <updated>2024-01-09T05:02:35.960Z</updated>
+    <updated>2024-01-09T10:22:55.007Z</updated>
     
     
     <summary type="html">C# basic types</summary>
@@ -356,7 +402,7 @@
     <link href="https://racleray.github.io/posts/886c7636.html"/>
     <id>https://racleray.github.io/posts/886c7636.html</id>
     <published>2023-01-09T04:59:21.000Z</published>
-    <updated>2024-01-09T06:20:23.682Z</updated>
+    <updated>2024-01-09T10:22:35.870Z</updated>
     
     
     <summary type="html">kali linux hack tools</summary>
@@ -379,7 +425,7 @@
     <link href="https://racleray.github.io/posts/897196e0.html"/>
     <id>https://racleray.github.io/posts/897196e0.html</id>
     <published>2023-01-03T10:41:33.000Z</published>
-    <updated>2024-01-09T08:55:40.197Z</updated>
+    <updated>2024-01-09T10:20:06.141Z</updated>
     
     
     <summary type="html">开发工具库</summary>
@@ -402,7 +448,7 @@
     <link href="https://racleray.github.io/posts/f692d883.html"/>
     <id>https://racleray.github.io/posts/f692d883.html</id>
     <published>2022-12-09T05:04:05.000Z</published>
-    <updated>2024-01-09T04:08:55.737Z</updated>
+    <updated>2024-01-09T10:23:10.029Z</updated>
     
     
     <summary type="html">C++高性能编程测试用环境</summary>
@@ -417,50 +463,6 @@
     <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
     
     <category term="Optimize" scheme="https://racleray.github.io/tags/Optimize/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>C++ String</title>
-    <link href="https://racleray.github.io/posts/d5d2990b.html"/>
-    <id>https://racleray.github.io/posts/d5d2990b.html</id>
-    <published>2022-11-12T15:20:11.000Z</published>
-    <updated>2024-01-09T08:55:40.179Z</updated>
-    
-    
-    <summary type="html">C++ string 笔记</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="C++" scheme="https://racleray.github.io/categories/Notes/C/"/>
-    
-    
-    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
-    
-    <category term="String" scheme="https://racleray.github.io/tags/String/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>深入C指针</title>
-    <link href="https://racleray.github.io/posts/379e512c.html"/>
-    <id>https://racleray.github.io/posts/379e512c.html</id>
-    <published>2022-11-09T11:02:33.000Z</published>
-    <updated>2024-01-09T08:55:40.199Z</updated>
-    
-    
-    <summary type="html">C 指针回顾</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="C" scheme="https://racleray.github.io/categories/Notes/C/"/>
-    
-    
-    <category term="C" scheme="https://racleray.github.io/tags/C/"/>
     
   </entry>
   

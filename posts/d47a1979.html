@@ -1,0 +1,717 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="C++ 内存访问优化">
+  <meta name="author" content="HeRui">
+  <meta name="keywords" content="C++">
+  <meta name="description" content="C++ 内存访问优化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++访存优化">
+<meta property="og:url" content="https://racleray.github.io/posts/d47a1979.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="C++ 内存访问优化">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/17-33-4d8145b43f83c29b87e88c4af65abc4f-1addf8.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/17-34-78a49911e3ab4f8b16b28dc3de466784-fa345f.png">
+<meta property="article:published_time" content="2023-06-19T14:30:42.000Z">
+<meta property="article:modified_time" content="2024-01-09T09:34:17.090Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="C++">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/17-33-4d8145b43f83c29b87e88c4af65abc4f-1addf8.png">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>C++访存优化 - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="C++访存优化">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2023-06-19 22:30" pubdate>
+        2023年6月19日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      12k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      37 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">C++访存优化</h1>
+            
+            <div class="markdown-body">
+              <h2><span id="cpu-bound-与-memory-bound">CPU-bound 与 Memory-bound</span></h2>
+<p>CPU并行能加速计算，并不能加速内存读写。</p>
+<p>常见读写和计算的时间花费对比：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/17-33-4d8145b43f83c29b87e88c4af65abc4f-1addf8.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<p>L1/2/3 read和Main RAM
+read的时间指的是读一个缓存行（64字节）所花费的时间。</p>
+<ul>
+<li><p><strong>一级缓存</strong>分为<strong>数据缓存</strong>和<strong>指令缓存</strong>，其中数据缓存有
+32 KB，6 个物理核心每个都有一个，总共 192
+KB。而指令缓存的大小刚好和数据缓存一样也是 192 KB。</p></li>
+<li><p><strong>二级缓存</strong>有 256 KB，6
+个物理核心每个都有一个，总共 1.5 MB。</p></li>
+<li><p><strong>三级缓存</strong>由各个物理核心共享，总共 12
+MB。</p></li>
+</ul>
+<p>若从主存读取一个float，大约花费时间 125 / 64 * 4 = 8
+个时钟周期。（125：从主存读取一个缓存行的时间，64：一个缓存行64字节，4：一个浮点数4字节）</p>
+<p>也就是说想要避免 mem-bound
+充分利用CPU核心的计算能力，就需要在计算任务部分有足够的计算量，使得计算花费时间不小于内存读写花费的时间。</p>
+<p>另外，如果数据能够充分在高速缓存中读取，也能够起到避免 mem-bound
+的作用。</p>
+<h2><span id="缓存机制">缓存机制</span></h2>
+<h3><span id="读">读</span></h3>
+<p>缓存会查找和该地址匹配的条目。如果找到，则给CPU返回缓存中的数据。如果找不到，则向主内存发送请求，等读取到该地址的数据，就创建一个新条目。</p>
+<p>在 x86 架构中每个条目的存储 64
+字节的数据，这个条目又称之为缓存行（cacheline）。当访问 0x0048~0x0050 这
+4 个字节时，实际会导致 0x0040~0x0080 的 64
+字节数据整个被读取到缓存中。</p>
+<p>为了不浪费缓存行的存储空间，可以把数据结构的起始地址和大小对齐到 64
+字节。</p>
+<p>设计数据结构时，应该把数据存储的尽可能紧凑，不要松散排列。最好每个缓存行里要么有数据，要么没数据，避免读取缓存行时浪费一部分空间没用。</p>
+<h3><span id="写">写</span></h3>
+<p>缓存会查找和该地址匹配的条目。如果找到，则修改缓存中该地址的数据。如果找不到，则创建一个新条目来存储CPU写的数据，并标记为脏（dirty）。</p>
+<p>当读和写创建的新条目过多，缓存快要塞不下时，他会把最不常用的那个条目移除，这个现象称为失效（invalid）。如果那个条目是被标记为脏的，则说明是当时打算写入的数据，那就需要向主内存发送写入请求，等他写入成功，才能安全移除这个条目。</p>
+<p>有多级缓存，则一级缓存失效后会丢给二级缓存。</p>
+<h3><span id="随机访问">随机访问</span></h3>
+<p>例如对float进行访问，随机访问一个float值，而这导致他附近的64字节都被读取到缓存了，但实际只用到了其中4字节，之后又没用到剩下的60字节，导致浪费了94%的带宽。</p>
+<p>解决方法就是，把数据按64字节大小分块。随机访问时，只随机块的位置，而块的内部仍然按顺序访问。</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;vector&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cmath&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstring&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdlib&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;array&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;benchmark/benchmark.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;x86intrin.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;omp.h&gt;</span></span><br><br><span class="hljs-keyword">constexpr</span> <span class="hljs-keyword">size_t</span> n = <span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">27</span>;  <span class="hljs-comment">// 512MB</span><br><br><span class="hljs-function"><span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">float</span>&gt; <span class="hljs-title">a</span><span class="hljs-params">(n)</span></span>;<br><br><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">uint32_t</span> <span class="hljs-title">randomize</span><span class="hljs-params">(<span class="hljs-keyword">uint32_t</span> i)</span> </span>&#123;<br>	i = (i ^ <span class="hljs-number">61</span>) ^ (i &gt;&gt; <span class="hljs-number">16</span>);<br>	i *= <span class="hljs-number">9</span>;<br>	i ^= i &lt;&lt; <span class="hljs-number">4</span>;<br>	i *= <span class="hljs-number">0x27d4eb2d</span>;<br>	i ^= i &gt;&gt; <span class="hljs-number">15</span>;<br>    <span class="hljs-keyword">return</span> i;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">BM_random_64B</span><span class="hljs-params">(benchmark::State &amp;bm)</span> </span>&#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> _: bm) &#123;<br><span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> omp parallel for</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; n / <span class="hljs-number">16</span>; i++) &#123;<br>            <span class="hljs-keyword">size_t</span> r = randomize(i) % (n / <span class="hljs-number">16</span>);<br>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> j = <span class="hljs-number">0</span>; j &lt; <span class="hljs-number">16</span>; j++) &#123;<br>                benchmark::DoNotOptimize(a[r * <span class="hljs-number">16</span> + j]);<br>            &#125;<br>        &#125;<br>        benchmark::DoNotOptimize(a);<br>    &#125;<br>&#125;<br>BENCHMARK(BM_random_64B);<br><br>BENCHMARK_MAIN();<br></code></pre></div></td></tr></table></figure>
+<h3><span id="prefetch">prefetch</span></h3>
+<p>当程序顺序访问 a[0], a[1] 时，CPU会智能地预测到你接下来可能会读取
+a[2]，于是会<strong>提前给缓存发送一个读取指令</strong>，让他读取
+a[2]、a[3]。</p>
+<p>这样等 a[0], a[1] 处理完以后，缓存也刚好读取完 a[2]
+了，从而CPU不用等待，就可以直接开始处理
+a[2]，避免等待数据的时候CPU空转浪费时间。</p>
+<p>一般来说只有线性的地址访问规律（包括顺序、逆序；连续、跨步(按固定间隔跳跃)）能被识别出来，而如果你的访存是随机的，那就没办法预测。</p>
+<p>对于不得不随机访问很小一块的情况，可以通过 _mm_prefetch
+指令手动预取一个缓存行。</p>
+<p>如果 prefetch
+成功，就可以在计算的同时，提前准备好下一次计算的数据，不至于CPU空转，同时将较短的CPU计算时间消耗，隐藏在内存读写的过程中。</p>
+<h3><span id="内存页">内存页</span></h3>
+<p>现在操作系统管理内存是用分页（page），程序的内存是一页一页贴在地址空间中的，有些地方可能不可访问，或者还没有分配，则把这个页设为不可用状态，访问他就会出错，进入内核模式。</p>
+<p>prefetch不能跨越页边界，否则可能会触发不必要的 page fault。</p>
+<p>可以用 _mm_alloc
+申请起始地址<strong>对齐到页边界</strong>的一段内存。</p>
+<p>当随机访问数据时，可以按4KB大小的块随机访问，在块内部就可以顺序访问，发挥prefetch的优势。</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;vector&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cmath&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstring&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdlib&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;array&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;benchmark/benchmark.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;x86intrin.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;omp.h&gt;</span></span><br><br><span class="hljs-keyword">constexpr</span> <span class="hljs-keyword">size_t</span> n = <span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">27</span>;  <span class="hljs-comment">// 512MB</span><br><br><span class="hljs-function"><span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">float</span>&gt; <span class="hljs-title">a</span><span class="hljs-params">(n)</span></span>;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">BM_random_4KB_aligned</span><span class="hljs-params">(benchmark::State &amp;bm)</span> </span>&#123;<br>    <span class="hljs-keyword">float</span> *a = (<span class="hljs-keyword">float</span> *)_mm_malloc(n * <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">float</span>), <span class="hljs-number">4096</span>);<br>    <span class="hljs-built_in">memset</span>(a, <span class="hljs-number">0</span>, n * <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">float</span>));<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> _: bm) &#123;<br><span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> omp parallel for</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; n / <span class="hljs-number">1024</span>; i++) &#123;<br>            <span class="hljs-keyword">size_t</span> r = randomize(i) % (n / <span class="hljs-number">1024</span>);<br>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> j = <span class="hljs-number">0</span>; j &lt; <span class="hljs-number">1024</span>; j++) &#123;<br>                benchmark::DoNotOptimize(a[r * <span class="hljs-number">1024</span> + j]);<br>            &#125;<br>        &#125;<br>        benchmark::DoNotOptimize(a);<br>    &#125;<br>    _mm_free(a);<br>&#125;<br>BENCHMARK(BM_random_4KB_aligned);<br><br>BENCHMARK_MAIN();<br></code></pre></div></td></tr></table></figure>
+<h2><span id="为什么写入比读取慢">为什么写入比读取慢？</span></h2>
+<p>因为缓存和内存通信的最小单位是缓存行：64字节。当CPU试图写入4字节时，因为剩下的60字节没有改变，缓存不知道CPU接下来会不会用到那60字节，因此他只好从内存读取完整的64字节，修改其中的4字节为CPU给的数据，之后再择机写回。</p>
+<p>写入少于64字节的数据时，虽然没有用到全部的读取数据，但实际上缓存还是从内存读取了，从而浪费了2倍带宽。</p>
+<h3><span id="_mm_stream_si32">_mm_stream_si32</span></h3>
+<p>绕过缓存，直接写入。用 _mm_stream_si32
+指令代替直接赋值的写入，他能够绕开缓存，将一个4字节的写入操作，挂起到临时队列，等凑满64字节后，直接写入内存，从而完全避免读的带宽。只支持int做参数，要用float还得转换一下指针类型。</p>
+<p>_mm 系列指令出自 &lt;xmmintrin.h&gt; 头文件。<a href="https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html" target="_blank" rel="noopener">指令的文档
+Intel Intrinsics Guide</a>。</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;vector&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cmath&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstring&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdlib&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;array&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;benchmark/benchmark.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;x86intrin.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;omp.h&gt;</span></span><br><br><span class="hljs-keyword">constexpr</span> <span class="hljs-keyword">size_t</span> n = <span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">27</span>;  <span class="hljs-comment">// 512MB</span><br><br><span class="hljs-function"><span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">float</span>&gt; <span class="hljs-title">a</span><span class="hljs-params">(n)</span></span>;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">BM_write_stream_then_read</span><span class="hljs-params">(benchmark::State &amp;bm)</span> </span>&#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> _: bm) &#123;<br><span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> omp parallel for</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            <span class="hljs-keyword">float</span> value = <span class="hljs-number">1</span>;<br>            _mm_stream_si32((<span class="hljs-keyword">int</span> *)&amp;a[i], *(<span class="hljs-keyword">int</span> *)&amp;value);<br>            benchmark::DoNotOptimize(a[i]);<br>        &#125;<br>        benchmark::DoNotOptimize(a);<br>    &#125;<br>&#125;<br>BENCHMARK(BM_write_stream_then_read);<br><br>BENCHMARK_MAIN();<br></code></pre></div></td></tr></table></figure>
+<p>因为 _mm_stream_si32
+会绕开缓存，直接把数据写到内存，之后读取的话，反而<strong>需要等待</strong>
+stream 写回执行完成，然后重新读取到缓存，反而更低效。</p>
+<p>因此，仅当这些情况：</p>
+<ol type="1">
+<li>该数组只有写入，之前完全没有读取过。</li>
+<li>之后没有再读取该数组的地方。</li>
+</ol>
+<p>才应该用 stream 指令。</p>
+<p>另外，_mm_stream_ps 可以一次性写入 16
+字节到挂起队列，更加高效。不过，_mm_stream_ps 写入的地址必须对齐到 16
+字节，否则会产生段错误等异常。</p>
+<p>注意，stream
+系列指令写入的地址，必须是连续的，中间<strong>不能有跨步</strong>（固定间隔），否则无法合并写入，会产生有中间数据读的带宽。</p>
+<h2><span id="为什么对数组写入全1比全0慢">为什么对数组写入全1比全0慢？</span></h2>
+<p>因为写入0被编译器自动优化成了memset，而memset内部利用了stream指令得以更快写入。而全1并不会调用stream指令。</p>
+<p>可以手动调用stream指令写入全1。</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;vector&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cmath&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstring&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdlib&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;array&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;benchmark/benchmark.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;x86intrin.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;omp.h&gt;</span></span><br><br><span class="hljs-keyword">constexpr</span> <span class="hljs-keyword">size_t</span> n = <span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">27</span>;  <span class="hljs-comment">// 512MB</span><br><br><span class="hljs-function"><span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; <span class="hljs-title">a</span><span class="hljs-params">(n)</span></span>;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">BM_write0</span><span class="hljs-params">(benchmark::State &amp;bm)</span> </span>&#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> _: bm) &#123;<br><span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> omp parallel for</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            a[i] = <span class="hljs-number">0</span>;<br>        &#125;<br>        benchmark::DoNotOptimize(a);<br>    &#125;<br>&#125;<br>BENCHMARK(BM_write0);<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">BM_write1</span><span class="hljs-params">(benchmark::State &amp;bm)</span> </span>&#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> _: bm) &#123;<br><span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> omp parallel for</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            a[i] = <span class="hljs-number">1</span>;<br>        &#125;<br>        benchmark::DoNotOptimize(a);<br>    &#125;<br>&#125;<br>BENCHMARK(BM_write1);<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">BM_write1_streamed</span><span class="hljs-params">(benchmark::State &amp;bm)</span> </span>&#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> _: bm) &#123;<br><span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> omp parallel for</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            _mm_stream_si32(&amp;a[i], <span class="hljs-number">1</span>);<br>        &#125;<br>        benchmark::DoNotOptimize(a);<br>    &#125;<br>&#125;<br>BENCHMARK(BM_write1_streamed);<br><br>BENCHMARK_MAIN();<br></code></pre></div></td></tr></table></figure>
+<h2><span id="循环代码优化">循环代码优化</span></h2>
+<p>当对同一个数组，执行两种操作，在不影响逻辑时，将两个循环写成一个循环可以加速
+mem-bound 的程序执行。</p>
+<p>在主存看来，
+CPU做的事情相当于：读+写+读+写，每个元素都需要访问四遍内存，变成了：读+写，从而每个元素只需要访问两遍内存。</p>
+<p>同时，可以利用SIMD优化（编译器优化笔记部分），比如 gcc
+unroll、局部变量并行批处理。</p>
+<h2><span id="内存的分配">内存的分配</span></h2>
+<p>当调用 malloc
+时，操作系统并不会实际分配那一块内存，而是将这一段内存标记为“不可用”。当用户试图访问（写入）这一片内存时，硬件就会触发所谓的缺页中断（page
+fault），进入操作系统内核，内核会查找当前进程的 malloc 历史记录。</p>
+<p>如果发现用户写入的地址是他曾经 malloc
+过的地址区间，则执行实际的内存分配，并标记该段内存为“可用”，下次访问就不会再产生缺页中断了；而如果用户写入的地址根本不是他
+malloc 过的地址，那就说明他确实犯错了，就抛出段错误（segmentation
+fault）。</p>
+<p>当执行代码 std::vector<int>、new int<span>n</span>
+会初始化数组为0，实际分配内存。</int></p>
+<p>malloc(n * sizeof(int))、new int[n]
+不会初始化数组为0，不会实际分配内存。</p>
+<p>第一次往malloc的数组里面赋值时，因为这时操作系统还没有给这个数组分配内存，所以会触发缺页中断，进入操作系统内核给数组分配内存，是内核执行内存分配的这个动作，会花费额外的时间。</p>
+<h3><span id="按页分配">按页分配</span></h3>
+<p>当一个尚且处于“不可用”的 malloc
+过的区间被访问，操作系统不是把整个区间全部分配完毕，而是只把当前写入地址所在的页面（4KB
+大小）给分配上。</p>
+<p>也就是说用户访问 a[0] 以后只分配了 4KB 的内存。等到用户访问了
+a[1024]，也就是触及了下一个页面，他才会继续分配一个 4KB
+的页面，这时才实际分配 8KB 。</p>
+<p>比如malloc申请 16GB 内存，但是只访问了他的前
+4KB，这样只有一个页被分配，所以非常快。</p>
+<h3><span id="内存重复利用">内存重复利用</span></h3>
+<p>即使第二次分配的是同一段差不多大小的内存（第一次分配内存不会再使用），也是会产生缺页中断，花费分配时间的。</p>
+<p>这就需要改动STL容器的allocator。tbb::cache_aligned_allocator
+可以提升一定的性能。最大好处在于他分配的内存地址，永远会对齐到缓存行（64字节）。</p>
+<p>标准库的 new 和 malloc 可以保证 16 字节对齐。</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;vector&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"ticktock.h"</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdlib&gt;</span></span><br><br><span class="hljs-keyword">constexpr</span> <span class="hljs-keyword">size_t</span> n = <span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">20</span>;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-built_in">std</span>::boolalpha;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; i++) &#123;<br>        <span class="hljs-function"><span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; <span class="hljs-title">arr</span><span class="hljs-params">(n)</span></span>;<br>        <span class="hljs-keyword">bool</span> is_aligned = (<span class="hljs-keyword">uintptr_t</span>)arr.data() % <span class="hljs-number">16</span> == <span class="hljs-number">0</span>;<br>        <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"std: "</span> &lt;&lt; is_aligned &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;<br>    &#125;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; i++) &#123;<br>        <span class="hljs-keyword">auto</span> arr = (<span class="hljs-keyword">int</span> *)<span class="hljs-built_in">malloc</span>(n * <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">int</span>));<br>        <span class="hljs-keyword">bool</span> is_aligned = (<span class="hljs-keyword">uintptr_t</span>)arr % <span class="hljs-number">16</span> == <span class="hljs-number">0</span>;<br>        <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"malloc: "</span> &lt;&lt; is_aligned &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;<br>        <span class="hljs-built_in">free</span>(arr);<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>还有 _mm_malloc(n, aalign) 可以分配对齐到任意 aalign 字节的内存。他在
+&lt;xmmintrin.h&gt; 这个头文件里。是 x86 特有的，并且需要通过 _mm_free
+来释放。 还有一个跨平台版本（比如用于 arm 架构）的 aligned_alloc(align,
+n)，他也可以分配对齐到任意 align 字节的内存，通过 free 释放。</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;vector&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"ticktock.h"</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdlib&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;x86intrin.h&gt;</span></span><br><br><span class="hljs-keyword">constexpr</span> <span class="hljs-keyword">size_t</span> n = <span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">20</span>;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-built_in">std</span>::boolalpha;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; i++) &#123;<br>        <span class="hljs-keyword">auto</span> arr = (<span class="hljs-keyword">int</span> *)_mm_malloc(n * <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">int</span>), <span class="hljs-number">4096</span>);<br>        <span class="hljs-keyword">bool</span> is_aligned = (<span class="hljs-keyword">uintptr_t</span>)arr % <span class="hljs-number">4096</span> == <span class="hljs-number">0</span>;<br>        <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"_mm_malloc: "</span> &lt;&lt; is_aligned &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;<br>        _mm_free(arr);<br>    &#125;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; i++) &#123;<br>        <span class="hljs-keyword">auto</span> arr = (<span class="hljs-keyword">int</span> *)aligned_alloc(<span class="hljs-number">4096</span>, n * <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">int</span>));<br>        <span class="hljs-keyword">bool</span> is_aligned = (<span class="hljs-keyword">uintptr_t</span>)arr % <span class="hljs-number">4096</span> == <span class="hljs-number">0</span>;<br>        <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"aligned_alloc: "</span> &lt;&lt; is_aligned &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;<br>        <span class="hljs-built_in">free</span>(arr);<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>利用 aligned_alloc 可以实现任意对齐的allocator。<a href="//%20https://stackoverflow.com/questions/12942548/making-stdvector-allocate-aligned-memory">stackoverflow链接</a>。</p>
+<p>使用这个allocator，可以改变容器的内存分配布局。</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;vector&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"ticktock.h"</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"alignalloc.h"</span></span><br><br><span class="hljs-keyword">constexpr</span> <span class="hljs-keyword">size_t</span> n = <span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">20</span>;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-built_in">std</span>::boolalpha;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; i++) &#123;<br>        std::vector&lt;int, AlignedAllocator&lt;int&gt;&gt; arr(n);<br>        <span class="hljs-keyword">bool</span> is_aligned = (<span class="hljs-keyword">uintptr_t</span>)arr.data() % <span class="hljs-number">64</span> == <span class="hljs-number">0</span>;<br>        <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"64: "</span> &lt;&lt; is_aligned &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;<br>    &#125;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; i++) &#123;<br>        std::vector&lt;int, AlignedAllocator&lt;int, 4096&gt;&gt; arr(n);<br>        <span class="hljs-keyword">bool</span> is_aligned = (<span class="hljs-keyword">uintptr_t</span>)arr.data() % <span class="hljs-number">4096</span> == <span class="hljs-number">0</span>;<br>        <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"4096: "</span> &lt;&lt; is_aligned &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h3><span id="临时数组优化">临时数组优化</span></h3>
+<p>如果一个经常调用的函数中，申请了临时数组，可以优化，使得不用每次都重新分配一段内存，浪费时间。</p>
+<ul>
+<li>声明为 static 变量，这样第二次进入 func
+的时候还是同一个数组，不需要重复分配内存；</li>
+<li>thread_local 表示如有多个线程，每个线程保留一个 tmp
+对象的副本，防止多线程调用 func 出错。</li>
+<li>返回时（或者进入时）调用 tmp.clear() 清除已有数据。由于 vector
+的特性，他只会把 size() 标记为 0
+并调用其成员的解构函数，而不会实际释放内存（free）。</li>
+</ul>
+<p>第二次进入的时候，如果 <strong>n
+不超过上一次的大小</strong>，就还是用的第一次分配的内存，避免了重新分配的开销。</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;vector&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cmath&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;algorithm&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"ticktock.h"</span></span><br><br><span class="hljs-function"><span class="hljs-keyword">float</span> <span class="hljs-title">func</span><span class="hljs-params">(<span class="hljs-keyword">int</span> n)</span> </span>&#123;<br>    <span class="hljs-comment">// 优化</span><br>    <span class="hljs-keyword">static</span> <span class="hljs-keyword">thread_local</span> <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">float</span>&gt; tmp;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>        tmp.push_back(i / <span class="hljs-number">15</span> * <span class="hljs-number">2.718f</span>);<br>    &#125;<br>    <span class="hljs-built_in">std</span>::reverse(tmp.<span class="hljs-built_in">begin</span>(), tmp.<span class="hljs-built_in">end</span>());<br>    <span class="hljs-keyword">float</span> ret = tmp[<span class="hljs-number">32</span>];<br>    <span class="hljs-comment">// 优化</span><br>    tmp.<span class="hljs-built_in">clear</span>();<br>    <span class="hljs-keyword">return</span> ret;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">constexpr</span> <span class="hljs-keyword">int</span> n = <span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">25</span>;<br><br>    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; func(n) &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h3><span id="二维数组">二维数组</span></h3>
+<p>C++/C
+对二维数组分配内存是一维的，并没有二级指针的必要，时间和空间效率都比较低（没有冒犯
+java 的意思）。</p>
+<p>C++/C 范围是按照行主序，也就是说，a[i][j] 翻译为 a[i * num_of_column
++ j]。也就是说先遍历 j ，可以连续访问内存，缓存利用率高。而如果先访问 i
+，就变成了跳跃内存地址的访问。</p>
+<p><a href="https://github.com/parallel101/course/blob/master/07/06_ndarray/03/ndarray.h" target="_blank" rel="noopener">一个优化的ndarray封装</a>，针对图像处理需要，增加了边界扩充设计，方便SIMD矢量化。</p>
+<h3><span id="矩阵乘法优化">矩阵乘法优化</span></h3>
+<p>直观实现</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;vector&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cmath&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstring&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdlib&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;array&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;benchmark/benchmark.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;x86intrin.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;omp.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"ndarray.h"</span></span><br><br><span class="hljs-keyword">constexpr</span> <span class="hljs-keyword">int</span> n = <span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">10</span>;<br><br>ndarray&lt;2, float&gt; a(n, n);<br>ndarray&lt;2, float&gt; b(n, n);<br>ndarray&lt;2, float&gt; c(n, n);<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">BM_matmul</span><span class="hljs-params">(benchmark::State &amp;bm)</span> </span>&#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> _: bm) &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; n; j++) &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> t = <span class="hljs-number">0</span>; t &lt; n; t++) &#123;<br>                    a(i, j) += b(i, t) * c(t, j);<br>                &#125;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br>BENCHMARK(BM_matmul);<br><br>BENCHMARK_MAIN();<br></code></pre></div></td></tr></table></figure>
+<ol type="1">
+<li>a(i, j)
+始终在一个地址不动（一般），如果有多个i值同时处理会更好。</li>
+<li>b(i, t) 每次跳跃 n 间隔的访问（坏）。</li>
+<li>c(t, j) 连续的顺序访问（好）。</li>
+</ol>
+<p>因为存在不连续的 b 和一直不动的
+a，导致矢量化失败，一次只能处理一个标量，CPU也无法启动指令级并行（ILP）。</p>
+<p>对循环进行分块，再看看访存的规律：</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-comment">// ...</span><br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">BM_matmul_blocked</span><span class="hljs-params">(benchmark::State &amp;bm)</span> </span>&#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> _: bm) &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; n; j++) &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> iBase = <span class="hljs-number">0</span>; iBase &lt; n; iBase += <span class="hljs-number">32</span>) &#123;<br>                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> t = <span class="hljs-number">0</span>; t &lt; n; t++) &#123;<br>                    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = iBase; i &lt; iBase + <span class="hljs-number">32</span>; i++) &#123;<br>                        a(i, j) += b(i, t) * c(t, j);<br>                    &#125;<br>                &#125;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br><br>BENCHMARK(BM_matmul_blocked);<br><br>BENCHMARK_MAIN();<br></code></pre></div></td></tr></table></figure>
+<ol type="1">
+<li>a(i, j) 连续 32 次顺序访问（好）。</li>
+<li>b(i, t) 连续 32 次顺序访问（好）。</li>
+<li>c(t, j) 32 次在一个地址不动（一般）。</li>
+</ol>
+<p>这样就消除不连续的访问了，从而内部的 i
+循环可以顺利矢量化，且多个循环体之间没有依赖关系，CPU得以启动指令级并行，缓存预取也能正常工作。</p>
+<p>甚至可以进一步将 j 也分块化：</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">BM_matmul_blocked_both</span><span class="hljs-params">(benchmark::State &amp;bm)</span> </span>&#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> _: bm) &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> jBase = <span class="hljs-number">0</span>; jBase &lt; n; jBase += <span class="hljs-number">16</span>) &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> iBase = <span class="hljs-number">0</span>; iBase &lt; n; iBase += <span class="hljs-number">16</span>) &#123;<br>                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = jBase; j &lt; jBase + <span class="hljs-number">16</span>; j++) &#123;<br>                    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> t = <span class="hljs-number">0</span>; t &lt; n; t++) &#123;<br>                        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = iBase; i &lt; iBase + <span class="hljs-number">16</span>; i++) &#123;<br>                            a(i, j) += b(i, t) * c(t, j);<br>                        &#125;<br>                    &#125;<br>                &#125;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br>BENCHMARK(BM_matmul_blocked_both);<br></code></pre></div></td></tr></table></figure>
+<h2><span id="morton-code">morton code</span></h2>
+<p>如果对矩阵进行转置，应该使用行主序还是列主序？显然必有一个矩阵读写会很不友好。</p>
+<p>morton code 使用一个时间变量 t，生成下一个访问元素 (x, y)
+坐标，尽量保证数据在时间 t 上是接近的，同时二维空间上 (x,y)
+也是接近的，利用访存局域性，发挥缓存优势。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/17-34-78a49911e3ab4f8b16b28dc3de466784-fa345f.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<h2><span id="多核下的缓存">多核下的缓存</span></h2>
+<p>如果多个核心同时访问的地址非常接近，这时候会变得很慢。</p>
+<p>因为 CPU 之间通信的最小单位也是 缓存行（64
+字节），如果两个核心访问到了的同一缓存行，假设一个核心修改了该缓存行的前32字节，另一个修改了后32字节，同时写回，只有一个会生效。</p>
+<p>所以CPU为了安全起见，同时只能允许一个核心写入同一地址的缓存行。从而导致读写这个变量的速度受限于三级缓存的速度，而不是一级缓存的速度。不能同时写，只有再取一次。</p>
+<p>错误共享只会发生在写入的情况，如果多个核心同时读取两个很靠近的变量，是不会产生冲突的，也没有性能损失。</p>
+<h3><span id="优化">优化</span></h3>
+<p>只需要把每个核心写入的地址尽可能分散开了就行了。比如这里，我们把每个核心访问的地方跨越
+16KB
+（足够远就行），这样CPU就知道每个核心之间不会发生冲突，从而可以放心地放在一级缓存里，不用担心会不会和其他核心共用了一个缓存行了。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/C/">C++</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/C/">C++</a>
+                    
+                      <a class="hover-with-bg" href="/tags/memory-manage/">memory manage</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/4ac86dd1.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">RPC笔记</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/9de18668.html">
+                        <span class="hidden-mobile">C++模版元编程</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>
