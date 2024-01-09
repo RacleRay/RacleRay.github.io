@@ -6,7 +6,7 @@
   <link href="https://racleray.github.io/atom.xml" rel="self"/>
   
   <link href="https://racleray.github.io/"/>
-  <updated>2024-01-09T08:04:11.764Z</updated>
+  <updated>2024-01-09T08:55:40.194Z</updated>
   <id>https://racleray.github.io/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://racleray.github.io/posts/dd6997a0.html"/>
     <id>https://racleray.github.io/posts/dd6997a0.html</id>
     <published>2023-12-02T13:48:25.000Z</published>
-    <updated>2024-01-09T08:04:11.764Z</updated>
+    <updated>2024-01-09T08:55:40.194Z</updated>
     
     
     <summary type="html">为什么C++协程标准库来得这么晚捏？</summary>
@@ -90,7 +90,7 @@
     <link href="https://racleray.github.io/posts/24f0dc1c.html"/>
     <id>https://racleray.github.io/posts/24f0dc1c.html</id>
     <published>2023-09-12T14:53:11.000Z</published>
-    <updated>2024-01-09T08:55:21.097Z</updated>
+    <updated>2024-01-09T08:55:40.187Z</updated>
     
     
     <summary type="html">现代 C++ 多线程笔记</summary>
@@ -113,7 +113,7 @@
     <link href="https://racleray.github.io/posts/244a647.html"/>
     <id>https://racleray.github.io/posts/244a647.html</id>
     <published>2023-08-15T15:14:28.000Z</published>
-    <updated>2024-01-09T08:19:46.693Z</updated>
+    <updated>2024-01-09T08:55:40.182Z</updated>
     
     
     <summary type="html">CUDA笔记</summary>
@@ -178,7 +178,7 @@
     <link href="https://racleray.github.io/posts/50880878.html"/>
     <id>https://racleray.github.io/posts/50880878.html</id>
     <published>2023-05-21T11:11:52.000Z</published>
-    <updated>2024-01-09T08:14:40.814Z</updated>
+    <updated>2024-01-09T08:55:40.189Z</updated>
     
     
     <summary type="html">CMake 笔记</summary>
@@ -190,9 +190,9 @@
     <category term="CMake" scheme="https://racleray.github.io/categories/Notes/CMake/"/>
     
     
-    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
-    
     <category term="C" scheme="https://racleray.github.io/tags/C/"/>
+    
+    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
     
     <category term="CMake" scheme="https://racleray.github.io/tags/CMake/"/>
     
@@ -203,7 +203,7 @@
     <link href="https://racleray.github.io/posts/f78760c9.html"/>
     <id>https://racleray.github.io/posts/f78760c9.html</id>
     <published>2023-05-12T14:25:36.000Z</published>
-    <updated>2024-01-09T08:52:21.851Z</updated>
+    <updated>2024-01-09T08:55:40.184Z</updated>
     
     
     <summary type="html">C++编译器优化笔记</summary>
@@ -218,6 +218,27 @@
     <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
     
     <category term="Compiler" scheme="https://racleray.github.io/tags/Compiler/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>CAP理论</title>
+    <link href="https://racleray.github.io/posts/6940af88.html"/>
+    <id>https://racleray.github.io/posts/6940af88.html</id>
+    <published>2023-04-12T06:24:12.000Z</published>
+    <updated>2024-01-09T08:56:38.938Z</updated>
+    
+    
+    <summary type="html">CAP 学习笔记</summary>
+    
+    
+    
+    <category term="Distributed System" scheme="https://racleray.github.io/categories/Distributed-System/"/>
+    
+    
+    <category term="Distributed System" scheme="https://racleray.github.io/tags/Distributed-System/"/>
+    
+    <category term="CAP" scheme="https://racleray.github.io/tags/CAP/"/>
     
   </entry>
   
@@ -272,7 +293,7 @@
     <link href="https://racleray.github.io/posts/467a9cda.html"/>
     <id>https://racleray.github.io/posts/467a9cda.html</id>
     <published>2023-02-16T13:07:45.000Z</published>
-    <updated>2024-01-09T08:11:18.236Z</updated>
+    <updated>2024-01-09T08:55:40.173Z</updated>
     
     
     <summary type="html">C++ 实践经验</summary>
@@ -358,7 +379,7 @@
     <link href="https://racleray.github.io/posts/897196e0.html"/>
     <id>https://racleray.github.io/posts/897196e0.html</id>
     <published>2023-01-03T10:41:33.000Z</published>
-    <updated>2024-01-09T07:47:12.850Z</updated>
+    <updated>2024-01-09T08:55:40.197Z</updated>
     
     
     <summary type="html">开发工具库</summary>
@@ -404,7 +425,7 @@
     <link href="https://racleray.github.io/posts/d5d2990b.html"/>
     <id>https://racleray.github.io/posts/d5d2990b.html</id>
     <published>2022-11-12T15:20:11.000Z</published>
-    <updated>2024-01-09T08:22:53.079Z</updated>
+    <updated>2024-01-09T08:55:40.179Z</updated>
     
     
     <summary type="html">C++ string 笔记</summary>
@@ -427,7 +448,7 @@
     <link href="https://racleray.github.io/posts/379e512c.html"/>
     <id>https://racleray.github.io/posts/379e512c.html</id>
     <published>2022-11-09T11:02:33.000Z</published>
-    <updated>2024-01-09T08:06:53.903Z</updated>
+    <updated>2024-01-09T08:55:40.199Z</updated>
     
     
     <summary type="html">C 指针回顾</summary>
@@ -440,27 +461,6 @@
     
     
     <category term="C" scheme="https://racleray.github.io/tags/C/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>深入C++对象模型笔记</title>
-    <link href="https://racleray.github.io/posts/ae73e7a0.html"/>
-    <id>https://racleray.github.io/posts/ae73e7a0.html</id>
-    <published>2022-06-30T12:42:31.000Z</published>
-    <updated>2023-08-07T12:02:23.621Z</updated>
-    
-    
-    <summary type="html">《深入探索C++对象模型》之前的笔记，有些过时的条款做了点改动。</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="C++" scheme="https://racleray.github.io/categories/Notes/C/"/>
-    
-    
-    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
     
   </entry>
   

@@ -221,9 +221,9 @@
       
         <tags>
             
-            <tag> C++ </tag>
-            
             <tag> C </tag>
+            
+            <tag> C++ </tag>
             
             <tag> CMake </tag>
             
@@ -255,6 +255,33 @@
             <tag> C++ </tag>
             
             <tag> Compiler </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>CAP理论</title>
+      <link href="/posts/6940af88.html"/>
+      <url>/posts/6940af88.html</url>
+      
+        <content type="html"><![CDATA[<h2><span id="基本概念">基本概念</span></h2><ul><li>Consistency 一致性<ul><li><code>所有节点</code> 访问 <code>同一份最新</code> 的数据副本，最新意味着所有的数据不能都是错误的</li></ul></li><li>Availablity 可用性<ul><li>每次请求都能获取到 <code>非错的</code>响应，但是<code>不能保证数据时最新的</code></li></ul></li><li>Partition Tolerance 分区容错性<ul><li>分区相当于对<code>通信时限</code>的要求，系统如果不能在一定时限内达成数据一致性，就意味着出现了分区</li><li>必须在 可用性 和 一致性 之间做出选择</li><li>也就是容忍分布式节点之间的网络包丢失或者延时，让系统仍然能正常运行</li></ul></li></ul><blockquote><p>在分布式系统中，当节点之间由于出现故障，分区节点之间不连通，导致无法访问指定数据。这时的分区是不能容忍的。为了提高分区容错性能，就需要将数据保存在不同的节点上，使用多个副本。但是副本越多，修改数据时，保持数据一致性的代价就越大。如果要保证一致性，那么就需要花更多的时间来同步数据。这一延迟如果很长，又将导致可用性降低。 这就是 CAP 的核心矛盾所在。</p></blockquote><p>这里的一致性，和关系型数据库事务ACID的C一致性不同。</p><ul><li>分布式C：同一副本的一致性</li><li>事务C：一种一致性关系，a和b转账，那么在转账前中后，金额总数都是一样的。</li></ul><p>对于一个分布式系统而言，不可能同时满足以上三点。</p><ul><li>若没有网络波动和网络分区，只需要CA，P无从谈起；</li><li>若出现网络波动和网络分区，为了保证P，C和A只能选择其一。注意这里的二选一，是在要达到严格的C或者A条件下。可以存在二者的折中选择，这也是各种系统优化算法的目的。可用性是可以在0% 到 100%之间连续变化的。一致性可以细分为强一致、弱一致和最终一致。系统的不同分区也可以有不同的认知。</li></ul><p>退一步讲，我们使用缓存，不就是在追求访问速度吗？那么，如果系统对一致性性要求很高，那么也许该系统就不适合使用缓存。使用缓存，就表示着系统应该接受弱一致性或者最终一致性。一般情况下，是通过一定方案，来最大限度地避免数据不一致或者减少达到最终一致的时间，比如延时双删、异步更新、串行化等。</p><h2><span id="cap示例">CAP示例</span></h2><p>CAP是个说明什么是不可行的理论。</p><blockquote><p>假设一个分布式系统有三台server，用户向其进行写入操作。若其中一个server写入成功就算向系统写入成功。</p></blockquote><p>此时，若出现网络问题，三台server数据就可能出现不一致，C无法保证。但是系统认为成功，返回了结果，A得到保证。</p><blockquote><p>假设一个分布式系统有三台server，用户向其进行写入操作。若三个server都写入成功才算向系统写入成功。</p></blockquote><p>此时，若出现网络问题，三台server数据不能同时写入成功，系统返回错误，A无法保证。但是副本一致性得到保证，A得到保证。</p><h2><span id="分布式系统中的cap">分布式系统中的CAP</span></h2><p>首先，分布式环境下，一般P是一定存在的，需要权衡的是 C 和 A。</p><ul><li>对于NoSQL，注重可用性，是一个 AP 系统</li><li>对于分布式关系型数据库，必须要保证一致性，是一个 CP 系统分布式关系型数据库，不能保证完全的100%可用性，但是一般要求 99.999%的高可用性。所以被定义为 CP + HA 系统。其有两个指标：</li><li>RPO（Recovery PointObjective）：恢复点目标。一般分布式数据库不会全部同时宕机或者受灾，只要有一台保留下了最新数据，RPO就为0。</li><li>RTO（Recovery TimeObjective）：恢复时间目标。事故后整个系统恢复正常所需的时间，通过主备切换、重新选主等，仍可以恢复正常服务。一般而言RTO 会在几分钟内。像一些使用raft协议的数据库，RTO会在30秒内。</li></ul><h2><span id="分布式方案">分布式方案</span></h2><h3><span id="quorum-replication">Quorum Replication</span></h3><p>要求 数据总副本数N，要小于，写入成功副本数W 与 读取成功副本数R之和。即，永远会有至少一个副本是最新的且正确返回的。 在此基础上，进行trade off。</p><ul><li>比如，W=N、R=1。此时所有节点都写入成功，才返回系统写入成功，保证了写一致性，写可用性差。只要有一个节点可读到数据，就让系统返回结果，保证了读可用性，读一致性差。</li><li>W=1、R=N。此时有一个节点写入成功，就返回系统写入成功，保证了写可用性，写一致性差。所有节点都可读到最新数据，才让系统返回结果，保证了读一致性，读可用性差。</li></ul><h3><span id="共识算法">共识算法</span></h3><p>不同节点间有通信交互，同时有一个leader节点管理读写服务，保证了一致性。但是leader节点出现问题，就不能保证可用性。通过选举算法，快速建立一个新leader，保证99.999% 的高可用性。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Distributed System </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Distributed System </tag>
+            
+            <tag> CAP </tag>
             
         </tags>
       
@@ -822,9 +849,9 @@
       
         <tags>
             
-            <tag> C++ </tag>
-            
             <tag> C </tag>
+            
+            <tag> C++ </tag>
             
             <tag> 测试框架 </tag>
             
@@ -1110,9 +1137,9 @@
       
         <tags>
             
-            <tag> deep learning </tag>
-            
             <tag> BP </tag>
+            
+            <tag> deep learning </tag>
             
         </tags>
       
@@ -1369,9 +1396,9 @@
       
         <tags>
             
-            <tag> pointer net </tag>
-            
             <tag> deep learning </tag>
+            
+            <tag> pointer net </tag>
             
         </tags>
       
@@ -1897,9 +1924,9 @@
       
         <tags>
             
-            <tag> word2vec </tag>
-            
             <tag> text similarity </tag>
+            
+            <tag> word2vec </tag>
             
             <tag> doc2vec </tag>
             
@@ -2278,11 +2305,11 @@
       
         <tags>
             
+            <tag> word2vec </tag>
+            
             <tag> fastText </tag>
             
             <tag> representation </tag>
-            
-            <tag> word2vec </tag>
             
         </tags>
       

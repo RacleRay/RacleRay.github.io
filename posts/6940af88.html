@@ -15,27 +15,25 @@
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
   
   <meta name="theme-color" content="#1aa3ff">
-  <meta name="description" content="C 指针回顾">
+  <meta name="description" content="CAP 学习笔记">
   <meta name="author" content="HeRui">
-  <meta name="keywords" content="C Pointer">
-  <meta name="description" content="C 指针回顾">
+  <meta name="keywords" content="CAP">
+  <meta name="description" content="CAP 学习笔记">
 <meta property="og:type" content="article">
-<meta property="og:title" content="深入C指针">
-<meta property="og:url" content="https://racleray.github.io/posts/379e512c.html">
+<meta property="og:title" content="CAP理论">
+<meta property="og:url" content="https://racleray.github.io/posts/6940af88.html">
 <meta property="og:site_name" content="Racle&#96;s Story">
-<meta property="og:description" content="C 指针回顾">
+<meta property="og:description" content="CAP 学习笔记">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-06-28ec132c0cec4a4714a0c02c41e71dec-bbaa73.png">
-<meta property="article:published_time" content="2022-11-09T11:02:33.000Z">
-<meta property="article:modified_time" content="2024-01-09T08:55:40.199Z">
+<meta property="article:published_time" content="2023-04-12T06:24:12.000Z">
+<meta property="article:modified_time" content="2024-01-09T08:56:38.938Z">
 <meta property="article:author" content="江左时雨">
-<meta property="article:tag" content="C Pointer">
+<meta property="article:tag" content="CAP">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-06-28ec132c0cec4a4714a0c02c41e71dec-bbaa73.png">
   
      <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
   
-  <title>深入C指针 - Racle`s Story</title>
+  <title>CAP理论 - Racle`s Story</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
 
@@ -212,7 +210,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="深入C指针">
+            <span class="h2" id="subtitle" title="CAP理论">
               
             </span>
 
@@ -222,8 +220,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2022-11-09 19:02" pubdate>
-        2022年11月9日 晚上
+      <time datetime="2023-04-12 14:24" pubdate>
+        2023年4月12日 下午
       </time>
     </span>
   
@@ -233,7 +231,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2.4k 字
+      1.7k 字
     </span>
   
 
@@ -242,7 +240,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      7 分钟
+      5 分钟
     </span>
   
 
@@ -271,214 +269,82 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">深入C指针</h1>
+            <h1 style="display: none">CAP理论</h1>
             
             <div class="markdown-body">
-              <p>计算机使用一个字（word），表示内存地址。在 32 位计算机上会把 4
-个字节（byte）拼成一个字，字由 32 个位（bit）组成。在 64 位计算机上会把
-8 个字节拼成一个字，字由 64
-个位组成。内存地址在内存中，就是一串固定长度的整数。</p>
-<h3><span id="可表示的内存地址范围">可表示的内存地址范围</span></h3>
-<p>虽然 64 位计算机的寄存器能处理 64 位的整数，实际上的内存地址并没有 64
-位。实际上地址的高 16 位始终和第 48
-位一致（符号扩展），也就是虚拟地址空间只有 48 位。 而经过 MMU
-映射后实际给内存的地址只有 39 位，因此如今的 x64 架构实际上只能访问
-512GB 内存，如果插了超过这个大小的内存条他也不会认出来。</p>
-<p>此外，16 位计算机实际上能通过额外的段寄存器访问到 20
-位的内存地址（1MB）。</p>
-<p>32 位计算机还能通过 PAE 技术（物理地址扩展）访问到 36
-位的内存地址（64GB）。</p>
-<p>64 位计算机反而是因为 16777216 TB 太大，内存地址被阉割到了 39
-位（512GB）。</p>
-<h2><span id="扩展数的表示">扩展：数的表示</span></h2>
-<h3><span id="c-语言中的整数类型">C 语言中的整数类型</span></h3>
-<table>
-<thead>
-<tr class="header">
-<th>类型</th>
-<th>Unix 32位</th>
-<th>Unix 64位</th>
-<th>Windows 32位</th>
-<th>Windows 64位</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>char</td>
-<td>8 位</td>
-<td>8 位</td>
-<td>8 位</td>
-<td>8 位</td>
-</tr>
-<tr class="even">
-<td>short</td>
-<td>16 位</td>
-<td>16 位</td>
-<td>16 位</td>
-<td>16 位</td>
-</tr>
-<tr class="odd">
-<td>int</td>
-<td>32 位</td>
-<td>32 位</td>
-<td>32 位</td>
-<td>32 位</td>
-</tr>
-<tr class="even">
-<td>long</td>
-<td>32 位</td>
-<td>64 位</td>
-<td>32 位</td>
-<td>32 位</td>
-</tr>
-<tr class="odd">
-<td>long long</td>
-<td>64 位</td>
-<td>64 位</td>
-<td>64 位</td>
-<td>64 位</td>
-</tr>
-</tbody>
-</table>
-<p>long 比较特殊，在 Unix 上随系统位数变化，Windows 上始终是 32
-位。所以在编写 C 语言程序时，应该避免使用 long
-类型，他会导致你的程序难以跨平台。</p>
-<p>在数字后面追加 U 和 L
-可以表示不同类型的字面常量，不区分大小写，例如：</p>
+              <h2><span id="基本概念">基本概念</span></h2>
+<ul>
+<li>Consistency 一致性
+<ul>
+<li><code>所有节点</code> 访问 <code>同一份最新</code> 的数据副本，最新
+意味着所有的数据不能都是错误的</li>
+</ul></li>
+<li>Availablity 可用性
+<ul>
+<li>每次请求都能获取到 <code>非错的</code>
+响应，但是<code>不能保证数据时最新的</code></li>
+</ul></li>
+<li>Partition Tolerance 分区容错性
+<ul>
+<li>分区相当于对<code>通信时限</code>的要求，系统如果不能在一定时限内达成数据一致性，就意味着出现了分区</li>
+<li>必须在 可用性 和 一致性 之间做出选择</li>
+<li>也就是容忍分布式节点之间的网络包丢失或者延时，让系统仍然能正常运行</li>
+</ul></li>
+</ul>
 <blockquote>
-<p>32 是 int 类型 32L 是 long 类型 32LL 是 long long 类型 32U 是
-unsigned int 类型 32UL 是 unsigned long 类型 32ULL 是 unsigned long long
-类型</p>
+<p>在分布式系统中，当节点之间由于出现故障，分区节点之间不连通，导致无法访问指定数据。这时的分区是不能容忍的。
+为了提高分区容错性能，就需要将数据保存在不同的节点上，使用多个副本。但是副本越多，修改数据时，保持数据一致性的代价就越大。如果要保证一致性，那么就需要花更多的时间来同步数据。
+这一延迟如果很长，又将导致可用性降低。 这就是 CAP 的核心矛盾所在。</p>
 </blockquote>
-<p>尽管主流操作系统上 int 都是32位的，C语言标准并没有规定 int
-就是32位的。int 甚至可以是16位的。</p>
-<p>为了解决不同操作系统上对类型定义混乱的问题，C语言标准引入了 stdint.h
-这个头文件。他里面包含一系列类型别名(typedef)，这些别名保证不论是什么操作系统什么架构，都是固定的大小：</p>
-<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">typedef</span> <span class="hljs-keyword">char</span> <span class="hljs-keyword">int8_t</span>;<br><span class="hljs-keyword">typedef</span> short <span class="hljs-keyword">int16_t</span>;<br><span class="hljs-keyword">typedef</span> <span class="hljs-keyword">int</span> <span class="hljs-keyword">int32_t</span>;<br><span class="hljs-keyword">typedef</span> <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> <span class="hljs-keyword">int64_t</span>;<br><br><span class="hljs-keyword">typedef</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">char</span> <span class="hljs-keyword">uint8_t</span>;<br><span class="hljs-keyword">typedef</span> <span class="hljs-keyword">unsigned</span> short <span class="hljs-keyword">uint16_t</span>;<br><span class="hljs-keyword">typedef</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> <span class="hljs-keyword">uint32_t</span>;<br><span class="hljs-keyword">typedef</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> <span class="hljs-keyword">uint64_t</span>;<br></code></pre></div></td></tr></table></figure>
-<h4><span id="表示内存地址的类型">表示内存地址的类型</span></h4>
-<p>指针的本质就是内存地址，所以指针的大小在 32 位系统上就 32 位，64
-位系统上就 64 位。intptr_t 和 uintptr_t 自动随系统位数变化。</p>
-<p>intptr_t 在 32 位平台上等价于 int32_t；在 64 位平台上等价于
-int64_t。</p>
-<p>uintptr_t 在 32 位平台上等价于 uint32_t；在 64 位平台上等价于
-uint64_t。</p>
-<p>另外，在主流操作系统上，size_t 和 uintptr_t 完全等价。size_t
-是标准库大量使用的用于表示大小的类型，例如 vector::size() 返回类型就是
-size_t。</p>
-<h3><span id="有符号整数vs无符号整数">有符号整数vs无符号整数</span></h3>
-<p>补码表示法，使得负数的计算可以直接使用正数的计算电路，而不用重新设计有符号位处理的新电路。</p>
-<p>补码表示法的目的是，利用加法器的“溢出”机制，例如 -1 + 2 =
-1，在计算机看来就是：11111111 + 00000010 =
-100000001。溢出的1，就被丢弃，而其结果正好是1。</p>
-<p>负数的范围反而比正数大是因为要回避 -0。</p>
-<h3><span id="类型转换">类型转换</span></h3>
-<p>小类型和大类型做数学运算（+-*/%）会得到两个类型中的大类型。</p>
-<p>如果两边有一边是 unsigned 的但是基本类型是相同的，则结果是 unsigned
-的：unsigned int + int = unsigned int</p>
-<p>如果两边有一边是 unsigned 的但是基本类型是不同的，则结果是
-大类型：unsigned short + int = int</p>
-<h3><span id="浮点数表示">浮点数表示</span></h3>
-<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-06-28ec132c0cec4a4714a0c02c41e71dec-bbaa73.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
-<p>从下向上，可以看到浮点数被转换为计算机中二进制表示的过程。（图中127+3=130）</p>
-<p>float 由 4 个字节组成，也就是 32 个位。最高位是符号位，接着的 8
-位是指数位(e)。 剩下的 23 位是底数位(m)。</p>
-<p>注意指数位(e)是用反码表示的。</p>
-<p>底数位限制了浮点数可表示的有效位数。</p>
-<h3><span id="数的计算">数的计算</span></h3>
-<p>常用函数名称：</p>
-<table>
-<colgroup>
-<col style="width: 10%">
-<col style="width: 12%">
-<col style="width: 20%">
-<col style="width: 13%">
-<col style="width: 15%">
-<col style="width: 27%">
-</colgroup>
-<thead>
-<tr class="header">
-<th><strong>int</strong></th>
-<th><strong>long</strong></th>
-<th><strong>long long</strong></th>
-<th><strong>float</strong></th>
-<th><strong>double</strong></th>
-<th><strong>C++</strong> <strong>重载版</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>abs</td>
-<td>labs</td>
-<td>llabs</td>
-<td>fabsf</td>
-<td>fabs</td>
-<td>std::abs</td>
-</tr>
-<tr class="even">
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>fmaxf</td>
-<td>fmax</td>
-<td>std::max</td>
-</tr>
-<tr class="odd">
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>fminf</td>
-<td>fmin</td>
-<td>std::min</td>
-</tr>
-<tr class="even">
-<td>%</td>
-<td>%</td>
-<td>%</td>
-<td>fmodf</td>
-<td>fmod</td>
-<td>std::fmod</td>
-</tr>
-<tr class="odd">
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>powf</td>
-<td>pow</td>
-<td>std::pow</td>
-</tr>
-<tr class="even">
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>sqrtf</td>
-<td>sqrt</td>
-<td>std::sqrt</td>
-</tr>
-<tr class="odd">
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>sinf</td>
-<td>sin</td>
-<td>std::sin</td>
-</tr>
-</tbody>
-</table>
-<p>注意函数调用中隐式的类型转换。C++中，可以使用更方便的重载函数。</p>
-<h2><span id="指针">指针</span></h2>
-<p>常见计算机架构中，表示指针的整数，在内存中以小端字节序保存在固定长度的内存中。</p>
-<p>指针无非是一个 64 位整数，在 32 位计算机上则是个 32
-位整数。表示的是指针所指向变量在内存中的起始地址（第一个字节所在的位置）。甚至可以把
-int* 强制转换成 unsigned long 类型，来打印出这个地址的整数值。</p>
-<h4><span id="c-的引用">C++ 的引用</span></h4>
-<p>C++ 的引用类型 int&amp; 本质无非是 int*
-指针。区别在于：引用不需要手动 &amp; 来创建；不需要手动 *
-来创建；无法重新赋值，指向新的变量；无法为空指针。</p>
-<h4><span id="nullptr">nullptr</span></h4>
-<p>在C++中根据类型调用不同的重载版本。因为C中NULL可以是 0，那么
-func(int) 和 func(int*) 就区分不了。</p>
-<h4><span id="数组指针">数组指针</span></h4>
-<p>数组变量就是指向数组其中一个元素的指针。数组作为参数传递，会退化为指针。</p>
+<p>这里的一致性，和关系型数据库事务ACID的C一致性不同。</p>
+<ul>
+<li>分布式C：同一副本的一致性</li>
+<li>事务C：一种一致性关系，a和b转账，那么在转账前中后，金额总数都是一样的。</li>
+</ul>
+<p>对于一个分布式系统而言，不可能同时满足以上三点。</p>
+<ul>
+<li>若没有网络波动和网络分区，只需要CA，P无从谈起；</li>
+<li>若出现网络波动和网络分区，为了保证P，C和A只能选择其一。
+注意这里的二选一，是在要达到严格的C或者A条件下。可以存在二者的折中选择，这也是各种系统优化算法的目的。可用性是可以在
+0% 到 100%
+之间连续变化的。一致性可以细分为强一致、弱一致和最终一致。系统的不同分区也可以有不同的认知。</li>
+</ul>
+<p>退一步讲，我们使用缓存，不就是在追求访问速度吗？那么，如果系统对一致性性要求很高，那么也许该系统就不适合使用缓存。使用缓存，就表示着系统应该接受弱一致性或者最终一致性。一般情况下，是通过一定方案，来最大限度地避免数据不一致或者减少达到最终一致的时间，比如延时双删、异步更新、串行化等。</p>
+<h2><span id="cap示例">CAP示例</span></h2>
+<p>CAP是个说明什么是不可行的理论。</p>
+<blockquote>
+<p>假设一个分布式系统有三台server，用户向其进行写入操作。若其中一个server写入成功就算向系统写入成功。</p>
+</blockquote>
+<p>此时，若出现网络问题，三台server数据就可能出现不一致，C无法保证。但是系统认为成功，返回了结果，A得到保证。</p>
+<blockquote>
+<p>假设一个分布式系统有三台server，用户向其进行写入操作。若三个server都写入成功才算向系统写入成功。</p>
+</blockquote>
+<p>此时，若出现网络问题，三台server数据不能同时写入成功，系统返回错误，A无法保证。但是副本一致性得到保证，A得到保证。</p>
+<h2><span id="分布式系统中的cap">分布式系统中的CAP</span></h2>
+<p>首先，分布式环境下，一般P是一定存在的，需要权衡的是 C 和 A。</p>
+<ul>
+<li>对于NoSQL，注重可用性，是一个 AP 系统</li>
+<li>对于分布式关系型数据库，必须要保证一致性，是一个 CP 系统
+分布式关系型数据库，不能保证完全的100%可用性，但是一般要求 99.999%
+的高可用性。所以被定义为 CP + HA 系统。其有两个指标：</li>
+<li>RPO（Recovery Point
+Objective）：恢复点目标。一般分布式数据库不会全部同时宕机或者受灾，只要有一台保留下了最新数据，RPO就为0。</li>
+<li>RTO（Recovery Time
+Objective）：恢复时间目标。事故后整个系统恢复正常所需的时间，通过主备切换、重新选主等，仍可以恢复正常服务。一般而言
+RTO 会在几分钟内。像一些使用raft协议的数据库，RTO会在30秒内。</li>
+</ul>
+<h2><span id="分布式方案">分布式方案</span></h2>
+<h3><span id="quorum-replication">Quorum Replication</span></h3>
+<p>要求 数据总副本数N，要小于，写入成功副本数W 与 读取成功副本数R
+之和。即，永远会有至少一个副本是最新的且正确返回的。 在此基础上，进行
+trade off。</p>
+<ul>
+<li>比如，W=N、R=1。此时所有节点都写入成功，才返回系统写入成功，保证了写一致性，写可用性差。只要有一个节点可读到数据，就让系统返回结果，保证了读可用性，读一致性差。</li>
+<li>W=1、R=N。此时有一个节点写入成功，就返回系统写入成功，保证了写可用性，写一致性差。所有节点都可读到最新数据，才让系统返回结果，保证了读一致性，读可用性差。</li>
+</ul>
+<h3><span id="共识算法">共识算法</span></h3>
+<p>不同节点间有通信交互，同时有一个leader节点管理读写服务，保证了一致性。但是leader节点出现问题，就不能保证可用性。通过选举算法，快速建立一个新leader，保证
+99.999% 的高可用性。</p>
 
             </div>
             <hr>
@@ -488,9 +354,7 @@ func(int) 和 func(int*) 就区分不了。</p>
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
-                    
-                      <a class="hover-with-bg" href="/categories/Notes/C/">C</a>
+                      <a class="hover-with-bg" href="/categories/Distributed-System/">Distributed System</a>
                     
                   </div>
                 
@@ -498,7 +362,9 @@ func(int) 和 func(int*) 就区分不了。</p>
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/C/">C</a>
+                      <a class="hover-with-bg" href="/tags/Distributed-System/">Distributed System</a>
+                    
+                      <a class="hover-with-bg" href="/tags/CAP/">CAP</a>
                     
                   </div>
                 
@@ -515,9 +381,9 @@ func(int) 和 func(int*) 就区分不了。</p>
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/posts/d5d2990b.html">
+                      <a href="/posts/f78760c9.html">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">C++ String</span>
+                        <span class="hidden-mobile">C++编译器优化</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -525,8 +391,8 @@ func(int) 和 func(int*) 就区分不了。</p>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/posts/ae73e7a0.html">
-                        <span class="hidden-mobile">深入C++对象模型笔记</span>
+                      <a href="/posts/c47fc989.html">
+                        <span class="hidden-mobile">超卖问题浅析</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
