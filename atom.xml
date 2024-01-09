@@ -6,7 +6,7 @@
   <link href="https://racleray.github.io/atom.xml" rel="self"/>
   
   <link href="https://racleray.github.io/"/>
-  <updated>2024-01-09T05:02:02.176Z</updated>
+  <updated>2024-01-09T05:13:49.839Z</updated>
   <id>https://racleray.github.io/</id>
   
   <author>
@@ -17,11 +17,55 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Linux内核链表设计</title>
+    <link href="https://racleray.github.io/posts/dd44df07.html"/>
+    <id>https://racleray.github.io/posts/dd44df07.html</id>
+    <published>2023-02-25T05:11:15.000Z</published>
+    <updated>2024-01-09T05:13:49.839Z</updated>
+    
+    
+    <summary type="html">Linux内核链表设计</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="Linux Kernel" scheme="https://racleray.github.io/categories/Notes/Linux-Kernel/"/>
+    
+    
+    <category term="Linux Kernel" scheme="https://racleray.github.io/tags/Linux-Kernel/"/>
+    
+    <category term="Data Structure" scheme="https://racleray.github.io/tags/Data-Structure/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>C语言程序内存安全检查</title>
+    <link href="https://racleray.github.io/posts/4df195e7.html"/>
+    <id>https://racleray.github.io/posts/4df195e7.html</id>
+    <published>2023-02-10T05:04:22.000Z</published>
+    <updated>2024-01-09T05:08:59.366Z</updated>
+    
+    
+    <summary type="html">C语言程序内存安全，静态检查和动态检查</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="C" scheme="https://racleray.github.io/categories/Notes/C/"/>
+    
+    
+    <category term="C" scheme="https://racleray.github.io/tags/C/"/>
+    
+  </entry>
+  
+  <entry>
     <title>C sharp</title>
     <link href="https://racleray.github.io/posts/abda3b00.html"/>
     <id>https://racleray.github.io/posts/abda3b00.html</id>
     <published>2023-02-09T12:58:02.000Z</published>
-    <updated>2024-01-09T05:02:02.176Z</updated>
+    <updated>2024-01-09T05:02:35.960Z</updated>
     
     
     <summary type="html">C# basic types</summary>
@@ -42,7 +86,7 @@
     <link href="https://racleray.github.io/posts/886c7636.html"/>
     <id>https://racleray.github.io/posts/886c7636.html</id>
     <published>2023-01-09T04:59:21.000Z</published>
-    <updated>2024-01-09T04:56:09.953Z</updated>
+    <updated>2024-01-09T05:02:35.964Z</updated>
     
     
     <summary type="html">kali linux hack tools</summary>
@@ -425,64 +469,6 @@
     <category term="cs basic" scheme="https://racleray.github.io/tags/cs-basic/"/>
     
     <category term="math" scheme="https://racleray.github.io/tags/math/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Embedding &amp; Searching</title>
-    <link href="https://racleray.github.io/posts/9e991c30.html"/>
-    <id>https://racleray.github.io/posts/9e991c30.html</id>
-    <published>2021-09-05T06:59:46.000Z</published>
-    <updated>2023-08-07T11:54:31.028Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;相似性搜索常见于以图搜图，听歌识曲...这类抽象查找问题中。你没有明确的Key，不能使用SQL之类的方法查找数据库。但是可以通过抽象的
-embedding 向量来进行检索。 一般样本向量表示可以通过 Skip-gram with
-negative sampling</summary>
-        
-      
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="NLP" scheme="https://racleray.github.io/categories/Notes/NLP/"/>
-    
-    
-    <category term="searching" scheme="https://racleray.github.io/tags/searching/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Practical BERT</title>
-    <link href="https://racleray.github.io/posts/372ecc5c.html"/>
-    <id>https://racleray.github.io/posts/372ecc5c.html</id>
-    <published>2021-07-22T08:01:17.000Z</published>
-    <updated>2023-08-07T11:54:31.033Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;BERT类模型，基本使用流程：1. Further pretrain. 2. single-task or
-multi-task finetuning. 3. inference&lt;/p&gt;
-&lt;p&gt;Further</summary>
-        
-      
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="NLP" scheme="https://racleray.github.io/categories/Notes/NLP/"/>
-    
-    
-    <category term="BERT" scheme="https://racleray.github.io/tags/BERT/"/>
     
   </entry>
   

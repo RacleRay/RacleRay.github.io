@@ -63,8 +63,8 @@
 <meta property="article:published_time" content="2021-02-22T13:16:40.000Z">
 <meta property="article:modified_time" content="2023-08-07T11:54:31.047Z">
 <meta property="article:author" content="江左时雨">
-<meta property="article:tag" content="NER">
 <meta property="article:tag" content="relation extraction">
+<meta property="article:tag" content="NER">
 <meta property="article:tag" content="TransE">
 <meta property="article:tag" content="Knowledge Graph">
 <meta name="twitter:card" content="summary_large_image">
@@ -653,9 +653,9 @@ Detection for Knowledge Base Question Answering
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/NER/">NER</a>
-                    
                       <a class="hover-with-bg" href="/tags/relation-extraction/">relation extraction</a>
+                    
+                      <a class="hover-with-bg" href="/tags/NER/">NER</a>
                     
                       <a class="hover-with-bg" href="/tags/TransE/">TransE</a>
                     
@@ -927,8 +927,23 @@ Detection for Knowledge Base Question Answering
 
 
 <!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<script  src="/js/boot.js" ></script>
 
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>
