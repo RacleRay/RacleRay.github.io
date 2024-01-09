@@ -38,11 +38,34 @@
   </entry>
   
   <entry>
+    <title>optimizing software in cpp</title>
+    <link href="https://racleray.github.io/posts/2ebe459a.html"/>
+    <id>https://racleray.github.io/posts/2ebe459a.html</id>
+    <published>2022-06-21T13:14:38.000Z</published>
+    <updated>2024-01-09T03:31:35.323Z</updated>
+    
+    
+    <summary type="html">optimizing software in cpp 读书笔记</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="C++" scheme="https://racleray.github.io/categories/Notes/C/"/>
+    
+    
+    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
+    
+    <category term="Book" scheme="https://racleray.github.io/tags/Book/"/>
+    
+  </entry>
+  
+  <entry>
     <title>More Effective Cpp</title>
     <link href="https://racleray.github.io/posts/e584d079.html"/>
     <id>https://racleray.github.io/posts/e584d079.html</id>
     <published>2022-05-09T04:01:49.000Z</published>
-    <updated>2024-01-09T03:11:41.904Z</updated>
+    <updated>2024-01-09T03:31:40.256Z</updated>
     
     
     <summary type="html">More Effective Cpp 读书笔记</summary>
@@ -88,7 +111,7 @@
     <link href="https://racleray.github.io/posts/b3d88a54.html"/>
     <id>https://racleray.github.io/posts/b3d88a54.html</id>
     <published>2022-04-12T13:00:52.000Z</published>
-    <updated>2024-01-09T03:12:18.048Z</updated>
+    <updated>2024-01-09T03:12:58.691Z</updated>
     
     
     <summary type="html">Effective Modern Cpp 读书笔记</summary>
@@ -136,7 +159,7 @@
     <link href="https://racleray.github.io/posts/95b1972c.html"/>
     <id>https://racleray.github.io/posts/95b1972c.html</id>
     <published>2022-03-15T13:43:52.000Z</published>
-    <updated>2024-01-09T03:12:29.146Z</updated>
+    <updated>2024-01-09T03:12:58.684Z</updated>
     
     
     <summary type="html">Effective Cpp 读书笔记</summary>
@@ -247,14 +270,14 @@
   </entry>
   
   <entry>
-    <title>数据结构整理-part2</title>
-    <link href="https://racleray.github.io/posts/4121feda.html"/>
-    <id>https://racleray.github.io/posts/4121feda.html</id>
+    <title>数据结构整理-part3</title>
+    <link href="https://racleray.github.io/posts/3626ce4c.html"/>
+    <id>https://racleray.github.io/posts/3626ce4c.html</id>
     <published>2021-10-08T13:30:33.000Z</published>
-    <updated>2023-08-07T11:54:31.042Z</updated>
+    <updated>2023-08-07T11:54:31.043Z</updated>
     
     
-    <summary type="html">常见基本数据结构整理第二部分，使用C语言编写。</summary>
+    <summary type="html">常见基本数据结构整理第三部分，使用C语言编写。</summary>
     
     
     
@@ -270,14 +293,14 @@
   </entry>
   
   <entry>
-    <title>数据结构整理-part3</title>
-    <link href="https://racleray.github.io/posts/3626ce4c.html"/>
-    <id>https://racleray.github.io/posts/3626ce4c.html</id>
+    <title>数据结构整理-part2</title>
+    <link href="https://racleray.github.io/posts/4121feda.html"/>
+    <id>https://racleray.github.io/posts/4121feda.html</id>
     <published>2021-10-08T13:30:33.000Z</published>
-    <updated>2023-08-07T11:54:31.043Z</updated>
+    <updated>2023-08-07T11:54:31.042Z</updated>
     
     
-    <summary type="html">常见基本数据结构整理第三部分，使用C语言编写。</summary>
+    <summary type="html">常见基本数据结构整理第二部分，使用C语言编写。</summary>
     
     
     
@@ -413,9 +436,9 @@ multi-task finetuning. 3. inference&lt;/p&gt;
     <category term="NLP" scheme="https://racleray.github.io/categories/Notes/NLP/"/>
     
     
-    <category term="topic model" scheme="https://racleray.github.io/tags/topic-model/"/>
-    
     <category term="BERT" scheme="https://racleray.github.io/tags/BERT/"/>
+    
+    <category term="topic model" scheme="https://racleray.github.io/tags/topic-model/"/>
     
   </entry>
   
@@ -436,9 +459,9 @@ multi-task finetuning. 3. inference&lt;/p&gt;
     <category term="DL" scheme="https://racleray.github.io/categories/Notes/DL/"/>
     
     
-    <category term="BP" scheme="https://racleray.github.io/tags/BP/"/>
-    
     <category term="deep learning" scheme="https://racleray.github.io/tags/deep-learning/"/>
+    
+    <category term="BP" scheme="https://racleray.github.io/tags/BP/"/>
     
   </entry>
   
@@ -469,36 +492,6 @@ multi-task finetuning. 3. inference&lt;/p&gt;
     <category term="sentence embedding" scheme="https://racleray.github.io/tags/sentence-embedding/"/>
     
     <category term="SimCSE" scheme="https://racleray.github.io/tags/SimCSE/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>回顾神经网络初始化方法</title>
-    <link href="https://racleray.github.io/posts/1498e8ac.html"/>
-    <id>https://racleray.github.io/posts/1498e8ac.html</id>
-    <published>2021-06-14T15:51:41.000Z</published>
-    <updated>2023-08-07T11:54:31.040Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;那么首先我们已经知道，全0或者常数、过大、过小的权重初始化都有梯度消失或者梯度爆炸的问题。而我们所期望的初始化状态是：期望为0，方差在一定范围内，同时尽量保证不同层的权重方差的一致性。这样出现internal
-covariance</summary>
-        
-      
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="DL" scheme="https://racleray.github.io/categories/Notes/DL/"/>
-    
-    
-    <category term="deep learning" scheme="https://racleray.github.io/tags/deep-learning/"/>
-    
-    <category term="initialization" scheme="https://racleray.github.io/tags/initialization/"/>
     
   </entry>
   
