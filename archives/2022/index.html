@@ -225,7 +225,7 @@
                 
 
 <div class="list-group">
-  <p class="h4">共计 76 篇文章</p>
+  <p class="h4">共计 86 篇文章</p>
   <hr>
   
   
@@ -239,6 +239,18 @@
     </a>
   
     
+    <a href="/posts/d5d2990b.html" class="list-group-item list-group-item-action">
+      <span class="archive-post-title">C++ String</span>
+      <time style="float: right;">11-12</time>
+    </a>
+  
+    
+    <a href="/posts/379e512c.html" class="list-group-item list-group-item-action">
+      <span class="archive-post-title">深入C指针</span>
+      <time style="float: right;">11-09</time>
+    </a>
+  
+    
     <a href="/posts/ae73e7a0.html" class="list-group-item list-group-item-action">
       <span class="archive-post-title">深入C++对象模型笔记</span>
       <time style="float: right;">06-30</time>
@@ -248,6 +260,12 @@
     <a href="/posts/2ebe459a.html" class="list-group-item list-group-item-action">
       <span class="archive-post-title">optimizing software in cpp</span>
       <time style="float: right;">06-21</time>
+    </a>
+  
+    
+    <a href="/posts/351032d1.html" class="list-group-item list-group-item-action">
+      <span class="archive-post-title">STL Tips</span>
+      <time style="float: right;">06-13</time>
     </a>
   
     
@@ -430,8 +448,23 @@
 
 
 <!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<script  src="/js/boot.js" ></script>
 
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>

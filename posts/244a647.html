@@ -1,0 +1,914 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="CUDA笔记">
+  <meta name="author" content="HeRui">
+  <meta name="keywords" content="CUDA">
+  <meta name="description" content="CUDA笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CUDA 笔记">
+<meta property="og:url" content="https://racleray.github.io/posts/244a647.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="CUDA笔记">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-17-e5c78036208e81f98c36b574a6a399cd-092962.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-17-d4444c3db2a99a8d49c51045880d94cd-dd7085.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-17-c4a81220ea6236b5b2b793c252a6ed86-376ce2.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-18-4f70da52d82d4ccc108e6da7ae2843b6-f29849.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-19-cbef5b9b116b3645b93f63484db6852d-60777a.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-19-6187fba0a10d0af32c745e122b16e6e6-5ab5ce.png">
+<meta property="article:published_time" content="2023-08-15T15:14:28.000Z">
+<meta property="article:modified_time" content="2024-01-09T08:19:46.693Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="CUDA">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-17-e5c78036208e81f98c36b574a6a399cd-092962.png">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>CUDA 笔记 - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="CUDA 笔记">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2023-08-15 23:14" pubdate>
+        2023年8月15日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      15k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      48 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">CUDA 笔记</h1>
+            
+            <div class="markdown-body">
+              <p><a href="https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/index.html#gpu-feature-list" target="_blank" rel="noopener">NVCC文档</a></p>
+<h2><span id="异构计算">异构计算</span></h2>
+<p>CPU和GPU是两个独立的处理器，它们通过单个计算节点中的PCI-Express总线相连。</p>
+<p>GPU不是一个独立运行的平台而是CPU的协处理器。因此，GPU必须通过PCIe总线与基于CPU的主机相连进行操作。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-17-e5c78036208e81f98c36b574a6a399cd-092962.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<ul>
+<li><p>GPU：计算单元多，控制单元少，无大量Cache。</p></li>
+<li><p>CPU：计算单元少，控制单元多， Cache占据了大量空间。</p></li>
+</ul>
+<p>一个异构应用包括两部分：主机代码和设备代码。主机代码在CPU上运行，设备代码在GPU上运行。</p>
+<p>程序通常由CPU初始化。在设备端加载计算密集型任务之前，CPU代码负责管理设备端的环境、代码和数据。</p>
+<p>CPU适合处理数据规模较小、控制密集型任务，GPU适合处理数据规模较大、包含数据并行的计算密集型任务。</p>
+<h2><span id="cuda硬件环境">CUDA硬件环境</span></h2>
+<blockquote>
+<p>GPU架构：Tesla、Fermi、Kepler、Maxwell、Pascal、Volta、Turing、Ampere</p>
+<p>显卡系列：GeForce、Quadro、Tesla、Jetson。</p>
+<ul>
+<li>GeForce：主要用于游戏和娱乐，也用于科学计算。</li>
+<li>Quadro：专业图形设计。</li>
+<li>Tesla：服务器专用卡，用于大规模并行计算，适用于机器学习。</li>
+<li>Jetson：适用于AI应用。</li>
+</ul>
+</blockquote>
+<p><a href="https://developer.nvidia.com/cuda-gpus" target="_blank" rel="noopener">NVIDIA</a>使用“计算能力”来对应硬件版本。</p>
+<p>NVIDIA Amperep Architecture （compute capabilities 8.x)：</p>
+<ul>
+<li>Tesla A Series</li>
+</ul>
+<p>NVIDIA Turing Architecture （compute capabilities 7.x)：</p>
+<ul>
+<li>GeForce 2000 Series Quadro RTX Series Tesla T Series</li>
+</ul>
+<p>NVIDIA Volta Architecture (compute capabilities 7.x):</p>
+<ul>
+<li>DRIVE/JETSON AGX/Xavier Quadro GV Series Tesla v Series</li>
+</ul>
+<p>NVIDIA Pascal Architecture (compute capabilities 6.x):</p>
+<ul>
+<li>Tegra X2 GeForce 1000 Series Quadro P Series Tesla P Series</li>
+</ul>
+<h3><span id="重要概念">重要概念</span></h3>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-17-d4444c3db2a99a8d49c51045880d94cd-dd7085.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-17-c4a81220ea6236b5b2b793c252a6ed86-376ce2.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<ul>
+<li><strong>thread:</strong>
+一个CUDA的并行程序会被以许多个thread来执行。</li>
+<li><strong>block:</strong>
+数个thread组成一个block，同一个block中的thread可以同步，也可以通过shared
+memory进行通信。</li>
+<li><strong>grid:</strong> 多个block则会再构成grid。</li>
+</ul>
+<p>实际在硬件上就是按照 <strong>SM(Streaming MultiProcessor)</strong>
+组织计算单元的。一个SM由多个流式单处理器（SP）组成。每个 SP
+可以处理一个或多个线程。</p>
+<p>SM采用的SIMT(Single-Instruction,
+Multiple-Thread，单指令多线程)架构，warp(线程束)是最基本的执行单元，一个warp包含32个并行thread。warp(线程束)由warp
+scheduler负责调度。</p>
+<p>当一个kernel被执行时，gird中的block被分配到SM上，<strong>一个block的thread只能在一个SM上调度</strong>。</p>
+<p>通常板块数量总是大于 SM 的数量，这时英伟达驱动就会在多个 SM
+之间调度你提交的各个板块。正如操作系统在多个 CPU
+核心之间调度线程那样。</p>
+<p>GPU 不会像 CPU 那样做时间片轮换——板块一旦被调度到了一个 SM
+上，就会一直执行，直到他执行完退出，这样的好处是不存在保存和切换上下文（寄存器，共享内存等）的开销，毕竟
+GPU 的数据量比较大，禁不起这样切换来切换去。</p>
+<p>一个grid可以包含多个block，block的组织方式可以是一维的，二维或者三维的。</p>
+<p><strong>CUDA中每一个线程都有一个唯一的标识ID即threadIdx</strong>，这个ID随着grid和block的划分方式的不同而变化。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-18-4f70da52d82d4ccc108e6da7ae2843b6-f29849.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<p>根据架构的不同，计算threadIdx需要考虑不同的维度。</p>
+<blockquote>
+<p>版本52：Quadro M6000 , GeForce 900, GTX-970,
+<strong>GTX-980</strong>, GTX Titan X</p>
+<p>版本53：Tegra (Jetson) TX1 / Tegra X1, Drive CX, Drive PX, Jetson
+Nano</p>
+<p>版本60：Quadro GP100, Tesla P100, DGX-1 (Generic Pascal)</p>
+<p>版本61：<strong>GTX 1080</strong>, GTX 1070, GTX 1060, GTX 1050, GTX
+1030 (GP108), GT 1010 (GP108) Titan Xp, Tesla P40, Tesla P4, Discrete
+GPU on the NVIDIA Drive PX2</p>
+<p>版本62：Integrated GPU on the NVIDIA Drive PX2, Tegra (Jetson)
+TX2</p>
+<p>版本70：DGX-1 with Volta, Tesla V100, <strong>GTX 1180</strong>
+(GV104), Titan V, Quadro GV100</p>
+<p>版本72：Jetson AGX Xavier, Drive AGX Pegasus, Xavier NX</p>
+<p>版本75：GTX/RTX Turing – GTX 1660 Ti, RTX 2060, RTX 2070, <strong>RTX
+2080</strong>, Titan RTX, Quadro RTX 4000, Quadro RTX 5000, Quadro RTX
+6000, Quadro RTX 8000, Quadro T1000/T2000, Tesla T4</p>
+<p>版本80：NVIDIA A100 (the name “Tesla” has been dropped – GA100),
+NVIDIA DGX-A100</p>
+<p>版本86：Tesla GA10x cards, RTX Ampere – <strong>RTX 3080</strong>,
+GA102 – RTX 3090, RTX A2000, A3000, A4000, A5000, A6000, NVIDIA A40,
+GA106 – RTX 3060, GA104 – RTX 3070, GA107 – RTX 3050, Quadro A10, Quadro
+A16, Quadro A40, A2 Tensor Core GPU</p>
+</blockquote>
+<p>使用NVCC编译，需要注意版本号：</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">nvcc -arch=sm_60 -o test1 .\test1.cu -run<br></code></pre></div></td></tr></table></figure>
+<p>使用CMake，可以指定多个可选版本号，但是会增加编译时间：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cmake"><span class="hljs-keyword">cmake_minimum_required</span>(VERSION <span class="hljs-number">3.10</span>)<br><br><span class="hljs-keyword">set</span>(CMAKE_CXX_STANDARD <span class="hljs-number">17</span>)<br><span class="hljs-keyword">set</span>(CMAKE_BUILD_TYPE Release)<br><span class="hljs-keyword">set</span>(CMAKE_CUDA_ARCHITECTURES <span class="hljs-number">60</span>;<span class="hljs-number">70</span>;<span class="hljs-number">75</span>;<span class="hljs-number">86</span>)<br><br><span class="hljs-keyword">project</span>(hellocuda LANGUAGES CXX CUDA)<br><br><span class="hljs-keyword">add_executable</span>(<span class="hljs-keyword">test</span> <span class="hljs-keyword">test</span>.cu)<br></code></pre></div></td></tr></table></figure>
+<h2><span id="cuda软件体系">CUDA软件体系</span></h2>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-19-cbef5b9b116b3645b93f63484db6852d-60777a.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<h3><span id="cuda函数库">CUDA</span></h3>
+<ul>
+<li>cuFFT ：利用CUDA进行快速傅里叶变换的函数库 。</li>
+<li>cuBLAS：线性代数方面的CUDA库。</li>
+<li>cuDNN ：利用CUDA进行深度卷积神经网络，深度学习常用。</li>
+<li>thrust：实现了众多基本并行算法的C++模板库。</li>
+<li>cuSolver：线性代数方面的CUDA库。</li>
+<li>cuRAND：随机数生成有关的库。</li>
+</ul>
+<h3><span id="cuda-api">CUDA API</span></h3>
+<p>CUDA 运行时 API和CUDA
+驱动API提供了实现设备管理、上下文管理、存储器管理、代码块管理、执行控制、
+纹理索引管理与OpenGL和Direct3D的互操作性的应用接口。</p>
+<ul>
+<li><p>驱动API是一种基于句柄的底层接口，大多数对象通过句柄被引用，其函数前缀均为cu。</p></li>
+<li><p>运行时API对驱动API进行了一定的封装，隐藏了其部分实现细节，因此使用起来更为方便，简化了编程的过程。</p></li>
+</ul>
+<h2><span id="cuda">CUDA</span></h2>
+<p>CUDA是一种通用的并行计算平台和编程模型，是在C语言基础上扩展的。借助于CUDA，可以像编写C语言程序一样实现并行算法。</p>
+<p>CUDA编程模型是一个异构模型，需要CPU和GPU协同工作，因此引入了主机(Host)端与设备
+(Device)端的概念。</p>
+<p>一个完整的CUDA程序由主机代码（串行代码）和设备代码（并行代码）组成。</p>
+<h3><span id="cuda程序实现流程">CUDA程序实现流程</span></h3>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-19-6187fba0a10d0af32c745e122b16e6e6-5ab5ce.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<h3><span id="cuda内存管理">CUDA内存管理</span></h3>
+<p>CUDA运行时负责分配与释放设备内存，并且在主机内存和设备内存之间传输数据。</p>
+<h3><span id="cuda编程基础">CUDA编程基础</span></h3>
+<p>CUDA程序主要由两部分组成，一部分是主函数，另一部分是设备函数。</p>
+<p>__global__
+定义一个kernel函数入口函数，一般在CPU上调用，GPU上执行。函数类型必须为void类型。</p>
+<p>__device__ 定义在device（GPU）执行的函数。</p>
+<p>__host__ 定义在host（CPU）执行的函数。</p>
+<p>使用nvcc对 .cu 源代码文件进行编译。</p>
+<p>了 CUDA 的核函数调用时需要用 kernel&lt;&lt;&lt;1, 1&gt;&gt;&gt;()
+这种语法。&lt;&lt;&lt;block数量，每个板块中的线程数量&gt;&gt;&gt;的形式，也就是&lt;&lt;&lt;gridDim,
+blockDim&gt;&gt;&gt;。总的板块数量由gridDim表示。</p>
+<blockquote>
+<p>线程(thread)：并行的最小单位 板块(block)：包含若干个线程
+网格(grid)：指整个任务，包含若干个板块</p>
+<p>线程＜板块＜网格</p>
+</blockquote>
+<p>GPU 的板块相当于 CPU 的线程，GPU 的线程相当于 CPU
+的SIMD，可以这样理解，但不完全等同。</p>
+<p>CUDA 也支持三维的板块和线程区间。只要在三重尖括号内指定的参数改成
+dim3 类型即可。</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdio&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cuda_runtime.h&gt;</span></span><br><br><span class="hljs-function">__global__ <span class="hljs-keyword">void</span> <span class="hljs-title">kernel</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Block (%d,%d,%d) of (%d,%d,%d), Thread (%d,%d,%d) of (%d,%d,%d)\n"</span>,<br>           blockIdx.x, blockIdx.y, blockIdx.z,<br>           gridDim.x, gridDim.y, gridDim.z,<br>           threadIdx.x, threadIdx.y, threadIdx.z,<br>           blockDim.x, blockDim.y, blockDim.z);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    kernel&lt;&lt;&lt;dim3(<span class="hljs-number">2</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>), dim3(<span class="hljs-number">2</span>, <span class="hljs-number">2</span>, <span class="hljs-number">2</span>)&gt;&gt;&gt;();<br>    cudaDeviceSynchronize();<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>二维的话，只需要把 dim3 最后一位（z方向）的值设为 1 即可。</p>
+<h4><span id="线程索引">线程索引</span></h4>
+<p><a href="#重要概念">CUDA硬件环境</a>部分，介绍了硬件在软件中的组织形式，所以可以计算：</p>
+<p>1、 grid 1维，block 1维（blockDim 表示每一维的size,
+blockIdx表示在grid中的位置，threadIdx表示在block中的位置）</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">int</span> threadId = blockIdx.x * blockDim.x + threadIdx.x;<br></code></pre></div></td></tr></table></figure>
+<p>2、 grid 1维，block 2维</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">int</span> threadId = blockIdx.x * blockDim.x * blockDim.y + threadIdx.y * blockDim.x + threadIdx.x;<br></code></pre></div></td></tr></table></figure>
+<p>3、 grid 1维，block 3维</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">int</span> threadId = blockIdx.x * blockDim.x * blockDim.y * blockDim.z \<br>               + threadIdx.z * blockDim.y * blockDim.x  \<br>               + threadIdx.y * blockDim.x \<br>               + threadIdx.x;<br></code></pre></div></td></tr></table></figure>
+<p>4、 grid 2维，block 1维</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">int</span> blockId = blockIdx.x + blockIdx.y * gridDim.x;  <br><span class="hljs-keyword">int</span> threadId = blockId * blockDim.x + threadIdx.x;<br></code></pre></div></td></tr></table></figure>
+<p>5、 grid 2维，block 2维</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">int</span> blockId = blockIdx.x + blockIdx.y * gridDim.x;  <br><span class="hljs-keyword">int</span> threadId = blockId * blockDim.x * blockDim.y \<br>               + threadIdx.y * blockDim.x \<br>    		   + threadIdx.x;<br></code></pre></div></td></tr></table></figure>
+<p>6、 grid 2维，block 3维</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">int</span> blockId = blockIdx.x + blockIdx.y * gridDim.x;  <br><span class="hljs-keyword">int</span> threadId = blockId * blockDim.x * blockDim.y * blockDim.z \<br>               + threadIdx.z * blockDim.x * blockDim.y \  <br>               + threadIdx.y * blockDim.x \<br>               + threadIdx.x;<br></code></pre></div></td></tr></table></figure>
+<p>7、 grid 3维，block 1维</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">int</span> blockId = blockIdx.x \<br>              + blockIdx.y * gridDim.x \  <br>              + blockIdx.z * gridDim.x * gridDim.y;  <br><span class="hljs-keyword">int</span> threadId = blockId * blockDim.x + threadIdx.x;<br></code></pre></div></td></tr></table></figure>
+<p>8、 grid 3维，block 2维</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">int</span> blockId = blockIdx.x \<br>              + blockIdx.y * gridDim.x \  <br>              + blockIdx.z * gridDim.x * gridDim.y;  <br><span class="hljs-keyword">int</span> threadId = blockId * blockDim.x * blockDim.y \<br>               + threadIdx.y * blockDim.x \<br>    		   + threadIdx.x;<br></code></pre></div></td></tr></table></figure>
+<p>9、 grid 3维，block 3维</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">int</span> blockId = blockIdx.x \<br>              + blockIdx.y * gridDim.x \  <br>              + blockIdx.z * gridDim.x * gridDim.y; <br><span class="hljs-keyword">int</span> threadId = blockId * blockDim.x * blockDim.y * blockDim.z \<br>               + threadIdx.z * blockDim.x * blockDim.y \  <br>               + threadIdx.y * blockDim.x \<br>               + threadIdx.x;<br></code></pre></div></td></tr></table></figure>
+<h2><span id="cuda编程">CUDA编程</span></h2>
+<p>CUDA 的语法，基本完全兼容 C++。包括 C++17
+新特性，都可以用。甚至可以把任何一个 C++ 项目的文件后缀名全部改成
+.cu，都能编译出来。</p>
+<p>CUDA 和 C++ 的关系就像 C++ 和 C
+的关系一样，大部分都兼容，因此能很方便地重用 C++ 现有的任何代码库，引用
+C++ 头文件等。</p>
+<h3><span id="代码执行">代码执行</span></h3>
+<h4><span id="__global__">__global__</span></h4>
+<p>定义函数 kernel（从 CPU 端通过三重尖括号语法调用），前面加上
+__global__ 修饰符，即可让他在 GPU 上执行。不可以有返回值。</p>
+<p>GPU 和 CPU 之间的通信，为了高效，是异步的。CPU实际上只是把 kernel
+这个任务推送到 GPU
+的执行队列上，然后立即返回，并不会等待GPU执行完毕。</p>
+<p>可以调用 cudaDeviceSynchronize()，让 CPU 陷入等待，等 GPU
+完成队列的所有任务后再返回。</p>
+<h5><span id="核函数调用核函数">核函数调用核函数</span></h5>
+<p>从 Kelper 架构开始，__global<strong> 里可以调用另一个
+__global</strong>，也就是说核函数可以调用另一个核函数，且其三重尖括号里的板块数和线程数可以动态指定。</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdio&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cuda_runtime.h&gt;</span></span><br><br><span class="hljs-function">__global__ <span class="hljs-keyword">void</span> <span class="hljs-title">another</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"another: Thread %d of %d\n"</span>, threadIdx.x, blockDim.x);<br>&#125;<br><br><span class="hljs-function">__global__ <span class="hljs-keyword">void</span> <span class="hljs-title">kernel</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"kernel: Thread %d of %d\n"</span>, threadIdx.x, blockDim.x);<br>    <span class="hljs-keyword">int</span> numthreads = threadIdx.x * threadIdx.x + <span class="hljs-number">1</span>;<br>    another&lt;&lt;&lt;<span class="hljs-number">1</span>, numthreads&gt;&gt;&gt;();<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"kernel: called another with %d threads\n"</span>, numthreads);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    kernel&lt;&lt;&lt;<span class="hljs-number">1</span>, <span class="hljs-number">3</span>&gt;&gt;&gt;();<br>    cudaDeviceSynchronize();<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h4><span id="__device__">__device__</span></h4>
+<p>__device__ 则用于定义设备函数，他在 GPU 上执行，但是从 GPU
+上调用的，而且不需要三重尖括号，和普通函数用起来一样，可以有参数，有返回值。</p>
+<p>默认情况下 <strong>GPU
+函数必须定义在同一个文件里</strong>。如果你试图分离声明和定义，调用另一个文件里的
+__device<strong> 或 __global</strong> 函数，就会出错。</p>
+<p>建议把要相互调用的 __device__
+函数放在同一个文件，这样方便编译器自动内联优化。</p>
+<p>__host<strong> 则相反，将函数定义在 CPU
+上。任何函数如果没有指明修饰符，则默认就是 __host</strong>。</p>
+<p>通过 __host<strong> __device</strong>
+这样的双重修饰符，可以把函数同时定义在 CPU 和 GPU 上。</p>
+<h4><span id="总结">总结</span></h4>
+<p>host 可以调用 global；global 可以调用 device；device 可以调用
+device。</p>
+<h3><span id="cuda内联">CUDA内联</span></h3>
+<p>inline 在现代 C++ 中的效果是声明一个函数为 weak
+符号，和性能优化意义上的内联无关。</p>
+<p>优化意义上的内联指把函数体直接放到调用者那里去。CUDA
+编译器提供了__inline__ 来声明一个函数为内联。不论是 CPU 函数还是 GPU
+都可以使用，只要你用的 CUDA 编译器。</p>
+<p>__inline__
+不一定就保证内联了，如果函数太大编译器可能会放弃内联化。</p>
+<p>因此 CUDA 还提供 __forceinline<strong>
+这个关键字来强制一个函数为内联。GCC 也有相应的
+__attribute</strong>((“always_inline”))。</p>
+<p>还有 __noinline__ 来禁止内联优化。</p>
+<h4><span id="constexpr-函数">constexpr 函数</span></h4>
+<p>指定 --expt-relaxed-constexpr 这个编译选项，把 constexpr
+函数自动变成修饰 __host<strong> __device</strong>。因为 constexpr
+通常都是一些可以内联的函数，数学计算表达式之类的。</p>
+<p>当然，constexpr 里没办法调用 printf，也不能用 __syncthreads 之类的
+GPU 特有的函数，因此也不能完全替代 __host<strong> 和
+__device</strong>。</p>
+<h3><span id="内存管理">内存管理</span></h3>
+<h4><span id="从核函数里返回数据">从核函数里返回数据</span></h4>
+<p>GPU 使用独立的显存，不能访问 CPU 内存。CPU
+的内存称为主机内存(host)。GPU
+使用的内存称为设备内存(device)，他是显卡上板载的，速度更快，又称显存。</p>
+<p>用 cudaMalloc 分配 GPU 上的显存，这样就不出错了，结束时 cudaFree
+释放。cudaMalloc 的返回值已经用来表示错误代码，所以只能通过 &amp;pret
+二级指针返回结果。</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdio&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cuda_runtime.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"helper_cuda.h"</span></span><br><br><span class="hljs-function">__global__ <span class="hljs-keyword">void</span> <span class="hljs-title">kernel</span><span class="hljs-params">(<span class="hljs-keyword">int</span> *pret)</span> </span>&#123;<br>    *pret = <span class="hljs-number">42</span>;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">int</span> *pret;<br>    checkCudaErrors(cudaMalloc(&amp;pret, <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">int</span>)));<br>    kernel&lt;&lt;&lt;<span class="hljs-number">1</span>, <span class="hljs-number">1</span>&gt;&gt;&gt;(pret);<br>    checkCudaErrors(cudaDeviceSynchronize());<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"result: %d\n"</span>, *pret);<br>    cudaFree(pret);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>helper_cuda.h 在 /opt/cuda/samples/common/inc/helper_cuda.h
+，可以直接将其和</p>
+<p>helper_string.h 一起拷贝到指定的 include
+文件夹下，使用一些封装好的功能。</p>
+<p>这里比如保存在 .cu
+文件的同级目录下include文件夹下，更改CMake文件：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cmake"><span class="hljs-keyword">target_include_directories</span>(main PUBLIC ./<span class="hljs-keyword">include</span>)<br></code></pre></div></td></tr></table></figure>
+<p>使用 checkCudaErrors
+宏可自动帮你检查错误代码并打印在终端，然后退出。还会报告出错所在的行号，函数名等。</p>
+<p>使用nvcc编译，就添加 --include-path 编译选项。</p>
+<h4><span id="跨-gpucpu-地址空间拷贝数据">跨 GPU/CPU 地址空间拷贝数据</span></h4>
+<p>cudaMemcpy，他能够在 GPU 和 CPU 内存之间拷贝数据。</p>
+<p>cudaMemcpy 会自动进行同步操作，即会调用 cudaDeviceSynchronize()
+！</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdio&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cuda_runtime.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"helper_cuda.h"</span></span><br><br><span class="hljs-function">__global__ <span class="hljs-keyword">void</span> <span class="hljs-title">kernel</span><span class="hljs-params">(<span class="hljs-keyword">int</span> *pret)</span> </span>&#123;<br>    *pret = <span class="hljs-number">42</span>;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">int</span> *pret;<br>    checkCudaErrors(cudaMalloc(&amp;pret, <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">int</span>)));<br>    kernel&lt;&lt;&lt;<span class="hljs-number">1</span>, <span class="hljs-number">1</span>&gt;&gt;&gt;(pret);<br><br>    <span class="hljs-keyword">int</span> ret;<br>    checkCudaErrors(cudaMemcpy(&amp;ret, pret, <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">int</span>), cudaMemcpyDeviceToHost));<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"result: %d\n"</span>, ret);<br><br>    cudaFree(pret);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h4><span id="统一内存地址技术unifiedmemory">统一内存地址技术（Unified
+Memory）</span></h4>
+<p>一种在比较新的显卡上支持的特性，那就是统一内存(managed)，只需把
+cudaMalloc 换成 cudaMallocManaged 即可，释放时也是通过 cudaFree。</p>
+<p>从 Pascal 架构开始支持的，也就是 GTX9 开头及以上。</p>
+<p>这样分配出来的地址，不论在 CPU 还是 GPU
+上都是一模一样的，都可以访问。而且拷贝也会自动按需进行（当从 CPU
+访问时），无需手动调用 cudaMemcpy。</p>
+<p>虽然方便，但并非完全没有开销，手动拷贝可能高效一些。</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdio&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cuda_runtime.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"helper_cuda.h"</span></span><br><br><span class="hljs-function">__global__ <span class="hljs-keyword">void</span> <span class="hljs-title">kernel</span><span class="hljs-params">(<span class="hljs-keyword">int</span> *pret)</span> </span>&#123;<br>    *pret = <span class="hljs-number">42</span>;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">int</span> *pret;<br>    checkCudaErrors(cudaMallocManaged(&amp;pret, <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">int</span>)));<br>    kernel&lt;&lt;&lt;<span class="hljs-number">1</span>, <span class="hljs-number">1</span>&gt;&gt;&gt;(pret);<br>    checkCudaErrors(cudaDeviceSynchronize());<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"result: %d\n"</span>, *pret);<br>    cudaFree(pret);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h4><span id="总结">总结</span></h4>
+<ul>
+<li>主机内存(host)：malloc、free</li>
+<li>设备内存(device)：cudaMalloc、cudaFree</li>
+<li>统一内存(managed)：cudaMallocManaged、cudaFree</li>
+</ul>
+<h3><span id="c封装">C++封装</span></h3>
+<p>定制CudaAllocator，构建在GPU上的vector对象。</p>
+<p>注意，vector 在初始化的时候（或是之后 resize
+的时候）会调用所有元素的无参构造函数，对 int
+类型来说就是零初始化。然而这个初始化会是在 CPU
+上做的，因此我们需要禁用他。</p>
+<p>通过给 allocator 添加 construct 成员函数，来魔改 vector
+对元素的构造。</p>
+<p>只需要判断是不是有参数，然后是不是传统的 C
+语言类型（plain-old-data），如果是，则跳过其无参构造，从而避免在 CPU
+上低效的零初始化。</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdio&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cuda_runtime.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"helper_cuda.h"</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;vector&gt;</span></span><br><br><span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">T</span>&gt;</span><br><span class="hljs-class"><span class="hljs-title">struct</span> <span class="hljs-title">CudaAllocator</span> &#123;</span><br>    <span class="hljs-keyword">using</span> value_type = T;<br><br>    <span class="hljs-function">T *<span class="hljs-title">allocate</span><span class="hljs-params">(<span class="hljs-keyword">size_t</span> <span class="hljs-built_in">size</span>)</span> </span>&#123;<br>        T *ptr = <span class="hljs-literal">nullptr</span>;<br>        checkCudaErrors(cudaMallocManaged(&amp;ptr, <span class="hljs-built_in">size</span> * <span class="hljs-keyword">sizeof</span>(T)));<br>        <span class="hljs-keyword">return</span> ptr;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">deallocate</span><span class="hljs-params">(T *ptr, <span class="hljs-keyword">size_t</span> <span class="hljs-built_in">size</span> = <span class="hljs-number">0</span>)</span> </span>&#123;<br>        checkCudaErrors(cudaFree(ptr));<br>    &#125;<br><br>    <span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> ...<span class="hljs-title">Args</span>&gt;</span><br><span class="hljs-class">    <span class="hljs-title">void</span> <span class="hljs-title">construct</span>(<span class="hljs-title">T</span> *<span class="hljs-title">p</span>, <span class="hljs-title">Args</span> &amp;&amp;...<span class="hljs-title">args</span>) &#123;</span><br>        <span class="hljs-comment">// 只需要判断是不是有参数，是不是传统的 C 语言类型（plain-old-data）</span><br>        <span class="hljs-comment">// 如果是，则跳过其无参构造，从而避免在 CPU 上低效的零初始化</span><br>        <span class="hljs-function"><span class="hljs-keyword">if</span> <span class="hljs-title">constexpr</span> <span class="hljs-params">(!(<span class="hljs-keyword">sizeof</span>...(Args) == <span class="hljs-number">0</span> &amp;&amp; <span class="hljs-built_in">std</span>::is_pod_v&lt;T&gt;))</span></span><br><span class="hljs-function">            ::<span class="hljs-title">new</span><span class="hljs-params">((<span class="hljs-keyword">void</span> *)p)</span> <span class="hljs-title">T</span><span class="hljs-params">(<span class="hljs-built_in">std</span>::forward&lt;Args&gt;(args)...)</span></span>;<br>    &#125;<br>&#125;;<br><br><span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">int</span> N, <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">T</span>&gt;</span><br><span class="hljs-class">__<span class="hljs-title">global__</span> <span class="hljs-title">void</span> <span class="hljs-title">kernel</span>(<span class="hljs-title">T</span> *<span class="hljs-title">arr</span>) &#123;</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = blockDim.x * blockIdx.x + threadIdx.x;<br>         i &lt; N; i += blockDim.x * gridDim.x) &#123;<br>        arr[i] = i;<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">constexpr</span> <span class="hljs-keyword">int</span> n = <span class="hljs-number">65536</span>;<br>    std::vector&lt;int, CudaAllocator&lt;int&gt;&gt; arr(n);<br><br>    kernel&lt;n&gt;&lt;&lt;&lt;<span class="hljs-number">32</span>, <span class="hljs-number">128</span>&gt;&gt;&gt;(arr.data());<br><br>    checkCudaErrors(cudaDeviceSynchronize());<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"arr[%d]: %d\n"</span>, i, arr[i]);<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h4><span id="核函数可以是一个模板函数">核函数可以是一个模板函数</span></h4>
+<p>CUDA 的优势在于对 C++ 的完全支持。所以 __global__
+修饰的核函数自然也是可以为模板函数的。</p>
+<p>调用模板时一样可以用自动参数类型推导，如有手动指定的模板参数（单尖括号）请放在三重尖括号的前面。</p>
+<h4><span id="核函数可以接受functor实现函数式编程">核函数可以接受
+functor，实现函数式编程</span></h4>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdio&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cuda_runtime.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"helper_cuda.h"</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;vector&gt;</span></span><br><br><span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">T</span>&gt;</span><br><span class="hljs-class"><span class="hljs-title">struct</span> <span class="hljs-title">CudaAllocator</span> &#123;</span><br>    <span class="hljs-keyword">using</span> value_type = T;<br><br>    <span class="hljs-function">T *<span class="hljs-title">allocate</span><span class="hljs-params">(<span class="hljs-keyword">size_t</span> <span class="hljs-built_in">size</span>)</span> </span>&#123;<br>        T *ptr = <span class="hljs-literal">nullptr</span>;<br>        checkCudaErrors(cudaMallocManaged(&amp;ptr, <span class="hljs-built_in">size</span> * <span class="hljs-keyword">sizeof</span>(T)));<br>        <span class="hljs-keyword">return</span> ptr;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">deallocate</span><span class="hljs-params">(T *ptr, <span class="hljs-keyword">size_t</span> <span class="hljs-built_in">size</span> = <span class="hljs-number">0</span>)</span> </span>&#123;<br>        checkCudaErrors(cudaFree(ptr));<br>    &#125;<br><br>    <span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> ...<span class="hljs-title">Args</span>&gt;</span><br><span class="hljs-class">    <span class="hljs-title">void</span> <span class="hljs-title">construct</span>(<span class="hljs-title">T</span> *<span class="hljs-title">p</span>, <span class="hljs-title">Args</span> &amp;&amp;...<span class="hljs-title">args</span>) &#123;</span><br>        <span class="hljs-function"><span class="hljs-keyword">if</span> <span class="hljs-title">constexpr</span> <span class="hljs-params">(!(<span class="hljs-keyword">sizeof</span>...(Args) == <span class="hljs-number">0</span> &amp;&amp; <span class="hljs-built_in">std</span>::is_pod_v&lt;T&gt;))</span></span><br><span class="hljs-function">            ::<span class="hljs-title">new</span><span class="hljs-params">((<span class="hljs-keyword">void</span> *)p)</span> <span class="hljs-title">T</span><span class="hljs-params">(<span class="hljs-built_in">std</span>::forward&lt;Args&gt;(args)...)</span></span>;<br>    &#125;<br>&#125;;<br><br><span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Func</span>&gt;</span><br><span class="hljs-class">__<span class="hljs-title">global__</span> <span class="hljs-title">void</span> <span class="hljs-title">parallel_for</span>(<span class="hljs-title">int</span> <span class="hljs-title">n</span>, <span class="hljs-title">Func</span> <span class="hljs-title">func</span>) &#123;</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = blockDim.x * blockIdx.x + threadIdx.x;<br>         i &lt; n; i += blockDim.x * gridDim.x) &#123;<br>        func(i);<br>    &#125;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">MyFunctor</span> &#123;</span><br>    <span class="hljs-function">__device__ <span class="hljs-keyword">void</span> <span class="hljs-title">operator</span><span class="hljs-params">()</span><span class="hljs-params">(<span class="hljs-keyword">int</span> i)</span> <span class="hljs-keyword">const</span> </span>&#123;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"number %d\n"</span>, i);<br>    &#125;<br>&#125;;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">int</span> n = <span class="hljs-number">65536</span>;<br><br>    parallel_for&lt;&lt;&lt;<span class="hljs-number">32</span>, <span class="hljs-number">128</span>&gt;&gt;&gt;(n, MyFunctor&#123;&#125;);<br><br>    checkCudaErrors(cudaDeviceSynchronize());<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>注意：</p>
+<ol type="1">
+<li>Func 不可以是 Func const &amp;，那样会变成一个指向 CPU
+内存地址的指针，从而出错。所以 CPU 向 GPU 的传参必须按值传。</li>
+<li>做参数的这个函数必须是一个有着成员函数 operator() 的类型，即 functor
+类。而不能是独立的函数。</li>
+<li>这个函数必须标记为 __device__，即 GPU 上的函数，否则会变成 CPU
+上的函数。</li>
+</ol>
+<p>functor 可以是 lambda 表达式。不过必须在 [] 后，() 前，插入
+__device__ 修饰符。而且需要开启 --extended-lambda 编译选项。在 CMake
+中表示为：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cmake"><span class="hljs-keyword">target_compile_options</span>(main PUBLIC $&lt;$&lt;COMPILE_LANGUAGE:CUDA&gt;:--extended-lambda&gt;)<br></code></pre></div></td></tr></table></figure>
+<p>这里使用了 CMake 的生成器表达式，限制 flag 只对 CUDA 源码生效。</p>
+<h5><span id="捕获外部变量">捕获外部变量</span></h5>
+<p>将 GPU 上的内存地址浅拷贝到 lambda 中。</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdio&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cuda_runtime.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"helper_cuda.h"</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;vector&gt;</span></span><br><br><span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">T</span>&gt;</span><br><span class="hljs-class"><span class="hljs-title">struct</span> <span class="hljs-title">CudaAllocator</span> &#123;</span><br>    <span class="hljs-keyword">using</span> value_type = T;<br><br>    <span class="hljs-function">T *<span class="hljs-title">allocate</span><span class="hljs-params">(<span class="hljs-keyword">size_t</span> <span class="hljs-built_in">size</span>)</span> </span>&#123;<br>        T *ptr = <span class="hljs-literal">nullptr</span>;<br>        checkCudaErrors(cudaMallocManaged(&amp;ptr, <span class="hljs-built_in">size</span> * <span class="hljs-keyword">sizeof</span>(T)));<br>        <span class="hljs-keyword">return</span> ptr;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">deallocate</span><span class="hljs-params">(T *ptr, <span class="hljs-keyword">size_t</span> <span class="hljs-built_in">size</span> = <span class="hljs-number">0</span>)</span> </span>&#123;<br>        checkCudaErrors(cudaFree(ptr));<br>    &#125;<br><br>    <span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> ...<span class="hljs-title">Args</span>&gt;</span><br><span class="hljs-class">    <span class="hljs-title">void</span> <span class="hljs-title">construct</span>(<span class="hljs-title">T</span> *<span class="hljs-title">p</span>, <span class="hljs-title">Args</span> &amp;&amp;...<span class="hljs-title">args</span>) &#123;</span><br>        <span class="hljs-function"><span class="hljs-keyword">if</span> <span class="hljs-title">constexpr</span> <span class="hljs-params">(!(<span class="hljs-keyword">sizeof</span>...(Args) == <span class="hljs-number">0</span> &amp;&amp; <span class="hljs-built_in">std</span>::is_pod_v&lt;T&gt;))</span></span><br><span class="hljs-function">            ::<span class="hljs-title">new</span><span class="hljs-params">((<span class="hljs-keyword">void</span> *)p)</span> <span class="hljs-title">T</span><span class="hljs-params">(<span class="hljs-built_in">std</span>::forward&lt;Args&gt;(args)...)</span></span>;<br>    &#125;<br>&#125;;<br><br><span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Func</span>&gt;</span><br><span class="hljs-class">__<span class="hljs-title">global__</span> <span class="hljs-title">void</span> <span class="hljs-title">parallel_for</span>(<span class="hljs-title">int</span> <span class="hljs-title">n</span>, <span class="hljs-title">Func</span> <span class="hljs-title">func</span>) &#123;</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = blockDim.x * blockIdx.x + threadIdx.x;<br>         i &lt; n; i += blockDim.x * gridDim.x) &#123;<br>        func(i);<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">int</span> n = <span class="hljs-number">65536</span>;<br>    std::vector&lt;int, CudaAllocator&lt;int&gt;&gt; arr(n);<br>	<br>    <span class="hljs-comment">// 拷贝指针</span><br>    <span class="hljs-keyword">int</span> *arr_data = arr.data();<br>    parallel_for&lt;&lt;&lt;<span class="hljs-number">32</span>, <span class="hljs-number">128</span>&gt;&gt;&gt;(n, [=] __device__ (<span class="hljs-keyword">int</span> i) &#123;<br>        arr_data[i] = i;<br>    &#125;);<br><br>    checkCudaErrors(cudaDeviceSynchronize());<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"arr[%d] = %d\n"</span>, i, arr[i]);<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>不能 [=] 传arr，因为vector 默认深拷贝。或者 [&amp;]
+传arr，因为arr是个CPU上的对象，不是GPU上实际内存地址的指针。</p>
+<h3><span id="数学运算">数学运算</span></h3>
+<p>使用C的函数计算，通过GPU进行加速。GPU 比 CPU
+快了很多。另外GPU需要预热，若执行多次循环，速度会更快，相差100倍是没问题的。</p>
+<p>注意计算 float 类型数值，使用对应 float
+版本函数，sinf、cosf、rsqrtf等。</p>
+<p>两个下划线的是 __sinf 是 GPU
+intrinstics，适合对精度要求不高，但有性能要求的图形学任务。</p>
+<h4><span id="编译选项">编译选项</span></h4>
+<blockquote>
+<p>--ftz=true 会把极小数(denormal)退化为0。</p>
+<p>--prec-div=false 降低除法的精度换取速度。</p>
+<p>--prec-sqrt=false 降低开方的精度换取速度。</p>
+<p>--fmad 因为非常重要，所以默认就是开启的，会自动把 a * b + c
+优化成乘加(FMA)指令。</p>
+</blockquote>
+<p>若开启了 --use_fast_math 选项，那么所有对 sinf 的调用都会自动被替换成
+__sinf。同时自动开启上述所有优化。</p>
+<h3><span id="cuda-thrust-库">CUDA thrust 库</span></h3>
+<p>thrust 相当于设计给 GPU
+的STL。包括上述中，GPU上的vector也不用手动实现，直接使用 thrust
+就可以。</p>
+<p>thrust::universal_vector 会在统一内存上分配，因此不论 GPU 还是 CPU
+都可以直接访问到。</p>
+<p>thrust::device_vector 则是在 GPU 上分配内存，thrust::host_vector 在
+CPU 上分配内存。</p>
+<p>可以通过 = 运算符在 thrust::device_vector 和 thrust::host_vector
+之间拷贝数据，他会自动帮你调用 cudaMemcpy。</p>
+<h3><span id="板块共享内存">板块共享内存</span></h3>
+<p>GPU 是由多个流式多处理器（SM）组成的。每个 SM
+可以处理一个或多个板块。</p>
+<p>SM 又由多个流式单处理器（SP）组成。每个 SP
+可以处理一个或多个线程。</p>
+<p>每个 SM 都有自己的一块共享内存（shared memory），他的性质类似于 CPU
+中的缓存——和主存相比很小，但是很快，用于缓冲临时数据。</p>
+<p>在 CUDA 的语法中，共享内存可以通过定义一个修饰了 __shared__
+的变量来创建。</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++">__shared__ <span class="hljs-keyword">int</span> local_sum[<span class="hljs-number">1024</span>];<br></code></pre></div></td></tr></table></figure>
+<h4><span id="内存延迟">内存延迟</span></h4>
+<p>SM
+执行一个板块中的线程时，并不是全部同时执行的。而是一会儿执行这个线程，一会儿执行那个线程。某个线程有可能因为在等待内存数据的抵达，这时大可以切换到另一个线程继续执行计算任务。</p>
+<p>内存延迟是阻碍 CPU 性能提升的一大瓶颈。</p>
+<p>CPU
+解决方案是超线程技术，一个物理核提供两个逻辑核，当一个逻辑核陷入内存等待时切换到另一个逻辑核上执行，避免空转。</p>
+<p>GPU 的解决方法就是单个 SM
+执行很多个线程，然后在遇到内存等待时，就自动切换到另一个线程。__syncthreads()
+会强制同步当前板块内的所有线程。</p>
+<h4><span id="线程组分歧warp-divergence">线程组分歧（warp divergence）</span></h4>
+<p>GPU 线程组（warp）中 32 个线程实际是绑在一起执行的，就像 CPU 的 SIMD
+那样。因此如果出现分支（if）语句时，如果 32 个 cond
+中有的为真有的为假，则会导致两个分支都被执行！</p>
+<p>建议 GPU 上的 if 尽可能 32
+个线程都处于同一个分支，要么全部真要么全部假，否则实际消耗了两倍时间！</p>
+<h4><span id="寄存器打翻register-spill">寄存器打翻（register spill）</span></h4>
+<p>板块中线程数量过多带来的问题。</p>
+<p>GPU
+线程的寄存器，实际上也是一块比较小而块的内存，称之为寄存器仓库（register
+file）。板块内的所有的线程共用一个寄存器仓库。</p>
+<p>当板块中的线程数量（blockDim）过多时，就会导致每个线程能够分配到的寄存器数量急剧缩小。而如果你的程序恰好用到了非常多的寄存器，那就没办法全部装在高效的寄存器仓库里，而是要把一部分“打翻”到一级缓存中，这时对这些寄存器读写的速度就和一级缓存一样，相对而言低效了。若一级缓存还装不下，那会打翻到所有
+SM 共用的二级缓存。</p>
+<h4><span id="延迟隐藏latency-hiding失效">延迟隐藏（latency hiding）失效</span></h4>
+<p>板块中的线程数量过少带来的问题。</p>
+<p>当线程组陷入内存等待时，可以切换到另一个线程，继续计算，这样一个 warp
+的内存延迟就被另一个 warp
+的计算延迟给隐藏起来了。因此，如果线程数量太少的话，就无法通过在多个
+warp 之间调度来隐藏内存等待的延迟，从而低效。</p>
+<p>最好让板块中的线程数量（blockDim）为32的整数倍，否则假如是 33
+个线程的话，那还是需要启动两个 warp，其中第二个 warp
+只有一个线程是有效的，非常浪费。</p>
+<p>对于使用寄存器较少、访存为主的核函数（例如矢量加法），使用大 blockDim
+为宜。反之（例如光线追踪）使用小 blockDim，但也不宜太小。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/CUDA/">CUDA</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/CUDA/">CUDA</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/24f0dc1c.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">C++多线程笔记</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/598ff250.html">
+                        <span class="hidden-mobile">系统设计笔记</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

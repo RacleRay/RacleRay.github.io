@@ -1,0 +1,875 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="C++编译器优化笔记">
+  <meta name="author" content="HeRui">
+  <meta name="keywords" content="C++">
+  <meta name="description" content="C++编译器优化笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++编译器优化">
+<meta property="og:url" content="https://racleray.github.io/posts/f78760c9.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="C++编译器优化笔记">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-28-2bac876da81e9b2e07d74affbc5eb297-359407.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-28-30548e12e976d60178d89a06ea8405d6-4ce8dd.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-29-2676ba88d49b74e0f244975a74261837-137683.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-37-b9dc9f298266e3b8917e8f98c08df2e5-ad339e.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-38-4abf1ccaf1b7836385b56a058a4dfd39-348a89.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-38-1aa6e0ac708a63424b7e9905b2b9f89e-cb9dd7.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-38-bae124747762f45beb7b4334c906e472-29a535.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-39-bedbcf028373c818099b1eadd46ae7ec-f78f7c.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-39-ebbd3596ff91f8bbc5e4d37a0b6b121e-008f04.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-40-cd37d2e67be10577ab241c76aeb4ec8e-28c58c.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-40-76d2826bf7cf57f309c766cf53322cdf-23a74e.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-40-d58a738fe55928872ed411e80f0a7abd-91fccf.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-41-958e639385173db565e7f329095f281b-380746.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-41-44ef59f30167d56ccac618f26837f7df-ba682f.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-41-70603c4000a64b632200b2c1fc53f3b5-3d07d4.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-42-4ca14e9af735e6c0f8389db9ba11ad73-c5ddd7.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-43-2ba9372184913e8ef1f069d767cbbd96-0d350b.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-43-abdacf5c6eadb38e54bef60a1dd089bf-acdc9f.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-44-1928221c052901b8d3195d97ba7c4590-168645.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-45-106c3ea114ec6eef26d62b1c20491979-ac07ee.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-46-6d6ca680e38145fcf1720b7104d21569-025a29.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-47-9becd7e1abf3cd0ec0dcc6de785e88f9-97be66.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-47-1d8011b81da5aaaabd469df704216472-7b6d05.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-48-cb0ce3991aa134d47082d6cc670702ba-cc7cc4.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-49-e40b786b463c4a999215113f539ec2bf-a17729.png">
+<meta property="article:published_time" content="2023-05-12T14:25:36.000Z">
+<meta property="article:modified_time" content="2024-01-09T08:52:21.851Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="C++">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-28-2bac876da81e9b2e07d74affbc5eb297-359407.png">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>C++编译器优化 - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="C++编译器优化">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2023-05-12 22:25" pubdate>
+        2023年5月12日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      8.1k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      25 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">C++编译器优化</h1>
+            
+            <div class="markdown-body">
+              <h2><span id="x64寄存器模型">x64寄存器模型</span></h2>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-28-2bac876da81e9b2e07d74affbc5eb297-359407.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<p>32 位 x86 架构中的通用寄存器有：eax, ecx, edx, ebx, esi, edi, esp,
+ebp</p>
+<p>其中 esp 是堆栈指针寄存器，和函数的调用与返回相关。 eax
+是用于保存返回值的寄存器。</p>
+<p>64 位 x86 架构中的通用寄存器有：rax, rcx, rdx, rbx, rsi, rdi, rsp,
+rbp, r8, r9, r10, r11, ..., r15</p>
+<p>其中 r8 到 r15 是 64 位 x86
+新增的寄存器，给了汇编程序员更大的空间，降低了编译器处理寄存器翻车（register
+spill）的压力。</p>
+<p>64 位比 32 位机器相比，除了内存突破 4GB
+限制外，也有一定性能优势。</p>
+<h2><span id="汇编语言">汇编语言</span></h2>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-28-30548e12e976d60178d89a06ea8405d6-4ce8dd.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<p>GCC 编译器所生成的汇编语言属于AT&amp;T系列。</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">gcc -fomit-frame-pointer -fverbose-asm -S main.cpp -o asm.S<br></code></pre></div></td></tr></table></figure>
+<p>使用 -O3 （Release级别）查看编译器优化后的汇编程序。</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">gcc -O3 -fomit-frame-pointer -fverbose-asm -S main.cpp -o asm.S<br></code></pre></div></td></tr></table></figure>
+<h3><span id="lea">lea</span></h3>
+<p>lea 是加载表达式的地址，相当于&amp;。</p>
+<figure class="highlight plain"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs asm">leal (%rdi,%rsi), %eax<br></code></pre></div></td></tr></table></figure>
+<p>相当于</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c">eax = &amp;*(rdi + rsi)<br></code></pre></div></td></tr></table></figure>
+<h3><span id="线性地址访问优化">线性地址访问优化</span></h3>
+<p>movslq 部分将32位寄存器扩展到64位，再进行访存计算。</p>
+<p>优化建议：</p>
+<p><strong>指针的索引尽量用</strong> <strong>size_t</strong> 类型。</p>
+<p>不需要用 movslq 从 32 位符号扩展到 64
+位，更高效。而且也能处理数组大小超过 INT_MAX 的情况。</p>
+<p>推荐始终<strong>用</strong> <strong>size_t</strong>
+<strong>表示数组大小和索引</strong>。</p>
+<h3><span id="浮点寄存器">浮点寄存器</span></h3>
+<p>浮点作为参数和返回使用 xmm 系列寄存器。</p>
+<p>xmm 寄存器有 128 位宽。可以容纳 4 个 float，或 2 个 double。</p>
+<p>对于浮点数寄存器操作指令，有特殊的指令形式。比如加法：</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs ebnf"><span class="hljs-attribute">addss</span><br></code></pre></div></td></tr></table></figure>
+<ul>
+<li>add 表示执行加法操作。</li>
+<li>第一个 s 表示标量(scalar)，只对 xmm 的最低位进行运算；也可以是 p
+表示矢量(packed)，一次对 xmm
+中所有位进行运算。（单个指令处理多个数据的技术称为
+SIMD（single-instruction multiple-data））</li>
+<li>第二个 s 表示单精度浮点数(single)，即 float 类型；也可以是 d
+表示双精度浮点数(double)，即 double 类型。</li>
+</ul>
+<p>即：</p>
+<p>addss：一个 float 加法。 addsd：一个 double 加法。 addps：四个 float
+加法。 addpd：两个 double 加法。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-29-2676ba88d49b74e0f244975a74261837-137683.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<p><strong>编译器生成的汇编里，有大量 ss
+结尾的指令则说明矢量化失败；如果大多数都是 ps
+结尾则说明矢量化成功。</strong></p>
+<h3><span id="simd">SIMD</span></h3>
+<p>single-instruction multiple-data
+可以大大增加计算密集型程序的吞吐量。</p>
+<p>通常认为利用同时处理 4 个 float 的 SIMD 指令可以加速 4 倍。</p>
+<p>但是如果你的算法不适合 SIMD，则可能加速达不到 4 倍；也可能因为 SIMD
+让访问内存更有规律，节约了指令解码和指令缓存的压力等原因，出现加速超过 4
+倍的情况。</p>
+<h2><span id="编译器优化">编译器优化</span></h2>
+<p>对于简单的代数运算，编译器可以帮助优化计算，直接返回结果。</p>
+<p>但是前提是：1. 代码简单；2. 代码不涉及动态内存分配。</p>
+<p>代码<strong>过于复杂</strong>，涉及的<strong>语句数量过多</strong>时，编译器会<strong>放弃优化</strong>。</p>
+<p><strong>简单的代码，比什么优化手段都强。</strong></p>
+<h3><span id="堆上的容器">堆上的容器</span></h3>
+<p>存储在堆上（妨碍优化）：</p>
+<ul>
+<li>vector, map, set, string, function, any</li>
+<li>unique_ptr, shared_ptr, weak_ptr</li>
+</ul>
+<p>存储在栈上（利于优化）：</p>
+<ul>
+<li>array, bitset, glm::vec, string_view</li>
+<li>pair, tuple, optional, variant</li>
+</ul>
+<h3><span id="constexpr">constexpr</span></h3>
+<p>如果发现编译器放弃了自动优化，可以用 constexpr
+函数<strong>迫使</strong>编译器进行常量折叠，但是会让编译变得很慢。</p>
+<p>不过，constexpr 函数中无法使用非 constexpr 的容器：vector, map, set,
+string 等。</p>
+<h2><span id="函数内联">函数内联</span></h2>
+<p>如果函数的实现和声明分离，在调用时，被称为调用外部函数。调用时，链接器会通过
+PLT 函数链接表，在其他 .o 文件中查找函数的定义。</p>
+<p>如果函数实现就在调用的同一个文件中，称为内部函数。此时会直接调用，而不是通过链接器，减轻了链接器的负担。</p>
+<p>只有定义在同一个文件的函数可以被内联。</p>
+<p>为了效率我们可以尽量把常用函数定义在头文件里，然后声明为
+static。这样调用他们的时候编译器看得到他们的函数体，从而有机会内联。</p>
+<p>当编译器看得到被调用函数实现的时候，会直接把函数实现贴到调用他的函数里，实现函数内联。</p>
+<h3><span id="inline-关键字">inline 关键字</span></h3>
+<p>在现代编译器的高强度优化下，<strong>加不加</strong>
+<strong>inline</strong> <strong>无所谓</strong>。只要他看得见 other
+的函数体定义，就会自动内联。</p>
+<p>内联与否和 inline
+没关系，内联与否<strong>只取决于是否在同文件，且函数体够小</strong>。</p>
+<p>想要性能，定义在头文件声明为 static 即可，没必要加 inline 的。static
+纯粹是为了避免多个 .cpp 引用同一个头文件造成冲突，并不是内联必需的。</p>
+<p>可以实验测试，在线做编译器实验：https://godbolt.org/。</p>
+<h2><span id="指针优化">指针优化</span></h2>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">func</span><span class="hljs-params">(<span class="hljs-keyword">int</span> *a, <span class="hljs-keyword">int</span> *b, <span class="hljs-keyword">int</span> *c)</span> </span>&#123;<br>	*c = *a;<br>	*c = *b;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>为什么编译器不优化掉 <em>c = </em>a？</p>
+<p>因为 b 和 c 可能指向同一个变量。</p>
+<p>优化前相当于：b = a; b = b; 最后 b 变成了 a。</p>
+<p>如果优化了：b = b; 最后 b 没有改变。</p>
+<p>这种情况叫做 <strong>pointer aliasing</strong>。</p>
+<h3><span id="__restrict">__restrict</span></h3>
+<p>__restrict
+是一个提示性的关键字，是程序员向编译器保证：这些指针之间不会发生重叠
+（pointer aliasing），从而可以放心地优化。</p>
+<p>实际上，__restrict
+只需要加在所有具有写入访问的指针上，就可以优化成功。即只需加在非 const
+参数之前即可。</p>
+<p>因为只读的变量，随便几个指针指向它无所谓。</p>
+<h3><span id="volatile">volatile</span></h3>
+<p>加了 volatile
+的对象，编译器<strong>会放弃优化</strong>对他的<strong>读写操作</strong>。做性能实验的时候非常有用。</p>
+<p>volatile 在 * 前面而，__restrict 在 * 后面。</p>
+<p>volatile 是禁用优化，__restrict 是帮助优化。</p>
+<p>restrict 是 C99 标准关键字，但不是 C++ 标准的关键字。__restrict
+其实是编译器的“私货”，不在C++标准中，好在大多数主流编译器都支持。</p>
+<h2><span id="矢量化">矢量化</span></h2>
+<h3><span id="合并写入">合并写入</span></h3>
+<p>编译器可以将两个 int32 的写入合并为一个 int64
+的写入。但如果访问的两个元素地址间有跳跃，就不能合并了。</p>
+<p>不管是编译器还是
+CPU，都喜欢<strong>顺序</strong>的<strong>连续</strong>访问。</p>
+<p>两个 int32 可以合并为一个 int64。四个 int32 可以合并为一个
+__m128。</p>
+<p>八个 int32 可以合并为一个 __m256。</p>
+<p>xmm0 由 SSE 引入，是个 128 位寄存器。他可以一次存储 4 个 int，或 4 个
+float。</p>
+<p>如果硬件支持AVX指令集，还可以使用 256 位的 ymm0 寄存器。gcc
+-march=native 让编译器自动判断当前硬件支持的指令。</p>
+<p>编译器会使用 SIMD 指令进行优化。</p>
+<h3><span id="数组清零">数组清零</span></h3>
+<p>编译器会自动分析你是在做拷贝或是清零，并优化成对标准库这俩的调用。</p>
+<h3><span id="数组循环赋值">数组循环赋值</span></h3>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">func</span><span class="hljs-params">(<span class="hljs-keyword">int</span> *a, <span class="hljs-keyword">int</span> n)</span> </span>&#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) &#123;<br>        a[i] = i;<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>n 如果是 4 的倍数，使用SIMD指令一次写入 4 个 int。</p>
+<p>如果 n 不是 4
+的倍数，将能被4整除的部分使用SIMD，剩余边界部分，每次处理 1 个。</p>
+<p>如果能保证指针 a 总是对齐到 16 字节，在 GCC 编译器中这样写：</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">func</span><span class="hljs-params">(<span class="hljs-keyword">int</span> *a, <span class="hljs-keyword">int</span> n)</span> </span>&#123;<br>    n = n / <span class="hljs-number">4</span> * <span class="hljs-number">4</span>;<br>    a = (<span class="hljs-keyword">int</span>*)__builtin_assume_aligned(a, <span class="hljs-number">16</span>);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) &#123;<br>        a[i] = i;<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>C++20 引入了标准化的 std::assume_aligned</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">func</span><span class="hljs-params">(<span class="hljs-keyword">int</span> *a, <span class="hljs-keyword">int</span> n)</span> </span>&#123;<br>    n = n / <span class="hljs-number">4</span> * <span class="hljs-number">4</span>;<br>    a = <span class="hljs-built_in">std</span>::assume_aligned&lt;<span class="hljs-number">16</span>&gt;(a);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) &#123;<br>        a[i] = i;<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h3><span id="数组重叠">数组重叠</span></h3>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-37-b9dc9f298266e3b8917e8f98c08df2e5-ad339e.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<p>在运行时检测 a, b 指针的差是否超过 1024 来判断是否有重叠现象。</p>
+<ol type="1">
+<li><p>如果没有重叠，则跳转到 SIMD 版本高效运行。</p></li>
+<li><p>如果重叠，则跳转到标量版本低效运行，但至少不会错。</p></li>
+</ol>
+<p>编译器编译两个版本的代码，ps结尾指令为矢量化指令，ss结尾指令为标量化指令：</p>
+<p>__restrict 关键字可以加以优化：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-38-4abf1ccaf1b7836385b56a058a4dfd39-348a89.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<p>只需要生成一个 SIMD 版本了，没有了运行时判断重叠的焦虑。</p>
+<p>或者，使用 OpenMP :</p>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-38-1aa6e0ac708a63424b7e9905b2b9f89e-cb9dd7.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<p>来迫使编译器无视指针别名的问题，并启用 SIMD 优化。编译参数设置为 gcc
+-fopenmp。</p>
+<p>gcc 也提供了相似的编译指令：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-38-bae124747762f45beb7b4334c906e472-29a535.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<h3><span id="循环中的if">循环中的if</span></h3>
+<p>有 if 分支的循环体是难以 SIMD 矢量化的。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-39-bedbcf028373c818099b1eadd46ae7ec-f78f7c.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<p>在编译器看来，is_mul 是一个常量，于是把 if 分支判断挪到了 for
+外面来。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-39-ebbd3596ff91f8bbc5e4d37a0b6b121e-008f04.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<p>这样就可以使用 SIMD 指令。这一优化过程，编译器可以自动进行。</p>
+<h3><span id="循环中的不变量">循环中的不变量</span></h3>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-40-cd37d2e67be10577ab241c76aeb4ec8e-28c58c.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<p>dt * dt 和当前 i
+无关，因此可以移到循环体外，提前计算，避免重复计算。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-40-76d2826bf7cf57f309c766cf53322cdf-23a74e.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<p>在使用了 （dt * dt）条件下，编译器可以自动优化，但是只要去掉 (dt *
+dt) 的括号就会优化失败。因为乘法是左结合的，就相当于 (b[i] * dt) * dt
+编译器识别不到不变量，从而优化失败。</p>
+<p>要么帮编译器打上括号帮助他识别，要么手动提取不变量到循环体外。</p>
+<h3><span id="循环中的外部函数">循环中的外部函数</span></h3>
+<p>避免在 for
+循环体里调用外部函数，把他们移到同一个文件里，或者放在头文件声明为
+static 函数。这样编译器能看到调用函数的函数体，才能进行内联优化。</p>
+<h3><span id="循环展开">循环展开</span></h3>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-40-d58a738fe55928872ed411e80f0a7abd-91fccf.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<p>每次执行循环体 a[i] = 1后，都要进行一次判断 i &lt;
+1024。导致一部分时间花在判断是否结束循环，而不是循环体里。</p>
+<p>对于 GCC 编译器，可以用 #pragma GCC unroll 4
+表示把循环体展开为4个，相当于：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-41-958e639385173db565e7f329095f281b-380746.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<p>但是不建议手动这样写，会妨碍编译器的 SIMD 矢量化。</p>
+<p>对小的循环体进行 unroll 可能是划算的，但最好不要 unroll
+大的循环体，否则会造成指令缓存的压力反而变慢！</p>
+<h3><span id="嵌套循环">嵌套循环</span></h3>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-41-44ef59f30167d56ccac618f26837f7df-ba682f.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<p>编译器担心 c 和 a
+可能会指向同一个地址，而连续判断三个指针是否有重合又过于复杂，放弃了矢量化。</p>
+<ul>
+<li>解决方案1：先读到局部变量，累加完毕后，再写入</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-41-70603c4000a64b632200b2c1fc53f3b5-3d07d4.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<p>编译器认为不存在指针别名的问题，矢量化成功。</p>
+<ul>
+<li>解决方案2：先累加到初始为 0 的局部变量，再累加到 c</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-42-4ca14e9af735e6c0f8389db9ba11ad73-c5ddd7.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<p>该解决方案比起前一种，由于加法顺序原因，算出来的浮点精度更高，c[i]
+后面可能很大了。</p>
+<h3><span id="结构体">结构体</span></h3>
+<p>结构体对齐会影响到矢量化。</p>
+<p>两个 float 的结构体，对齐到 8 字节，可以成功 SIMD 矢量化。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-43-2ba9372184913e8ef1f069d767cbbd96-0d350b.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<p>三个 float 的结构体，对齐到 12 字节，矢量化失败。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-43-abdacf5c6eadb38e54bef60a1dd089bf-acdc9f.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<p>追加了一个没有用的 4 字节变量，整个结构体变成 16 字节大小。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-44-1928221c052901b8d3195d97ba7c4590-168645.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<p>矢量化反而成功。</p>
+<p>计算机喜欢 2 的整数幂，2, 4, 8, 16, 32, 64, 128...。结构体大小若不是
+2 的整数幂，往往会导致 SIMD 优化失败。</p>
+<h4><span id="alignas">alignas</span></h4>
+<p>C++11 的新语法。在 struct 后加上 alignas(要对齐到的字节数)
+即可实现同样效果，就不需要手动写 padding 变量了。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-45-106c3ea114ec6eef26d62b1c20491979-ac07ee.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<p>但是这种padding策略，<strong>也有可能不仅不变快，反而还变慢</strong>。SIMD
+和缓存行对齐只是性能优化的一个点，又不是全部。还要考虑结构体变大会导致内存带宽的占用，对缓存的占用等一系列连锁反应，总之，要根据实际情况选择优化方案。</p>
+<h4><span id="aos-与-soa">AOS 与 SOA</span></h4>
+<p>AOS（Array of Struct）单个对象的属性紧挨着存。SOA（Struct of
+Array）属性分离存储在多个数组。</p>
+<p>AOS 必须对齐到 2 的幂才高效，SOA 就不需要。SOA
+不符合直觉，但通常是更高效的。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-46-6d6ca680e38145fcf1720b7104d21569-025a29.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<p>SOA：分离存储多个属性。不符合面向对象编程 (OOP)
+的习惯，但常常有利于性能。又称之为面向数据编程 (DOP)。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-47-9becd7e1abf3cd0ec0dcc6de785e88f9-97be66.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<p>成功 SIMD 矢量化。</p>
+<h5><span id="aosoa">AOSOA</span></h5>
+<p>4 个对象一组打包成 SOA，再用一个 n / 4 大小的数组存储为 AOS。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-47-1d8011b81da5aaaabd469df704216472-7b6d05.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<p>优点：SOA 便于 SIMD 优化；AOS 便于存储在传统容器；AOSOA
+两者得兼。</p>
+<p>缺点：需要两层 for 循环，不利于随机访问；需要数组大小是 4
+的整数倍，不过可以用边界特判法（单独处理不能矢量化部分）解决。</p>
+<h4><span id="benchmark">Benchmark</span></h4>
+<p>aos</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Point</span> &#123;</span><br>    <span class="hljs-keyword">float</span> x;<br>    <span class="hljs-keyword">float</span> y;<br>    <span class="hljs-keyword">float</span> z;<br>&#125;;<br><br>Point ps[N];<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">compute</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; N; i++) &#123;<br>        ps[i].x = ps[i].x + ps[i].y + ps[i].z;<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>aos_aligned</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Point</span> &#123;</span><br>    <span class="hljs-keyword">float</span> x;<br>    <span class="hljs-keyword">float</span> y;<br>    <span class="hljs-keyword">float</span> z;<br>    <span class="hljs-keyword">char</span> padding[<span class="hljs-number">4</span>];<br>&#125;;<br><br>Point ps[N];<br><br><span class="hljs-comment">// 同compute</span><br></code></pre></div></td></tr></table></figure>
+<p>aos_parallel</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Point</span> &#123;</span><br>    <span class="hljs-keyword">float</span> x;<br>    <span class="hljs-keyword">float</span> y;<br>    <span class="hljs-keyword">float</span> z;<br>&#125;;<br><br>Point ps[N];<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">compute</span><span class="hljs-params">()</span> </span>&#123;<br><span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> omp parallel for</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; N; i++) &#123;<br>        ps[i].x = ps[i].x + ps[i].y + ps[i].z;<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>aosoa</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Point</span> &#123;</span><br>    <span class="hljs-keyword">float</span> x[M];<br>    <span class="hljs-keyword">float</span> y[M];<br>    <span class="hljs-keyword">float</span> z[M];<br>&#125;;<br><br>Point ps[N / M];<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">compute</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; N / M; i++) &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; M; j++) &#123;<br>            ps[i].x[j] = ps[i].x[j] + ps[i].y[j] + ps[i].z[j];<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>soa</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Point</span> &#123;</span><br>    <span class="hljs-keyword">float</span> x[N];<br>    <span class="hljs-keyword">float</span> y[N];<br>    <span class="hljs-keyword">float</span> z[N];<br>&#125;;<br><br>Point ps;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">compute</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; N; i++) &#123;<br>        ps.x[i] = ps.x[i] + ps.y[i] + ps.z[i];<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>soa_size_t</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Point</span> &#123;</span><br>    <span class="hljs-keyword">float</span> x[N];<br>    <span class="hljs-keyword">float</span> y[N];<br>    <span class="hljs-keyword">float</span> z[N];<br>&#125;;<br><br>Point ps;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">compute</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-built_in">std</span>::<span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>; i &lt; N; i++) &#123;<br>        ps.x[i] = ps.x[i] + ps.y[i] + ps.z[i];<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>soa_simd</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Point</span> &#123;</span><br>    <span class="hljs-keyword">float</span> x[N];<br>    <span class="hljs-keyword">float</span> y[N];<br>    <span class="hljs-keyword">float</span> z[N];<br>&#125;;<br><br>Point ps;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">compute</span><span class="hljs-params">()</span> </span>&#123;<br><span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> omp simd</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; N; i++) &#123;<br>        ps.x[i] = ps.x[i] + ps.y[i] + ps.z[i];<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>soa_unroll</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Point</span> &#123;</span><br>    <span class="hljs-keyword">float</span> x[N];<br>    <span class="hljs-keyword">float</span> y[N];<br>    <span class="hljs-keyword">float</span> z[N];<br>&#125;;<br><br>Point ps;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">compute</span><span class="hljs-params">()</span> </span>&#123;<br><span class="hljs-meta">#<span class="hljs-meta-keyword">if</span> defined(__GNUC__) || defined(__clang__)</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> GCC unroll 32</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">elif</span> defined(_MSC_VER)</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> unroll 32</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span></span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; N; i++) &#123;<br>        ps.x[i] = ps.x[i] + ps.y[i] + ps.z[i];<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>soa_parallel</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Point</span> &#123;</span><br>    <span class="hljs-keyword">float</span> x[N];<br>    <span class="hljs-keyword">float</span> y[N];<br>    <span class="hljs-keyword">float</span> z[N];<br>&#125;;<br><br>Point ps;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">compute</span><span class="hljs-params">()</span> </span>&#123;<br><span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> omp parallel for</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; N; i++) &#123;<br>        ps.x[i] = ps.x[i] + ps.y[i] + ps.z[i];<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>测试</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;chrono&gt;</span></span><br><br><span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Name</span>, <span class="hljs-title">class</span> <span class="hljs-title">Func</span>&gt;</span><br><span class="hljs-class"><span class="hljs-title">static</span> <span class="hljs-title">inline</span> <span class="hljs-title">void</span> <span class="hljs-title">profile</span>(<span class="hljs-title">int</span> <span class="hljs-title">times</span>, <span class="hljs-title">Name</span> <span class="hljs-title">const</span> &amp;<span class="hljs-title">name</span>, <span class="hljs-title">Func</span> <span class="hljs-title">const</span> &amp;<span class="hljs-title">func</span>) &#123;</span><br>    <span class="hljs-keyword">auto</span> t0 = <span class="hljs-built_in">std</span>::chrono::steady_clock::now();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; times; i++) &#123;<br>        func();<br>    &#125;<br>    <span class="hljs-keyword">auto</span> t1 = <span class="hljs-built_in">std</span>::chrono::steady_clock::now();<br>    <span class="hljs-keyword">long</span> dt = <span class="hljs-built_in">std</span>::chrono::duration_cast&lt;<span class="hljs-built_in">std</span>::chrono::nanoseconds&gt;(t1 - t0).count() / times;<br>    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; name &lt;&lt; <span class="hljs-string">": "</span> &lt;&lt; dt &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>结果</p>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-48-cb0ce3991aa134d47082d6cc670702ba-cc7cc4.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<p>单线程的 SOA + unroll 甚至略微超过了并行版的 AOS。OpenMP
+并非万能，单线程的程序认真优化后一样打败无脑并行。</p>
+<p>性能还和array大小 N 有关。</p>
+<h3><span id="stdvector">std::vector</span></h3>
+<p>使用 <strong>pragma</strong> <strong>omp</strong>
+<strong>simd</strong> <strong>或</strong> <strong>pragma GCC</strong>
+<strong>ivdep</strong> 可以解决 vector 的 pointer aliasing 问题。</p>
+<p>另外，使用 std::vector 也可以实现 SOA，不过，请保证 vector
+是同样大小。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/09/16-49-e40b786b463c4a999215113f539ec2bf-a17729.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<h2><span id="c数学运算优化">C++数学运算优化</span></h2>
+<h3><span id="除法变乘法">除法变乘法</span></h3>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">float</span> <span class="hljs-title">func</span><span class="hljs-params">(<span class="hljs-keyword">float</span> a)</span> </span>&#123;<br>    <span class="hljs-keyword">return</span> a / <span class="hljs-number">2</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>汇编变为mul乘法，* 0.5f。</p>
+<p>但是以下程序却没有优化：</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">func</span><span class="hljs-params">(<span class="hljs-keyword">float</span> *a, <span class="hljs-keyword">float</span> *b)</span> </span>&#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">1024</span>; i++) &#123;<br>        a[i] /= b;<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>因为编译器害怕 b = 0。</p>
+<p>乘法比除法更快，所以可以提前计算好 b 的倒数避免重复求除法。</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">func</span><span class="hljs-params">(<span class="hljs-keyword">float</span> *a, <span class="hljs-keyword">float</span> *b)</span> </span>&#123;<br>    <span class="hljs-keyword">float</span> inv_b = <span class="hljs-number">1</span> / b;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">1024</span>; i++) &#123;<br>        a[i] *= inv_b;<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h3><span id="-ffast-math">-ffast-math</span></h3>
+<p>-ffast-math 选项让 GCC 更大胆地尝试浮点运算的优化，有时能带来 2
+倍左右的提升。作为代价，他对 NaN 和无穷大的处理。</p>
+<p>如果你能保证，程序中永远不会出现 NaN 和无穷大，那么可以放心打开
+-ffast-math。</p>
+<h3><span id="数学函数请加-std-前缀">数学函数请加 std:: 前缀</span></h3>
+<p>sqrt 只接受 double sqrtf 只接受 float std::sqrt 重载了 double 和
+float（推荐）</p>
+<p>abs 只接受 int fabs 只接受 double fabsf 只接受 float std::abs 重载了
+int, double, float（推荐）</p>
+<p>请勿用全局的数学函数，他们是 C 语言的遗产。始终用 std::sin, std::pow
+等。</p>
+<h2><span id="小结">小结</span></h2>
+<ol type="1">
+<li>函数尽量写在同一个文件内</li>
+<li>避免在 for 循环内调用外部函数</li>
+<li>非 const 指针加上 __restrict 修饰</li>
+<li>试着用 SOA 取代 AOS</li>
+<li>对齐到 16 或 64 字节</li>
+<li>简单的代码，不要复杂化</li>
+<li>试试看 #pragma omp simd</li>
+<li>循环中不变的常量挪到外面来</li>
+<li>对小循环体用 #pragma unroll</li>
+<li>-ffast-math 和 -march=native</li>
+</ol>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/C/">C++</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/C/">C++</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Compiler/">Compiler</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/50880878.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">CMake Tips</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/c47fc989.html">
+                        <span class="hidden-mobile">超卖问题浅析</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

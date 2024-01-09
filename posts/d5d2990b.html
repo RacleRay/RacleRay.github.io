@@ -1,0 +1,980 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="C++ string 笔记">
+  <meta name="author" content="HeRui">
+  <meta name="keywords" content="C++">
+  <meta name="description" content="C++ string 笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++ String">
+<meta property="og:url" content="https://racleray.github.io/posts/d5d2990b.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="C++ string 笔记">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-11-12T15:20:11.000Z">
+<meta property="article:modified_time" content="2024-01-09T08:22:53.079Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="C++">
+<meta name="twitter:card" content="summary_large_image">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>C++ String - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="C++ String">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-11-12 23:20" pubdate>
+        2022年11月12日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      12k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      37 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">C++ String</h1>
+            
+            <div class="markdown-body">
+              <h1><span id="计算机中的字符">计算机中的字符</span></h1>
+<h2><span id="acsii码">ACSII码</span></h2>
+<p>起初，计算机使用ACSII码表示不同的英文字母以及符号。例如 32
+代表空格，48 代表 ‘0’，65 代表 ‘A’，97 代表 ‘a’。</p>
+<blockquote>
+<p>32~126 这些整数就用于是表示这些可显示字符(printable
+character)的。</p>
+<p>0~31 和 127 这些整数，规定了一类特殊的控制字符(control
+character)：</p>
+<ul>
+<li>0 表示空字符（‘\0’）</li>
+<li>9 表示 Tab 制表符（‘）</li>
+<li>10 表示换行（‘’）</li>
+<li>13 表示回车（‘）</li>
+<li>27 表示 ESC 键（‘1b’）</li>
+<li>127 表示 DEL 键（‘7f’）等</li>
+</ul>
+<p>一些控制符号的使用，比较常见，如：Ctrl+C
+来发送中断信号（SIGINT）强制终止程序；Ctrl+D
+来关闭标准输入流，终止正在读取他的程序；Ctrl+I 的效果和 Tab 键一样，
+Ctrl+J 的效果和 Enter 键一样，Ctrl+H 的效果和退格键一样...</p>
+<p>具体可以上wiki上查看。</p>
+</blockquote>
+<h2><span id="utf">UTF</span></h2>
+<p>ASCII 码表，建立了英文字母和标点符号到 0x00~0x7F
+的一一映射。那么，中文、拉丁文字、俄文等等呢？</p>
+<p>所以，各国开始推出自己用的编码格式规范。中国大陆推出了 GBK
+编码格式表示简体中文的字符，同时简体和繁体的 GB18030 编码，包含了 27484
+个汉字；日本推出了 Shift-JIS 编码格式表示日语的字符，等等。</p>
+<p>再后来，就有了“万国码”的
+Unicode。他给世界上所有的字符编码。全部字符都可以用一个
+0x000000~0x10FFFF 的整数表示，也就是3个字节。</p>
+<h3><span id="utf-32">UTF-32</span></h3>
+<p>UTF-32 使用 wchar_t 这个 4 字节的数据类型，来表示 Unicode
+编码，完全够用。</p>
+<p>wchar_t 的问题在于，<strong>最高位字节是 0</strong>，导致 C 语言使用
+\0 判断字符串结束符的方式不再适用。</p>
+<p>C 语言为了适应这个变化，推出了专门针对 wchar_t 的
+wcslen、wcscpy、wmemset 等函数。Windows 也推出 LoadLibraryA 和
+LoadLibraryW 两个版本，分别适配 char 和 wchar_t。</p>
+<p>显然，所有字符都占用4字节，是浪费的。即使是中文汉字，本来也只需要 2
+字节就能表示了（27484 个汉字，在 65536 的范围内）。</p>
+<h3><span id="utf-16">UTF-16</span></h3>
+<p>Windows 采用了 UTF-16 编码格式，这种规范下的 wchar_t 是 2
+字节的（实际上就是 unsigned short
+的类型别名）。超过2字节的字符被分成两个 wchar_t表示，拆法很复杂。</p>
+<blockquote>
+<p>Windows 为了更好地伺候中国客户，还专门把中文 Windows
+系统的默认编码格式改成了
+GBK，大大妨碍了程序员编程和国际交流的便利性。</p>
+</blockquote>
+<h3><span id="utf-8">UTF-8</span></h3>
+<p>UTF-16 没法兼容 ASCII，在网络上传输还需要考虑字节序等等各种问题。</p>
+<p>UTF-8 则是在 1、2、3、4 字节之间变长的编码。</p>
+<p>作为变长编码的代价，UTF-8
+需要在二进制中浪费额外的空间来表示当前编码的长度。但是 1
+个字节的ASCII码还是能使用一个字节表示。使用二进制位的标记方式，进行变长编码。</p>
+<p>而此时，C 语言也可以使用 \0
+判断字符串结束符了。节省了一些空间，也解决了C语言适配的问题。</p>
+<h3><span id="解码编码格式对应">解码编码格式对应</span></h3>
+<p>读写双方编码格式不同，会导致乱码。</p>
+<p>所以 MSVC 编译器调试时，“烫烫烫”的问题，也可以解释了。</p>
+<p>Windows 的 MSVC 在 Debug 模式下会默认把未初始化的栈内存填满 0xCC（x86
+的 INT3 单步中断指令），未初始化的堆内存填满 0xCD。</p>
+<p>而 0xCCCC 在 GBK
+编码中就是“烫”，所以如果打印了栈上未初始化的字符串数组，就会看到“烫烫烫”。而
+0xCDCD 在 GBK
+编码中就是“屯”，所以如果打印了堆上未初始化的字符串数组，就会看到“屯屯屯”。</p>
+<p>虽然现在普遍采用了 UTF-8 格式，但是中文版 Windows 还在用 UTF-16 和
+GBK。Linux 也可根据环境变量 LANG 和 LC_ALL
+的值来动态决定采用哪种编码格式和语言。</p>
+<p>C++ 中对各大编码格式的支持如下表：</p>
+<table>
+<colgroup>
+<col style="width: 20%">
+<col style="width: 15%">
+<col style="width: 20%">
+<col style="width: 18%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>字符类型</strong></th>
+<th><strong>字符串类型</strong></th>
+<th><strong>字符串常量语法</strong></th>
+<th><strong>大小（字节）</strong></th>
+<th><strong>编码格式</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>char</td>
+<td>string</td>
+<td>"字符"</td>
+<td>1</td>
+<td>随系统默认编码格式而变</td>
+</tr>
+<tr class="even">
+<td>wchar_t（Linux）</td>
+<td>wstring</td>
+<td>L"字符"</td>
+<td>4</td>
+<td>UTF-32</td>
+</tr>
+<tr class="odd">
+<td>wchar_t（Windows）</td>
+<td>wstring</td>
+<td>L"字符"</td>
+<td>2</td>
+<td>UTF-16</td>
+</tr>
+<tr class="even">
+<td>char8_t（C++20）</td>
+<td>u8string</td>
+<td>u8"字符"</td>
+<td>1</td>
+<td>UTF-8</td>
+</tr>
+<tr class="odd">
+<td>char16_t（C++11）</td>
+<td>u16string</td>
+<td>u"字符"</td>
+<td>2</td>
+<td>UTF-16</td>
+</tr>
+<tr class="even">
+<td>char32_t（C++11）</td>
+<td>u32string</td>
+<td>U"字符"</td>
+<td>4</td>
+<td>UTF-32</td>
+</tr>
+</tbody>
+</table>
+<p>后面三个是不随系统而改变的（C++ 标准委员会定义）。</p>
+<h1><span id="c-语言字符串">C 语言字符串</span></h1>
+<h2><span id="char">char</span></h2>
+<p>在C语言中，char类型就是整数，只不过被表示成对应的字符表示。是数字就可以比较大小等。</p>
+<p>常用的帮手函数如下：</p>
+<blockquote>
+<p>isupper(c) 判断是否为大写字母（‘A’ &lt;= c &amp;&amp; c &lt;= ‘Z’）。
+islower(c) 判断是否为小写字母（‘a’ &lt;= c &amp;&amp; c &lt;= ‘z’）。
+isalpha(c) 判断是否为字母（包括大写和小写）。 isdigit(c)
+判断是否为数字（‘0’ &lt;= c &amp;&amp; c &lt;= ‘9’）。 isalnum(c)
+判断是否为字母或数字（包括字母和数字）。 isxdigit(c)
+判断是否为十六进制数字（0~9 或 a-f 或 A-F）。 isspace(c)
+判断是否为等价于空格的字符（‘ ’ 或 ‘ 或 ‘’ 或 ‘ 或 ‘）。 iscntrl(c)
+判断是否为控制字符（0 &lt;= c &amp;&amp; c &lt;= 31 或 c == 127）。
+toupper(c) 把小写字母转换为大写字母，如果不是则原封不动返回。 tolower(c)
+把大写字母转换为小写字母，如果不是则原封不动返回。</p>
+</blockquote>
+<p>char 类型只需是 8
+位即可，可以是有符号也可以是无符号，任凭编译器决定。在 x86
+架构是有符号的 (char = signed char)，而在 arm 架构上则认为是无符号的
+(char = unsigned char)。</p>
+<p>但是C 语言却规定 short，int，long，long long 必须是有符号的 (int =
+signed int)，反而却没有规定他们的位宽，和 char 刚好相反。</p>
+<p>C++ 标准保证 char，signed char，unsigned char
+是三个完全不同的类型，std::is_same_v 分别判断他们总会得到 false，无论
+x86 还是 arm。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-comment">// 判断系统</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> *argv[])</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">std</span>::is_signed&lt;<span class="hljs-keyword">char</span>&gt;::value) &#123;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"signed, x86"</span>);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"unsigned, arm:"</span>);<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h2><span id="c-string">C string</span></h2>
+<p>字符串(string)就是由字符(character)组成的数组。</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">char</span> c = ‘h’; <span class="hljs-comment">// ‘h’ 是个语法糖，等价于 104 ASCII码</span><br><span class="hljs-comment">// “hello” 也是个语法糖，等价于数组 &#123;‘h’, ‘e’, ‘l’, ‘l’, ‘o’, 0&#125;</span><br><span class="hljs-keyword">char</span> s[] = “hello”;<br></code></pre></div></td></tr></table></figure>
+<p>C
+语言的字符串因为只保留数组的首地址指针（指向第一个字符的指针），在以
+char * 类型传递给其他函数时，其数组的长度无法知晓。</p>
+<p>为了确切知道数组在什么地方结束，规定用 ASCII 码中的“空字符”也就是 0
+来表示数组的结尾。这样只需要一个首地址指针就能表示一个动态长度的数组。</p>
+<blockquote>
+<p>除了 \0 ，其他常见转义符号：</p>
+<p>‘’ 换行符：另起一行（光标移到下一行行首） ‘
+回车符：光标移到行首（覆盖原来的字符） ‘ 缩进符：光标横坐标对齐到 8
+的整数倍 ‘ 退格符：光标左移，删除上个字符 ‘\’ 反斜杠：表示这个是真的
+，不是转义符 ‘”’ 双引号：在字符串常量中使用，防止歧义 ‘’’
+单引号：在字符常量中使用，防止歧义 ‘\0’ 空字符：标记字符串结尾，等价于
+0，注意和 '0' 不等价。</p>
+</blockquote>
+<h1><span id="c-字符串">C++ 字符串</span></h1>
+<p>使用C++的特性，简化对字符串数据的处理方式。其特点有：</p>
+<ol type="1">
+<li>string 可以从 const char * 隐式构造：string s = “hello”;</li>
+<li>string 具有 +、+=、== 等直观的运算符重载：string(“hello”) +
+string(“world”) == string(“helloworld”)</li>
+<li>string 符合 vector 的接口，例如 begin/end/size/resize……</li>
+<li>string 有一系列成员函数，例如 find/replace/substr……</li>
+<li>string 可以通过 s.c_str() 重新转换回古板的 const char *。</li>
+<li>string 在离开作用域时自动释放内存 (RAII)，不用手动 free。</li>
+</ol>
+<p>C 语言字符串是单独一个 char *ptr，自动以 ‘\0’ 结尾。C++ 字符串是
+string 类，其成员有两个：</p>
+<p>char *ptr; size_t len;</p>
+<p>有了len，就不需要 ‘\0’ 标记结尾。</p>
+<p>string 类从 C 字符串构造时，可以额外指定一个长度，string(“hello”, 3)
+会得到 “hel”。len 超出范围会出现越界读取内存的错误。</p>
+<h2><span id="c_str-和-data">c_str() 和 data()</span></h2>
+<p>s.c_str() 保证返回的是以 0 结尾的字符串首地址指针，总长度为 s.size()
++ 1。</p>
+<p>s.data() 只保证返回长度为 s.size() 的连续内存的首地址指针，不保证 0
+结尾。</p>
+<p>把 C++ 的 string 作为参数传入像 printf 这种 C 语言函数时，需要用
+s.c_str()。如果只是在 C++ 函数之间传参数，直接用 string 或 string const
+&amp; 即可。考虑传参效率，可以使用 string_view。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">legacy_c</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *name)</span></span>; <span class="hljs-comment">// 古老的 C 语言遗产</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">modern_cpp</span><span class="hljs-params">(<span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span> name)</span></span>;  <span class="hljs-comment">// 这个函数是现代 C++</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">performance_geek</span><span class="hljs-params">(<span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span> <span class="hljs-keyword">const</span> &amp;name)</span></span>;  <span class="hljs-comment">// 追求性能</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">performance_nerd</span><span class="hljs-params">(<span class="hljs-built_in">std</span>::string_view name)</span></span>;  <span class="hljs-comment">// 超级追求性能</span><br></code></pre></div></td></tr></table></figure>
+<h2><span id="自定义字面量后缀">自定义字面量后缀</span></h2>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-built_in">string</span> <span class="hljs-keyword">operator</span><span class="hljs-string">""</span>_s(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *s, <span class="hljs-keyword">size_t</span> len) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">string</span>(s, len);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-comment">// 使用</span><br>    <span class="hljs-built_in">string</span> s3 = <span class="hljs-string">"hello"</span>_s + <span class="hljs-string">"world"</span>_s;<br>    <span class="hljs-built_in">cout</span> &lt;&lt; s3 &lt;&lt; <span class="hljs-built_in">endl</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>写 “hello”_s 就相当于写 operator“”_s(“hello”, 5)，就相当于
+string(“hello”, 5) 了。</p>
+<p>如果你 using namespace std; 那么标准库已经自动帮你定义好了 “”s
+后缀。这里 “hello”s 就等价于原本繁琐的 string(“hello”)
+了。或者更安全一点 using namespace std::literials;</p>
+<h2><span id="stdto_string">std::to_string()</span></h2>
+<p>std::to_string
+是标准库定义的全局函数，他具有9个重载，将数字转为字符串。</p>
+<p>把 to_string 作为全局函数，而不是 string
+类的构造函数，可以让数字转字符串这个特定的需求，和字符串本身的实现不会有太多耦合。</p>
+<p>相关函数，字符串转数字：std::stoi/stof/stod
+是标准库定义的一系列全局函数。</p>
+<p>stoi 有第二参数
+&amp;pos，用来保存数字部分结束的那个字符在原字符串中所在的index。</p>
+<p>stoi 的第三参数 base 表示，当前字符串表示的数字的进制。</p>
+<p>另外 stof 支持科学计数法。</p>
+<h2><span id="stringstream">stringstream</span></h2>
+<p>想要完整字符串格式化功能（指定多少进制，左右对齐等），可以用专业的做法：</p>
+<ul>
+<li>C 语言的 sprintf</li>
+<li>C++ 的 stringstream</li>
+<li>C++20 新增的 std::format</li>
+</ul>
+<p>stringstream 是相对较早的处理方法，比如设置数字进制：</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;sstream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;string&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iomanip&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>	<span class="hljs-built_in">stringstream</span> ss;<br>	ss &lt;&lt; hex &lt;&lt; <span class="hljs-number">66</span>;<br>	<span class="hljs-built_in">string</span> s = ss.str();<br>	<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; s &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;  <span class="hljs-comment">// 只是为了显示结果</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>官方推荐用 stringstream 取代 to_string。stringstream 也可以取代
+stoi。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;sstream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;string&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iomanip&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-built_in">string</span> s = <span class="hljs-string">"233word"</span>;<br>    <span class="hljs-function"><span class="hljs-built_in">stringstream</span> <span class="hljs-title">ss</span><span class="hljs-params">(s)</span></span>;<br>    <span class="hljs-keyword">int</span> num;<br>    ss &gt;&gt; num;<br>    <span class="hljs-built_in">string</span> unit;<br>    ss &gt;&gt; unit;<br>    <br>    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; num &lt;&lt; <span class="hljs-string">" "</span> &lt;&lt; unit &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h2><span id="at">at()</span></h2>
+<p>s.at(i) 和 s[i] 都可以获取字符串中的第 i 个字符。区别在于 at 如果遇到
+i 越界的情况，也就是检测到 i ≥ s.size() 时，会抛出 std::out_of_range
+异常终止程序。at 做越界检测需要额外的开销，[] 不需要。</p>
+<h2><span id="其他方法">其他方法</span></h2>
+<h3><span id="slength-和-ssize">s.length() 和 s.size()</span></h3>
+<p>获取字符串长度有两种写法 s.length() 和 s.size() 等价。</p>
+<h3><span id="substr">substr()</span></h3>
+<p>函数原型为：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-built_in">string</span> <span class="hljs-title">substr</span><span class="hljs-params">(<span class="hljs-keyword">size_t</span> pos = <span class="hljs-number">0</span>, <span class="hljs-keyword">size_t</span> len = <span class="hljs-number">-1</span>)</span> <span class="hljs-keyword">const</span></span>;<br></code></pre></div></td></tr></table></figure>
+<p>substr(pos, len) 会截取从第 pos 个字符开始，长度为 len
+的子字符串，原字符串不会改变。</p>
+<p>如果 pos 超出了原字符串的范围，则抛出 std::out_of_range 异常。</p>
+<p>可以指定 len 为 -1（即 string::npos），此时会截取从 pos
+开始直到原字符串末尾的子字符串。</p>
+<blockquote>
+<p>len为什么可以是 -1 ？因为 -1 类型转为无符号 size_t
+类型之后，是很大的数，0xffffffffffffffff。</p>
+</blockquote>
+<h3><span id="find">find()</span></h3>
+<p>find 拥有众多重载，返回这个字符第一次出现所在的位置。如果找不到，返回
+-1。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">size_t</span> <span class="hljs-title">find</span><span class="hljs-params">(<span class="hljs-keyword">char</span> c, <span class="hljs-keyword">size_t</span> pos = <span class="hljs-number">0</span>)</span> <span class="hljs-keyword">const</span> <span class="hljs-keyword">noexcept</span></span>;<br><span class="hljs-function"><span class="hljs-keyword">size_t</span> <span class="hljs-title">find</span><span class="hljs-params">(string_view svt, <span class="hljs-keyword">size_t</span> pos = <span class="hljs-number">0</span>)</span> <span class="hljs-keyword">const</span> <span class="hljs-keyword">noexcept</span></span>;<br><span class="hljs-function"><span class="hljs-keyword">size_t</span> <span class="hljs-title">find</span><span class="hljs-params">(<span class="hljs-built_in">string</span> <span class="hljs-keyword">const</span> &amp;str, <span class="hljs-keyword">size_t</span> pos = <span class="hljs-number">0</span>)</span> <span class="hljs-keyword">const</span> <span class="hljs-keyword">noexcept</span></span>;<br><span class="hljs-function"><span class="hljs-keyword">size_t</span> <span class="hljs-title">find</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *s, <span class="hljs-keyword">size_t</span> pos = <span class="hljs-number">0</span>)</span> <span class="hljs-keyword">const</span></span>;<br><span class="hljs-function"><span class="hljs-keyword">size_t</span> <span class="hljs-title">find</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *s, <span class="hljs-keyword">size_t</span> pos, <span class="hljs-keyword">size_t</span> count)</span> <span class="hljs-keyword">const</span></span>;<br></code></pre></div></td></tr></table></figure>
+<p>为什么最后两个重载没有标记 noexcept？只是历史原因。</p>
+<p>实际上 find 函数都是不会抛出异常的，他找不到只会返回 -1。可以用
+std::string::npos 代替 -1。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-comment">// 都是等价的</span><br>s.find(c) != <span class="hljs-built_in">string</span>::npos<br>s.find(c) != s.npos<br>s.find(c) != (<span class="hljs-keyword">size_t</span>)<span class="hljs-number">-1</span><br>s.find(c) != <span class="hljs-number">-1</span><br></code></pre></div></td></tr></table></figure>
+<p>下面是 std::string::npos 的定义。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-keyword">static</span> <span class="hljs-keyword">const</span> size_type  npos = <span class="hljs-keyword">static_cast</span>&lt;size_type&gt;(<span class="hljs-number">-1</span>);<br></code></pre></div></td></tr></table></figure>
+<p>find(“str”, pos) 是从第 pos 个字符开始查找子字符串 “str”。</p>
+<p>还有 find(“str”, pos, len) 和 find(“str”.substr(0, len), pos)
+等价，用于查询确定长度字符串，或者要查询的字符串是个切片（string_view）的情况。</p>
+<p>若不指定这个长度 len，则默认是 C 语言的 0 结尾字符串，此时 find
+还要去求 len = strlen(“str”)，相对低效。</p>
+<p>rfind 则是从尾部开始查找，返回最后一次出现的地方。</p>
+<h3><span id="find_first_of">find_first_of()</span></h3>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">size_t</span> <span class="hljs-title">find_first_of</span><span class="hljs-params">(<span class="hljs-built_in">string</span> <span class="hljs-keyword">const</span> &amp;s, <span class="hljs-keyword">size_t</span> pos = <span class="hljs-number">0</span>)</span> <span class="hljs-keyword">const</span> <span class="hljs-keyword">noexcept</span></span>;<br><span class="hljs-function"><span class="hljs-keyword">size_t</span> <span class="hljs-title">find_first_of</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *s, <span class="hljs-keyword">size_t</span> pos = <span class="hljs-number">0</span>)</span> <span class="hljs-keyword">const</span> <span class="hljs-keyword">noexcept</span></span>;<br><span class="hljs-function"><span class="hljs-keyword">size_t</span> <span class="hljs-title">find_first_of</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *s, <span class="hljs-keyword">size_t</span> pos, <span class="hljs-keyword">size_t</span> n)</span> <span class="hljs-keyword">const</span> <span class="hljs-keyword">noexcept</span></span>;<br></code></pre></div></td></tr></table></figure>
+<p>“str”.find_first_of(“chset”, pos) 会从第 pos 个字符开始，在 “str”
+中找到第一个出现的 ‘c’ 或 ‘h’ 或 ‘s’ 或 ‘e’ 或 ‘t’
+字符，并返回他所在的位置。如果都找不到，则会返回
+-1（string::npos）。</p>
+<p>其实 s.find_first_of(“chset”) 等价于 min(s.find(‘c’), s.find(‘h’),
+s.find(‘s’), s.find(‘e’), s.find(‘t’))。</p>
+<p>按空格分割字符串就可以使用下面这个方法：s.find_first_of(“
+)。空格类字符是一个集合 {‘ ’, ‘, ‘, ‘, ‘’, ‘}。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-built_in">vector</span>&lt;<span class="hljs-built_in">string</span>&gt; <span class="hljs-title">split</span><span class="hljs-params">(<span class="hljs-built_in">string</span> s)</span> </span>&#123;<br>    <span class="hljs-built_in">vector</span>&lt;<span class="hljs-built_in">string</span>&gt; ret;<br>    <span class="hljs-keyword">size_t</span> pos = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) &#123;<br>        <span class="hljs-keyword">size_t</span> newpos = s.find_first_of(<span class="hljs-string">" \t\v\f\n\r"</span>, pos);<br>        <span class="hljs-keyword">if</span> (newpos == s.npos) &#123;<br>            ret.push_back(s.substr(pos, newpos));<br>            <span class="hljs-keyword">break</span>;<br>        &#125;<br>        ret.push_back(s.substr(pos, newpos - pos));<br>        pos = newpos + <span class="hljs-number">1</span>;<br>    &#125;<br>    <span class="hljs-keyword">return</span> ret;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>同时也有find_first_not_of 方法寻找不在集合内的字符。</p>
+<h3><span id="replace">replace()</span></h3>
+<p>replace() 替换一段子字符串。replace(pos, len, “str”) 会把从 pos
+开始的 len 个字符替换为 “str”。</p>
+<p>string 的本质和 vector 一样，是内存中连续的数组。所以当 str
+长度不等于 len，就会发生数据的复制移动，从而变成 O(n)
+时间复杂度，丢失性能。</p>
+<h3><span id="append">append()</span></h3>
+<p>s.append(“world”) 和 s += “world” 等价。区别在于 append
+还可以指定第二个参数，限定字符串长度，用于要追加的字符串已经确定长度，或者是个切片的情况（string_view）。
+例如 s.append(“world”, 3) 和 s += string(“world”, 3) 和 s += “wor”
+等价。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-built_in">string</span> &amp;<span class="hljs-title">append</span><span class="hljs-params">(<span class="hljs-built_in">string</span> <span class="hljs-keyword">const</span> &amp;str)</span></span>;   <span class="hljs-comment">// str 是 C++ 字符串类 string 的对象</span><br><span class="hljs-function"><span class="hljs-built_in">string</span> &amp;<span class="hljs-title">append</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *s)</span></span>;     <span class="hljs-comment">// s 是长度为 strlen(s) 的 0 结尾字符串</span><br><span class="hljs-function"><span class="hljs-built_in">string</span> &amp;<span class="hljs-title">append</span><span class="hljs-params">(<span class="hljs-built_in">string</span> <span class="hljs-keyword">const</span> &amp;str, <span class="hljs-keyword">size_t</span> len)</span></span>;   <span class="hljs-comment">// 只保留后 str.size() - len 个字符</span><br><span class="hljs-function"><span class="hljs-built_in">string</span> &amp;<span class="hljs-title">append</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *s, <span class="hljs-keyword">size_t</span> len)</span></span>;        <span class="hljs-comment">// 只保留前 len 个字符</span><br><br><span class="hljs-comment">// 注意第三个重载函数，是保留 str 的后 str.size() - len 个字符</span><br></code></pre></div></td></tr></table></figure>
+<p>前面两个是最常用的版本，和 += 也是等价的。后面两个带 len
+的版本很奇怪，他们居然不一样：对于 str 是 string
+类型时，会变成保留后半部分。对于 str 是 const char *
+类型时，会保留前半部分。</p>
+<p>C++17 中有更为直观的 string_view，要切片只需 substr，例如：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-comment">// string_view(“world”) 也可以简写作 “world”sv</span><br><br>s.append(“world”, <span class="hljs-number">3</span>) <br><span class="hljs-comment">// 改成</span><br>s += string_view(“world”).substr(<span class="hljs-number">0</span>, <span class="hljs-number">3</span>)<br><br>s.append(“world”s, <span class="hljs-number">3</span>) <br><span class="hljs-comment">// 改成 </span><br>s += string_view(“world”).substr(<span class="hljs-number">3</span>)<br></code></pre></div></td></tr></table></figure>
+<p>又高效，又直观易懂，且 substr 附带了自动检查越界的能力，安全。
+string_view(“world”) 也可以简写作 “world”sv。</p>
+<h3><span id="insert">insert()</span></h3>
+<p>s.insert(pos, str) 会把子字符串 pos 插入到原字符串中第 pos 个字符和第
+pos+1 个字符之间。函数原型：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-built_in">string</span> &amp;<span class="hljs-title">insert</span><span class="hljs-params">(<span class="hljs-keyword">size_t</span> pos, <span class="hljs-built_in">string</span> <span class="hljs-keyword">const</span> &amp;str)</span></span>;                 <span class="hljs-comment">// str 是 C++ 字符串类 string 的对象</span><br><span class="hljs-function"><span class="hljs-built_in">string</span> &amp;<span class="hljs-title">insert</span><span class="hljs-params">(<span class="hljs-keyword">size_t</span> pos, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *s)</span></span>;                     <span class="hljs-comment">// s 是长度为 strlen(s) 的 0 结尾字符串</span><br><span class="hljs-function"><span class="hljs-built_in">string</span> &amp;<span class="hljs-title">insert</span><span class="hljs-params">(<span class="hljs-keyword">size_t</span> pos, <span class="hljs-built_in">string</span> <span class="hljs-keyword">const</span> &amp;str, <span class="hljs-keyword">size_t</span> len)</span></span>;   <span class="hljs-comment">// 只保留 str 后 str.size() - len 个字符</span><br><span class="hljs-function"><span class="hljs-built_in">string</span> &amp;<span class="hljs-title">insert</span><span class="hljs-params">(<span class="hljs-keyword">size_t</span> pos, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *s, <span class="hljs-keyword">size_t</span> len)</span></span>;         <span class="hljs-comment">// 只保留 s 前 len 个字符</span><br></code></pre></div></td></tr></table></figure>
+<h3><span id="compare">compare()</span></h3>
+<p>C 语言的 strcmp(a, b) 不仅可以判断相等，也可以用于字典序比较，返回 -1
+代表 a &lt; b，返回 1 代表 a &gt; b，返回 0 代表 a == b。</p>
+<p>string 也有一个成员函数 compare，他也是返回 -1、1、0
+表示大小关系。</p>
+<p>a == b 和 !a.compare(b) 等价。</p>
+<h3><span id="not-found-starts_with-和ends_with">[Not found] starts_with 和
+ends_with</span></h3>
+<p>以下内容没有找到，成疑：</p>
+<blockquote>
+<p>s.starts_with(str) 等价于 s.substr(0, str.size()) == str
+s.ends_with(str) 等价于 s.substr(str.size()) == str</p>
+<p>他们不会抛出异常，只会返回 true 或 false，表示 s 是否以 str
+开头。</p>
+</blockquote>
+<h3><span id="和-vector-类似的其他接口方法">和 vector 类似的其他接口方法</span></h3>
+<p>at, [], data, size, resize, empty, clear, capacity, reserve,
+shrink_to_fit, insert, erase, assign, push_back, pop_back, front, back,
+begin, end, rbegin, rend, swap, move string 在这些函数上都和
+vector&lt;char&gt; 一样。</p>
+<h2><span id="basic_string">basic_string</span></h2>
+<p>string 被 c++filt 解析为 basic_string&lt;char,
+char_traits&lt;char&gt;, allocator&lt;char&gt;&gt;。std::string
+就是他的类型别名（typedef）。</p>
+<p>string_view 也是 basic_string_view&lt;char,
+char_traits&lt;char&gt;&gt; 的类型别名。</p>
+<p>可自定义 char_traits
+，使用比标准库更高效的字符串比较、赋值等方法。或者 allocator
+自定义内存管理。</p>
+<h2><span id="string-空基类优化-todo">string 空基类优化 [ TODO ]</span></h2>
+<p>string 类中，将首地址指针成员属性包装在一个继承了空基类
+allocator_type 的类 _Alloc_hider 中。</p>
+<p>因为，如果只是把 allocator（空的）直接作为成员变量放在 basic_string
+里的，至少要占1个字节，再考虑字节对齐。比如，这1个字节扩展到 8
+个字节。而这 8 字节没有任何数据，只是浪费空间。</p>
+<p>如果一个类（_Alloc_hider）的基类是空类（allocator），则这个基类不占据任何空间，如果这个派生类（_Alloc_hider）如果定义了大小为
+n 字节的成员变量（_M_p），则这个派生类（_Alloc_hider）的大小也是 n。</p>
+<p>_M_allocator 从原来被迫从1字节开始对齐，到不占空间。</p>
+<h1><span id="字符串胖指针">字符串胖指针</span></h1>
+<p>要描述一个动态长度的数组（此处为字符串），需要首地址指针和数组长度两个参数。C
+语言假定字符串中的字符不可能出现 ‘\0’，那么可以用 ‘\0’
+作为结尾的标记符。</p>
+<p>可以把这描述同一个东西的两个参数首地址指针和数组长度，打包进一个结构体（struct）里：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">FatPtr</span> &#123;</span><br>   <span class="hljs-keyword">char</span> *ptr;<br>   <span class="hljs-keyword">size_t</span> len;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+<p>这就是 rust 炫耀已久的数组胖指针。C++20 中的 span
+也是这个思想。提倡把 ptr 和 len
+这两个逻辑上相关的参数绑在一起，避免程序员犯错。</p>
+<p>C++ 中的 vector 和 string 其实都是胖指针。string 和 vector
+内部都有三个成员变量：ptr, len, capacity。</p>
+<p>前两个 [ptr, len]
+其实就是表示实际有效范围（存储了字符的）的胖指针。</p>
+<p>而 [ptr, capacity]
+就是表示实际已分配内存（操作系统认为的）的胖指针。</p>
+<p>在 GCC 的实现中，被换成了三个指针 [ptr, ptr + len, ptr + capacity]
+来表示。</p>
+<h2><span id="强引用-弱引用-string">强引用、弱引用 string</span></h2>
+<p>string
+容器，是掌握着字符串生命周期（lifespan）的胖指针。这种掌管了所指向对象生命周期的指针称为强引用（strong
+reference）。</p>
+<p>当 string 容器被拷贝时，其指向的字符串也会被拷贝（深拷贝）。 当
+string 容器被销毁时，其指向的字符串也会被销毁（内存释放）。</p>
+<p>一个强引用的 string
+到处拷贝来拷贝去，则其指向的字符串也会被多次拷贝，比较低效。人们常用
+string const &amp; 来避免不必要拷贝，但仍比较麻烦。</p>
+<p>C++17 引入了弱引用胖指针 string_view，这种弱引用（weak
+reference）不影响原对象的生命周期，原对象的销毁仍然由强引用控制。</p>
+<p>当 string_view 被拷贝时，其指向的字符串仍然是同一个（浅拷贝）。 当
+string_view 被销毁时，其指向的字符串仍存在（弱引用不影响生命周期）。</p>
+<p>使用原则：</p>
+<ul>
+<li>强引用和弱引用都可以用来访问对象。</li>
+<li>每个存活的对象，强引用有且只有一个。</li>
+<li>弱引用可以同时存在多个，也可以没有。</li>
+<li>强引用销毁时，所有弱引用都会失效。如果强引用销毁以后，仍存在其他指向该对象的弱引用，访问他会导致程序奔溃（野指针）。</li>
+</ul>
+<p>建议创建 string_view 以后，不要改写原字符串。</p>
+<p>常见强弱引用：</p>
+<table>
+<thead>
+<tr class="header">
+<th><strong>强引用</strong></th>
+<th><strong>弱引用</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>string</td>
+<td>string_view</td>
+</tr>
+<tr class="even">
+<td>wstring</td>
+<td>wstring_view</td>
+</tr>
+<tr class="odd">
+<td>vector<t></t></td>
+<td>span<t></t></td>
+</tr>
+<tr class="even">
+<td>unique_ptr<t></t></td>
+<td>T *</td>
+</tr>
+<tr class="odd">
+<td>shared_ptr<t></t></td>
+<td>weak_ptr<t></t></td>
+</tr>
+</tbody>
+</table>
+<h3><span id="小字符串优化">小字符串优化</span></h3>
+<p>注意当 string 长度在15 以内，会保存在一个共享栈空间地址(_M_local_buf
+)，此时修改原字符串会在此地址上覆盖，还可以通过弱引用查看内容。</p>
+<p>但是当长度大于 15 ，string
+字符串保存在堆空间，一旦修改原字符串，使用弱引用会导致访存失效。</p>
+<h2><span id="字符串切片">字符串切片</span></h2>
+<p>string(“hello”).substr(1, 3) 会得到 “ell”。
+这样其实不是最高效的，因为 string.substr
+并不是就地修改字符串，他是返回一个全新的 string 对象，然后把原字符串里的
+1 到 3 这部分子字符串拷贝到这个新的 string 对象里去。</p>
+<p>C++17 只需要保证原来的字符串存在于内存中，让 substr
+只是返回切片后的胖指针 [ptr,
+len]，不就让新字符串和原字符串共享一片内存，实现了零拷贝零分配。于是就有了接口和
+string 很相似，但是只保留胖指针，而不掌管他所指向内存生命周期的
+string_view 类。</p>
+<p>不论子字符串多大，真正改变的只有两个变量。</p>
+<h3><span id="remove_prefix-remove_suffix">remove_prefix、remove_suffix</span></h3>
+<p>sv.remove_prefix(n) 等价于 sv = sv.substr(n) sv.remove_suffix(n)
+等价于 sv = sv.substr(0, n)</p>
+<p>他们都是就地修改的，这个就地修改的是 string_view
+对象本身，而不是修改他指向的字符串，原 string 还是不会变的。</p>
+<p>不同之处在于，substr(pos, len) 遇到 pos &gt; sv.size() 的情况会抛出
+out_of_range 异常。而 remove_prefix/suffix 就不会，如果他的 n &gt;
+sv.size()，则属于未定义行为，可能崩溃。 remove_prefix/suffix
+更高效，substr 更安全。</p>
+<h3><span id="类型转换规则">类型转换规则</span></h3>
+<figure class="highlight reasonml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs reasonml"><span class="hljs-comment">// 隐式：string s = “hello”;</span><br><span class="hljs-comment">// 显式：string s(“hello”); 或 auto s = string(“hello”);</span><br><span class="hljs-comment">// c_str：const char *cs = s.c_str();</span><br><br>const <span class="hljs-built_in">char</span><span class="hljs-operator"> * </span>===隐式==<span class="hljs-constructor">O(<span class="hljs-params">n</span>)</span>==&gt; string_view<br>const <span class="hljs-built_in">char</span><span class="hljs-operator"> * </span>===隐式==<span class="hljs-constructor">O(<span class="hljs-params">n</span>)</span>==&gt; <span class="hljs-built_in">string</span><br><br><span class="hljs-built_in">string</span>       ===隐式==<span class="hljs-constructor">O(1)</span>==&gt; string_view<br>string_view  ===显式==<span class="hljs-constructor">O(<span class="hljs-params">n</span>)</span>==&gt; <span class="hljs-built_in">string</span><br><br><span class="hljs-built_in">string</span>       ===c_str==<span class="hljs-constructor">O(1)</span>==&gt; const <span class="hljs-built_in">char</span> *<br></code></pre></div></td></tr></table></figure>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/C/">C++</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/C/">C++</a>
+                    
+                      <a class="hover-with-bg" href="/tags/String/">String</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/f692d883.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Cpp性能测试</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/379e512c.html">
+                        <span class="hidden-mobile">深入C指针</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

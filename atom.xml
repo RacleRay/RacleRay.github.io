@@ -6,7 +6,7 @@
   <link href="https://racleray.github.io/atom.xml" rel="self"/>
   
   <link href="https://racleray.github.io/"/>
-  <updated>2024-01-09T07:18:23.162Z</updated>
+  <updated>2024-01-09T08:04:11.764Z</updated>
   <id>https://racleray.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>协程浅析</title>
+    <link href="https://racleray.github.io/posts/dd6997a0.html"/>
+    <id>https://racleray.github.io/posts/dd6997a0.html</id>
+    <published>2023-12-02T13:48:25.000Z</published>
+    <updated>2024-01-09T08:04:11.764Z</updated>
+    
+    
+    <summary type="html">为什么C++协程标准库来得这么晚捏？</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="Coroutine" scheme="https://racleray.github.io/categories/Notes/Coroutine/"/>
+    
+    
+    <category term="Multi-threading" scheme="https://racleray.github.io/tags/Multi-threading/"/>
+    
+    <category term="Coroutine" scheme="https://racleray.github.io/tags/Coroutine/"/>
+    
+  </entry>
   
   <entry>
     <title>HTTP1.0到3.0浅析</title>
@@ -44,7 +67,7 @@
     <link href="https://racleray.github.io/posts/a20f1877.html"/>
     <id>https://racleray.github.io/posts/a20f1877.html</id>
     <published>2023-09-12T14:54:34.000Z</published>
-    <updated>2024-01-09T07:18:23.156Z</updated>
+    <updated>2024-01-09T08:03:23.985Z</updated>
     
     
     <summary type="html">B+、B-link、LSM 数据结构分析</summary>
@@ -63,11 +86,55 @@
   </entry>
   
   <entry>
+    <title>C++多线程笔记</title>
+    <link href="https://racleray.github.io/posts/24f0dc1c.html"/>
+    <id>https://racleray.github.io/posts/24f0dc1c.html</id>
+    <published>2023-09-12T14:53:11.000Z</published>
+    <updated>2024-01-09T08:55:21.097Z</updated>
+    
+    
+    <summary type="html">现代 C++ 多线程笔记</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="C++" scheme="https://racleray.github.io/categories/Notes/C/"/>
+    
+    
+    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
+    
+    <category term="Multi-threading" scheme="https://racleray.github.io/tags/Multi-threading/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>CUDA 笔记</title>
+    <link href="https://racleray.github.io/posts/244a647.html"/>
+    <id>https://racleray.github.io/posts/244a647.html</id>
+    <published>2023-08-15T15:14:28.000Z</published>
+    <updated>2024-01-09T08:19:46.693Z</updated>
+    
+    
+    <summary type="html">CUDA笔记</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="CUDA" scheme="https://racleray.github.io/categories/Notes/CUDA/"/>
+    
+    
+    <category term="CUDA" scheme="https://racleray.github.io/tags/CUDA/"/>
+    
+  </entry>
+  
+  <entry>
     <title>系统设计笔记</title>
     <link href="https://racleray.github.io/posts/598ff250.html"/>
     <id>https://racleray.github.io/posts/598ff250.html</id>
     <published>2023-07-13T11:19:37.000Z</published>
-    <updated>2024-01-09T07:40:14.737Z</updated>
+    <updated>2024-01-09T07:40:40.481Z</updated>
     
     
     <summary type="html">系统设计分析</summary>
@@ -107,6 +174,54 @@
   </entry>
   
   <entry>
+    <title>CMake Tips</title>
+    <link href="https://racleray.github.io/posts/50880878.html"/>
+    <id>https://racleray.github.io/posts/50880878.html</id>
+    <published>2023-05-21T11:11:52.000Z</published>
+    <updated>2024-01-09T08:14:40.814Z</updated>
+    
+    
+    <summary type="html">CMake 笔记</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="CMake" scheme="https://racleray.github.io/categories/Notes/CMake/"/>
+    
+    
+    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
+    
+    <category term="C" scheme="https://racleray.github.io/tags/C/"/>
+    
+    <category term="CMake" scheme="https://racleray.github.io/tags/CMake/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>C++编译器优化</title>
+    <link href="https://racleray.github.io/posts/f78760c9.html"/>
+    <id>https://racleray.github.io/posts/f78760c9.html</id>
+    <published>2023-05-12T14:25:36.000Z</published>
+    <updated>2024-01-09T08:52:21.851Z</updated>
+    
+    
+    <summary type="html">C++编译器优化笔记</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="C++" scheme="https://racleray.github.io/categories/Notes/C/"/>
+    
+    
+    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
+    
+    <category term="Compiler" scheme="https://racleray.github.io/tags/Compiler/"/>
+    
+  </entry>
+  
+  <entry>
     <title>超卖问题浅析</title>
     <link href="https://racleray.github.io/posts/c47fc989.html"/>
     <id>https://racleray.github.io/posts/c47fc989.html</id>
@@ -134,7 +249,7 @@
     <link href="https://racleray.github.io/posts/dd44df07.html"/>
     <id>https://racleray.github.io/posts/dd44df07.html</id>
     <published>2023-02-25T05:11:15.000Z</published>
-    <updated>2024-01-09T05:14:12.051Z</updated>
+    <updated>2024-01-09T07:46:01.456Z</updated>
     
     
     <summary type="html">Linux内核链表设计</summary>
@@ -149,6 +264,27 @@
     <category term="Data Structure" scheme="https://racleray.github.io/tags/Data-Structure/"/>
     
     <category term="Linux Kernel" scheme="https://racleray.github.io/tags/Linux-Kernel/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>C++ Tips</title>
+    <link href="https://racleray.github.io/posts/467a9cda.html"/>
+    <id>https://racleray.github.io/posts/467a9cda.html</id>
+    <published>2023-02-16T13:07:45.000Z</published>
+    <updated>2024-01-09T08:11:18.236Z</updated>
+    
+    
+    <summary type="html">C++ 实践经验</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="C++" scheme="https://racleray.github.io/categories/Notes/C/"/>
+    
+    
+    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
     
   </entry>
   
@@ -218,6 +354,29 @@
   </entry>
   
   <entry>
+    <title>开发工具</title>
+    <link href="https://racleray.github.io/posts/897196e0.html"/>
+    <id>https://racleray.github.io/posts/897196e0.html</id>
+    <published>2023-01-03T10:41:33.000Z</published>
+    <updated>2024-01-09T07:47:12.850Z</updated>
+    
+    
+    <summary type="html">开发工具库</summary>
+    
+    
+    
+    <category term="Tools" scheme="https://racleray.github.io/categories/Tools/"/>
+    
+    <category term="C++" scheme="https://racleray.github.io/categories/Tools/C/"/>
+    
+    
+    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
+    
+    <category term="Python" scheme="https://racleray.github.io/tags/Python/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Cpp性能测试</title>
     <link href="https://racleray.github.io/posts/f692d883.html"/>
     <id>https://racleray.github.io/posts/f692d883.html</id>
@@ -241,6 +400,50 @@
   </entry>
   
   <entry>
+    <title>C++ String</title>
+    <link href="https://racleray.github.io/posts/d5d2990b.html"/>
+    <id>https://racleray.github.io/posts/d5d2990b.html</id>
+    <published>2022-11-12T15:20:11.000Z</published>
+    <updated>2024-01-09T08:22:53.079Z</updated>
+    
+    
+    <summary type="html">C++ string 笔记</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="C++" scheme="https://racleray.github.io/categories/Notes/C/"/>
+    
+    
+    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
+    
+    <category term="String" scheme="https://racleray.github.io/tags/String/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>深入C指针</title>
+    <link href="https://racleray.github.io/posts/379e512c.html"/>
+    <id>https://racleray.github.io/posts/379e512c.html</id>
+    <published>2022-11-09T11:02:33.000Z</published>
+    <updated>2024-01-09T08:06:53.903Z</updated>
+    
+    
+    <summary type="html">C 指针回顾</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="C" scheme="https://racleray.github.io/categories/Notes/C/"/>
+    
+    
+    <category term="C" scheme="https://racleray.github.io/tags/C/"/>
+    
+  </entry>
+  
+  <entry>
     <title>深入C++对象模型笔记</title>
     <link href="https://racleray.github.io/posts/ae73e7a0.html"/>
     <id>https://racleray.github.io/posts/ae73e7a0.html</id>
@@ -258,215 +461,6 @@
     
     
     <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>optimizing software in cpp</title>
-    <link href="https://racleray.github.io/posts/2ebe459a.html"/>
-    <id>https://racleray.github.io/posts/2ebe459a.html</id>
-    <published>2022-06-21T13:14:38.000Z</published>
-    <updated>2024-01-09T03:32:14.533Z</updated>
-    
-    
-    <summary type="html">optimizing software in cpp 读书笔记</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="C++" scheme="https://racleray.github.io/categories/Notes/C/"/>
-    
-    
-    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
-    
-    <category term="Book" scheme="https://racleray.github.io/tags/Book/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>More Effective Cpp</title>
-    <link href="https://racleray.github.io/posts/e584d079.html"/>
-    <id>https://racleray.github.io/posts/e584d079.html</id>
-    <published>2022-05-09T04:01:49.000Z</published>
-    <updated>2024-01-09T04:08:01.214Z</updated>
-    
-    
-    <summary type="html">More Effective Cpp 读书笔记</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="C++" scheme="https://racleray.github.io/categories/Notes/C/"/>
-    
-    
-    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
-    
-    <category term="Book" scheme="https://racleray.github.io/tags/Book/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>再看Lookahead</title>
-    <link href="https://racleray.github.io/posts/89ba64e7.html"/>
-    <id>https://racleray.github.io/posts/89ba64e7.html</id>
-    <published>2022-04-18T15:22:07.000Z</published>
-    <updated>2023-08-07T12:02:23.617Z</updated>
-    
-    
-    <summary type="html">这是摘要</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="DL" scheme="https://racleray.github.io/categories/Notes/DL/"/>
-    
-    
-    <category term="optimizer" scheme="https://racleray.github.io/tags/optimizer/"/>
-    
-    <category term="lookahead" scheme="https://racleray.github.io/tags/lookahead/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Effective Modern Cpp</title>
-    <link href="https://racleray.github.io/posts/b3d88a54.html"/>
-    <id>https://racleray.github.io/posts/b3d88a54.html</id>
-    <published>2022-04-12T13:00:52.000Z</published>
-    <updated>2024-01-09T03:12:58.691Z</updated>
-    
-    
-    <summary type="html">Effective Modern Cpp 读书笔记</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="C++" scheme="https://racleray.github.io/categories/Notes/C/"/>
-    
-    
-    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
-    
-    <category term="Book" scheme="https://racleray.github.io/tags/Book/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Prompt, Adaptor, ...</title>
-    <link href="https://racleray.github.io/posts/7695beab.html"/>
-    <id>https://racleray.github.io/posts/7695beab.html</id>
-    <published>2022-04-05T14:57:55.000Z</published>
-    <updated>2024-01-09T03:12:40.582Z</updated>
-    
-    
-    <summary type="html">Prompt and Adaptor and ... Record.</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="NLP" scheme="https://racleray.github.io/categories/Notes/NLP/"/>
-    
-    
-    <category term="nlp" scheme="https://racleray.github.io/tags/nlp/"/>
-    
-    <category term="prompt" scheme="https://racleray.github.io/tags/prompt/"/>
-    
-    <category term="adaptor" scheme="https://racleray.github.io/tags/adaptor/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Effective Cpp</title>
-    <link href="https://racleray.github.io/posts/95b1972c.html"/>
-    <id>https://racleray.github.io/posts/95b1972c.html</id>
-    <published>2022-03-15T13:43:52.000Z</published>
-    <updated>2024-01-09T03:12:58.684Z</updated>
-    
-    
-    <summary type="html">Effective Cpp 读书笔记</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="C++" scheme="https://racleray.github.io/categories/Notes/C/"/>
-    
-    
-    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
-    
-    <category term="Book" scheme="https://racleray.github.io/tags/Book/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>epoll简述</title>
-    <link href="https://racleray.github.io/posts/d207ef0b.html"/>
-    <id>https://racleray.github.io/posts/d207ef0b.html</id>
-    <published>2022-03-02T16:02:59.000Z</published>
-    <updated>2024-01-09T05:01:58.427Z</updated>
-    
-    
-    <summary type="html">一图流简易epoll实现机制</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="Computer Network" scheme="https://racleray.github.io/categories/Notes/Computer-Network/"/>
-    
-    
-    <category term="epoll" scheme="https://racleray.github.io/tags/epoll/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>C/C++测试框架</title>
-    <link href="https://racleray.github.io/posts/aeaec6fb.html"/>
-    <id>https://racleray.github.io/posts/aeaec6fb.html</id>
-    <published>2022-01-23T12:59:29.000Z</published>
-    <updated>2023-09-23T13:57:26.173Z</updated>
-    
-    
-    <summary type="html">测试框架：catch2、doctes、googletest、cmocka</summary>
-    
-    
-    
-    <category term="Tools" scheme="https://racleray.github.io/categories/Tools/"/>
-    
-    <category term="C" scheme="https://racleray.github.io/categories/Tools/C/"/>
-    
-    
-    <category term="C" scheme="https://racleray.github.io/tags/C/"/>
-    
-    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
-    
-    <category term="测试框架" scheme="https://racleray.github.io/tags/%E6%B5%8B%E8%AF%95%E6%A1%86%E6%9E%B6/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>对比学习损失使用</title>
-    <link href="https://racleray.github.io/posts/39bd8d48.html"/>
-    <id>https://racleray.github.io/posts/39bd8d48.html</id>
-    <published>2021-11-03T14:52:53.000Z</published>
-    <updated>2023-08-07T12:02:23.619Z</updated>
-    
-    
-    <summary type="html">简单记录两种对比学习损失的简单使用，以及计算方法。</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="DL" scheme="https://racleray.github.io/categories/Notes/DL/"/>
-    
-    
-    <category term="deep learning" scheme="https://racleray.github.io/tags/deep-learning/"/>
-    
-    <category term="contrastive learning" scheme="https://racleray.github.io/tags/contrastive-learning/"/>
     
   </entry>
   

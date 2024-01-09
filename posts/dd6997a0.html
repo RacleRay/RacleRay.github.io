@@ -1,0 +1,750 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="为什么C++协程标准库来得这么晚捏？">
+  <meta name="author" content="HeRui">
+  <meta name="keywords" content="Coroutine">
+  <meta name="description" content="为什么C++协程标准库来得这么晚捏？">
+<meta property="og:type" content="article">
+<meta property="og:title" content="协程浅析">
+<meta property="og:url" content="https://racleray.github.io/posts/dd6997a0.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="为什么C++协程标准库来得这么晚捏？">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/12/19/11-47-53e524555bf08c0d1a94eae0fb41749c-1fb709.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/12/19/11-37-bcdb29d34702457d0d9d0e486e491ac5-1a7979.png">
+<meta property="article:published_time" content="2023-12-02T13:48:25.000Z">
+<meta property="article:modified_time" content="2024-01-09T08:04:11.764Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="Coroutine">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/12/19/11-47-53e524555bf08c0d1a94eae0fb41749c-1fb709.png">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>协程浅析 - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="协程浅析">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2023-12-02 21:48" pubdate>
+        2023年12月2日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      18k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      56 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">协程浅析</h1>
+            
+            <div class="markdown-body">
+              <p>协程是可以暂停执行，之后恢复的函数。</p>
+<h2><span id="有栈协程-vs-无栈协程">有栈协程 vs 无栈协程</span></h2>
+<p>有栈协程通过固定大小的栈空间作为协程运行时空间，切换协程就是这些固定大小空间直接的切换，协程内的程序逻辑全部运行在这段空间内。而无栈协程将
+frame 保存在堆空间（C++20
+是这样做的），依据协程的状态进行统一的调度执行。
+有栈协程，每个协程会有固定大小的空间作为栈内存使用。
+无栈协程，每个协程会有一个协程帧作为状态和变量的管理对象，然后进行类似状态机的函数调用过程。
+无栈协程内存紧凑，但是不适合递归。有栈协程虽然适合递归，但是分配的固定空间，可能会浪费，也可能会不足，这是有栈协程的问题。
+总的来说：</p>
+<ul>
+<li>无栈的切换速度要远高于有栈。</li>
+<li>无栈协程更加适合IO场景。</li>
+<li>无栈协程相比普通函数会有额外开销。</li>
+</ul>
+<p>更详细的对比，可以参考这篇优质的量化文档：<a href="https://github.com/alibaba/async_simple/blob/main/docs/docs.cn/%E5%9F%BA%E4%BA%8Easync_simple%E7%9A%84%E5%8D%8F%E7%A8%8B%E6%80%A7%E8%83%BD%E5%AE%9A%E9%87%8F%E5%88%86%E6%9E%90.md" target="_blank" rel="noopener">基于async_simple的协程性能定量分析</a></p>
+<h3><span id="有栈协程">有栈协程</span></h3>
+<p>有栈协程不关心协程函数体是什么，直接开辟一边内存（goroutine 中是 2000
+Bytes），将这片空间和整个函数体，告知调度器去调度。而协程内部，会实现某个函数或者调度点，运行到此处时，会识别到当前处于协程空间中，会转移执行权（比如，等待
+IO 时）。协程并没有显式的 await 暂停点出现，而是在协程内部实现。</p>
+<p>协程栈也可以有其他不同的实现方式：</p>
+<ul>
+<li>分段栈(Segmented
+Stack)：编译时，为协程栈增加栈内存检测标记，检测是否够用，是否需要申请更多内存。</li>
+<li>拷贝栈(Copy Stack)：采用和 std::vector
+相同的方式，动态扩展并拷贝栈。</li>
+<li>共享栈(Shared
+Stack)：首先申请一块较大内存的共享栈，然后每次运行新协程前，将协程栈内存
+copy 共享栈中，随着协程的运行计算真正用到的内存，将其 copy
+到一段合适的内存中。libco 采用的就是这种方式。</li>
+<li>虚拟内存栈(Virtual Memory
+Stack)：为每个协程申请虚拟内存，不读写就不会占物理内存，按照实际使用的内存量申请物理内存页面。</li>
+</ul>
+<p>协程调度方式：</p>
+<ul>
+<li>栈式调度，按照调用栈关系，每次执行调用栈栈顶的协程</li>
+<li>星型调度，每次执行完一个协程，必须切换回调度线程，然后再进入下一个协程</li>
+<li>环形调度，协程之间有调用链，但是执行完最后一个协程后，直接返回调度线程</li>
+</ul>
+<p>协程调度的优化方法有：</p>
+<ul>
+<li>结合多线程，充分利用多核能力。</li>
+<li>每个线程设计协程队列，同时可以划分不同的队列类型，区分能够在多线程间进行转移的协程，和不能转移的协程。</li>
+<li>采用负载均衡策略，调度协程，比如，空闲线程（可以定义为超过某个"水位"）可以窃取忙碌线程协程队列中的任务。</li>
+<li>队列设计优化，比如对于短时快速任务，可以使用
+spinlock；对于线程内的就绪队列，可以视情况，设计为多写一读的结构，仅在写端加锁。</li>
+</ul>
+<p>保存上下文，则是将寄存器的值保存下来。goroutine
+也是采用有栈协程的方式实现的。 boost.context, boost.coroutine,
+ucontext(unix), fiber(windows) 这些库提供底层
+API，没有实现协程调度模块，不适合直接做应用项目。另外 ucontext 被 fiber
+库性能相对会较差一点。boost.context 的性能会更好。 腾讯的 libco
+虽然做了协程调度，也兼容很多第三方库的调用接口，但是也需要对底层机制较为清楚，才能写出更稳定的代码。比如，不同的系统、不同版本的Linux都需要不同的汇编代码。</p>
+<p>一个简单的汇编程序示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs assembly">&#x2F;&#x2F; 保存8个32位元素的数组，数组首地址保存在 eax 寄存器<br>movl %esp, 28(%eax)  <br>movl %ebp, 24(%eax)<br>movl %esi, 20(%eax)<br>movl %edi, 16(%eax)<br>movl %edx, 12(%eax)<br>movl %ecx, 8(%eax)<br>movl %ebx, 4(%eax)<br>&#x2F;&#x2F; eax 是第一个元素<br><br>&#x2F;&#x2F; 假设新上下文中从 esp + 8 的位置开始恢复数组元素到寄存器<br>movl 8(%esp), %eax <br>movl 4(%eax), %ebx<br>movl 8(%eax), %ecx<br>movl 12(%eax), %edx  <br>movl 16(%eax), %edi<br>movl 20(%eax), %esi<br>movl 24(%eax), %ebp<br>movl 28(%eax), %esp<br></code></pre></div></td></tr></table></figure>
+<p>假设这是一个函数内的一段代码，其中 eax
+为传入数组首地址作为第一个参数，esp + 8
+为另一个数组首地址作为第二个参数。以上代码，就将是将当前上下文寄存器保存到第一个参数的数组中，然后从第二个数组中加载新的上下文的寄存器的值。</p>
+<p>这种嵌套切换上下文的方式，保证当前调用栈栈顶的协程先执行结束，然后执行前一个协程。这种有明显层级切换结构的协程，也称为
+<strong>非对称协程</strong>。</p>
+<h4><span id="ucontext_t">ucontext_t</span></h4>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">// 上下文结构体</span><br><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ucontext_t</span> &#123;</span><br>    <span class="hljs-comment">// 当前上下文结束后，下一个激活的上下文对象的指针，只在当前上下文是由makecontext创建时有效</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ucontext_t</span> *<span class="hljs-title">uc_link</span>;</span><br>    <span class="hljs-comment">// 当前上下文的信号屏蔽掩码</span><br>    <span class="hljs-keyword">sigset_t</span>          uc_sigmask;<br>    <span class="hljs-comment">// 当前上下文使用的栈内存空间，只在当前上下文是由makecontext创建时有效</span><br>    <span class="hljs-keyword">stack_t</span>           uc_stack;<br>    <span class="hljs-comment">// 平台相关的上下文具体内容，包含寄存器的值</span><br>    <span class="hljs-keyword">mcontext_t</span>        uc_mcontext;<br>    ...<br>&#125; <span class="hljs-keyword">ucontext_t</span>;<br><br><br><span class="hljs-comment">// 获取当前的上下文</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">getcontext</span><span class="hljs-params">(<span class="hljs-keyword">ucontext_t</span> *ucp)</span></span>;<br><br><span class="hljs-comment">// 将 getcontext 获取到的上下文指针ucp，与一个函数 func 进行绑定，支持指定func运行时的参数，</span><br><span class="hljs-comment">// 在调用 makecontext 之前，必须手动给 ucp 分配一段内存空间，存储在 ucp-&gt;uc_stack 中，作为 func 函数运行时的栈空间，</span><br><span class="hljs-comment">// 可以指定 ucp-&gt;uc_link，func 运行结束后恢复 uc_link 指向的上下文</span><br><span class="hljs-comment">// makecontext 执行完后，ucp就与函数func绑定了，调用 setcontext 或 swapcontext 激活 ucp 时，func 就会被运行</span><br><span class="hljs-comment">// 如果不指定 uc_link，那 func函数结束时必须显式调用 setcontext 或 swapcontext 以重新指定一个有效的上下文，否则程序就跑飞了</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">makecontext</span><span class="hljs-params">(<span class="hljs-keyword">ucontext_t</span> *ucp, <span class="hljs-keyword">void</span> (*func)(), <span class="hljs-keyword">int</span> argc, ...)</span></span>;<br><br><br><span class="hljs-comment">// 恢复 ucp 指向的上下文，这个函数会跳转到 ucp上下文 对应的函数中执行，相当于变相调用了函数，但是不会返回。</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">setcontext</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">ucontext_t</span> *ucp)</span></span>;<br><br><span class="hljs-comment">// 恢复 ucp 指向的上下文，同时将当前的上下文存储到 oucp 中</span><br><span class="hljs-comment">// 和 setcontext 一样，swapcontext 会跳转到 ucp上下文 对应的函数中执行，但是不会返回</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">swapcontext</span><span class="hljs-params">(<span class="hljs-keyword">ucontext_t</span> *oucp, <span class="hljs-keyword">const</span> <span class="hljs-keyword">ucontext_t</span> *ucp)</span></span>;<br></code></pre></div></td></tr></table></figure>
+<h3><span id="无栈协程">无栈协程</span></h3>
+<p>无栈协程的典型实现是 <code>async / await</code> 模型。async
+标志会使得编译器，创建一个协程帧，保存函数参数、跨越协程暂停点的局部变量。await
+表示程序在这里转移执行权，等待 await
+后面的程序执行完成，编译器应该在这之后去生成转移执行权的代码。</p>
+<p>无栈协程本质上是一个状态机（state
+machine），利用系统栈进行协程切换。恢复执行所需的数据，和程序运行时的栈是分离存储的。比如把协程的
+frame
+数据放在堆中，而不是栈中，也就不会在函数返回时被回收。从而可以实现异步执行的顺序代码，不用显式的回调来处理非阻塞的输入和输出。</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-comment">// 无栈协程抽象出的一个类</span><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">abstract_coroutine</span> &#123;</span><br>	<span class="hljs-keyword">int</span> val;<br>	<span class="hljs-keyword">int</span> state = <span class="hljs-number">0</span>;<br><br>	<span class="hljs-comment">// interface</span><br>	<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>&#123;<br>		<span class="hljs-keyword">switch</span> (state) &#123;<br>		<span class="hljs-keyword">case</span> <span class="hljs-number">0</span>:<br>			<span class="hljs-keyword">return</span> sub_proc_1();<br>		<span class="hljs-keyword">case</span> <span class="hljs-number">1</span>:<br>			<span class="hljs-keyword">return</span> sub_proc_2();<br>		<span class="hljs-keyword">case</span> <span class="hljs-number">2</span>:<br>			<span class="hljs-keyword">return</span> sub_proc_3();<br>		&#125;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">sub_proc_1</span><span class="hljs-params">()</span> </span>&#123;<br>		val = <span class="hljs-number">0</span>;<br>		state = <span class="hljs-number">1</span>;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">sub_proc_2</span><span class="hljs-params">()</span> </span>&#123;<br>		val = <span class="hljs-number">1</span>;<br>		state = <span class="hljs-number">2</span>;<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">sub_proc_3</span><span class="hljs-params">()</span> </span>&#123;<br>		val--;<br>	&#125;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+<p>每个部分执行完成后，状态转移。下一次调用 run
+时，执行下一个函数调用。这种方式，没有有栈协程的显式上下文切换。这种方式和函数执行和返回几乎没有区别。难点在于如何实现高效地协程调度机制。</p>
+<h3><span id="对称协程-vs-非对称协程">对称协程 vs 非对称协程</span></h3>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/12/19/11-47-53e524555bf08c0d1a94eae0fb41749c-1fb709.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<p>非对称协程，协程之间有严格的父子关系，由调度器负责所有调度。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/12/19/11-37-bcdb29d34702457d0d9d0e486e491ac5-1a7979.png" srcset="/img/loading.gif" lazyload style="zoom:55%;"></p>
+<p>对称式协程，协程之间地位平等。</p>
+<h2><span id="coroutines-in-c">Coroutines in C</span></h2>
+<p>LLVM Coroutines 实现的无栈协程伪代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">void</span> *<span class="hljs-title">f</span><span class="hljs-params">(<span class="hljs-keyword">int</span> n)</span> </span>&#123;<br>  <span class="hljs-keyword">void</span> *hdl = CORO_BEGIN(<span class="hljs-built_in">malloc</span>);<br>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = n;; ++i) &#123;<br>    CORO_SUSPEND(hdl);<br>    <span class="hljs-built_in">print</span>(i);<br>    CORO_SUSPEND(hdl);<br>    <span class="hljs-built_in">print</span>(-i);<br>  &#125;<br>  CORO_END(hdl, <span class="hljs-built_in">free</span>);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>  <span class="hljs-keyword">void</span> *coro = f(<span class="hljs-number">1</span>);<br>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">4</span>; ++i) &#123;<br>    CORO_RESUME(coro);<br>  &#125;<br>  CORO_DESTROY(coro);<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>以上程序的协程帧数据可以定义如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">f</span>.<span class="hljs-title">frame</span> &#123;</span><br>  <span class="hljs-comment">// 只有 i 跨越了协程的调用，而 n 在协程 SUSPEND 处理之前已经没用了</span><br>  <span class="hljs-keyword">int</span> i;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+<p>而编译器会继续优化，比如：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">void</span> *<span class="hljs-title">f</span><span class="hljs-params">(<span class="hljs-keyword">int</span> n)</span> </span>&#123;<br>  <span class="hljs-keyword">void</span> *hdl = CORO_BEGIN(<span class="hljs-built_in">malloc</span>);<br>  f.frame *frame = (f.frame *)hdl;<br>  <span class="hljs-keyword">for</span> (frame-&gt;i = n;; ++frame-&gt;i) &#123;<br>    frame-&gt;suspend_index = <span class="hljs-number">0</span>;<br>  r0:<br>    CORO_SUSPEND(hdl);<br>    <span class="hljs-built_in">print</span>(frame-&gt;i);<br>    frame-&gt;suspend_index = <span class="hljs-number">1</span>;<br>  r1:<br>    CORO_SUSPEND(hdl);<br>    <span class="hljs-built_in">print</span>(-frame-&gt;i);<br>  &#125;<br>  CORO_END(hdl, <span class="hljs-built_in">free</span>);<br>&#125;<br><br><span class="hljs-comment">// 此时协程帧数据</span><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">f</span>.<span class="hljs-title">frame</span> &#123;</span><br>  <span class="hljs-keyword">int</span> suspend_index;<br>  <span class="hljs-keyword">int</span> i;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+<p>编译器同时，会生成三个函数调用：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">// coroutine start function</span><br><span class="hljs-function"><span class="hljs-keyword">void</span>* <span class="hljs-title">f</span><span class="hljs-params">(<span class="hljs-keyword">int</span> *n)</span> </span>&#123;<br>    <span class="hljs-keyword">void</span>* hdl = CORO_BEGIN(<span class="hljs-built_in">malloc</span>); <br>    f.frame* frame = (f.frame*)hdl;<br>    frame-&gt;ResumeFn = &amp;f.resume;<br>    frame-&gt;DestroyFn = &amp;f.destroy;<br>    frame-&gt;i = n;<br>    frame-&gt;suspend_index = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">return</span> coro_hdl;<br>&#125;<br><br><span class="hljs-comment">// coroutine resume function</span><br><span class="hljs-keyword">void</span> f.resume(f.frame *frame) &#123;<br>  <span class="hljs-keyword">switch</span> (frame-&gt;suspend_index) &#123;<br>  <span class="hljs-keyword">case</span> <span class="hljs-number">0</span>:<br>    <span class="hljs-keyword">goto</span> r0;<br>  <span class="hljs-keyword">default</span>:<br>    <span class="hljs-keyword">goto</span> r1;<br>  &#125;<br>  <span class="hljs-keyword">for</span> (frame-&gt;i = n;; ++frame-&gt;i) &#123;<br>    frame-&gt;suspend_index = <span class="hljs-number">0</span>;<br>  r0:<br>    CORO_SUSPEND(hdl);<br>    <span class="hljs-built_in">print</span>(frame-&gt;i);<br>    frame-&gt;suspend_index = <span class="hljs-number">1</span>;<br>  r1:<br>    CORO_SUSPEND(hdl);<br>    <span class="hljs-built_in">print</span>(-frame-&gt;i);<br>  &#125;<br>  CORO_END(hdl, <span class="hljs-built_in">free</span>);<br>&#125;<br><br><span class="hljs-comment">// coroutine destroy function</span><br><span class="hljs-keyword">void</span> f.destroy(f.frame *frame) &#123;<br>  <span class="hljs-keyword">switch</span> (frame-&gt;suspend_index) &#123;<br>    …<br>  &#125;<br>  <span class="hljs-built_in">free</span>(frame);<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>此时的协程帧中数据为：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">f</span>.<span class="hljs-title">frame</span> &#123;</span><br>    FnPtr ResumeFn;<br>    FnPtr DestroyFn;<br>    <span class="hljs-keyword">int</span> suspend_index;<br>    <span class="hljs-keyword">int</span> i;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+<p>LLVM Coroutines 中定义了以下宏，用于处理协程的不同状态：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> CORO_SUSPEND()                                                         \</span><br>  <span class="hljs-keyword">switch</span> (__builtin_coro_suspend()) &#123;                                          \<br>  <span class="hljs-keyword">case</span> <span class="hljs-number">-1</span>:                                                                     \<br>    <span class="hljs-keyword">goto</span> coro_Suspend;                                                         \<br>  <span class="hljs-keyword">case</span> <span class="hljs-number">1</span>:                                                                      \<br>    <span class="hljs-keyword">goto</span> coro_Cleanup;                                                         \<br>  <span class="hljs-keyword">default</span>:                                                                     \<br>    <span class="hljs-keyword">break</span>;                                                                     \<br>  &#125;<br><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> CORO_END(hdl, FreeFunc)                                                \</span><br>  coro_Cleanup : &#123;                                                             \<br>    <span class="hljs-keyword">void</span> *coro_mem = __builtin_coro_free(hdl);                                 \<br>    <span class="hljs-keyword">if</span> (coro_mem)                                                              \<br>      FreeFunc(coro_mem);                                                      \<br>  &#125;                                                                            \<br>  coro_Suspend:                                                                \<br>  __builtin_coro_end();                                                        \<br>  <span class="hljs-keyword">return</span> coro_hdl;<br></code></pre></div></td></tr></table></figure>
+<h2><span id="c20-协程">C++20 协程</span></h2>
+<p>C++20
+协程是无栈协程。定义中包含了以下3种表达式之一的函数，就是一个协程。</p>
+<ul>
+<li>co_await 表达式——用于暂停执行，直到恢复：</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function">task&lt;&gt; <span class="hljs-title">tcp_echo_server</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">char</span> data[<span class="hljs-number">1024</span>];<br>    <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>)<br>    &#123;<br>        <span class="hljs-built_in">std</span>::<span class="hljs-keyword">size_t</span> n = <span class="hljs-keyword">co_await</span> socket.async_read_some(buffer(data));<br>        <span class="hljs-function"><span class="hljs-keyword">co_await</span> <span class="hljs-title">async_write</span><span class="hljs-params">(socket, buffer(data, n))</span></span>;<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<ul>
+<li>co_yield 表达式——用于暂停执行并返回一个值：</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function">generator&lt;<span class="hljs-keyword">int</span>&gt; <span class="hljs-title">iota</span><span class="hljs-params">(<span class="hljs-keyword">int</span> n = <span class="hljs-number">0</span>)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>)<br>        <span class="hljs-keyword">co_yield</span> n++;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<ul>
+<li>co_return 语句——用于完成执行并返回一个值：</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function">lazy&lt;<span class="hljs-keyword">int</span>&gt; <span class="hljs-title">f</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">co_return</span> <span class="hljs-number">7</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>每个协程都与下列对象关联：</p>
+<ul>
+<li><em>承诺（promise）对象</em>，在协程内部操纵。协程通过此对象提交其结果或异常。</li>
+<li><em>协程句柄 (coroutine
+handle)</em>，在协程外部操纵。这是用于恢复协程执行或销毁协程帧的不带所有权句柄。</li>
+<li><em>协程状态 (coroutine
+state)</em>，它是一个动态存储分配（除非自定义分配方式）的内部对象，其包含：
+<ul>
+<li>promise 对象</li>
+<li>各个形参（全部按值复制）</li>
+<li>当前暂停点的一些表示，使得程序在恢复时知晓要从何处继续，销毁时知晓有哪些局部变量在作用域内</li>
+<li>生存期超过当前暂停点的局部变量和临时量</li>
+</ul></li>
+</ul>
+<p>当协程开始执行时，它进行下列操作：</p>
+<ul>
+<li>用 <a href="https://zh.cppreference.com/w/cpp/memory/new/operator_new" target="_blank" rel="noopener" title="cpp/memory/new/operator new">operator new</a> <a href="https://zh.cppreference.com/w/cpp/language/coroutines#.E5.8A.A8.E6.80.81.E5.88.86.E9.85.8D" target="_blank" rel="noopener">分配</a>协程状态对象</li>
+<li>将所有函数形参复制到协程状态中：按值传递的形参被移动或复制，按引用传递的参数保持为引用（因此，如果在被指代对象的生存期结束后恢复协程，它可能变成悬垂引用）</li>
+<li>调用承诺对象的构造函数。如果承诺类型拥有接收所有协程形参的构造函数，那么以复制后的协程实参调用该构造函数。否则调用其默认构造函数。</li>
+<li>调用 promise.get_return_object() 并将结果保存在局部变量中。该调用的结果将在协程首次暂停时返回给调用方。至此并包含这个步骤为止，任何抛出的异常均传播回调用方，而非置于
+promise 中。</li>
+<li>调用 promise.initial_suspend() 并 co_await 它的结果。典型的承诺类型 <code>Promise</code> 要么（对于惰性启动的协程）返回<a href="https://zh.cppreference.com/w/cpp/coroutine/suspend_always" target="_blank" rel="noopener" title="cpp/coroutine/suspend always">std::suspend_always</a>，要么（对于急切启动的协程）返回<a href="https://zh.cppreference.com/w/cpp/coroutine/suspend_never" target="_blank" rel="noopener" title="cpp/coroutine/suspend never">std::suspend_never</a>。</li>
+<li>当 co_await
+promise.initial_suspend() 恢复时，开始协程体的执行。</li>
+</ul>
+<h4><span id="一个跨线程调度协程示例">一个跨线程调度协程示例</span></h4>
+<p>程序实现了 producer 协程运行在线程2中， 500ms 后生成一个 val
+；consumer 协程运行在线程 1 中，并会被调度到线程2 中执行，最后读取出
+val。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;coroutine&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;chrono&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;future&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;thread&gt;</span></span><br><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;<br><br><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Task</span> &#123;</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">promise_type</span>;</span><br>    <span class="hljs-keyword">using</span> handle_type = <span class="hljs-built_in">std</span>::coroutine_handle&lt;promise_type&gt;;<br><br>    handle_type h;  <span class="hljs-comment">// 协程的 handle</span><br>    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">future</span>&lt;<span class="hljs-keyword">void</span>&gt; fut;<br><br>    <span class="hljs-comment">//=================================================================================</span><br>    <span class="hljs-comment">// promise</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">promise_type</span> &#123;</span><br>        <span class="hljs-keyword">int</span> result;<br>        coroutine_handle&lt;&gt; h_next = <span class="hljs-literal">nullptr</span>;  <span class="hljs-comment">// 调度的下一个协程</span><br><br>        <span class="hljs-function">Task <span class="hljs-title">get_return_object</span><span class="hljs-params">()</span> </span>&#123;<br>            <span class="hljs-keyword">return</span> Task&#123; handle_type::from_promise(*<span class="hljs-keyword">this</span>) &#125;;<br>        &#125;<br><br>        <span class="hljs-function">suspend_always <span class="hljs-title">initial_suspend</span><span class="hljs-params">()</span> </span>&#123; <span class="hljs-keyword">return</span> &#123;&#125;;&#125;;<br><br>        <span class="hljs-function"><span class="hljs-keyword">auto</span> <span class="hljs-title">final_suspend</span><span class="hljs-params">()</span> <span class="hljs-keyword">noexcept</span> </span>&#123;<br>            <span class="hljs-comment">// 被 await 后，如果 h_next 不为空，则返回 h_next(调度到指定协程)，否则返回 std::noop_coroutine() (调度到协程的调用者)</span><br>            <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">next_awaiter</span> &#123;</span>  <span class="hljs-comment">// as a promise</span><br>                promise_type* self;<br><br>                <span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">await_ready</span><span class="hljs-params">()</span> <span class="hljs-keyword">noexcept</span> </span>&#123; <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>; &#125;   <span class="hljs-comment">// will suspend</span><br>                <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">await_resume</span><span class="hljs-params">()</span> <span class="hljs-keyword">noexcept</span> </span>&#123;&#125;;<br><br>                <span class="hljs-function">coroutine_handle&lt;&gt; <span class="hljs-title">await_suspend</span><span class="hljs-params">(coroutine_handle&lt;promise_type&gt; hdl)</span> <span class="hljs-keyword">noexcept</span> </span>&#123;<br>                    <span class="hljs-keyword">if</span> (hdl.promise().h_next) &#123;<br>                        <span class="hljs-keyword">return</span> hdl.promise().h_next;   <span class="hljs-comment">// 返回 h_next ，即调度的到下一个协程</span><br>                    &#125; <span class="hljs-keyword">else</span> &#123;<br>                        <span class="hljs-keyword">return</span> <span class="hljs-built_in">std</span>::noop_coroutine();<br>                    &#125;<br>                &#125;<br>            &#125;;<br>            <span class="hljs-keyword">return</span> next_awaiter&#123; <span class="hljs-keyword">this</span> &#125;;<br>        &#125;<br><br>        <span class="hljs-comment">// called at co_return</span><br>        <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">return_value</span><span class="hljs-params">(<span class="hljs-keyword">int</span> i)</span> </span>&#123; result = i; &#125;<br><br>        <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">unhandled_exception</span><span class="hljs-params">()</span> </span>&#123;&#125;<br>    &#125;;<br><br>    <span class="hljs-comment">//=================================================================================</span><br>    <span class="hljs-comment">// awaiter definition</span><br>    <span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">await_ready</span><span class="hljs-params">()</span> </span>&#123; <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>; &#125;   <span class="hljs-comment">// go to await_suspend</span><br>    <span class="hljs-comment">// co_await will call await_suspend</span><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">await_suspend</span><span class="hljs-params">(handle_type hdl)</span> </span>&#123;<br>        h.promise().h_next = hdl;  <span class="hljs-comment">// 设置下一个协程(consume)</span><br>        <span class="hljs-comment">// 另开线程执行 producer 协程 resume() , 此时异步地开始执行 produce() 函数</span><br>        fut = <span class="hljs-built_in">std</span>::async([<span class="hljs-keyword">this</span>]() &#123; h.resume(); &#125;);<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">await_resume</span><span class="hljs-params">()</span> </span>&#123; <span class="hljs-keyword">return</span> h.promise().result; &#125;<br>&#125;;<br><br><br><span class="hljs-comment">// 协程 producer</span><br><span class="hljs-function">Task <span class="hljs-title">produce</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-comment">// producer 协程 resume() ，从这里开始执行</span><br>    <span class="hljs-keyword">int</span> val = <span class="hljs-number">1111</span>;<br>    <span class="hljs-built_in">std</span>::this_thread::sleep_for(<span class="hljs-built_in">std</span>::chrono::milliseconds(<span class="hljs-number">500</span>));<br>    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="hljs-string">" produce: "</span> &lt;&lt; val &lt;&lt; <span class="hljs-built_in">endl</span>;<br>    <span class="hljs-keyword">co_return</span> val;  <span class="hljs-comment">// promise::return_value(int)</span><br>    <span class="hljs-comment">// final_suspend 返回 consumer 的 coroutine_handle，即调度到 consumer 协程</span><br>    <span class="hljs-comment">// 注意，此时 producer 协程还存在，同时，当前运行在 async 线程中</span><br>&#125;<br><br><br><span class="hljs-comment">// 协程 consumer</span><br><span class="hljs-function">Task <span class="hljs-title">consume</span><span class="hljs-params">(Task&amp; fut)</span> </span>&#123;<br>    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="hljs-string">" consume: waiting "</span> &lt;&lt; <span class="hljs-built_in">endl</span>;<br>    <span class="hljs-comment">// 这里的 co_await 的是 producer (fut) ，传入 producer::await_suspend 的是 consumer 的 coroutine_handle </span><br>    <span class="hljs-comment">// 从 producer::await_suspend 开始执行</span><br>    <span class="hljs-keyword">int</span> val = <span class="hljs-keyword">co_await</span> fut;<br>    <span class="hljs-comment">// 从 producer::final_suspend 执行结束后，调度到 consumer 协程，从此处开始执行</span><br>    <span class="hljs-comment">// 在此之前，由 producer::await_resume 返回的结果，保存到 val</span><br>    <span class="hljs-comment">// ！！！注意，此时 consumer 协程运行在 async 线程中</span><br>    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="hljs-string">" consume: "</span> &lt;&lt; val &lt;&lt; <span class="hljs-built_in">endl</span>;<br>    <span class="hljs-keyword">co_return</span> <span class="hljs-number">0</span>;  <span class="hljs-comment">// promise::return_value(int)</span><br>    <span class="hljs-comment">// 协程结束执行，即 async 线程结束</span><br>&#125;<br><br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-comment">// 初始化协程</span><br>    <span class="hljs-keyword">auto</span> prod = produce();<br>    <span class="hljs-keyword">auto</span> cons = consume(prod);<br><br>    <span class="hljs-comment">// consumer 协程 ，从 co_await 开始执行</span><br>    cons.h.resume();<br>    <br>    <span class="hljs-comment">// 等待协程 consumer 协程执行完毕，但是当前程序不会阻塞，而是忙等待</span><br>    <span class="hljs-keyword">while</span> (!cons.h.done()) &#123;<br>        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="hljs-string">" main: waiting "</span> &lt;&lt; <span class="hljs-built_in">endl</span>;<br>        <span class="hljs-built_in">std</span>::this_thread::sleep_for(<span class="hljs-built_in">std</span>::chrono::milliseconds(<span class="hljs-number">100</span>));<br>    &#125;<br><br>    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="hljs-string">" main: done"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;  <span class="hljs-comment">// 主线程结束，协程析构</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h4><span id="co_await">co_await</span></h4>
+<p>作为一个一元操作符，暂停协程并将控制权返回给调用方。</p>
+<ol type="1">
+<li>将操作对象转化为可等待体 awaitable 对象</li>
+<li>调用 awaiter.await_ready()
+<ul>
+<li>返回 false
+暂停协程，此时协程已经完全暂停，可以在不同线程间转移协程句柄，而且不需要额外同步处理。
+<ul>
+<li>调用 awaiter.await_suspend(handle) ，其中 handle
+表示当前协程的协程句柄：
+<ul>
+<li>await_suspend 返回 void
+，那么将控制权返回给协程的调用方，而暂停当前协程。</li>
+<li>await_suspend 返回 true，也将控制权返回给调用方；返回 false
+，则继续执行当前协程。</li>
+<li>await_suspend 返回 其他协程的句柄，那么 handle.resume()
+恢复执行其他协程，最终会返回到当前协程。</li>
+<li>await_suspend 抛出异常，那么会向上一层调用者抛出异常。</li>
+</ul></li>
+</ul></li>
+<li>返回 true 不会暂停协程</li>
+</ul></li>
+<li>调用 awaiter.await_resume() ，它的返回结果就是 co_await expr
+的返回结果。</li>
+</ol>
+<p>由于如果执行到
+awaiter.await_suspend，那么协程已经完全暂停，可以在不同线程间转移协程句柄，而且不需要额外同步处理。比如，将协程句柄写入回调函数，在某个异步
+IO 操作完成时运行该协程。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;coroutine&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdexcept&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;thread&gt;</span></span><br><br><br><span class="hljs-function"><span class="hljs-keyword">auto</span> <span class="hljs-title">switch_to_new_thread</span><span class="hljs-params">(<span class="hljs-built_in">std</span>::jthread&amp; out)</span> </span>&#123;<br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">awaitable</span> &#123;</span><br>        <span class="hljs-built_in">std</span>::jthread* p_out;<br>        <span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">await_ready</span><span class="hljs-params">()</span> </span>&#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>        &#125;<br>        <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">await_suspend</span><span class="hljs-params">(<span class="hljs-built_in">std</span>::coroutine_handle&lt;&gt; h)</span> </span>&#123;<br>            <span class="hljs-built_in">std</span>::jthread&amp; out = *p_out;<br>            <span class="hljs-keyword">if</span> (out.joinable()) &#123;<br>                <span class="hljs-keyword">throw</span> <span class="hljs-built_in">std</span>::runtime_error(<span class="hljs-string">"thread already started, needed to be null, then generated by internal suspend"</span>);<br>            &#125;<br>            out = <span class="hljs-built_in">std</span>::jthread([h] &#123;h.resume();&#125;);<br>            <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"New thread "</span> &lt;&lt; out.get_id() &lt;&lt; <span class="hljs-string">" started\n"</span>;<br>        &#125;<br><br>        <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">await_resume</span><span class="hljs-params">()</span> </span>&#123;&#125;<br>    &#125;;<br>    <br>    <span class="hljs-keyword">return</span> awaitable&#123;&amp;out&#125;;<br>&#125;<br><br><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">task</span> &#123;</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">promise_type</span> &#123;</span><br>        <span class="hljs-function">task <span class="hljs-title">get_return_object</span><span class="hljs-params">()</span> </span>&#123;<br>            <span class="hljs-keyword">return</span> &#123;&#125;;<br>        &#125;<br>        <span class="hljs-function"><span class="hljs-built_in">std</span>::suspend_never <span class="hljs-title">initial_suspend</span><span class="hljs-params">()</span> </span>&#123;<br>            <span class="hljs-keyword">return</span> &#123;&#125;;<br>        &#125;<br>        <span class="hljs-function"><span class="hljs-built_in">std</span>::suspend_never <span class="hljs-title">final_suspend</span><span class="hljs-params">()</span> <span class="hljs-keyword">noexcept</span> </span>&#123;<br>            <span class="hljs-keyword">return</span> &#123;&#125;;<br>        &#125;<br><br>        <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">return_void</span><span class="hljs-params">()</span> </span>&#123;&#125;<br><br>        <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">unhandled_exception</span><span class="hljs-params">()</span> </span>&#123;&#125;<br>    &#125;;<br>&#125;;<br><br><br><span class="hljs-function">task <span class="hljs-title">resuming_on_new_thread</span><span class="hljs-params">(<span class="hljs-built_in">std</span>::jthread&amp; out)</span> </span>&#123;<br>    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"coroutine start, current thread "</span> &lt;&lt; <span class="hljs-built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;<br>    <span class="hljs-function"><span class="hljs-keyword">co_await</span> <span class="hljs-title">switch_to_new_thread</span><span class="hljs-params">(out)</span></span>;<br>    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"coroutine end, current thread "</span> &lt;&lt; <span class="hljs-built_in">std</span>::this_thread::get_id() &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;<br>&#125;<br><br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-built_in">std</span>::jthread out;<br>    resuming_on_new_thread(out);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>std::suspend_always 及 std::suspend_never 就是标准库提供的两个
+awaitable 对象。</p>
+<h4><span id="co_yield">co_yield</span></h4>
+<p>yield
+表达式向调用方返回一个值并暂停当前协程，在生成器函数中很常见。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-keyword">co_yield</span> expr<br><span class="hljs-comment">// 或者</span><br><span class="hljs-keyword">co_yield</span> &#123;initializer <span class="hljs-built_in">list</span>&#125;<br><br><span class="hljs-comment">// 等价于</span><br><span class="hljs-keyword">co_await</span> promise.yield_value(expr)<br></code></pre></div></td></tr></table></figure>
+<p>yield_value 生成器将实参保存到生成器对象中，并返回 suspend_always
+，并将控制权交还给调用方。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;coroutine&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;exception&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;memory&gt;</span></span><br><br><span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">typename</span> T&gt;<br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Generator</span> &#123;</span><br>    <span class="hljs-comment">// 定义一个 promise_type 类型，用于生成 handle_type</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">promise_type</span>;</span><br>    <span class="hljs-keyword">using</span> handle_type = <span class="hljs-built_in">std</span>::coroutine_handle&lt;promise_type&gt;;<br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">promise_type</span> &#123;</span><br>        T value;  <span class="hljs-comment">// 在 promise 中暂存了值</span><br>        <span class="hljs-built_in">std</span>::exception_ptr exception;<br><br>        <span class="hljs-function">Generator <span class="hljs-title">get_return_object</span><span class="hljs-params">()</span> </span>&#123;<br>            <span class="hljs-keyword">return</span> Generator(handle_type::from_promise(*<span class="hljs-keyword">this</span>));<br>        &#125;<br><br>        <span class="hljs-function"><span class="hljs-built_in">std</span>::suspend_always <span class="hljs-title">initial_suspend</span><span class="hljs-params">()</span> </span>&#123; <span class="hljs-keyword">return</span> &#123;&#125;; &#125;<br>        <span class="hljs-function"><span class="hljs-built_in">std</span>::suspend_always <span class="hljs-title">final_suspend</span><span class="hljs-params">()</span> <span class="hljs-keyword">noexcept</span> </span>&#123; <span class="hljs-keyword">return</span> &#123;&#125;; &#125;<br>        <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">unhandled_exception</span><span class="hljs-params">()</span> </span>&#123; exception = <span class="hljs-built_in">std</span>::current_exception(); &#125;<br><br>        <span class="hljs-keyword">template</span> &lt;<span class="hljs-built_in">std</span>::convertible_to&lt;T&gt; From&gt;<br>        <span class="hljs-function"><span class="hljs-built_in">std</span>::suspend_always <span class="hljs-title">yield_value</span><span class="hljs-params">(From&amp;&amp; from)</span> </span>&#123;<br>            value = <span class="hljs-built_in">std</span>::forward&lt;From&gt;(from);<br>            <span class="hljs-keyword">return</span> &#123;&#125;;<br>        &#125;<br><br>        <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">return_void</span><span class="hljs-params">()</span> </span>&#123;&#125;<br>    &#125;;<br><br>    <span class="hljs-comment">// 构造函数传入 handle_type，用于生成 Generator 对象</span><br>    handle_type h;<br>    Generator(handle_type hdl) : h(hdl) &#123;&#125;<br>    ~Generator() &#123; h.destroy(); &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">explicit</span> <span class="hljs-keyword">operator</span> <span class="hljs-title">bool</span><span class="hljs-params">()</span> </span>&#123;<br>        fill();  <span class="hljs-comment">// 调用 fill() 方法，填充 promise 中的值和异常对象；如果过没有使用 operator()，则不会重复执行协程</span><br>        <span class="hljs-keyword">return</span> !h.done();<br>    &#125;<br><br>    <span class="hljs-function">T <span class="hljs-title">operator</span><span class="hljs-params">()</span><span class="hljs-params">()</span> </span>&#123;<br>        fill();<br>        m_full = <span class="hljs-literal">false</span>;<br>        <span class="hljs-keyword">return</span> <span class="hljs-built_in">std</span>::move(h.promise().value);  <span class="hljs-comment">// 返回 promise 中暂存的值</span><br>    &#125;<br><br><span class="hljs-keyword">private</span>:<br>    <span class="hljs-keyword">bool</span> m_full = <span class="hljs-literal">false</span>;<br><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">fill</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (!m_full) &#123;<br>            h();  <span class="hljs-comment">// 调用 handle_type::operator()，触发协程执行</span><br>            <span class="hljs-comment">// handle 中存储的 promise 对象，暂存了当前的目标变量值拷贝和程序异常对象</span><br>            <span class="hljs-keyword">if</span> (h.promise().exception) &#123;<br>                <span class="hljs-built_in">std</span>::rethrow_exception(h.promise().exception);<br>            &#125;<br>            m_full = <span class="hljs-literal">true</span>;<br>        &#125;<br>    &#125;<br><br>&#125;;<br><br><br>Generator&lt;<span class="hljs-keyword">uint64_t</span>&gt;<br>fibonacci_sequence(<span class="hljs-keyword">unsigned</span> n) &#123;<br>    <span class="hljs-keyword">if</span> (n == <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-keyword">co_return</span> ;<br>    &#125;<br>    <span class="hljs-keyword">if</span> (n &gt; <span class="hljs-number">94</span>) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-built_in">std</span>::runtime_error(<span class="hljs-string">"n too large, number will overflow"</span>);<br>    &#125;<br><br>    <span class="hljs-keyword">co_yield</span> <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">if</span> (n == <span class="hljs-number">1</span>) &#123;<br>        <span class="hljs-keyword">co_return</span>;<br>    &#125;<br>    <br>    <span class="hljs-keyword">co_yield</span> <span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">if</span> (n == <span class="hljs-number">2</span>) &#123;<br>        <span class="hljs-keyword">co_return</span>;<br>    &#125;<br><br>    <span class="hljs-keyword">uint64_t</span> a = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">uint64_t</span> b = <span class="hljs-number">1</span>;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">unsigned</span> i = <span class="hljs-number">2</span>; i &lt; n; ++i) &#123;<br>        <span class="hljs-keyword">uint64_t</span> s = a + b;<br>        <span class="hljs-keyword">co_yield</span> s;<br>        a = b;<br>        b = s;<br>    &#125;<br>&#125;<br><br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-keyword">auto</span> gen = fibonacci_sequence(<span class="hljs-number">1</span>);<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; gen; ++j) &#123;<br>            <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"fibonacci["</span> &lt;&lt; j &lt;&lt; <span class="hljs-string">"] = "</span> &lt;&lt; gen() &lt;&lt; <span class="hljs-string">'\n'</span>;<br>        &#125;<br>    &#125; <span class="hljs-keyword">catch</span> (<span class="hljs-keyword">const</span> <span class="hljs-built_in">std</span>::exception&amp; e) &#123;<br>        <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cerr</span> &lt;&lt; <span class="hljs-string">"exception: "</span> &lt;&lt; e.what() &lt;&lt; <span class="hljs-string">'\n'</span>;<br>    &#125; <span class="hljs-keyword">catch</span> (...) &#123;<br>        <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cerr</span> &lt;&lt; <span class="hljs-string">"unknown exception\n"</span>;<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h4><span id="co_return">co_return</span></h4>
+<p>co_return expr; 相当于
+<code>p.return_value(expr); goto final_suspend;</code> 。 co_return;
+相当于 <code>p.return_void(expr); goto final_suspend;</code>。</p>
+<h4><span id="coroutine_handle">coroutine_handle</span></h4>
+<p>类模板 coroutine_handle
+能用于表示，暂停或执行中的协程。使用时要注意避免 dangling
+问题，可能会导致 undefined behavior。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;coroutine&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;optional&gt;</span></span><br><br><br><span class="hljs-keyword">template</span> &lt;<span class="hljs-built_in">std</span>::movable T&gt;<br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Generator</span> &#123;</span><br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-comment">//=================================================================================</span><br>    <span class="hljs-comment">// promise_type</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">promise_type</span> &#123;</span><br>        <span class="hljs-built_in">std</span>::optional&lt;T&gt; current_value;<br><br>        <span class="hljs-function">Generator&lt;T&gt; <span class="hljs-title">get_return_object</span><span class="hljs-params">()</span> </span>&#123;<br>            <span class="hljs-keyword">return</span> Generator&#123;Handle::from_promise(*<span class="hljs-keyword">this</span>)&#125;;<br>        &#125;<br>        <br>        <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-built_in">std</span>::suspend_always <span class="hljs-title">initial_suspend</span><span class="hljs-params">()</span> <span class="hljs-keyword">noexcept</span> </span>&#123; <span class="hljs-keyword">return</span> &#123;&#125;; &#125;<br>        <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-built_in">std</span>::suspend_always <span class="hljs-title">final_suspend</span><span class="hljs-params">()</span> <span class="hljs-keyword">noexcept</span> </span>&#123; <span class="hljs-keyword">return</span> &#123;&#125;; &#125;<br><br>        <span class="hljs-function"><span class="hljs-built_in">std</span>::suspend_always <span class="hljs-title">yield_value</span><span class="hljs-params">(T value)</span> <span class="hljs-keyword">noexcept</span> </span>&#123;<br>            current_value = <span class="hljs-built_in">std</span>::move(value);<br>            <span class="hljs-keyword">return</span> &#123;&#125;;            <br>        &#125;<br><br>        <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">await_transform</span><span class="hljs-params">()</span> </span>= <span class="hljs-keyword">delete</span>;<br>        [[noreturn]] <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">unhandled_exception</span><span class="hljs-params">()</span> </span>&#123; <span class="hljs-keyword">throw</span>; &#125;<br>    &#125;;<br><br>    <span class="hljs-keyword">using</span> Handle = <span class="hljs-built_in">std</span>::coroutine_handle&lt;promise_type&gt;;<br>    <br>    <span class="hljs-function"><span class="hljs-keyword">explicit</span> <span class="hljs-title">Generator</span><span class="hljs-params">(<span class="hljs-keyword">const</span> Handle coroutine)</span> : <span class="hljs-title">m_coroutine</span><span class="hljs-params">(coroutine)</span> </span>&#123;&#125;<br><br>    <span class="hljs-comment">//=================================================================================</span><br>    <span class="hljs-comment">// constructor</span><br>    Generator() = <span class="hljs-keyword">default</span>;<br>    ~Generator() &#123;<br>        <span class="hljs-keyword">if</span> (m_coroutine) &#123;<br>            m_coroutine.destroy();<br>        &#125;<br>    &#125;<br><br>    Generator(<span class="hljs-keyword">const</span> Generator&amp;) = <span class="hljs-keyword">delete</span>;<br>    Generator&amp; <span class="hljs-keyword">operator</span>=(<span class="hljs-keyword">const</span> Generator&amp;) = <span class="hljs-keyword">delete</span>;<br><br>    Generator(Generator&amp;&amp; other) : m_coroutine(other.m_coroutine) &#123;<br>        other.m_coroutine = &#123;&#125;;<br>    &#125;<br>    Generator&amp; <span class="hljs-keyword">operator</span>=(Generator&amp;&amp; other) &#123;<br>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span> != &amp;other) &#123;<br>            <span class="hljs-keyword">if</span> (m_coroutine) &#123;<br>                m_coroutine.destroy();<br>            &#125;<br>            m_coroutine = other.m_coroutine;<br>            other.m_coroutine = &#123;&#125;;<br>        &#125;<br>        <span class="hljs-keyword">return</span> *<span class="hljs-keyword">this</span>;<br>    &#125;<br>    <br>    <span class="hljs-comment">//=================================================================================</span><br>    <span class="hljs-comment">// for loop support</span><br>    <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Iter</span> &#123;</span><br>    <span class="hljs-keyword">public</span>:<br>        <span class="hljs-keyword">void</span> <span class="hljs-keyword">operator</span>++() &#123;<br>            m_coroutine.resume();<br>        &#125;<br>        <span class="hljs-keyword">const</span> T&amp; <span class="hljs-keyword">operator</span>*() &#123;<br>            <span class="hljs-keyword">return</span> *m_coroutine.promise().current_value;<br>        &#125;<br><br>        <span class="hljs-comment">// out of range</span><br>        <span class="hljs-keyword">bool</span> <span class="hljs-keyword">operator</span>==(<span class="hljs-built_in">std</span>::<span class="hljs-keyword">default_sentinel_t</span>) <span class="hljs-keyword">const</span> &#123;<br>            <span class="hljs-keyword">return</span> !m_coroutine || m_coroutine.done();<br>        &#125;<br><br>        <span class="hljs-function"><span class="hljs-keyword">explicit</span> <span class="hljs-title">Iter</span><span class="hljs-params">(<span class="hljs-keyword">const</span> Handle coroutine)</span> : <span class="hljs-title">m_coroutine</span><span class="hljs-params">(coroutine)</span> </span>&#123;&#125;<br><br>    <span class="hljs-keyword">private</span>:<br>        Handle m_coroutine;<br>    &#125;;<br><br>    <span class="hljs-function">Iter <span class="hljs-title">begin</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (m_coroutine) &#123;<br>            m_coroutine.resume();<br>        &#125;<br>        <span class="hljs-keyword">return</span> Iter&#123;m_coroutine&#125;;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-built_in">std</span>::<span class="hljs-keyword">default_sentinel_t</span> <span class="hljs-title">end</span><span class="hljs-params">()</span> </span>&#123; <span class="hljs-keyword">return</span> &#123;&#125;; &#125;<br><br><span class="hljs-keyword">private</span>:<br>    Handle m_coroutine;<br>&#125;;<br><br><br><span class="hljs-keyword">template</span> &lt;<span class="hljs-built_in">std</span>::integral T&gt;<br><span class="hljs-function">Generator&lt;T&gt; <span class="hljs-title">range</span><span class="hljs-params">(T first, T last)</span> </span>&#123;<br>    <span class="hljs-keyword">while</span> (first &lt; last) &#123;<br>        <span class="hljs-keyword">co_yield</span> first;<br>        first++;<br>    &#125;<br>&#125;<br><br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> i : range(<span class="hljs-number">65</span>, <span class="hljs-number">91</span>)) &#123;<br>        <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; i &lt;&lt; <span class="hljs-string">' '</span>;<br>    &#125;<br>    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">'\n'</span>;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>数据成员</p>
+<ul>
+<li>ptr : void* ，指向协程状态的指针； 成员函数</li>
+<li>构造函数</li>
+<li>operator= 拷贝赋值</li>
+<li>operator coroutine_handle&lt;&gt; 获得类型擦除的 coroutine_handle
+，就是说将不同类型的模版，返回统一的类型</li>
+<li>done : 检查协程是否完成</li>
+<li>operator bool : 检查当前 handle 是否表示协程</li>
+<li>operator() 或者 resume : 恢复协程执行</li>
+<li>destroy : 销毁协程</li>
+<li>promise : 访问协程的 promise 对象</li>
+<li>from_promise : 从一个 promise 对象，创建 coroutine_handle</li>
+<li>address : 返回支撑协程的底层指针</li>
+<li>from_address : 从指针地址导入协程</li>
+</ul>
+<p>C++20 还为 coroutine_handle
+提供了散列特化支持，std::hash<std::coroutine_handle>。</std::coroutine_handle></p>
+<h3><span id="应用">应用</span></h3>
+<p>在设计网络应用时，可以在需要等待IO输入时，将协程 co_await
+交还控制权到协程的调用者或者调度到其他协程。当 epoll
+中来数据了，触发了IO事件，再在相应的回调函数中 resume 协程的调用。</p>
+<h3><span id="io-多路复用">IO 多路复用</span></h3>
+<h3><span id="more-to-read">More to read</span></h3>
+<ul>
+<li><a href="https://www.scs.stanford.edu/~dm/blog/c++-coroutines.html" target="_blank" rel="noopener">My
+tutorial and take on C++20 coroutines (stanford.edu)</a></li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/Coroutine/">Coroutine</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Multi-threading/">Multi-threading</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Coroutine/">Coroutine</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/3465c9da.html">
+                        <span class="hidden-mobile">HTTP1.0到3.0浅析</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
