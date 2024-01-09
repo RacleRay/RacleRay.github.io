@@ -871,9 +871,9 @@
             
             <tag> sentence embedding </tag>
             
-            <tag> BERT </tag>
-            
             <tag> nlp </tag>
+            
+            <tag> BERT </tag>
             
         </tags>
       
@@ -956,9 +956,9 @@
       
         <tags>
             
-            <tag> nlp </tag>
-            
             <tag> CRF </tag>
+            
+            <tag> nlp </tag>
             
         </tags>
       
@@ -1180,11 +1180,11 @@
       
         <tags>
             
+            <tag> text similarity </tag>
+            
             <tag> DSSM </tag>
             
             <tag> CDSSM </tag>
-            
-            <tag> text similarity </tag>
             
         </tags>
       
@@ -1470,9 +1470,9 @@
       
         <tags>
             
-            <tag> classification </tag>
-            
             <tag> fine-grained </tag>
+            
+            <tag> classification </tag>
             
         </tags>
       
@@ -1530,9 +1530,9 @@
       
         <tags>
             
-            <tag> machine learning </tag>
-            
             <tag> classification </tag>
+            
+            <tag> machine learning </tag>
             
         </tags>
       
@@ -1594,9 +1594,9 @@
             
             <tag> fastText </tag>
             
-            <tag> representation </tag>
-            
             <tag> word2vec </tag>
+            
+            <tag> representation </tag>
             
         </tags>
       
