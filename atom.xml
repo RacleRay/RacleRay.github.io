@@ -38,6 +38,29 @@
   </entry>
   
   <entry>
+    <title>More Effective Cpp</title>
+    <link href="https://racleray.github.io/posts/e584d079.html"/>
+    <id>https://racleray.github.io/posts/e584d079.html</id>
+    <published>2022-05-09T04:01:49.000Z</published>
+    <updated>2024-01-09T03:11:41.904Z</updated>
+    
+    
+    <summary type="html">More Effective Cpp 读书笔记</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="C++" scheme="https://racleray.github.io/categories/Notes/C/"/>
+    
+    
+    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
+    
+    <category term="Book" scheme="https://racleray.github.io/tags/Book/"/>
+    
+  </entry>
+  
+  <entry>
     <title>再看Lookahead</title>
     <link href="https://racleray.github.io/posts/89ba64e7.html"/>
     <id>https://racleray.github.io/posts/89ba64e7.html</id>
@@ -61,11 +84,34 @@
   </entry>
   
   <entry>
+    <title>Effective Modern Cpp</title>
+    <link href="https://racleray.github.io/posts/b3d88a54.html"/>
+    <id>https://racleray.github.io/posts/b3d88a54.html</id>
+    <published>2022-04-12T13:00:52.000Z</published>
+    <updated>2024-01-09T03:12:18.048Z</updated>
+    
+    
+    <summary type="html">Effective Modern Cpp 读书笔记</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="C++" scheme="https://racleray.github.io/categories/Notes/C/"/>
+    
+    
+    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
+    
+    <category term="Book" scheme="https://racleray.github.io/tags/Book/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Prompt, Adaptor, ...</title>
     <link href="https://racleray.github.io/posts/7695beab.html"/>
     <id>https://racleray.github.io/posts/7695beab.html</id>
     <published>2022-04-05T14:57:55.000Z</published>
-    <updated>2024-01-09T02:55:06.907Z</updated>
+    <updated>2024-01-09T03:12:40.582Z</updated>
     
     
     <summary type="html">Prompt and Adaptor and ... Record.</summary>
@@ -86,11 +132,34 @@
   </entry>
   
   <entry>
+    <title>Effective Cpp</title>
+    <link href="https://racleray.github.io/posts/95b1972c.html"/>
+    <id>https://racleray.github.io/posts/95b1972c.html</id>
+    <published>2022-03-15T13:43:52.000Z</published>
+    <updated>2024-01-09T03:12:29.146Z</updated>
+    
+    
+    <summary type="html">Effective Cpp 读书笔记</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="C++" scheme="https://racleray.github.io/categories/Notes/C/"/>
+    
+    
+    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
+    
+    <category term="Book" scheme="https://racleray.github.io/tags/Book/"/>
+    
+  </entry>
+  
+  <entry>
     <title>epoll简述</title>
     <link href="https://racleray.github.io/posts/d207ef0b.html"/>
     <id>https://racleray.github.io/posts/d207ef0b.html</id>
     <published>2022-03-02T16:02:59.000Z</published>
-    <updated>2024-01-09T02:49:22.708Z</updated>
+    <updated>2024-01-09T03:11:52.029Z</updated>
     
     
     <summary type="html">一图流简易epoll实现机制</summary>
@@ -178,14 +247,14 @@
   </entry>
   
   <entry>
-    <title>数据结构整理-part3</title>
-    <link href="https://racleray.github.io/posts/3626ce4c.html"/>
-    <id>https://racleray.github.io/posts/3626ce4c.html</id>
+    <title>数据结构整理-part2</title>
+    <link href="https://racleray.github.io/posts/4121feda.html"/>
+    <id>https://racleray.github.io/posts/4121feda.html</id>
     <published>2021-10-08T13:30:33.000Z</published>
-    <updated>2023-08-07T11:54:31.043Z</updated>
+    <updated>2023-08-07T11:54:31.042Z</updated>
     
     
-    <summary type="html">常见基本数据结构整理第三部分，使用C语言编写。</summary>
+    <summary type="html">常见基本数据结构整理第二部分，使用C语言编写。</summary>
     
     
     
@@ -201,14 +270,14 @@
   </entry>
   
   <entry>
-    <title>数据结构整理-part2</title>
-    <link href="https://racleray.github.io/posts/4121feda.html"/>
-    <id>https://racleray.github.io/posts/4121feda.html</id>
+    <title>数据结构整理-part3</title>
+    <link href="https://racleray.github.io/posts/3626ce4c.html"/>
+    <id>https://racleray.github.io/posts/3626ce4c.html</id>
     <published>2021-10-08T13:30:33.000Z</published>
-    <updated>2023-08-07T11:54:31.042Z</updated>
+    <updated>2023-08-07T11:54:31.043Z</updated>
     
     
-    <summary type="html">常见基本数据结构整理第二部分，使用C语言编写。</summary>
+    <summary type="html">常见基本数据结构整理第三部分，使用C语言编写。</summary>
     
     
     
@@ -430,92 +499,6 @@ covariance</summary>
     <category term="deep learning" scheme="https://racleray.github.io/tags/deep-learning/"/>
     
     <category term="initialization" scheme="https://racleray.github.io/tags/initialization/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Knowledge Distillation Note</title>
-    <link href="https://racleray.github.io/posts/62f6fe86.html"/>
-    <id>https://racleray.github.io/posts/62f6fe86.html</id>
-    <published>2021-04-18T15:39:09.000Z</published>
-    <updated>2023-08-07T11:54:31.031Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;知识蒸馏模型采用类似迁移学习的方法，通过采用预先训练好的老师模型(Teacher
-model）的输出作为监督信号去训练另外一个简单的学生模型(Student
-model)。&lt;/p&gt;
-&lt;p&gt;所谓的知识就是从输入向量引至输出向量的节点图。&lt;/p&gt;
-&lt;p&gt;大概分为三类：知</summary>
-        
-      
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="Distillation" scheme="https://racleray.github.io/categories/Notes/Distillation/"/>
-    
-    
-    <category term="knowledge distillation" scheme="https://racleray.github.io/tags/knowledge-distillation/"/>
-    
-    <category term="CRD" scheme="https://racleray.github.io/tags/CRD/"/>
-    
-    <category term="SRRD" scheme="https://racleray.github.io/tags/SRRD/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>再看NCE</title>
-    <link href="https://racleray.github.io/posts/68340e67.html"/>
-    <id>https://racleray.github.io/posts/68340e67.html</id>
-    <published>2021-04-08T15:41:42.000Z</published>
-    <updated>2023-08-07T11:54:31.039Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;概率语言模型，如最大熵模型和概率神经模型，在参数估计时，都有计算量大的问题，词汇表实在是太大了。这让配分函数的计算量大得就想优化它。&lt;/p&gt;
-&lt;p&gt;只看NCE和Negative</summary>
-        
-      
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="ML" scheme="https://racleray.github.io/categories/Notes/ML/"/>
-    
-    
-    <category term="NCE" scheme="https://racleray.github.io/tags/NCE/"/>
-    
-    <category term="language model" scheme="https://racleray.github.io/tags/language-model/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>UDA &amp; MixMatch</title>
-    <link href="https://racleray.github.io/posts/d4b0eecc.html"/>
-    <id>https://racleray.github.io/posts/d4b0eecc.html</id>
-    <published>2021-03-25T14:51:11.000Z</published>
-    <updated>2023-08-07T11:54:31.035Z</updated>
-    
-    
-    <summary type="html">简要记录两种比较新且有实际效果的数据增强方法思路。</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="Data Augmentation" scheme="https://racleray.github.io/categories/Notes/Data-Augmentation/"/>
-    
-    
-    <category term="data augmentation" scheme="https://racleray.github.io/tags/data-augmentation/"/>
     
   </entry>
   
