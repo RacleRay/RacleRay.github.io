@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>超卖问题浅析</title>
+    <link href="/posts/c47fc989.html"/>
+    <url>/posts/c47fc989.html</url>
+    
+    <content type="html"><![CDATA[<h2><span id="问题难点">问题难点</span></h2><ul><li>1 突发访问量<ul><li>前端优化<ul><li>秒杀倒计时，不能发送下单请求，下单键不可用</li><li>下单后，不能重复下单请求，下单键不可用</li><li>JS程序设置用户请求最小间隔时间</li><li>使用前端缓存，相同页面直接从缓存刷新</li></ul></li><li>后端优化<ul><li>见后文</li></ul></li><li>行业方案<ul><li><ol type="1"><li>使用队列组织 nginx 接收到的请求，业务服务器从队列中取，顺序处理</li></ol></li><li><ol start="2" type="1"><li>负载均衡</li></ol></li><li><ol start="3" type="1"><li>提升机器数量</li></ol></li><li><ol start="4" type="1"><li>nginx 接入层筛选限流，再转发到服务器</li></ol></li></ul></li></ul></li><li>2 带宽限制<ul><li>突发流量太大，需要从运营商临时购买</li><li>设置CDN缓存页面，分担服务器压力</li></ul></li><li>3 大部分不会生成订单的请求<ul><li>在 nginx 反向代理层，就进行筛选发送到服务器的请求</li></ul></li><li>4 超卖问题<ul><li>在同一时间内，数据库中没有及时更新库存量，多个用户抢到商品，但是只能有一个用户买到</li><li>行业方案<ul><li>MySQL悲观锁：数据库层面设置的写锁，保证修改只能同时被一个session执行，在完成前其他都需要等待<ul><li>优点：稳定</li><li>缺点：锁等待，资源消耗</li></ul></li><li>MySQL乐观锁：程序设计时，增加的锁机制，比如增加版本号，在修改时先查询版本号是否被更改，没改动一次就更新版本号，此时只有一条SQL执行成功。<ul><li>优点：比悲观锁并发量大</li><li>缺点：MySQL本身处理不了大量并发请求</li></ul></li><li>队列：使用队列变成有序的请求处理<ul><li>优点：稳定，可以处理大量并发请求</li><li>缺点：本身实时处理请求速率低，大量并发请求内存占用高</li></ul></li><li>Redis 分布式锁：SETNX只能设置一次键值，返回1，再次设置会返回0。基于此，多个线程只有一个线程的SETNX 返回 1。超时时间后，删除 SETNX 设置的key。<ul><li>优点：只限制处理库存时，只允许单线程执行</li><li>缺点：线程级的限制，资源浪费</li></ul></li><li>Redis 乐观锁：Redis watch 机制，比如 watch库存值得变化。当Redis事务开启后，库存值发生变化，就回滚当前事务。所以并发请求当有一个成功时，其他请求的事务都会回滚。<ul><li>优点：没有限制线程的执行数量，只是打断冲突线程的执行。</li><li>缺点：在这些方法的比较中，缺点不明显，可以使用高性能的语言或者框架，进一步提升性能</li></ul></li></ul></li></ul></li></ul><h2><span id="方案设计">方案设计</span></h2><ul><li>静态资源处理，图片、js、css、页面等<ul><li>使用CDN</li><li>加大带宽</li></ul></li><li>业务请求处理<ul><li>Nginx 过滤大部分一定不会生成订单的请求</li><li>Nginx-Lua + Redis 乐观锁解决超卖问题</li><li>服务器处理少量请求</li></ul></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>Notes</category>
+      
+      <category>System Design</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Nginx</tag>
+      
+      <tag>System Design</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Linux内核链表设计</title>
     <link href="/posts/dd44df07.html"/>
     <url>/posts/dd44df07.html</url>
@@ -911,9 +940,9 @@
     
     <tags>
       
-      <tag>tools</tag>
-      
       <tag>jupyter</tag>
+      
+      <tag>tools</tag>
       
     </tags>
     
@@ -1242,9 +1271,9 @@
     
     <tags>
       
-      <tag>spark</tag>
-      
       <tag>tools</tag>
+      
+      <tag>spark</tag>
       
     </tags>
     
@@ -1851,9 +1880,9 @@
       
       <tag>fastText</tag>
       
-      <tag>word2vec</tag>
-      
       <tag>representation</tag>
+      
+      <tag>word2vec</tag>
       
     </tags>
     
