@@ -236,9 +236,9 @@
     <category term="CMake" scheme="https://racleray.github.io/categories/Notes/CMake/"/>
     
     
-    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
-    
     <category term="C" scheme="https://racleray.github.io/tags/C/"/>
+    
+    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
     
     <category term="CMake" scheme="https://racleray.github.io/tags/CMake/"/>
     
@@ -264,6 +264,50 @@
     <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
     
     <category term="Compiler" scheme="https://racleray.github.io/tags/Compiler/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Unix用户终端登录过程分析</title>
+    <link href="https://racleray.github.io/posts/ff5b020d.html"/>
+    <id>https://racleray.github.io/posts/ff5b020d.html</id>
+    <published>2023-04-24T13:01:35.000Z</published>
+    <updated>2024-01-11T02:08:15.941Z</updated>
+    
+    
+    <summary type="html">Unix用户终端登录过程分析</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="Linux" scheme="https://racleray.github.io/categories/Notes/Linux/"/>
+    
+    
+    <category term="Unix" scheme="https://racleray.github.io/tags/Unix/"/>
+    
+    <category term="Shell" scheme="https://racleray.github.io/tags/Shell/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>shell交互逻辑分析</title>
+    <link href="https://racleray.github.io/posts/66515c26.html"/>
+    <id>https://racleray.github.io/posts/66515c26.html</id>
+    <published>2023-04-12T11:53:37.000Z</published>
+    <updated>2024-01-11T02:01:01.216Z</updated>
+    
+    
+    <summary type="html">shell 终端逻辑分析</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="Linux" scheme="https://racleray.github.io/categories/Notes/Linux/"/>
+    
+    
+    <category term="Shell" scheme="https://racleray.github.io/tags/Shell/"/>
     
   </entry>
   
@@ -417,52 +461,6 @@
     <category term="hack" scheme="https://racleray.github.io/tags/hack/"/>
     
     <category term="kali" scheme="https://racleray.github.io/tags/kali/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>开发工具</title>
-    <link href="https://racleray.github.io/posts/897196e0.html"/>
-    <id>https://racleray.github.io/posts/897196e0.html</id>
-    <published>2023-01-03T10:41:33.000Z</published>
-    <updated>2024-01-09T10:20:06.141Z</updated>
-    
-    
-    <summary type="html">开发工具库</summary>
-    
-    
-    
-    <category term="Tools" scheme="https://racleray.github.io/categories/Tools/"/>
-    
-    <category term="C++" scheme="https://racleray.github.io/categories/Tools/C/"/>
-    
-    
-    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
-    
-    <category term="Python" scheme="https://racleray.github.io/tags/Python/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Cpp性能测试</title>
-    <link href="https://racleray.github.io/posts/f692d883.html"/>
-    <id>https://racleray.github.io/posts/f692d883.html</id>
-    <published>2022-12-09T05:04:05.000Z</published>
-    <updated>2024-01-09T10:23:10.029Z</updated>
-    
-    
-    <summary type="html">C++高性能编程测试用环境</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="C++" scheme="https://racleray.github.io/categories/Notes/C/"/>
-    
-    
-    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
-    
-    <category term="Optimize" scheme="https://racleray.github.io/tags/Optimize/"/>
     
   </entry>
   

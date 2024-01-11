@@ -381,9 +381,9 @@ trade off。</p>
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/posts/f78760c9.html">
+                      <a href="/posts/66515c26.html">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">C++编译器优化</span>
+                        <span class="hidden-mobile">shell交互逻辑分析</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -590,8 +590,23 @@ trade off。</p>
 
 
 <!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<script  src="/js/boot.js" ></script>
 
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>

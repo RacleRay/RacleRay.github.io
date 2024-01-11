@@ -225,13 +225,25 @@
                 
 
 <div class="list-group">
-  <p class="h4">共计 79 篇文章</p>
+  <p class="h4">共计 81 篇文章</p>
   <hr>
   
   
     
       
       <p class="h5">2020</p>
+    
+    <a href="/posts/cd141949.html" class="list-group-item list-group-item-action">
+      <span class="archive-post-title">Capsule Net</span>
+      <time style="float: right;">07-07</time>
+    </a>
+  
+    
+    <a href="/posts/8be3b59a.html" class="list-group-item list-group-item-action">
+      <span class="archive-post-title">A Sentence Embedding Baseline</span>
+      <time style="float: right;">07-07</time>
+    </a>
+  
     
     <a href="/posts/bad75bd3.html" class="list-group-item list-group-item-action">
       <span class="archive-post-title">文本相似性深度学习方法</span>
@@ -340,18 +352,12 @@
       <time style="float: right;">07-06</time>
     </a>
   
-    
-    <a href="/posts/9ad55c64.html" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">常用python文本处理函数</span>
-      <time style="float: right;">07-06</time>
-    </a>
-  
 </div>
 
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <a class="extend prev" rel="prev" href="/categories/Notes/page/3/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/categories/Notes/">1</a><a class="page-number" href="/categories/Notes/page/2/#board">2</a><a class="page-number" href="/categories/Notes/page/3/#board">3</a><span class="page-number current">4</span>
+      <a class="extend prev" rel="prev" href="/categories/Notes/page/3/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/categories/Notes/">1</a><a class="page-number" href="/categories/Notes/page/2/#board">2</a><a class="page-number" href="/categories/Notes/page/3/#board">3</a><span class="page-number current">4</span><a class="page-number" href="/categories/Notes/page/5/#board">5</a><a class="extend next" rel="next" href="/categories/Notes/page/5/#board"><i class="iconfont icon-arrowright"></i></a>
     </span>
   </nav>
 
@@ -490,8 +496,23 @@
 
 
 <!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<script  src="/js/boot.js" ></script>
 
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>
