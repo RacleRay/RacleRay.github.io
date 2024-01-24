@@ -6,7 +6,7 @@
   <link href="https://racleray.github.io/atom.xml" rel="self"/>
   
   <link href="https://racleray.github.io/"/>
-  <updated>2024-01-24T09:23:12.517Z</updated>
+  <updated>2024-01-24T09:46:03.105Z</updated>
   <id>https://racleray.github.io/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://racleray.github.io/posts/6832584d.html"/>
     <id>https://racleray.github.io/posts/6832584d.html</id>
     <published>2024-01-24T04:20:34.000Z</published>
-    <updated>2024-01-24T09:23:12.517Z</updated>
+    <updated>2024-01-24T09:46:03.105Z</updated>
     
     
     <summary type="html">Khalil Gibran</summary>
@@ -255,9 +255,9 @@
     <category term="CMake" scheme="https://racleray.github.io/categories/Notes/CMake/"/>
     
     
-    <category term="C" scheme="https://racleray.github.io/tags/C/"/>
-    
     <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
+    
+    <category term="C" scheme="https://racleray.github.io/tags/C/"/>
     
     <category term="CMake" scheme="https://racleray.github.io/tags/CMake/"/>
     
