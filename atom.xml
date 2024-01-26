@@ -38,25 +38,6 @@
   </entry>
   
   <entry>
-    <title>Poetry for 1</title>
-    <link href="https://racleray.github.io/posts/6832584d.html"/>
-    <id>https://racleray.github.io/posts/6832584d.html</id>
-    <published>2024-01-24T04:20:34.000Z</published>
-    <updated>2024-01-24T09:53:20.560Z</updated>
-    
-    
-    <summary type="html">Khalil Gibran</summary>
-    
-    
-    
-    <category term="Poetry" scheme="https://racleray.github.io/categories/Poetry/"/>
-    
-    
-    <category term="Poetry" scheme="https://racleray.github.io/tags/Poetry/"/>
-    
-  </entry>
-  
-  <entry>
     <title>协程浅析</title>
     <link href="https://racleray.github.io/posts/dd6997a0.html"/>
     <id>https://racleray.github.io/posts/dd6997a0.html</id>
@@ -457,6 +438,27 @@
     
     
     <category term="C" scheme="https://racleray.github.io/tags/C/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>C sharp</title>
+    <link href="https://racleray.github.io/posts/abda3b00.html"/>
+    <id>https://racleray.github.io/posts/abda3b00.html</id>
+    <published>2023-02-09T12:58:02.000Z</published>
+    <updated>2024-01-09T10:22:55.007Z</updated>
+    
+    
+    <summary type="html">C# basic types</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="C#" scheme="https://racleray.github.io/categories/Notes/C/"/>
+    
+    
+    <category term="C-sharp" scheme="https://racleray.github.io/tags/C-sharp/"/>
     
   </entry>
   
