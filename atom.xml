@@ -6,7 +6,7 @@
   <link href="https://racleray.github.io/atom.xml" rel="self"/>
   
   <link href="https://racleray.github.io/"/>
-  <updated>2024-01-24T09:52:57.136Z</updated>
+  <updated>2024-01-26T02:49:52.593Z</updated>
   <id>https://racleray.github.io/</id>
   
   <author>
@@ -17,11 +17,32 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Poetry</title>
+    <link href="https://racleray.github.io/posts/66515c26.html"/>
+    <id>https://racleray.github.io/posts/66515c26.html</id>
+    <published>2024-01-24T04:20:56.000Z</published>
+    <updated>2024-01-26T02:49:52.593Z</updated>
+    
+    
+    <summary type="html">Seven Times Have I Despised My Soul</summary>
+    
+    
+    
+    <category term="Poetry" scheme="https://racleray.github.io/categories/Poetry/"/>
+    
+    <category term="1" scheme="https://racleray.github.io/categories/Poetry/1/"/>
+    
+    
+    <category term="Poetry" scheme="https://racleray.github.io/tags/Poetry/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Poetry for 1</title>
     <link href="https://racleray.github.io/posts/6832584d.html"/>
     <id>https://racleray.github.io/posts/6832584d.html</id>
     <published>2024-01-24T04:20:34.000Z</published>
-    <updated>2024-01-24T09:52:57.136Z</updated>
+    <updated>2024-01-24T09:53:20.560Z</updated>
     
     
     <summary type="html">Khalil Gibran</summary>
@@ -255,9 +276,9 @@
     <category term="CMake" scheme="https://racleray.github.io/categories/Notes/CMake/"/>
     
     
-    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
-    
     <category term="C" scheme="https://racleray.github.io/tags/C/"/>
+    
+    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
     
     <category term="CMake" scheme="https://racleray.github.io/tags/CMake/"/>
     
@@ -368,9 +389,9 @@
     <category term="System Design" scheme="https://racleray.github.io/categories/Notes/System-Design/"/>
     
     
-    <category term="System Design" scheme="https://racleray.github.io/tags/System-Design/"/>
-    
     <category term="Nginx" scheme="https://racleray.github.io/tags/Nginx/"/>
+    
+    <category term="System Design" scheme="https://racleray.github.io/tags/System-Design/"/>
     
   </entry>
   
@@ -436,27 +457,6 @@
     
     
     <category term="C" scheme="https://racleray.github.io/tags/C/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>C sharp</title>
-    <link href="https://racleray.github.io/posts/abda3b00.html"/>
-    <id>https://racleray.github.io/posts/abda3b00.html</id>
-    <published>2023-02-09T12:58:02.000Z</published>
-    <updated>2024-01-09T10:22:55.007Z</updated>
-    
-    
-    <summary type="html">C# basic types</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="C#" scheme="https://racleray.github.io/categories/Notes/C/"/>
-    
-    
-    <category term="C-sharp" scheme="https://racleray.github.io/tags/C-sharp/"/>
     
   </entry>
   
