@@ -6,7 +6,7 @@
   <link href="https://racleray.github.io/atom.xml" rel="self"/>
   
   <link href="https://racleray.github.io/"/>
-  <updated>2024-01-26T02:49:52.593Z</updated>
+  <updated>2024-01-26T02:55:43.157Z</updated>
   <id>https://racleray.github.io/</id>
   
   <author>
@@ -18,10 +18,10 @@
   
   <entry>
     <title>Poetry</title>
-    <link href="https://racleray.github.io/posts/66515c26.html"/>
-    <id>https://racleray.github.io/posts/66515c26.html</id>
+    <link href="https://racleray.github.io/posts/cdfe5c99.html"/>
+    <id>https://racleray.github.io/posts/cdfe5c99.html</id>
     <published>2024-01-24T04:20:56.000Z</published>
-    <updated>2024-01-26T02:49:52.593Z</updated>
+    <updated>2024-01-26T02:55:43.157Z</updated>
     
     
     <summary type="html">Seven Times Have I Despised My Soul</summary>
@@ -276,9 +276,9 @@
     <category term="CMake" scheme="https://racleray.github.io/categories/Notes/CMake/"/>
     
     
-    <category term="C" scheme="https://racleray.github.io/tags/C/"/>
-    
     <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
+    
+    <category term="C" scheme="https://racleray.github.io/tags/C/"/>
     
     <category term="CMake" scheme="https://racleray.github.io/tags/CMake/"/>
     
@@ -389,9 +389,9 @@
     <category term="System Design" scheme="https://racleray.github.io/categories/Notes/System-Design/"/>
     
     
-    <category term="Nginx" scheme="https://racleray.github.io/tags/Nginx/"/>
-    
     <category term="System Design" scheme="https://racleray.github.io/tags/System-Design/"/>
+    
+    <category term="Nginx" scheme="https://racleray.github.io/tags/Nginx/"/>
     
   </entry>
   
