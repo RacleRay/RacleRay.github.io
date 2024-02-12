@@ -6,7 +6,7 @@
   <link href="https://racleray.github.io/atom.xml" rel="self"/>
   
   <link href="https://racleray.github.io/"/>
-  <updated>2024-01-26T02:56:09.028Z</updated>
+  <updated>2024-02-12T15:00:33.274Z</updated>
   <id>https://racleray.github.io/</id>
   
   <author>
@@ -17,11 +17,32 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Dangle</title>
+    <link href="https://racleray.github.io/posts/e3a85bcd.html"/>
+    <id>https://racleray.github.io/posts/e3a85bcd.html</id>
+    <published>2024-02-12T14:45:50.000Z</published>
+    <updated>2024-02-12T15:00:33.274Z</updated>
+    
+    
+    <summary type="html">凡人</summary>
+    
+    
+    
+    <category term="Poetry" scheme="https://racleray.github.io/categories/Poetry/"/>
+    
+    <category term="Meditation" scheme="https://racleray.github.io/categories/Poetry/Meditation/"/>
+    
+    
+    <category term="Poetry" scheme="https://racleray.github.io/tags/Poetry/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Poetry</title>
     <link href="https://racleray.github.io/posts/cdfe5c99.html"/>
     <id>https://racleray.github.io/posts/cdfe5c99.html</id>
     <published>2024-01-24T04:20:56.000Z</published>
-    <updated>2024-01-26T02:56:09.028Z</updated>
+    <updated>2024-02-06T13:33:01.096Z</updated>
     
     
     <summary type="html">Seven Times Have I Despised My Soul</summary>
@@ -438,27 +459,6 @@
     
     
     <category term="C" scheme="https://racleray.github.io/tags/C/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>C sharp</title>
-    <link href="https://racleray.github.io/posts/abda3b00.html"/>
-    <id>https://racleray.github.io/posts/abda3b00.html</id>
-    <published>2023-02-09T12:58:02.000Z</published>
-    <updated>2024-01-09T10:22:55.007Z</updated>
-    
-    
-    <summary type="html">C# basic types</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="C#" scheme="https://racleray.github.io/categories/Notes/C/"/>
-    
-    
-    <category term="C-sharp" scheme="https://racleray.github.io/tags/C-sharp/"/>
     
   </entry>
   
