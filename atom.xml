@@ -6,7 +6,7 @@
   <link href="https://racleray.github.io/atom.xml" rel="self"/>
   
   <link href="https://racleray.github.io/"/>
-  <updated>2024-02-12T15:00:59.813Z</updated>
+  <updated>2024-03-03T16:15:29.325Z</updated>
   <id>https://racleray.github.io/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>REUSEPORT</title>
+    <link href="https://racleray.github.io/posts/e474b5c3.html"/>
+    <id>https://racleray.github.io/posts/e474b5c3.html</id>
+    <published>2024-03-03T16:06:07.000Z</published>
+    <updated>2024-03-03T16:15:29.325Z</updated>
+    
+    
+    <summary type="html">socket REUSEPORT 分析</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="Computer Network" scheme="https://racleray.github.io/categories/Notes/Computer-Network/"/>
+    
+    
+    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
+    
+    <category term="Network" scheme="https://racleray.github.io/tags/Network/"/>
+    
+    <category term="Socket" scheme="https://racleray.github.io/tags/Socket/"/>
+    
+  </entry>
   
   <entry>
     <title>Dangle</title>
@@ -391,9 +416,9 @@
     <category term="System Design" scheme="https://racleray.github.io/categories/Notes/System-Design/"/>
     
     
-    <category term="Nginx" scheme="https://racleray.github.io/tags/Nginx/"/>
-    
     <category term="System Design" scheme="https://racleray.github.io/tags/System-Design/"/>
+    
+    <category term="Nginx" scheme="https://racleray.github.io/tags/Nginx/"/>
     
   </entry>
   
@@ -438,27 +463,6 @@
     
     
     <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>C语言程序内存安全检查</title>
-    <link href="https://racleray.github.io/posts/4df195e7.html"/>
-    <id>https://racleray.github.io/posts/4df195e7.html</id>
-    <published>2023-02-10T05:04:22.000Z</published>
-    <updated>2024-01-09T10:22:44.130Z</updated>
-    
-    
-    <summary type="html">C语言程序内存安全，静态检查和动态检查</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="C" scheme="https://racleray.github.io/categories/Notes/C/"/>
-    
-    
-    <category term="C" scheme="https://racleray.github.io/tags/C/"/>
     
   </entry>
   
