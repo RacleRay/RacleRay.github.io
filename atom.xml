@@ -6,7 +6,7 @@
   <link href="https://racleray.github.io/atom.xml" rel="self"/>
   
   <link href="https://racleray.github.io/"/>
-  <updated>2024-03-03T16:15:29.325Z</updated>
+  <updated>2024-03-09T16:01:59.296Z</updated>
   <id>https://racleray.github.io/</id>
   
   <author>
@@ -17,11 +17,34 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>NGINX Recap</title>
+    <link href="https://racleray.github.io/posts/e2369d80.html"/>
+    <id>https://racleray.github.io/posts/e2369d80.html</id>
+    <published>2024-03-09T15:57:33.000Z</published>
+    <updated>2024-03-09T16:01:59.296Z</updated>
+    
+    
+    <summary type="html">NGINX 一点小结</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="Nginx" scheme="https://racleray.github.io/categories/Notes/Nginx/"/>
+    
+    
+    <category term="NGINX" scheme="https://racleray.github.io/tags/NGINX/"/>
+    
+    <category term="Server Design" scheme="https://racleray.github.io/tags/Server-Design/"/>
+    
+  </entry>
+  
+  <entry>
     <title>REUSEPORT</title>
     <link href="https://racleray.github.io/posts/e474b5c3.html"/>
     <id>https://racleray.github.io/posts/e474b5c3.html</id>
     <published>2024-03-03T16:06:07.000Z</published>
-    <updated>2024-03-03T16:15:29.325Z</updated>
+    <updated>2024-03-03T16:16:19.515Z</updated>
     
     
     <summary type="html">socket REUSEPORT 分析</summary>
@@ -442,27 +465,6 @@
     <category term="Data Structure" scheme="https://racleray.github.io/tags/Data-Structure/"/>
     
     <category term="Linux Kernel" scheme="https://racleray.github.io/tags/Linux-Kernel/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>C++ Tips</title>
-    <link href="https://racleray.github.io/posts/467a9cda.html"/>
-    <id>https://racleray.github.io/posts/467a9cda.html</id>
-    <published>2023-02-16T13:07:45.000Z</published>
-    <updated>2024-01-09T10:19:24.630Z</updated>
-    
-    
-    <summary type="html">C++ 实践经验</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="C++" scheme="https://racleray.github.io/categories/Notes/C/"/>
-    
-    
-    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
     
   </entry>
   
