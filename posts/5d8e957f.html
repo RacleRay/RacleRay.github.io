@@ -1,0 +1,597 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="内存池实现与对比">
+  <meta name="author" content="HeRui">
+  <meta name="keywords" content="Memory Pool">
+  <meta name="description" content="内存池实现与对比">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Memory Pool">
+<meta property="og:url" content="https://racleray.github.io/posts/5d8e957f.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="内存池实现与对比">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/%E5%86%85%E5%AD%98%E6%B1%A0/03/16/18-02-619f70f1396abce9ec864569893f2276-2e141f.png">
+<meta property="article:published_time" content="2024-03-17T13:30:22.000Z">
+<meta property="article:modified_time" content="2024-03-17T13:46:56.898Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="Memory Pool">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/%E5%86%85%E5%AD%98%E6%B1%A0/03/16/18-02-619f70f1396abce9ec864569893f2276-2e141f.png">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>Memory Pool - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Memory Pool">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2024-03-17 21:30" pubdate>
+        2024年3月17日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.3k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      10 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Memory Pool</h1>
+            
+            <div class="markdown-body">
+              <h2><span id="sgi-memory-pool">SGI Memory Pool</span></h2>
+<p>大于 128Bytes 直接使用 malloc / free
+，只管理内存，不负责构造与析构。</p>
+<p>小于 128Bytes 使用自定义内存空间管理。</p>
+<ul>
+<li>8、16、24、... 、128 大小的内存块指针数组统一管理</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-keyword">union</span> _Obj &#123;<br>	<span class="hljs-keyword">union</span> _Obj* _M_free_list_link;<br>	<span class="hljs-keyword">char</span> _M_client_data[<span class="hljs-number">1</span>]; <span class="hljs-comment">/* The client sees this. */</span><br>&#125;;<br></code></pre></div></td></tr></table></figure>
+<ul>
+<li>每个大小内存块组织在一个大的内存空间，维护
+起始地址、结束地址和对空间大小</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-keyword">static</span> <span class="hljs-keyword">char</span>* _S_start_free;<br><span class="hljs-keyword">static</span> <span class="hljs-keyword">char</span>* _S_end_free;<br><span class="hljs-keyword">static</span> <span class="hljs-keyword">size_t</span> _S_heap_size;<br></code></pre></div></td></tr></table></figure>
+<ul>
+<li>组织可用内存块为一个链表，顶层管理的指针数组中的元素，指向对应内存块区域中，首个可用的内存块地址</li>
+<li>申请和释放内存块，就是在改变链表的指向</li>
+</ul>
+<p>当然，已经申请的内存，在内存池回收前，都不会释放。</p>
+<p>内存池管理接口：</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-comment">// 分配内存的入口函数</span><br><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span>* <span class="hljs-title">allocate</span><span class="hljs-params">(<span class="hljs-keyword">size_t</span> __n)</span></span><br><span class="hljs-function"></span><br><span class="hljs-function"><span class="hljs-comment">// 把分配好的chunk块添加到自由链表当中</span></span><br><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span>* _<span class="hljs-title">S_refill</span><span class="hljs-params">(<span class="hljs-keyword">size_t</span> __n)</span></span>;<br><br><span class="hljs-comment">// 分配相应__size字节大小的chunk块，__nobjs个（函数内可修改）</span><br><span class="hljs-keyword">static</span> <span class="hljs-keyword">char</span>* _S_chunk_alloc(<span class="hljs-keyword">size_t</span> __size, <span class="hljs-keyword">int</span>&amp; __nobjs);<br><br><span class="hljs-comment">// 把chunk块归还到内存池</span><br><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">deallocate</span><span class="hljs-params">(<span class="hljs-keyword">void</span>* __p, <span class="hljs-keyword">size_t</span> __n)</span></span>;<br><br><span class="hljs-comment">// 内存池扩容函数</span><br><span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">bool</span> threads, <span class="hljs-keyword">int</span> inst&gt;<br><span class="hljs-keyword">void</span>*<br>__default_alloc_template&lt;threads, inst&gt;::reallocate(<span class="hljs-keyword">void</span>* __p,<br>	<span class="hljs-keyword">size_t</span> __old_sz,<br>	<span class="hljs-keyword">size_t</span> __new_sz);<br></code></pre></div></td></tr></table></figure>
+<p>另外又两个辅助函数：</p>
+<p>地址对齐用的函数 _S_round_up</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-comment">/*将 __bytes 上调至最邻近的 8 的倍数*/</span><br><span class="hljs-keyword">static</span> <span class="hljs-keyword">size_t</span> _S_round_up(<span class="hljs-keyword">size_t</span> __bytes) &#123; <br>    <span class="hljs-keyword">return</span> (((__bytes) + (<span class="hljs-keyword">size_t</span>) _ALIGN<span class="hljs-number">-1</span>) &amp; ~((<span class="hljs-keyword">size_t</span>) _ALIGN - <span class="hljs-number">1</span>)); <br>&#125;<br><span class="hljs-comment">// ~((size_t) _ALIGN - 1) 得到一个二进制掩码 1111...1000</span><br></code></pre></div></td></tr></table></figure>
+<p>内存块指针数组中找到对应 chunk 块大小的函数 _S_freelist_index</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-comment">/*返回 __bytes 大小的chunk块位于 free-list 中的编号*/</span><br><span class="hljs-keyword">static</span> <span class="hljs-keyword">size_t</span> _S_freelist_index(<span class="hljs-keyword">size_t</span> __bytes) &#123;<br>	<span class="hljs-keyword">return</span> (((__bytes) + (<span class="hljs-keyword">size_t</span>)_ALIGN<span class="hljs-number">-1</span>)/(<span class="hljs-keyword">size_t</span>)_ALIGN - <span class="hljs-number">1</span>); <br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h2><span id="nginx-memory-pool">NGINX Memory Pool</span></h2>
+<p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/内存池/03/16/18-02-619f70f1396abce9ec864569893f2276-2e141f.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ngx_pool_s</span> &#123;</span><br>    <span class="hljs-keyword">ngx_pool_data_t</span>       d;			<span class="hljs-comment">//内存池数据管理相关指针的结构体</span><br>    <span class="hljs-keyword">size_t</span>                <span class="hljs-built_in">max</span>;			<span class="hljs-comment">//ngx_pool_data_t可分配的最大内存值，超过此值则使用 ngx_pool_large_t 分配内存</span><br>    <span class="hljs-keyword">ngx_pool_t</span>           *current;		<span class="hljs-comment">//当前内存池指针</span><br>    <span class="hljs-keyword">ngx_chain_t</span>          *chain;		<span class="hljs-comment">//挂接一个ngx_chain_t结构</span><br>    <span class="hljs-keyword">ngx_pool_large_t</span>     *large;		<span class="hljs-comment">//大块内存链表</span><br>    <span class="hljs-keyword">ngx_pool_cleanup_t</span>   *cleanup;		<span class="hljs-comment">//释放内存池的操作集（callback函数）</span><br>    <span class="hljs-keyword">ngx_log_t</span>            *<span class="hljs-built_in">log</span>;			<span class="hljs-comment">//日志信息</span><br>&#125;;<br><br><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ngx_pool_s</span> <span class="hljs-title">ngx_pool_t</span>;</span><br><br><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> &#123;</span><br>    u_char               *last;		<span class="hljs-comment">//当前内存池分配到的末尾地址，即下一次分配开始地址</span><br>    u_char               *<span class="hljs-built_in">end</span>;		<span class="hljs-comment">//内存池结束位置</span><br>    <span class="hljs-keyword">ngx_pool_t</span>           *next;		<span class="hljs-comment">//下一块内存</span><br>    <span class="hljs-keyword">ngx_uint_t</span>            failed;	<span class="hljs-comment">//当前块内存分配失败次数</span><br>&#125; <span class="hljs-keyword">ngx_pool_data_t</span>;<br></code></pre></div></td></tr></table></figure>
+<p>小块内存，通过 <code>ngx_pool_data_t</code> 组织为链表结构，在 last
+到 end 之间分配内存使用。不足时，会新开辟一个内存块。</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ngx_pool_large_s</span> &#123;</span><br>	<span class="hljs-keyword">ngx_pool_large_t</span> *next; <span class="hljs-comment">// 下一个大块内存</span><br>	<span class="hljs-keyword">void</span> *alloc; <span class="hljs-comment">// 记录分配的大块内存的起始地址</span><br>&#125;;<br></code></pre></div></td></tr></table></figure>
+<p>大块内存，通过 <code>ngx_pool_large_s</code>
+组织为链表，使用和释放就是包装之后的 malloc 和 free。</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">void</span> <span class="hljs-params">(*ngx_pool_cleanup_pt)</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *data)</span></span>; <span class="hljs-comment">// 清理回调函数的类型定义</span><br><br><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ngx_pool_cleanup_s</span> <span class="hljs-title">ngx_pool_cleanup_t</span>;</span><br><br><span class="hljs-comment">// 清理操作的类型定义，包括一个清理回调函数，传给回调函数的数据和下一个清理操作的地址</span><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ngx_pool_cleanup_s</span> &#123;</span><br>	ngx_pool_cleanup_pt handler; <span class="hljs-comment">// 清理回调函数</span><br>	<span class="hljs-keyword">void</span> *data;                  <span class="hljs-comment">// 传递给回调函数的指针</span><br>	<span class="hljs-keyword">ngx_pool_cleanup_t</span> *next;    <span class="hljs-comment">// 指向下一个清理操作</span><br>&#125;;<br></code></pre></div></td></tr></table></figure>
+<p>内存池的清理，一般在内存池销毁之前。</p>
+<p>内存池的一般接口为：</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">ngx_pool_t</span> *<span class="hljs-title">ngx_create_pool</span><span class="hljs-params">(<span class="hljs-keyword">size_t</span> <span class="hljs-built_in">size</span>, <span class="hljs-keyword">ngx_log_t</span> *<span class="hljs-built_in">log</span>)</span></span>; <span class="hljs-comment">// 创建内存池</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">ngx_destroy_pool</span><span class="hljs-params">(<span class="hljs-keyword">ngx_pool_t</span> *pool)</span></span>; <span class="hljs-comment">// 销毁内存池</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">ngx_reset_pool</span><span class="hljs-params">(<span class="hljs-keyword">ngx_pool_t</span> *pool)</span></span>;   <span class="hljs-comment">// 重置内存池</span><br><br><span class="hljs-function"><span class="hljs-keyword">void</span> *<span class="hljs-title">ngx_palloc</span><span class="hljs-params">(<span class="hljs-keyword">ngx_pool_t</span> *pool, <span class="hljs-keyword">size_t</span> <span class="hljs-built_in">size</span>)</span></span>;  <span class="hljs-comment">// 内存分配函数，支持内存对齐</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> *<span class="hljs-title">ngx_pnalloc</span><span class="hljs-params">(<span class="hljs-keyword">ngx_pool_t</span> *pool, <span class="hljs-keyword">size_t</span> <span class="hljs-built_in">size</span>)</span></span>; <span class="hljs-comment">// 内存分配函数，不支持内存对齐</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> *<span class="hljs-title">ngx_pcalloc</span><span class="hljs-params">(<span class="hljs-keyword">ngx_pool_t</span> *pool, <span class="hljs-keyword">size_t</span> <span class="hljs-built_in">size</span>)</span></span>; <span class="hljs-comment">// 内存分配函数，支持内存初始化0</span><br><br><span class="hljs-function"><span class="hljs-keyword">ngx_int_t</span> <span class="hljs-title">ngx_pfree</span><span class="hljs-params">(<span class="hljs-keyword">ngx_pool_t</span> *pool, <span class="hljs-keyword">void</span> *p)</span></span>;   <span class="hljs-comment">// 内存释放（大块内存）,不支持小块内存</span><br>                    <br><span class="hljs-function"><span class="hljs-keyword">ngx_pool_cleanup_t</span> *<span class="hljs-title">ngx_pool_cleanup_add</span><span class="hljs-params">(<span class="hljs-keyword">ngx_pool_t</span> *p, <span class="hljs-keyword">size_t</span> <span class="hljs-built_in">size</span>)</span></span>; <span class="hljs-comment">// 添加清理handler</span><br></code></pre></div></td></tr></table></figure>
+<p>小块内存池的申请，需要手动进行内存对齐，以增加内存操作的效率，因为没有使用
+malloc 不会自动对齐。</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> ngx_align_ptr(p, a)                                       \</span><br>(u_char *) (((<span class="hljs-keyword">uintptr_t</span>) (p) + ((<span class="hljs-keyword">uintptr_t</span>) a - <span class="hljs-number">1</span>)) &amp; ~((<span class="hljs-keyword">uintptr_t</span>) a - <span class="hljs-number">1</span>))<br></code></pre></div></td></tr></table></figure>
+<p>这个操作的逻辑和 <code>_S_round_up</code> 是一致的。将指针
+<code>p</code> 向上对齐到最接近的 <code>a</code> 的倍数。</p>
+<h2><span id="实现与测试">实现与测试</span></h2>
+<p><a href="https://github.com/RacleRay/CodeSpace/tree/master/Memory_Pool" target="_blank" rel="noopener">github
+link</a> ；一个类似的简化版 NGINX 内存池实现 <a href="https://github.com/cacay/MemoryPool" target="_blank" rel="noopener">MemoryPool</a>。</p>
+<p>整体而言，自定义实现的 MemoryPool allocator 性能比 SGI Memory Pool
+性能会好一些。 SGI Memory Pool 的性能和 STL 默认 allocator
+性能相差无几。NGINX Memory Pool 性能会比 SGI Memory Pool 更好。但是NGINX
+Memory Pool 并没有实现为 allocator 的形式。</p>
+<h2><span id="内存管理相关">内存管理相关</span></h2>
+<p>对 malloc 的进一步优化：</p>
+<p><a href="https://github.com/jemalloc/jemalloc" target="_blank" rel="noopener">jemalloc</a></p>
+<p><a href="https://github.com/microsoft/mimalloc" target="_blank" rel="noopener">mimalloc</a> well
+document</p>
+<p><a href="https://github.com/google/tcmalloc" target="_blank" rel="noopener">tcmalloc</a></p>
+<p>其中 jemalloc 和 mimallic 会是更优的选择。</p>
+<p>相关学习博客推荐为：</p>
+<p><a href="https://zhuanlan.zhihu.com/p/642471269" target="_blank" rel="noopener">内存分配器之jemalloc技术原理分析</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/48957114" target="_blank" rel="noopener">JeMalloc</a></p>
+<p>看了但是忘了，还是随便总结一点可能会好一些吧。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/Memory/">Memory</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Memory-Pool/">Memory Pool</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Memory/">Memory</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/e2369d80.html">
+                        <span class="hidden-mobile">NGINX Recap</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
