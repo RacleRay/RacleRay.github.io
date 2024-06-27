@@ -6,7 +6,7 @@
   <link href="https://racleray.github.io/atom.xml" rel="self"/>
   
   <link href="https://racleray.github.io/"/>
-  <updated>2024-03-18T14:58:54.594Z</updated>
+  <updated>2024-06-27T14:57:45.188Z</updated>
   <id>https://racleray.github.io/</id>
   
   <author>
@@ -17,11 +17,32 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>RUST Part1</title>
+    <link href="https://racleray.github.io/posts/9b4059d6.html"/>
+    <id>https://racleray.github.io/posts/9b4059d6.html</id>
+    <published>2024-06-27T14:54:55.000Z</published>
+    <updated>2024-06-27T14:57:45.188Z</updated>
+    
+    
+    <summary type="html">Rust Notes</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
+    
+    
+    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Windows终端配置</title>
     <link href="https://racleray.github.io/posts/a61fc9c9.html"/>
     <id>https://racleray.github.io/posts/a61fc9c9.html</id>
     <published>2024-03-18T14:42:15.000Z</published>
-    <updated>2024-03-18T14:58:54.594Z</updated>
+    <updated>2024-03-18T14:59:27.880Z</updated>
     
     
     <summary type="html">windows 配置 wezterm 终端环境记录（archive）</summary>
@@ -444,27 +465,6 @@
     
     
     <category term="Shell" scheme="https://racleray.github.io/tags/Shell/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>CAP理论</title>
-    <link href="https://racleray.github.io/posts/6940af88.html"/>
-    <id>https://racleray.github.io/posts/6940af88.html</id>
-    <published>2023-04-12T06:24:12.000Z</published>
-    <updated>2024-01-09T09:29:28.417Z</updated>
-    
-    
-    <summary type="html">CAP 学习笔记</summary>
-    
-    
-    
-    <category term="Distributed System" scheme="https://racleray.github.io/categories/Distributed-System/"/>
-    
-    
-    <category term="Distributed System" scheme="https://racleray.github.io/tags/Distributed-System/"/>
-    
-    <category term="CAP" scheme="https://racleray.github.io/tags/CAP/"/>
     
   </entry>
   
