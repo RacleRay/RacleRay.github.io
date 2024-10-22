@@ -1,0 +1,679 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="Rust Notes">
+  <meta name="author" content="江左时雨">
+  <meta name="keywords" content="Rust">
+  <meta name="description" content="Rust Notes">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RUST-part2">
+<meta property="og:url" content="https://racleray.github.io/posts/7f1634b6.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="Rust Notes">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-10-22T13:19:35.225Z">
+<meta property="article:modified_time" content="2024-10-22T15:00:22.404Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="Rust">
+<meta name="twitter:card" content="summary_large_image">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>RUST-part2 - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="RUST-part2">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2024-10-22 21:19" pubdate>
+        2024年10月22日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      9.5k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      30 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">RUST-part2</h1>
+            
+            <div class="markdown-body">
+              <h2><span id="错误处理">错误处理</span></h2>
+<p>错误处理，包含捕获、传播、处理。处理方法常见有，使用返回值（Golang），使用异常（Python，C++），使用类型系统（Rust，Haskell）。</p>
+<p>使用返回值时，错误需要立即处理或者显式传递。使用异常需要开发者对其有较好的理解和把控，平衡好异常处理的开销。</p>
+<p>Rust 使用类似 Haskell 的类型设计，使用 Option 和 Result
+作为一个内部包含正常返回类型和错误返回类型的复合类型。</p>
+<p>Result 类型声明时还有个 must_use
+的标注，如果该类型对应的值没有被显式使用，编译器会提示。</p>
+<p>如果你只想传播错误，不想就地处理，可以用 ? 操作符。</p>
+<p>? 操作符内部被展开成类似这样的代码：</p>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">match</span> result &#123;<br>  <span class="hljs-literal">Ok</span>(v) =&gt; v,<br>  <span class="hljs-literal">Err</span>(e) =&gt; <span class="hljs-keyword">return</span> <span class="hljs-literal">Err</span>(e.into())<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>Rust 还为 Option 和 Result 提供了大量的辅助函数，如 map
+(处理Ok和Some) / map_err (处理 err) / and_then (处理
+Ok和Some，同时捕获新的 Err)。</p>
+<h3><span id="严重的错误">严重的错误</span></h3>
+<p>使用 panic! 和 catch_unwind
+处理不可恢复或者不想恢复的错误。比如，如果协议变量写错了，最佳的方式是立刻
+panic!
+出来（当然还是需要考虑系统是否需要忽略部分错误），让错误立刻暴露，以便解决这个问题。</p>
+<p>catch_unwind 作用和其它语言的 try {…} catch {…} 一样。</p>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">use</span> std::panic;<br><br><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() &#123;<br>    <span class="hljs-keyword">let</span> result = panic::catch_unwind(|| &#123;<br>        <span class="hljs-built_in">println!</span>(<span class="hljs-string">"hello!"</span>);<br>    &#125;);<br>    <span class="hljs-built_in">assert!</span>(result.is_ok());<br>    <span class="hljs-keyword">let</span> result = panic::catch_unwind(|| &#123;<br>        <span class="hljs-built_in">panic!</span>(<span class="hljs-string">"oh no!"</span>);  <span class="hljs-comment">// exception</span><br>    &#125;);<br>    <span class="hljs-built_in">assert!</span>(result.is_err());<br>    <span class="hljs-built_in">println!</span>(<span class="hljs-string">"panic captured: &#123;:#?&#125;"</span>, result);<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>如果把 Rust 代码整个封装在 catch_unwind()
+函数所需要传入的闭包中。一旦任何代码中，包括第三方 crates
+的代码，含有能够导致 panic! 的代码，都会被捕获，并被转换为一个
+Result。</p>
+<h3><span id="错误类型转换">错误类型转换</span></h3>
+<p>Rust 定义了 Error trait：</p>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Error</span></span>: <span class="hljs-built_in">Debug</span> + Display &#123;<br>    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">source</span></span>(&amp;<span class="hljs-keyword">self</span>) -&gt; <span class="hljs-built_in">Option</span>&lt;&amp;(<span class="hljs-keyword">dyn</span> Error + <span class="hljs-symbol">'static</span>)&gt; &#123; ... &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">backtrace</span></span>(&amp;<span class="hljs-keyword">self</span>) -&gt; <span class="hljs-built_in">Option</span>&lt;&amp;Backtrace&gt; &#123; ... &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">description</span></span>(&amp;<span class="hljs-keyword">self</span>) -&gt; &amp;<span class="hljs-built_in">str</span> &#123; ... &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">cause</span></span>(&amp;<span class="hljs-keyword">self</span>) -&gt; <span class="hljs-built_in">Option</span>&lt;&amp;<span class="hljs-keyword">dyn</span> Error&gt; &#123; ... &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>使用 <a href="https://github.com/dtolnay/thiserror" target="_blank" rel="noopener">thiserror</a>和<a href="https://github.com/dtolnay/anyhow" target="_blank" rel="noopener">anyhow</a>
+可以简化自定义的错误类型。</p>
+<p>比如使用 thiserror：</p>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">use</span> thiserror::Error;<br><span class="hljs-meta">#[derive(Error, Debug)]</span><br><span class="hljs-meta">#[non_exhaustive]</span><br><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">DataStoreError</span></span> &#123;<br>    <span class="hljs-meta">#[error(<span class="hljs-meta-string">"data store disconnected"</span>)]</span><br>    Disconnect(<span class="hljs-meta">#[from]</span> std::io::Error),<br>    <span class="hljs-meta">#[error(<span class="hljs-meta-string">"the data for key `&#123;0&#125;` is not available"</span>)]</span><br>    Redaction(<span class="hljs-built_in">String</span>),<br>    <span class="hljs-meta">#[error(<span class="hljs-meta-string">"invalid header (expected &#123;expected:?&#125;, found &#123;found:?&#125;)"</span>)]</span><br>    InvalidHeader &#123;<br>        expected: <span class="hljs-built_in">String</span>,<br>        found: <span class="hljs-built_in">String</span>,<br>    &#125;,<br>    <span class="hljs-meta">#[error(<span class="hljs-meta-string">"unknown data store error"</span>)]</span><br>    Unknown,<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>而 anyhow 实现了 anyhow::Error 和任意符合 Error trait
+的错误类型之间的转换，让你可以使用 ?
+操作符，不必再手工转换错误类型。anyhow
+还可以让你很容易地抛出一些临时的错误，而不必费力定义错误类型，但是不提倡滥用这个能力。</p>
+<h2><span id="闭包">闭包</span></h2>
+<p>闭包是一种匿名类型，一旦声明，就会产生一个新的类型，但这个类型无法被其它地方使用。这个类型就像一个结构体，会包含所有捕获的变量。其大小和内部的局部变量大小无关。</p>
+<blockquote>
+<p>捕获顺序，会影响闭包保存变量的顺序。但是 Rust
+编译器会对结构体内存进行内存优化，所以实际程序中内存顺序，不一定是 debug
+所显式的顺序。</p>
+</blockquote>
+<p>闭包是存储在栈上（和 Golang/Python/Java
+这些不同，它们会申请堆内存），并且除了捕获的数据外，闭包本身不包含任何额外函数指针指向闭包的代码。</p>
+<blockquote>
+<p>Golang/Python/Java
+这些闭包，会有额外的堆内存分配、潜在的动态分派（闭包被处理成函数指针）、额外的内存回收。</p>
+</blockquote>
+<p>使用了 move 且 move 到闭包内的数据结构需要满足
+Send。闭包拥有数据的所有权，它的生命周期是 'static。</p>
+<p>Rust 的性能却和使用命令式编程的 C
+几乎一样，除了编译器优化的效果，也因为 Rust 闭包的性能和函数差不多。</p>
+<p>Rust
+闭包的效率非常高。首先闭包捕获的变量，都储存在栈上，没有堆内存分配。其次因为闭包在创建时会隐式地创建自己的类型，每个闭包都是一个新的类型。通过闭包自己唯一的类型，Rust
+不需要额外的函数指针来运行闭包，所以<strong>闭包的调用效率和函数调用几乎一致</strong>。</p>
+<h3><span id="闭包类型">闭包类型</span></h3>
+<h4><span id="fnonce">FnOnce</span></h4>
+<p><a href="https://doc.rust-lang.org/std/ops/trait.FnOnce.html" target="_blank" rel="noopener">定义</a>如下：</p>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">FnOnce</span></span>&lt;Args&gt; &#123;<br>    <span class="hljs-class"><span class="hljs-keyword">type</span> <span class="hljs-title">Output</span></span>;<br>    <span class="hljs-keyword">extern</span> <span class="hljs-string">"rust-call"</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">call_once</span></span>(<span class="hljs-keyword">self</span>, args: Args) -&gt; Self::Output;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>FnOnce 有一个关联类型
+Output，显然，它是闭包返回值的类型。还有一个方法 call_once，要注意的是
+call_once 第一个参数是 self，它会转移 self 的所有权到 call_once
+函数中。所以<strong>它只能被调用一次</strong>。</p>
+<h4><span id="fnmut">FnMut</span></h4>
+<p><a href="https://doc.rust-lang.org/std/ops/trait.FnMut.html" target="_blank" rel="noopener">定义</a>如下：</p>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">FnMut</span></span>&lt;Args&gt;: <span class="hljs-built_in">FnOnce</span>&lt;Args&gt; &#123;<br>    <span class="hljs-keyword">extern</span> <span class="hljs-string">"rust-call"</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">call_mut</span></span>(<br>        &amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>, <br>        args: Args<br>    ) -&gt; Self::Output;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>首先，FnMut “继承”了 FnOnce，或者说 FnOnce 是 FnMut 的 super
+trait。所以FnMut也拥有 Output 这个关联类型和 call_once
+这个方法。此外，它还有一个 call_mut() 方法。<strong>call_mut() 传入
+&amp;mut self，它不移动 self，所以 FnMut 可以被多次调用</strong>。</p>
+<h4><span id="fn">Fn</span></h4>
+<p><a href="https://doc.rust-lang.org/std/ops/trait.Fn.html" target="_blank" rel="noopener">定义</a>如下：</p>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Fn</span></span>&lt;Args&gt;: <span class="hljs-built_in">FnMut</span>&lt;Args&gt; &#123;<br>    <span class="hljs-keyword">extern</span> <span class="hljs-string">"rust-call"</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">call</span></span>(&amp;<span class="hljs-keyword">self</span>, args: Args) -&gt; Self::Output;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>可以看到，它“继承”了 FnMut，或者说 FnMut 是 Fn 的 super
+trait。这也就意味着<strong>任何需要 FnOnce 或者 FnMut
+的场合，都可以传入满足 Fn 的闭包</strong>。Fn
+不允许修改闭包的内部数据，也可以执行多次。</p>
+<h4><span id="示例">示例</span></h4>
+<p><a href="https://github.com/hyperium/tonic" target="_blank" rel="noopener">tonic</a>（Rust 下的 gRPC
+库）的<a href="https://docs.rs/tonic/0.5.2/src/tonic/service/interceptor.rs.html#41-53" target="_blank" rel="noopener">例子</a>：</p>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Interceptor</span></span> &#123;<br>    <span class="hljs-comment">/// Intercept a request before it is sent, optionally cancelling it.</span><br>    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">call</span></span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>, request: crate::Request&lt;()&gt;) -&gt; <span class="hljs-built_in">Result</span>&lt;crate::Request&lt;()&gt;, Status&gt;;<br>&#125;<br><br><span class="hljs-keyword">impl</span>&lt;F&gt; Interceptor <span class="hljs-keyword">for</span> F<br><span class="hljs-keyword">where</span><br>    F: <span class="hljs-built_in">FnMut</span>(crate::Request&lt;()&gt;) -&gt; <span class="hljs-built_in">Result</span>&lt;crate::Request&lt;()&gt;, Status&gt;,<br>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">call</span></span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>, request: crate::Request&lt;()&gt;) -&gt; <span class="hljs-built_in">Result</span>&lt;crate::Request&lt;()&gt;, Status&gt; &#123;<br>        <span class="hljs-keyword">self</span>(request)<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>这里为 F 实现 Trait，把 Request 和 闭包 F 统一起来调用。</p>
+<h2><span id="泛型数据结构使用">泛型数据结构使用</span></h2>
+<p><code>BufReader</code> 代码示例：</p>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">BufReader</span></span>&lt;R: ?<span class="hljs-built_in">Sized</span>&gt; &#123;<br>    buf: Buffer,<br>    inner: R,<br>&#125;<br><br><span class="hljs-keyword">impl</span>&lt;R: Read&gt; BufReader&lt;R&gt; &#123;<br>    <span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">new</span></span>(inner: R) -&gt; BufReader&lt;R&gt; &#123;<br>        BufReader::with_capacity(DEFAULT_BUF_SIZE, inner)<br>    &#125;<br>    <br>    <span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">with_capacity</span></span>(capacity: <span class="hljs-built_in">usize</span>, inner: R) -&gt; BufReader&lt;R&gt; &#123;<br>        BufReader &#123; inner, buf: Buffer::with_capacity(capacity) &#125;<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">impl</span>&lt;R: Read + ?<span class="hljs-built_in">Sized</span>&gt; BufReader&lt;R&gt; &#123;<br>    <span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">peek</span></span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>, n: <span class="hljs-built_in">usize</span>) -&gt; io::<span class="hljs-built_in">Result</span>&lt;&amp;[<span class="hljs-built_in">u8</span>]&gt; &#123;...&#125;<br>&#125;<br><br><span class="hljs-keyword">impl</span>&lt;R: ?<span class="hljs-built_in">Sized</span>&gt; BufReader&lt;R&gt; &#123;<br>    <span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">get_ref</span></span>(&amp;<span class="hljs-keyword">self</span>) -&gt; &amp;R &#123;<br>        &amp;<span class="hljs-keyword">self</span>.inner<br>    &#125;<br>    <br>    <span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">get_mut</span></span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>) -&gt; &amp;<span class="hljs-keyword">mut</span> R &#123;<br>        &amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>.inner<br>    &#125;<br>    <br>    <span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">buffer</span></span>(&amp;<span class="hljs-keyword">self</span>) -&gt; &amp;[<span class="hljs-built_in">u8</span>] &#123;<br>        <span class="hljs-keyword">self</span>.buf.buffer()<br>    &#125;<br>    <br>    <span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">into_inner</span></span>(<span class="hljs-keyword">self</span>) -&gt; R<br>    <span class="hljs-keyword">where</span><br>        R: <span class="hljs-built_in">Sized</span>,<br>    &#123;<br>        <span class="hljs-keyword">self</span>.inner<br>    &#125;<br>    <br>    <span class="hljs-keyword">pub</span>(<span class="hljs-keyword">in</span> crate::io) <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">discard_buffer</span></span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>) &#123;<br>        <span class="hljs-keyword">self</span>.buf.discard_buffer()<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">impl</span>&lt;R: ?<span class="hljs-built_in">Sized</span> + Read&gt; Read <span class="hljs-keyword">for</span> BufReader&lt;R&gt; &#123;<br>    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">read</span></span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>, buf: &amp;<span class="hljs-keyword">mut</span> [<span class="hljs-built_in">u8</span>]) -&gt; io::<span class="hljs-built_in">Result</span>&lt;<span class="hljs-built_in">usize</span>&gt; &#123;...&#125;<br>    <br>    ...<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>根据不同的约束，分成了不同的代码块。</p>
+<h3><span id="三种常见的使用场景">三种常见的使用场景</span></h3>
+<ul>
+<li>使用泛型参数延迟数据结构的绑定；</li>
+<li>使用泛型参数和
+PhantomData，声明数据结构中不直接使用，但在实现过程中需要用到的类型。PhantomData
+长度为零，是个 ZST（Zero-Sized
+Type），就像不存在一样，唯一作用就是类型的标记；</li>
+</ul>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-meta">#[derive(Debug, Default, PartialEq, Eq)]</span><br><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Identifier</span></span>&lt;T&gt; &#123;<br>    inner: <span class="hljs-built_in">u64</span>,<br>    _tag: PhantomData&lt;T&gt;,<br>&#125;<br><br><span class="hljs-meta">#[derive(Debug, Default, PartialEq, Eq)]</span><br><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">User</span></span> &#123;<br>    id: Identifier&lt;<span class="hljs-keyword">Self</span>&gt;,<br>&#125;<br><br><span class="hljs-meta">#[derive(Debug, Default, PartialEq, Eq)]</span><br><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Product</span></span> &#123;<br>    id: Identifier&lt;<span class="hljs-keyword">Self</span>&gt;,<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<ul>
+<li>使用泛型参数让同一个数据结构对同一个 trait 可以拥有不同的实现。</li>
+</ul>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-meta">#[derive(Debug, Default)]</span><br><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Equation</span></span>&lt;IterMethod&gt; &#123;<br>    current: <span class="hljs-built_in">u32</span>,<br>    _method: PhantomData&lt;IterMethod&gt;,<br>&#125;<br><br><span class="hljs-meta">#[derive(Debug, Default)]</span><br><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Linear</span></span>;<br><br><span class="hljs-meta">#[derive(Debug, Default)]</span><br><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Quadratic</span></span>;<br><br><span class="hljs-keyword">impl</span> <span class="hljs-built_in">Iterator</span> <span class="hljs-keyword">for</span> Equation&lt;Linear&gt; &#123;<br>    <span class="hljs-class"><span class="hljs-keyword">type</span> <span class="hljs-title">Item</span></span> = <span class="hljs-built_in">u32</span>;<br><br>    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">next</span></span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>) -&gt; <span class="hljs-built_in">Option</span>&lt;Self::Item&gt; &#123;<br>        <span class="hljs-keyword">self</span>.current += <span class="hljs-number">1</span>;<br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">self</span>.current &gt;= <span class="hljs-built_in">u32</span>::MAX &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">None</span>;<br>        &#125;<br><br>        <span class="hljs-literal">Some</span>(<span class="hljs-keyword">self</span>.current)<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">impl</span> <span class="hljs-built_in">Iterator</span> <span class="hljs-keyword">for</span> Equation&lt;Quadratic&gt; &#123;<br>    <span class="hljs-class"><span class="hljs-keyword">type</span> <span class="hljs-title">Item</span></span> = <span class="hljs-built_in">u32</span>;<br><br>    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">next</span></span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>) -&gt; <span class="hljs-built_in">Option</span>&lt;Self::Item&gt; &#123;<br>        <span class="hljs-keyword">self</span>.current += <span class="hljs-number">1</span>;<br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">self</span>.current &gt;= <span class="hljs-built_in">u16</span>::MAX <span class="hljs-keyword">as</span> <span class="hljs-built_in">u32</span> &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">None</span>;<br>        &#125;<br><br>        <span class="hljs-literal">Some</span>(<span class="hljs-keyword">self</span>.current * <span class="hljs-keyword">self</span>.current)<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<blockquote>
+<p>另外：</p>
+<ul>
+<li>泛型参数支持默认值；</li>
+<li>impl Trait 与 &lt;Constrain: Trait&gt; 是相同的；</li>
+</ul>
+</blockquote>
+<h3><span id="动态分配的-trait-object">动态分配的 trait object</span></h3>
+<p>trait object 是 Rust 处理多态的手段。</p>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-comment">// 返回 trait object</span><br><span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">trait_object_as_return_working</span></span>(i: <span class="hljs-built_in">u32</span>) -&gt; <span class="hljs-built_in">Box</span>&lt;<span class="hljs-keyword">dyn</span> <span class="hljs-built_in">Iterator</span>&lt;Item = <span class="hljs-built_in">u32</span>&gt;&gt; &#123;<br>    <span class="hljs-built_in">Box</span>::new(std::iter::once(i))<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>使用 trait object
+是有额外的代价的，首先这里有一次额外的堆分配，其次动态分派会带来一定的性能损失。</p>
+<p>当我们在运行时想让某个具体类型，只表现出某个 trait
+的行为，可以通过将其赋值给一个 dyn T，无论是 &amp;dyn T，还是 Box&lt;dyn
+T&gt;，还是 Arc&lt;dyn T&gt;。此时，原有的类型被抹去，Rust 会创建一个
+trait object，并为其分配满足该 trait 的 vtable。</p>
+<p>在编译 dyn T 时，Rust 会为使用了 trait object 类型的 trait
+实现，生成相应的 vtable，放在可执行文件中（一般在 TEXT 或 RODATA
+段）。</p>
+<p>当 trait object 调用 trait 的方法时，它会先从 vptr 中找到对应的
+vtable，进而找到对应的方法来执行。</p>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">type</span> <span class="hljs-title">BoxedError</span></span> = <span class="hljs-built_in">Box</span>&lt;<span class="hljs-keyword">dyn</span> Error + <span class="hljs-built_in">Send</span> + <span class="hljs-built_in">Sync</span>&gt;;<br><br><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Executor</span></span> &#123;<br>    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">run</span></span>(&amp;<span class="hljs-keyword">self</span>) -&gt; <span class="hljs-built_in">Result</span>&lt;<span class="hljs-built_in">Option</span>&lt;<span class="hljs-built_in">i32</span>&gt;, BoxedError&gt;;<br>&#125;<br><br><span class="hljs-comment">/// 使用泛型参数</span><br><span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">execute_generics</span></span>(cmd: &amp;<span class="hljs-keyword">impl</span> Executor) -&gt; <span class="hljs-built_in">Result</span>&lt;<span class="hljs-built_in">Option</span>&lt;<span class="hljs-built_in">i32</span>&gt;, BoxedError&gt; &#123;<br>    cmd.run()<br>&#125;<br><br><span class="hljs-comment">/// 使用 trait object: &amp;dyn T</span><br><span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">execute_trait_object</span></span>(cmd: &amp;<span class="hljs-keyword">dyn</span> Executor) -&gt; <span class="hljs-built_in">Result</span>&lt;<span class="hljs-built_in">Option</span>&lt;<span class="hljs-built_in">i32</span>&gt;, BoxedError&gt; &#123;<br>    cmd.run()<br>&#125;<br><br><span class="hljs-comment">/// 使用 trait object: Box&lt;dyn T&gt;</span><br><span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">execute_boxed_trait_object</span></span>(cmd: <span class="hljs-built_in">Box</span>&lt;<span class="hljs-keyword">dyn</span> Executor&gt;) -&gt; <span class="hljs-built_in">Result</span>&lt;<span class="hljs-built_in">Option</span>&lt;<span class="hljs-built_in">i32</span>&gt;, BoxedError&gt; &#123;<br>    cmd.run()<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>&amp;dyn Executor 和 Box<dyn executor> 是 trait
+object，前者在栈上，后者分配在堆上。</dyn></p>
+<blockquote>
+<p>学习 Trait 设计的开源库 ：<a href="https://github.com/mcginty/snow" target="_blank" rel="noopener">snow</a> <a href="https://docs.rs/snow/latest/snow/all.html" target="_blank" rel="noopener">snow-doc</a></p>
+</blockquote>
+<h3><span id="用-trait-做桥接">用 trait 做桥接</span></h3>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-comment">// Engine trait：未来可以添加更多的 engine，主流程只需要替换 engine</span><br><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Engine</span></span> &#123;<br>    <span class="hljs-comment">// 对 engine 按照 specs 进行一系列有序的处理</span><br>    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">apply</span></span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>, specs: &amp;[Spec]);<br>    <span class="hljs-comment">// 从 engine 中生成目标图片，注意这里用的是 self，而非 self 的引用</span><br>    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">generate</span></span>(<span class="hljs-keyword">self</span>, format: ImageOutputFormat) -&gt; <span class="hljs-built_in">Vec</span>&lt;<span class="hljs-built_in">u8</span>&gt;;<br>&#125;<br><br><span class="hljs-comment">// 使用 image engine 处理</span><br><span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span> engine: Photon = data<br>    .try_into()<br>    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;<br>engine.apply(&amp;spec.specs);<br><span class="hljs-keyword">let</span> image = engine.generate(ImageOutputFormat::Jpeg(<span class="hljs-number">85</span>));<br></code></pre></div></td></tr></table></figure>
+<p>可读性优化</p>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-comment">// 从 Bytes 转换成 Photon 结构</span><br><span class="hljs-keyword">impl</span> TryFrom&lt;Bytes&gt; <span class="hljs-keyword">for</span> Photon &#123;<br>    <span class="hljs-class"><span class="hljs-keyword">type</span> <span class="hljs-title">Error</span></span> = anyhow::Error;<br><br>    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">try_from</span></span>(data: Bytes) -&gt; <span class="hljs-built_in">Result</span>&lt;<span class="hljs-keyword">Self</span>, Self::Error&gt; &#123;<br>        <span class="hljs-literal">Ok</span>(<span class="hljs-keyword">Self</span>(open_image_from_bytes(&amp;data)?))<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">// Engine trait：未来可以添加更多的 engine，主流程只需要替换 engine</span><br><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Engine</span></span> &#123;<br>    <span class="hljs-comment">// 生成一个新的 engine</span><br>    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">create</span></span>&lt;T&gt;(data: T) -&gt; <span class="hljs-built_in">Result</span>&lt;<span class="hljs-keyword">Self</span>&gt;<br>    <span class="hljs-keyword">where</span><br>        <span class="hljs-keyword">Self</span>: <span class="hljs-built_in">Sized</span>,<br>        T: TryInto&lt;<span class="hljs-keyword">Self</span>&gt;,<br>    &#123;<br>        data.try_into()<br>            .map_err(|_| anyhow!(<span class="hljs-string">"failed to create engine"</span>))<br>    &#125;<br>    <span class="hljs-comment">// 对 engine 按照 specs 进行一系列有序的处理</span><br>    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">apply</span></span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>, specs: &amp;[Spec]);<br>    <span class="hljs-comment">// 从 engine 中生成目标图片，注意这里用的是 self，而非 self 的引用</span><br>    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">generate</span></span>(<span class="hljs-keyword">self</span>, format: ImageOutputFormat) -&gt; <span class="hljs-built_in">Vec</span>&lt;<span class="hljs-built_in">u8</span>&gt;;<br>&#125;<br><br><span class="hljs-comment">// 使用 image engine 处理</span><br><span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span> engine = Photon::create(data)<br>    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;<br>engine.apply(&amp;spec.specs);<br><span class="hljs-keyword">let</span> image = engine.generate(ImageOutputFormat::Jpeg(<span class="hljs-number">85</span>));<br></code></pre></div></td></tr></table></figure>
+<p>桥接也可以用来隐藏具体实现细节：</p>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">let</span> secret_api = api_with_user_token(&amp;user, params);<br><span class="hljs-keyword">let</span> data: <span class="hljs-built_in">Vec</span>&lt;Status&gt; = reqwest::get(secret_api)?.json()?;<br><br><span class="hljs-comment">// 隐藏 api 调用细节的 trait</span><br><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">FriendCircle</span></span> &#123;<br>	<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">get_published</span></span>(&amp;<span class="hljs-keyword">self</span>, user: &amp;User) -&gt; <span class="hljs-built_in">Result</span>&lt;<span class="hljs-built_in">Vec</span>&lt;Status&gt;, FriendCircleError&gt;;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h3><span id="用-trait作为约束反馈信息给上层">用 trait
+作为约束反馈信息给上层</span></h3>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Engine</span></span> &#123;<br>    <span class="hljs-comment">// 生成一个新的 engine</span><br>    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">create</span></span>&lt;T&gt;(data: T) -&gt; <span class="hljs-built_in">Result</span>&lt;<span class="hljs-keyword">Self</span>&gt;<br>    <span class="hljs-keyword">where</span><br>        <span class="hljs-keyword">Self</span>: <span class="hljs-built_in">Sized</span>,<br>        T: TryInto&lt;<span class="hljs-keyword">Self</span>&gt;,  <span class="hljs-comment">// 只要 T 实现了 TryInto&lt;Self&gt; 即可</span><br>    &#123;<br>        data.try_into()<br>            .map_err(|_| anyhow!(<span class="hljs-string">"failed to create engine"</span>))<br>    &#125;<br>    ...<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h3><span id="用-trait-实现-solid">用 trait 实现 SOLID</span></h3>
+<ul>
+<li>SRP：单一职责原则，是指每个模块应该只负责单一的功能，不应该让多个功能耦合在一起，而是应该将其组合在一起。</li>
+<li>OCP：开闭原则，是指软件系统应该对修改关闭，而对扩展开放。trait
+的不同实现，或者 trait 的继承扩展。</li>
+<li>LSP：里氏替换原则，是指如果组件可替换，那么这些可替换的组件应该遵守相同的约束，或者说接口。比如，上文中实现了
+Engine trait 的 engine 可以进行替换。</li>
+<li>ISP：接口隔离原则，是指使用者只需要知道他们感兴趣的方法，而不该被迫了解和使用对他们来说无用的方法或者功能。一般当
+trait 满足 SRP 单一职责原则时，它也满足接口隔离原则</li>
+<li>DIP：依赖反转原则，是指某些场合下底层代码应该依赖高层代码，而非高层代码去依赖底层代码。</li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/Rust/">Rust</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Rust/">Rust</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/9b4059d6.html">
+                        <span class="hidden-mobile">RUST Part1</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
