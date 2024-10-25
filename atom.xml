@@ -6,7 +6,7 @@
   <link href="https://racleray.github.io/atom.xml" rel="self"/>
   
   <link href="https://racleray.github.io/"/>
-  <updated>2024-10-25T15:45:45.751Z</updated>
+  <updated>2024-10-25T15:50:29.133Z</updated>
   <id>https://racleray.github.io/</id>
   
   <author>
@@ -20,8 +20,8 @@
     <title>RUST-part2</title>
     <link href="https://racleray.github.io/posts/7f1634b6.html"/>
     <id>https://racleray.github.io/posts/7f1634b6.html</id>
-    <published>2024-07-20T14:54:55.000Z</published>
-    <updated>2024-10-25T15:45:45.751Z</updated>
+    <published>2024-10-22T13:19:35.225Z</published>
+    <updated>2024-10-25T15:50:29.133Z</updated>
     
     
     <summary type="html">Rust Notes</summary>
@@ -414,9 +414,9 @@
     <category term="CMake" scheme="https://racleray.github.io/categories/Notes/CMake/"/>
     
     
-    <category term="C" scheme="https://racleray.github.io/tags/C/"/>
-    
     <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
+    
+    <category term="C" scheme="https://racleray.github.io/tags/C/"/>
     
     <category term="CMake" scheme="https://racleray.github.io/tags/CMake/"/>
     
