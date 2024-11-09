@@ -6,7 +6,7 @@
   <link href="https://racleray.github.io/atom.xml" rel="self"/>
   
   <link href="https://racleray.github.io/"/>
-  <updated>2024-10-25T15:50:29.133Z</updated>
+  <updated>2024-11-09T13:38:47.484Z</updated>
   <id>https://racleray.github.io/</id>
   
   <author>
@@ -17,11 +17,32 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>RUST-part2</title>
+    <title>RUST-part3</title>
+    <link href="https://racleray.github.io/posts/8110420.html"/>
+    <id>https://racleray.github.io/posts/8110420.html</id>
+    <published>2024-11-09T12:31:22.317Z</published>
+    <updated>2024-11-09T13:38:47.484Z</updated>
+    
+    
+    <summary type="html">Rust Notes</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
+    
+    
+    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>RUST Part2</title>
     <link href="https://racleray.github.io/posts/7f1634b6.html"/>
     <id>https://racleray.github.io/posts/7f1634b6.html</id>
     <published>2024-10-22T13:19:35.225Z</published>
-    <updated>2024-10-25T15:50:29.133Z</updated>
+    <updated>2024-11-09T12:30:42.322Z</updated>
     
     
     <summary type="html">Rust Notes</summary>
@@ -442,29 +463,6 @@
     <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
     
     <category term="Compiler" scheme="https://racleray.github.io/tags/Compiler/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Unix用户终端登录过程分析</title>
-    <link href="https://racleray.github.io/posts/ff5b020d.html"/>
-    <id>https://racleray.github.io/posts/ff5b020d.html</id>
-    <published>2023-04-24T13:01:35.000Z</published>
-    <updated>2024-01-11T02:08:51.535Z</updated>
-    
-    
-    <summary type="html">Unix用户终端登录过程分析</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="Linux" scheme="https://racleray.github.io/categories/Notes/Linux/"/>
-    
-    
-    <category term="Unix" scheme="https://racleray.github.io/tags/Unix/"/>
-    
-    <category term="Shell" scheme="https://racleray.github.io/tags/Shell/"/>
     
   </entry>
   
