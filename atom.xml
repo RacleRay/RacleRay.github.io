@@ -6,7 +6,7 @@
   <link href="https://racleray.github.io/atom.xml" rel="self"/>
   
   <link href="https://racleray.github.io/"/>
-  <updated>2024-11-10T13:31:11.188Z</updated>
+  <updated>2024-11-14T13:06:14.680Z</updated>
   <id>https://racleray.github.io/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>RUST Part4</title>
+    <link href="https://racleray.github.io/posts/eb2aad59.html"/>
+    <id>https://racleray.github.io/posts/eb2aad59.html</id>
+    <published>2024-11-14T11:03:25.564Z</published>
+    <updated>2024-11-14T13:06:14.680Z</updated>
+    
+    
+    <summary type="html">Rust Notes</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
+    
+    
+    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
+    
+  </entry>
   
   <entry>
     <title>RUST Part3</title>
@@ -440,29 +461,6 @@
     <category term="C" scheme="https://racleray.github.io/tags/C/"/>
     
     <category term="CMake" scheme="https://racleray.github.io/tags/CMake/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>C++编译器优化</title>
-    <link href="https://racleray.github.io/posts/f78760c9.html"/>
-    <id>https://racleray.github.io/posts/f78760c9.html</id>
-    <published>2023-05-12T14:25:36.000Z</published>
-    <updated>2024-01-09T10:19:48.220Z</updated>
-    
-    
-    <summary type="html">C++编译器优化笔记</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="C++" scheme="https://racleray.github.io/categories/Notes/C/"/>
-    
-    
-    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
-    
-    <category term="Compiler" scheme="https://racleray.github.io/tags/Compiler/"/>
     
   </entry>
   
