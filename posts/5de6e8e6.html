@@ -78,7 +78,7 @@
 <meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cbold%7Bx%7D_l">
 <meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cfrac%7B%5Cpartial+Norm(%5Cbold%7BWx%27%7D)%7D%7B%5Cpartial+%5Cbold%7BW%7D%7D+%253D+%5Cfrac%7B%5Cpartial+Norm(%5Cbold%7BWx%7D)%7D%7B%5Cpartial%5Cbold%7BW%7D%7D+%5C%5C">
 <meta property="article:published_time" content="2020-10-19T11:32:28.000Z">
-<meta property="article:modified_time" content="2023-08-07T11:54:31.047Z">
+<meta property="article:modified_time" content="2024-11-14T13:09:59.856Z">
 <meta property="article:author" content="江左时雨">
 <meta property="article:tag" content="deep learning">
 <meta property="article:tag" content="normalization">
@@ -430,6 +430,7 @@ set来做，相当于进行梯度计算式引入噪声。因此，Batch
 Normalization不适用于对噪声敏感的强化学习、生成模型（Generative
 model：GAN，VAE）使用。</p>
 <figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">batch_normalization_layer</span><span class="hljs-params">(inputs, out_size, isTrain=True)</span>:</span><br>    <span class="hljs-comment"># in_size, out_size = inputs.get_shape()</span><br>    pop_mean = tf.Variable(tf.zeros([out_size]),trainable=<span class="hljs-literal">False</span>)<br>    pop_var = tf.Variable(tf.ones([out_size]),trainable=<span class="hljs-literal">False</span>)<br>    scale = tf.Variable(tf.ones([out_size]))<br>    shift = tf.Variable(tf.zeros([out_size]))<br>    eps = <span class="hljs-number">0.001</span><br>    decay = <span class="hljs-number">0.999</span><br>    <span class="hljs-keyword">if</span> isTrain:<br>        <span class="hljs-comment"># batch的mean和var。 注原始维度为[batch_size, height, width, channel]</span><br>        batch_mean, batch_var = tf.nn.moments(inputs,[<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">2</span>])<br>        print(batch_mean.get_shape())<br>        <span class="hljs-comment"># 记录训练的mean和var</span><br>        train_mean = tf.assign(pop_mean, pop_mean * decay + batch_mean * (<span class="hljs-number">1</span>-decay))<br>        train_var = tf.assign(pop_var, pop_var * decay + batch_var * (<span class="hljs-number">1</span>-decay))<br>        <span class="hljs-keyword">with</span> tf.control_dependencies([train_mean,train_var]):<br>            <span class="hljs-keyword">return</span> tf.nn.batch_normalization(inputs,batch_mean,batch_var,shift,scale,eps)<br>    <span class="hljs-keyword">else</span>:<br>        <span class="hljs-keyword">return</span> tf.nn.batch_normalization(inputs,pop_mean,pop_var,shift,scale,eps)<br></code></pre></div></td></tr></table></figure>
+<p>ref <a href="https://github.com/vacancy/Synchronized-BatchNorm-PyTorch" target="_blank" rel="noopener">Synchronized-BatchNorm-PyTorch</a>，多GPU分布式同步各个节点的数据mean和var</p>
 <ol start="2" type="1">
 <li><strong>Layer Normalization —— 横向规范化</strong>：单个输入
 https://arxiv.org/abs/1607.06450</li>
@@ -501,7 +502,7 @@ Norm</strong>的<strong>num_groups等于num_channel</strong>.</p>
 </figure>
 <p>当<strong>Group Norm中group</strong>的数量是1的时候,
 是与LayerNorm是等价的</p>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">GroupNorm</span><span class="hljs-params">(x, gamma, beta, G, eps=<span class="hljs-number">1</span>e−<span class="hljs-number">5</span>)</span>:</span><br>    <span class="hljs-comment"># x: input features with shape [N,C,H,W]</span><br>    <span class="hljs-comment"># gamma, beta: scale and offset, with shape [1,C,1,1]</span><br>    <span class="hljs-comment"># G: number of groups for GN</span><br>    N, C, H, W = x.shape<br>    <span class="hljs-comment"># group划分</span><br>    x = tf.reshape(x, [N, G, C // G, H, W])<br>    <span class="hljs-comment"># 按group求mean var</span><br>    mean, var = tf.nn.moments(x, [<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>], keepdims=<span class="hljs-literal">True</span>)<br>    <br>    x = (x−mean) / tf.sqrt(var + eps)<br>    x = tf.reshape(x, [N, C, H, W])<br>    <span class="hljs-keyword">return</span> x∗gamma + beta<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">GroupNorm</span><span class="hljs-params">(x, gamma, beta, G, eps=<span class="hljs-number">1</span>e−<span class="hljs-number">5</span>)</span>:</span><br>    <span class="hljs-comment"># x: input features with shape [N,C,H,W]</span><br>    <span class="hljs-comment"># gamma, beta: scale and offset, with shape [1,C,1,1]</span><br>    <span class="hljs-comment"># G: number of groups for GN</span><br>    N, C, H, W = x.shape<br>    <span class="hljs-comment"># group划分</span><br>    x = tf.reshape(x, [N, G, C // G, H, W])<br>    <span class="hljs-comment"># 按group求mean var</span><br>    mean, var = tf.nn.moments(x, [<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>], keepdims=<span class="hljs-literal">True</span>)<br><br>    x = (x−mean) / tf.sqrt(var + eps)<br>    x = tf.reshape(x, [N, C, H, W])<br>    <span class="hljs-keyword">return</span> x∗gamma + beta<br></code></pre></div></td></tr></table></figure>
 <h2><span id="normalization为什么会有效"><strong>Normalization
 为什么会有效？</strong></span></h2>
 <ol type="1">
@@ -833,23 +834,8 @@ function的图像</p>
 
 
 <!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>

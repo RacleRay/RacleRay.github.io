@@ -1,0 +1,714 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="Rust Notes">
+  <meta name="author" content="HeRui">
+  <meta name="keywords" content="Rust,Concurrency">
+  <meta name="description" content="Rust Notes">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RUST-concurrency">
+<meta property="og:url" content="https://racleray.github.io/posts/7b9437f8.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="Rust Notes">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-11-14T13:12:29.198Z">
+<meta property="article:modified_time" content="2024-11-15T12:48:24.354Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="Rust">
+<meta property="article:tag" content="Concurrency">
+<meta name="twitter:card" content="summary_large_image">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>RUST-concurrency - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="RUST-concurrency">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2024-11-14 21:12" pubdate>
+        2024年11月14日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      9.3k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      29 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">RUST-concurrency</h1>
+            
+            <div class="markdown-body">
+              <p>并发是程序处理多个任务的能力，难点在于多个任务之间如何协作，如何同步状态。几种常见的工作模式：自由竞争模式、map/reduce
+模式、DAG 模式。</p>
+<ul>
+<li>在自由竞争模式下，多个并发任务会竞争同一个临界区的访问权。任务之间在何时、以何种方式去访问临界区，是不确定的，或者说是最为灵活的，只要在进入临界区时获得独占访问即可。</li>
+<li>map/reduce
+模式，把工作打散，按照相同的处理完成后，再按照一定的顺序将结果组织起来。</li>
+<li>DAG
+模式，把工作切成不相交的、有依赖关系的子任务，然后按依赖关系并发执行。</li>
+</ul>
+<p>当处理复杂问题的时候，一种方法是先厘清其脉络，用分治的思想把问题拆解成正交的子问题，然后组合合适的并发模式来处理这些子问题。</p>
+<h2><span id="atomic">Atomic</span></h2>
+<p>Atomic
+是所有并发原语的基础，它为并发任务的同步奠定了坚实的基础。先看一个 Lock
+的实现：</p>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">use</span> std::&#123;cell::RefCell, fmt, sync::Arc, thread&#125;;<br><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Lock</span></span>&lt;T&gt; &#123;<br>    locked: RefCell&lt;<span class="hljs-built_in">bool</span>&gt;,<br>    data: RefCell&lt;T&gt;,<br>&#125;<br><br><span class="hljs-keyword">impl</span>&lt;T&gt; fmt::<span class="hljs-built_in">Debug</span> <span class="hljs-keyword">for</span> Lock&lt;T&gt;<br><span class="hljs-keyword">where</span><br>    T: fmt::<span class="hljs-built_in">Debug</span>,<br>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">fmt</span></span>(&amp;<span class="hljs-keyword">self</span>, f: &amp;<span class="hljs-keyword">mut</span> fmt::Formatter&lt;<span class="hljs-symbol">'_</span>&gt;) -&gt; fmt::<span class="hljs-built_in">Result</span> &#123;<br>        <span class="hljs-built_in">write!</span>(f, <span class="hljs-string">"Lock&lt;&#123;:?&#125;&gt;"</span>, <span class="hljs-keyword">self</span>.data.borrow())<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">// SAFETY: 我们确信 Lock&lt;T&gt; 很安全，可以在多个线程中共享</span><br><span class="hljs-keyword">unsafe</span> <span class="hljs-keyword">impl</span>&lt;T&gt; <span class="hljs-built_in">Sync</span> <span class="hljs-keyword">for</span> Lock&lt;T&gt; &#123;&#125;<br><br><span class="hljs-keyword">impl</span>&lt;T&gt; Lock&lt;T&gt; &#123;<br>    <span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">new</span></span>(data: T) -&gt; <span class="hljs-keyword">Self</span> &#123;<br>        <span class="hljs-keyword">Self</span> &#123;<br>            data: RefCell::new(data),<br>            locked: RefCell::new(<span class="hljs-literal">false</span>),<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">lock</span></span>(&amp;<span class="hljs-keyword">self</span>, op: <span class="hljs-keyword">impl</span> <span class="hljs-built_in">FnOnce</span>(&amp;<span class="hljs-keyword">mut</span> T)) &#123;<br>        <span class="hljs-comment">// 如果没拿到锁，就一直 spin</span><br>        <span class="hljs-keyword">while</span> *<span class="hljs-keyword">self</span>.locked.borrow() != <span class="hljs-literal">false</span> &#123;&#125; <span class="hljs-comment">// **1</span><br><br>        <span class="hljs-comment">// 拿到，赶紧加锁</span><br>        *<span class="hljs-keyword">self</span>.locked.borrow_mut() = <span class="hljs-literal">true</span>; <span class="hljs-comment">// **2</span><br><br>        <span class="hljs-comment">// 开始干活</span><br>        op(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>.data.borrow_mut()); <span class="hljs-comment">// **3</span><br><br>        <span class="hljs-comment">// 解锁</span><br>        *<span class="hljs-keyword">self</span>.locked.borrow_mut() = <span class="hljs-literal">false</span>; <span class="hljs-comment">// **4</span><br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() &#123;<br>    <span class="hljs-keyword">let</span> data = Arc::new(Lock::new(<span class="hljs-number">0</span>));<br><br>    <span class="hljs-keyword">let</span> data1 = data.clone();<br>    <span class="hljs-keyword">let</span> t1 = thread::spawn(<span class="hljs-keyword">move</span> || &#123;<br>        data1.lock(|v| *v += <span class="hljs-number">10</span>);<br>    &#125;);<br><br>    <span class="hljs-keyword">let</span> data2 = data.clone();<br>    <span class="hljs-keyword">let</span> t2 = thread::spawn(<span class="hljs-keyword">move</span> || &#123;<br>        data2.lock(|v| *v *= <span class="hljs-number">10</span>);<br>    &#125;);<br>    t1.join().unwrap();<br>    t2.join().unwrap();<br><br>    <span class="hljs-built_in">println!</span>(<span class="hljs-string">"data: &#123;:?&#125;"</span>, data);<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>在 lock() 方法里，拿不到锁的并发任务会一直
+spin，拿到锁的任务可以干活，干完活后会解锁，这样之前 spin
+的任务会竞争到锁，进入临界区。这里的实现有一些潜在的不易发现的问题：</p>
+<ul>
+<li>在<code>多核情况</code>下，1 和 2 之间，有可能其它线程也碰巧 spin
+结束，把 locked 修改为
+true。这样，存在多个线程拿到这把锁，破坏了任何线程都有独占访问的保证。</li>
+<li>在<code>单核情况</code>下，1 和 2
+之间，也可能因为操作系统的可抢占式调度，导致上述问题发生。</li>
+<li>编译器会最大程度优化生成的指令，如果操作之间没有依赖关系，可能会生成乱序的机器码，比如3
+被优化放在 1 之前，从而破坏了这个 lock 的保证。注意这里的 3 和 1
+之间没有依赖关系。</li>
+<li>即便编译器不做乱序处理，CPU
+也会最大程度做指令的乱序执行，让流水线的效率最高。同样会发生 3
+的问题。</li>
+</ul>
+<p>这个锁的行为是未定义的。可能大部分时间如我们所愿，但会随机出现奇奇怪怪的行为。一旦这样的事情发生，bug
+可能会以各种不同的面貌出现在系统的各个角落。而且，这样的 bug
+几乎是无解的，因为它很难稳定复现，表现行为很不一致，甚至，只在某个 CPU
+下出现。</p>
+<p>为了解决上面这段代码的问题，我们必须在 CPU
+层面做一些保证，让某些操作成为原子操作。</p>
+<h3><span id="cas">CAS</span></h3>
+<p>最基础的保证是：可以通过一条指令读取某个内存地址，判断其值是否等于某个前置值，如果相等，将其修改为新的值。这就是
+Compare-and-swap
+操作，简称CAS。它是操作系统的几乎所有并发原语的基石，使得我们能实现一个可以正常工作的锁。</p>
+<p>上文中的代码示例可以将 1 改写为：</p>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">while</span> <span class="hljs-keyword">self</span>.locked.compare_exchange(<span class="hljs-literal">false</span>, <span class="hljs-literal">true</span>, Ordering::Acquire, Ordering::Relaxed).is_err() &#123;&#125;<br></code></pre></div></td></tr></table></figure>
+<p>如果 locked 当前的值是 false，就将其改成
+true。这整个操作在一条指令里完成，不会被其它线程打断或者修改；如果
+locked 的当前值不是 false，那么就会返回错误，我们会在此不停
+spin，直到前置条件得到满足。这里，compare_exchange 是 Rust 提供的 CAS
+操作，它会被编译成 CPU 的对应 CAS 指令。</p>
+<p>同样在释放锁的时候，相应地需要使用 atomic 的版本，而非直接赋值成
+false：</p>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">self</span>.locked.store(<span class="hljs-literal">false</span>, Ordering::Release);<br></code></pre></div></td></tr></table></figure>
+<h3><span id="ordering">Ordering</span></h3>
+<p>通过使用 compare_exchange ，规避了 1 和 2
+面临的问题，但对于和编译器/CPU自动优化相关的 3 和
+4，我们还需要一些额外处理。这就是这个函数里额外的两个和 Ordering
+有关。</p>
+<ul>
+<li>Relaxed，这是最宽松的规则，它对编译器和 CPU
+不做任何限制，可以乱序执行。</li>
+<li>Release，当写入数据的时候：
+<ul>
+<li>对于当前线程，任何读取或写入操作都不能被乱序排在这个 store 之后</li>
+<li>对于其它线程，如果使用了 Acquire 来读取这个 atomic
+的数据，那么它们看到的是修改后的结果。所以能保证读到最新的值。</li>
+</ul></li>
+<li>Acquire 是当读取数据的时候:
+<ul>
+<li>对于当前线程，任何读取或者写入操作都不能被乱序排在这个读取之前。</li>
+<li>对于其它线程，如果使用了 Release
+来修改数据，那么，修改的值对当前线程可见。</li>
+</ul></li>
+<li>AcqRel 是Acquire 和 Release 的结合，同时拥有 Acquire 和 Release
+的保证。
+<ul>
+<li>一般用在 fetch_xxx 上，比如对一个 atomic 自增
+1，你希望这个操作之前和之后的读取或写入操作不会被乱序，并且操作的结果对其它线程可见。</li>
+</ul></li>
+<li>SeqCst 是最严格的 ordering，除了 AcqRel
+的保证外，它还保证所有线程看到的所有 SeqCst 操作的顺序是一致的。</li>
+</ul>
+<p>因为 CAS 和 ordering 都是系统级的操作，所以这里描述的 Ordering
+的用途在各种语言中都大同小异。</p>
+<p>对于 Rust 来说，它的 atomic 原语继承于 C++。C++ 关于 <a href="https://en.cppreference.com/w/cpp/atomic/memory_order" target="_blank" rel="noopener">ordering</a>
+的文档要清晰得多。</p>
+<p>由于 compare_exchange 会独占访问，所以可以进行以下优化：</p>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">while</span> <span class="hljs-keyword">self</span><br>    .locked<br>    .compare_exchange(<span class="hljs-literal">false</span>, <span class="hljs-literal">true</span>, Ordering::Acquire, Ordering::Relaxed)<br>    .is_err()<br>&#123;<br>    <span class="hljs-comment">// compare_exchange 需要独占访问，当拿不到锁时，我们</span><br>    <span class="hljs-comment">// 检测 locked 的状态，直到其 unlocked 后，再尝试拿锁</span><br>    <span class="hljs-keyword">while</span> <span class="hljs-keyword">self</span>.locked.load(Ordering::Relaxed) == <span class="hljs-literal">true</span> &#123;&#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>CAS 是个代价比较高的操作，它需要获得对应内存的独占访问（exclusive
+access），我们希望失败的时候只是简单读取 atomic
+的状态，只有符合条件的时候再去做独占访问，进行 CAS。</p>
+<p>一个全局 Metrics 的示例：</p>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">use</span> std::&#123;<br>    collections::HashMap,<br>    sync::atomic::&#123;AtomicUsize, Ordering&#125;,<br>&#125;;<br><br><span class="hljs-comment">// server statistics</span><br><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Metrics</span></span>(HashMap&lt;&amp;<span class="hljs-symbol">'static</span> <span class="hljs-built_in">str</span>, AtomicUsize&gt;);<br><br><span class="hljs-keyword">impl</span> Metrics &#123;<br>    <span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">new</span></span>(names: &amp;[&amp;<span class="hljs-symbol">'static</span> <span class="hljs-built_in">str</span>]) -&gt; <span class="hljs-keyword">Self</span> &#123;<br>        <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span> metrics: HashMap&lt;&amp;<span class="hljs-symbol">'static</span> <span class="hljs-built_in">str</span>, AtomicUsize&gt; = HashMap::new();<br>        <span class="hljs-keyword">for</span> name <span class="hljs-keyword">in</span> names.iter() &#123;<br>            metrics.insert(name, AtomicUsize::new(<span class="hljs-number">0</span>));<br>        &#125;<br>        <span class="hljs-keyword">Self</span>(metrics)<br>    &#125;<br><br>    <span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">inc</span></span>(&amp;<span class="hljs-keyword">self</span>, name: &amp;<span class="hljs-symbol">'static</span> <span class="hljs-built_in">str</span>) &#123;<br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">let</span> <span class="hljs-literal">Some</span>(m) = <span class="hljs-keyword">self</span>.<span class="hljs-number">0</span>.get(name) &#123;<br>            m.fetch_add(<span class="hljs-number">1</span>, Ordering::Relaxed);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">add</span></span>(&amp;<span class="hljs-keyword">self</span>, name: &amp;<span class="hljs-symbol">'static</span> <span class="hljs-built_in">str</span>, val: <span class="hljs-built_in">usize</span>) &#123;<br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">let</span> <span class="hljs-literal">Some</span>(m) = <span class="hljs-keyword">self</span>.<span class="hljs-number">0</span>.get(name) &#123;<br>            m.fetch_add(val, Ordering::Relaxed);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">dec</span></span>(&amp;<span class="hljs-keyword">self</span>, name: &amp;<span class="hljs-symbol">'static</span> <span class="hljs-built_in">str</span>) &#123;<br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">let</span> <span class="hljs-literal">Some</span>(m) = <span class="hljs-keyword">self</span>.<span class="hljs-number">0</span>.get(name) &#123;<br>            m.fetch_sub(<span class="hljs-number">1</span>, Ordering::Relaxed);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">snapshot</span></span>(&amp;<span class="hljs-keyword">self</span>) -&gt; <span class="hljs-built_in">Vec</span>&lt;(&amp;<span class="hljs-symbol">'static</span> <span class="hljs-built_in">str</span>, <span class="hljs-built_in">usize</span>)&gt; &#123;<br>        <span class="hljs-keyword">self</span>.<span class="hljs-number">0</span><br>            .iter()<br>            .map(|(k, v)| (*k, v.load(Ordering::Relaxed)))<br>            .collect()<br>    &#125;<br>&#125;<br><br>lazy_static! &#123;<br>    <span class="hljs-keyword">pub</span>(<span class="hljs-keyword">crate</span>) <span class="hljs-keyword">static</span> <span class="hljs-keyword">ref</span> METRICS: Metrics = Metrics::new(&amp;[<br>        <span class="hljs-string">"topics"</span>,<br>        <span class="hljs-string">"clients"</span>,<br>        <span class="hljs-string">"peers"</span>,<br>        <span class="hljs-string">"broadcasts"</span>,<br>        <span class="hljs-string">"servers"</span>,<br>        <span class="hljs-string">"states"</span>,<br>        <span class="hljs-string">"subscribers"</span><br>    ]);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() &#123;<br>    METRICS.inc(<span class="hljs-string">"topics"</span>);<br>    METRICS.inc(<span class="hljs-string">"subscribers"</span>);<br><br>    <span class="hljs-built_in">println!</span>(<span class="hljs-string">"&#123;:?&#125;"</span>, METRICS.snapshot());<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h2><span id="mutex">Mutex</span></h2>
+<p>通过 SpinLock
+做互斥的实现方式有使用场景的限制：如果受保护的临界区太大，那么整体的性能会急剧下降，
+CPU
+忙等，浪费资源还不干实事，不适合作为一种通用的处理方法。更通用的解决方案是：当多个线程竞争同一个
+Mutex 时，获得锁的线程得到临界区的访问，其它线程被挂起，放入该 Mutex
+上的一个等待队列里。当获得锁的线程完成工作，退出临界区时，Mutex
+会给等待队列发一个信号，把队列中第一个线程唤醒，于是这个线程可以进行后续的访问。</p>
+<p>SpinLock和 Mutex 最大的不同是，使用 SpinLock，线程在忙等（busy
+wait），而使用 Mutex
+lock，线程在等待锁的时候会被调度出去，等锁可用时再被调度回来。</p>
+<p>线程的上下文切换代价很大，所以频繁将线程挂起再唤醒，会降低整个系统的效率。所以很多
+Mutex 具体的实现会将 SpinLock（确切地说是 spin
+wait）和线程挂起结合使用：线程的 lock 请求如果拿不到会先尝试 spin
+一会，然后再挂起添加到等待队列。Rust 下的 parking_lot
+就是这样实现的。</p>
+<blockquote>
+<p>如果新来的线程恰巧在 spin
+过程中拿到了锁，而当前等待队列中还有其它线程在等待锁，那么等待的线程只能继续等待下去，这不符合
+FIFO，不适合那些需要严格按先来后到排队的使用场景。为此，parking_lot
+提供了 fair mutex。</p>
+</blockquote>
+<p>Mutex 的实现依赖于 CPU 提供的 atomic。可以把 Mutex
+想象成一个粒度更大的 atomic，只不过这个 atomic 无法由 CPU
+保证，而是通过软件算法来实现。</p>
+<h2><span id="condvar">Condvar</span></h2>
+<p>Condvar 有两种状态：</p>
+<ul>
+<li>等待（wait）：线程在队列中等待，直到满足某个条件。</li>
+<li>通知（notify）：当 condvar
+的条件满足时，当前线程通知其他等待的线程可以被唤醒。</li>
+</ul>
+<p>Condvar 往往和 Mutex 一起使用：Mutex
+用于保证条件在读写时互斥，Condvar 用于控制线程的等待和唤醒。</p>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">use</span> std::sync::&#123;Arc, Condvar, Mutex&#125;;<br><span class="hljs-keyword">use</span> std::thread;<br><span class="hljs-keyword">use</span> std::time::Duration;<br><br><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() &#123;<br>    <span class="hljs-keyword">let</span> pair = Arc::new((Mutex::new(<span class="hljs-literal">false</span>), Condvar::new()));<br>    <span class="hljs-keyword">let</span> pair2 = Arc::clone(&amp;pair);<br><br>    thread::spawn(<span class="hljs-keyword">move</span> || &#123;<br>        <span class="hljs-keyword">let</span> (lock, cvar) = &amp;*pair2;<br>        <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span> started = lock.lock().unwrap();<br>        *started = <span class="hljs-literal">true</span>;<br>        eprintln!(<span class="hljs-string">"I'm a happy worker!"</span>);<br>        <span class="hljs-comment">// 通知主线程</span><br>        cvar.notify_one();<br>        <span class="hljs-keyword">loop</span> &#123;<br>            thread::sleep(Duration::from_secs(<span class="hljs-number">1</span>));<br>            <span class="hljs-built_in">println!</span>(<span class="hljs-string">"working..."</span>);<br>        &#125;<br>    &#125;);<br><br>    <span class="hljs-comment">// 等待工作线程的通知</span><br>    <span class="hljs-keyword">let</span> (lock, cvar) = &amp;*pair;<br>    <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span> started = lock.lock().unwrap();<br>    <span class="hljs-keyword">while</span> !*started &#123;<br>        <span class="hljs-comment">// 唤醒哪个 Mutex 下等待的线程</span><br>        started = cvar.wait(started).unwrap();<br>    &#125;<br>    eprintln!(<span class="hljs-string">"Worker started!"</span>);<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h2><span id="channel">Channel</span></h2>
+<p>Channel
+把锁封装在了队列写入和读取的小块区域内，然后把读者和写者完全分离，使得读者读取数据和写者写入数据，对开发者而言，除了潜在的上下文切换外，完全和锁无关，就像访问一个本地队列一样。对于大部分并发问题，都可以用
+Channel 或者类似的思想来处理（比如 actor model）。</p>
+<p>Rust 提供了以下四种 Channel：</p>
+<ul>
+<li>oneshot：这可能是最简单的
+Channel，写者就只发一次数据，而读者也只读一次。</li>
+<li>rendezvous：适用于只需要通过 Channel
+来控制线程间的同步，并不需要发送数据。rendezvous channel 是 channel size
+为 0 的一种特殊情况。rendezvous channel 其实也就是 Mutex + Condvar
+的一个包装。</li>
+<li>bounded：bounded channel
+有一个队列，但队列有上限。一旦队列被写满了，写者也需要被挂起等待。当阻塞发生后，读者一旦读取数据，channel
+内部就会使用 Condvar 的 notify_one
+通知写者，唤醒某个写者使其能够继续写入。 &gt; 一般会用到 Mutex + Condvar
++ VecDeque 来实现；如果不用 Condvar，可以直接使用 thread::park +
+thread::notify 来完成（flume 的做法）；如果不用
+VecDeque，也可以使用双向链表或者其它的 ring buffer 的实现。</li>
+<li>unbounded：queue 没有上限，如果写满了，就自动扩容。我们知道，Rust
+的很多数据结构如 Vec 、VecDeque 都是自动扩容的。unbounded 和 bounded
+相比，除了不阻塞写者，其它实现都很类似。</li>
+</ul>
+<p>所有这些 channel
+类型，同步和异步的实现思路大同小异，主要的区别在于挂起/唤醒的对象。在同步的世界里，挂起/唤醒的对象是线程；而异步的世界里，是粒度很小的
+task。</p>
+<p>根据 Channel 读者和写者的数量，Channel 又可以分为：</p>
+<ul>
+<li>SPSC：Single-Producer
+Single-Consumer，单生产者，单消费者。最简单，可以不依赖于 Mutex，只用
+atomics 就可以实现。</li>
+<li>SPMC：Single-Producer
+Multi-Consumer，单生产者，多消费者。需要在消费者这侧读取时加锁。</li>
+<li>MPSC：Multi-Producer
+Single-Consumer，多生产者，单消费者。需要在生产者这侧写入时加锁。</li>
+<li>MPMC：Multi-Producer
+Multi-Consumer。多生产者，多消费者。需要在生产者写入或者消费者读取时加锁。</li>
+</ul>
+<p>在众多 Channel 类型中，使用最广的是 MPSC
+channel，多生产者，单消费者。通过单消费者来保证，消息的数据结构有独占的写访问。</p>
+<h2><span id="actor">Actor</span></h2>
+<p>actor 是一种有栈协程。每个
+actor，有自己的一个独立的、轻量级的调用栈，以及一个用来接受消息的消息队列（mailbox
+或者 message queue），外界跟 actor
+打交道的唯一手段就是，给它发送消息。</p>
+<p>Rust 标准库没有 actor 的实现，但是社区里有比较成熟的 <a href="https://github.com/actix/actix" target="_blank" rel="noopener">actix</a>，以及 <a href="https://github.com/bastion-rs/bastion" target="_blank" rel="noopener">bastion</a>。</p>
+<p>一个示例 Actor 实现为：</p>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">use</span> actix::prelude::*;<br><span class="hljs-keyword">use</span> anyhow::<span class="hljs-built_in">Result</span>;<br><br><span class="hljs-meta">#[derive(Message, Debug, Clone, PartialEq)]</span><br><span class="hljs-meta">#[rtype(result = <span class="hljs-meta-string">"OutMsg"</span>)]</span><br><span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">InMsg</span></span> &#123;<br>    Add((<span class="hljs-built_in">usize</span>, <span class="hljs-built_in">usize</span>)),<br>    Concat((<span class="hljs-built_in">String</span>, <span class="hljs-built_in">String</span>)),<br>&#125;<br><br><span class="hljs-meta">#[derive(MessageResponse, Debug, Clone, PartialEq)]</span><br><span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">OutMsg</span></span> &#123;<br>    Num(<span class="hljs-built_in">usize</span>),<br>    Str(<span class="hljs-built_in">String</span>),<br>&#125;<br><br><span class="hljs-comment">// Actor</span><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">DummyActor</span></span>;<br><br><span class="hljs-comment">// 只需要实现 Actor trait和Handler&lt;InMsg&gt; trait</span><br><span class="hljs-keyword">impl</span> Actor <span class="hljs-keyword">for</span> DummyActor &#123;<br>    <span class="hljs-class"><span class="hljs-keyword">type</span> <span class="hljs-title">Context</span></span> = Context&lt;<span class="hljs-keyword">Self</span>&gt;;<br>&#125;<br><br><span class="hljs-comment">// 实现处理 InMsg 的 Handler trait</span><br><span class="hljs-keyword">impl</span> Handler&lt;InMsg&gt; <span class="hljs-keyword">for</span> DummyActor &#123;<br>    <span class="hljs-class"><span class="hljs-keyword">type</span> <span class="hljs-title">Result</span></span> = OutMsg; <span class="hljs-comment">// &lt;-  返回的消息</span><br><br>    <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">handle</span></span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>, msg: InMsg, _ctx: &amp;<span class="hljs-keyword">mut</span> Self::Context) -&gt; Self::<span class="hljs-built_in">Result</span> &#123;<br>        <span class="hljs-keyword">match</span> msg &#123;<br>            InMsg::Add((a, b)) =&gt; OutMsg::Num(a + b),<br>            InMsg::Concat((<span class="hljs-keyword">mut</span> s1, s2)) =&gt; &#123;<br>                s1.push_str(&amp;s2);<br>                OutMsg::Str(s1)<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br><br><span class="hljs-meta">#[actix::main]</span><br><span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() -&gt; <span class="hljs-built_in">Result</span>&lt;()&gt; &#123;<br>    <span class="hljs-keyword">let</span> addr = DummyActor.start();<br>    <span class="hljs-keyword">let</span> res = addr.send(InMsg::Add((<span class="hljs-number">21</span>, <span class="hljs-number">21</span>))).<span class="hljs-keyword">await</span>?;<br>    <span class="hljs-keyword">let</span> res1 = addr<br>        .send(InMsg::Concat((<span class="hljs-string">"hello, "</span>.into(), <span class="hljs-string">"world"</span>.into())))<br>        .<span class="hljs-keyword">await</span>?;<br><br>    <span class="hljs-built_in">println!</span>(<span class="hljs-string">"res: &#123;:?&#125;, res1: &#123;:?&#125;"</span>, res, res1);<br><br>    <span class="hljs-literal">Ok</span>(())<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h2><span id="小结">小结</span></h2>
+<ul>
+<li>Atomic 在处理简单的原生类型时非常有用，如果你可以通过 AtomicXXX
+结构进行同步，那么它们是最好的选择。</li>
+<li>当你的数据结构无法简单通过 AtomicXXX
+进行同步，但你又的确需要在多个线程中共享数据，那么 Mutex / RwLock
+可以是一种选择。不过，需要考虑锁的粒度，粒度太大的 Mutex / RwLock
+效率很低。</li>
+<li>如果有 N 份资源可以供多个并发任务竞争使用，那么，Semaphore
+是一个很好的选择。比如做一个 DB 连接池。</li>
+<li>当需要在并发任务中通知、协作时，Condvar
+提供了最基本的通知机制，而Channel 把这个通知机制进一步广泛扩展开。可以用
+Condvar 进行点对点的同步，用 Channel
+做一对多、多对一、多对多的同步。</li>
+</ul>
+<p>做大部分复杂的系统设计时，Channel
+往往是最有力的武器，除了可以让数据穿梭于各个线程、各个异步任务间，它的接口还可以很优雅地跟
+stream 适配。</p>
+<p>在做整个后端的系统架构时，着眼的是：有哪些服务、服务和服务之间如何通讯、数据如何流动、服务和服务间如何同步。在做某一个服务的架构时，着眼的是有哪些功能性的线程（异步任务）、它们之间的接口是什么样子、数据如何流动、如何同步。</p>
+<p>而 Channel 兼具接口、同步和数据流三种功能。</p>
+<p>Rust 提供几乎你需要的所有解决方案，可按需选择。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/Rust/">Rust</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Rust/">Rust</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/eb2aad59.html">
+                        <span class="hidden-mobile">RUST Part4</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>
