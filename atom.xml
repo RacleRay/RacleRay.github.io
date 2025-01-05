@@ -6,7 +6,7 @@
   <link href="https://racleray.github.io/atom.xml" rel="self"/>
   
   <link href="https://racleray.github.io/"/>
-  <updated>2024-11-15T12:48:24.354Z</updated>
+  <updated>2025-01-05T15:12:40.221Z</updated>
   <id>https://racleray.github.io/</id>
   
   <author>
@@ -17,11 +17,53 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>RUST-Async</title>
+    <link href="https://racleray.github.io/posts/b9534ecc.html"/>
+    <id>https://racleray.github.io/posts/b9534ecc.html</id>
+    <published>2025-01-05T13:50:19.000Z</published>
+    <updated>2025-01-05T15:12:40.221Z</updated>
+    
+    
+    <summary type="html">Rust Notes</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
+    
+    
+    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Rust-TLS</title>
+    <link href="https://racleray.github.io/posts/dad61cf6.html"/>
+    <id>https://racleray.github.io/posts/dad61cf6.html</id>
+    <published>2024-11-16T06:52:18.939Z</published>
+    <updated>2025-01-05T13:48:45.286Z</updated>
+    
+    
+    <summary type="html">Rust TLS notes</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
+    
+    
+    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
+    
+  </entry>
+  
+  <entry>
     <title>RUST-concurrency</title>
     <link href="https://racleray.github.io/posts/7b9437f8.html"/>
     <id>https://racleray.github.io/posts/7b9437f8.html</id>
     <published>2024-11-14T13:12:29.198Z</published>
-    <updated>2024-11-15T12:48:24.354Z</updated>
+    <updated>2024-11-15T13:10:47.023Z</updated>
     
     
     <summary type="html">Rust Notes</summary>
@@ -411,52 +453,6 @@
     <category term="Web" scheme="https://racleray.github.io/tags/Web/"/>
     
     <category term="RPC" scheme="https://racleray.github.io/tags/RPC/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>C++访存优化</title>
-    <link href="https://racleray.github.io/posts/d47a1979.html"/>
-    <id>https://racleray.github.io/posts/d47a1979.html</id>
-    <published>2023-06-19T14:30:42.000Z</published>
-    <updated>2024-01-09T10:24:49.646Z</updated>
-    
-    
-    <summary type="html">C++ 内存访问优化</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="C++" scheme="https://racleray.github.io/categories/Notes/C/"/>
-    
-    
-    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
-    
-    <category term="memory manage" scheme="https://racleray.github.io/tags/memory-manage/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>C++模版元编程</title>
-    <link href="https://racleray.github.io/posts/9de18668.html"/>
-    <id>https://racleray.github.io/posts/9de18668.html</id>
-    <published>2023-06-02T14:34:53.000Z</published>
-    <updated>2024-01-09T10:24:49.642Z</updated>
-    
-    
-    <summary type="html">C++ 模版元编程</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="C++" scheme="https://racleray.github.io/categories/Notes/C/"/>
-    
-    
-    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
-    
-    <category term="Template" scheme="https://racleray.github.io/tags/Template/"/>
     
   </entry>
   

@@ -229,13 +229,28 @@
                 
 
 <div class="list-group">
-  <p class="h4">共计 5 篇文章</p>
+  <p class="h4">共计 7 篇文章</p>
   <hr>
   
   
     
       
+      <p class="h5">2025</p>
+    
+    <a href="/posts/b9534ecc.html" class="list-group-item list-group-item-action">
+      <span class="archive-post-title">RUST-Async</span>
+      <time style="float: right;">01-05</time>
+    </a>
+  
+    
+      
       <p class="h5">2024</p>
+    
+    <a href="/posts/dad61cf6.html" class="list-group-item list-group-item-action">
+      <span class="archive-post-title">Rust-TLS</span>
+      <time style="float: right;">11-16</time>
+    </a>
+  
     
     <a href="/posts/7b9437f8.html" class="list-group-item list-group-item-action">
       <span class="archive-post-title">RUST-concurrency</span>
@@ -404,8 +419,23 @@
 
 
 <!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<script  src="/js/boot.js" ></script>
 
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>
