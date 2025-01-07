@@ -6,7 +6,7 @@
   <link href="https://racleray.github.io/atom.xml" rel="self"/>
   
   <link href="https://racleray.github.io/"/>
-  <updated>2025-01-07T02:39:52.909Z</updated>
+  <updated>2025-01-07T15:34:57.362Z</updated>
   <id>https://racleray.github.io/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Rust-Send-Sync</title>
+    <link href="https://racleray.github.io/posts/18bd8400.html"/>
+    <id>https://racleray.github.io/posts/18bd8400.html</id>
+    <published>2025-01-07T14:55:16.669Z</published>
+    <updated>2025-01-07T15:34:57.362Z</updated>
+    
+    
+    <summary type="html">Rust Notes</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
+    
+    
+    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
+    
+  </entry>
   
   <entry>
     <title>RUST-Async</title>
@@ -430,29 +451,6 @@
     
     
     <category term="System Design" scheme="https://racleray.github.io/tags/System-Design/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>RPC笔记</title>
-    <link href="https://racleray.github.io/posts/4ac86dd1.html"/>
-    <id>https://racleray.github.io/posts/4ac86dd1.html</id>
-    <published>2023-07-09T13:33:13.000Z</published>
-    <updated>2024-01-09T10:21:27.146Z</updated>
-    
-    
-    <summary type="html">RPC技术学习笔记</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="RPC" scheme="https://racleray.github.io/categories/Notes/RPC/"/>
-    
-    
-    <category term="Web" scheme="https://racleray.github.io/tags/Web/"/>
-    
-    <category term="RPC" scheme="https://racleray.github.io/tags/RPC/"/>
     
   </entry>
   
