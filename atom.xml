@@ -6,7 +6,7 @@
   <link href="https://racleray.github.io/atom.xml" rel="self"/>
   
   <link href="https://racleray.github.io/"/>
-  <updated>2025-01-07T15:34:57.362Z</updated>
+  <updated>2025-02-08T15:58:33.540Z</updated>
   <id>https://racleray.github.io/</id>
   
   <author>
@@ -17,11 +17,53 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>RUST-Project</title>
+    <link href="https://racleray.github.io/posts/c0f01f20.html"/>
+    <id>https://racleray.github.io/posts/c0f01f20.html</id>
+    <published>2025-02-08T15:27:20.515Z</published>
+    <updated>2025-02-08T15:58:33.540Z</updated>
+    
+    
+    <summary type="html">Rust Notes on project staff</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
+    
+    
+    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>GoInAction</title>
+    <link href="https://racleray.github.io/posts/cffca3.html"/>
+    <id>https://racleray.github.io/posts/cffca3.html</id>
+    <published>2025-02-02T13:56:09.707Z</published>
+    <updated>2025-02-02T13:59:00.750Z</updated>
+    
+    
+    <summary type="html">Go 语言笔记</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="Go" scheme="https://racleray.github.io/categories/Notes/Go/"/>
+    
+    
+    <category term="Go" scheme="https://racleray.github.io/tags/Go/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Rust-Send-Sync</title>
     <link href="https://racleray.github.io/posts/18bd8400.html"/>
     <id>https://racleray.github.io/posts/18bd8400.html</id>
     <published>2025-01-07T14:55:16.669Z</published>
-    <updated>2025-01-07T15:34:57.362Z</updated>
+    <updated>2025-01-30T15:19:08.538Z</updated>
     
     
     <summary type="html">Rust Notes</summary>
@@ -42,7 +84,7 @@
     <link href="https://racleray.github.io/posts/b9534ecc.html"/>
     <id>https://racleray.github.io/posts/b9534ecc.html</id>
     <published>2025-01-05T13:50:19.000Z</published>
-    <updated>2025-01-07T02:39:52.909Z</updated>
+    <updated>2025-02-06T14:35:20.366Z</updated>
     
     
     <summary type="html">Rust Notes</summary>
@@ -409,48 +451,6 @@
     <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
     
     <category term="Multi-threading" scheme="https://racleray.github.io/tags/Multi-threading/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>CUDA 笔记</title>
-    <link href="https://racleray.github.io/posts/244a647.html"/>
-    <id>https://racleray.github.io/posts/244a647.html</id>
-    <published>2023-08-15T15:14:28.000Z</published>
-    <updated>2024-01-09T10:18:30.974Z</updated>
-    
-    
-    <summary type="html">CUDA笔记</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="CUDA" scheme="https://racleray.github.io/categories/Notes/CUDA/"/>
-    
-    
-    <category term="CUDA" scheme="https://racleray.github.io/tags/CUDA/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>系统设计笔记</title>
-    <link href="https://racleray.github.io/posts/598ff250.html"/>
-    <id>https://racleray.github.io/posts/598ff250.html</id>
-    <published>2023-07-13T11:19:37.000Z</published>
-    <updated>2024-01-09T10:21:47.068Z</updated>
-    
-    
-    <summary type="html">系统设计分析</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="System Design" scheme="https://racleray.github.io/categories/Notes/System-Design/"/>
-    
-    
-    <category term="System Design" scheme="https://racleray.github.io/tags/System-Design/"/>
     
   </entry>
   
