@@ -26,7 +26,7 @@
 <meta property="og:description" content="Rust TLS notes">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-11-16T06:52:18.939Z">
-<meta property="article:modified_time" content="2025-01-05T15:20:23.525Z">
+<meta property="article:modified_time" content="2025-02-18T03:09:05.733Z">
 <meta property="article:author" content="江左时雨">
 <meta property="article:tag" content="Rust">
 <meta property="article:tag" content="TLS">
@@ -232,7 +232,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      7.3k 字
+      7.7k 字
     </span>
   
 
@@ -241,7 +241,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      23 分钟
+      24 分钟
     </span>
   
 
@@ -314,6 +314,11 @@ ClientConfig。</p>
 <h2><span id="其它选择">其它选择</span></h2>
 <p><a href="https://noiseprotocol.org/" target="_blank" rel="noopener">Noise Protocol
 Framework</a>，可使用的工具 <a href="https://github.com/mcginty/snow" target="_blank" rel="noopener">snow</a>。</p>
+<h2><span id="bonus">BONUS</span></h2>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">use</span> tracing::info;<br><span class="hljs-keyword">use</span> tracing_subscriber::EnvFilter;<br><br><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() &#123;<br>    tracing_subscriber::fmt::fmt()<br>        .with_env_filter(EnvFilter::from_default_env())<br>        .init();<br><br>    <span class="hljs-keyword">let</span> url = <span class="hljs-string">"&lt;https://www.rust-lang.org/&gt;"</span>;<br><br>    <span class="hljs-keyword">let</span> _body = reqwest::blocking::get(url).unwrap().text().unwrap();<br>    info!(<span class="hljs-string">"Fetching url: &#123;&#125;"</span>, url);<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sh">RUST_LOG=debug cargo run --quiet<br><span class="hljs-comment"># or</span><br>RUST_LOG=trace cargo run --quiet<br></code></pre></div></td></tr></table></figure>
+<p>可以输出 Rust 下用 hyper 处理 HTTP/2
+的主要流程和消息记录。同样，如果有其它使用tracing或者某个log工具的优秀开源包，拉来分析一些代码之外的问题和思考，也可能是个不错的工具。</p>
 
             </div>
             <hr>
@@ -559,23 +564,8 @@ Framework</a>，可使用的工具 <a href="https://github.com/mcginty/snow" tar
 
 
 <!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>

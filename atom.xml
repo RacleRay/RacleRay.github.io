@@ -6,7 +6,7 @@
   <link href="https://racleray.github.io/atom.xml" rel="self"/>
   
   <link href="https://racleray.github.io/"/>
-  <updated>2025-02-08T15:58:33.540Z</updated>
+  <updated>2025-02-18T03:00:47.525Z</updated>
   <id>https://racleray.github.io/</id>
   
   <author>
@@ -17,11 +17,32 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Rust macro</title>
+    <link href="https://racleray.github.io/posts/b1a6eeba.html"/>
+    <id>https://racleray.github.io/posts/b1a6eeba.html</id>
+    <published>2025-02-17T14:32:42.569Z</published>
+    <updated>2025-02-18T03:00:47.525Z</updated>
+    
+    
+    <summary type="html">Rust Notes</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
+    
+    
+    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
+    
+  </entry>
+  
+  <entry>
     <title>RUST-Project</title>
     <link href="https://racleray.github.io/posts/c0f01f20.html"/>
     <id>https://racleray.github.io/posts/c0f01f20.html</id>
     <published>2025-02-08T15:27:20.515Z</published>
-    <updated>2025-02-08T15:58:33.540Z</updated>
+    <updated>2025-02-08T15:58:51.593Z</updated>
     
     
     <summary type="html">Rust Notes on project staff</summary>
@@ -42,7 +63,7 @@
     <link href="https://racleray.github.io/posts/cffca3.html"/>
     <id>https://racleray.github.io/posts/cffca3.html</id>
     <published>2025-02-02T13:56:09.707Z</published>
-    <updated>2025-02-02T13:59:00.750Z</updated>
+    <updated>2025-02-08T15:58:51.593Z</updated>
     
     
     <summary type="html">Go 语言笔记</summary>
@@ -105,7 +126,7 @@
     <link href="https://racleray.github.io/posts/dad61cf6.html"/>
     <id>https://racleray.github.io/posts/dad61cf6.html</id>
     <published>2024-11-16T06:52:18.939Z</published>
-    <updated>2025-01-05T15:20:23.525Z</updated>
+    <updated>2025-02-18T03:09:05.733Z</updated>
     
     
     <summary type="html">Rust TLS notes</summary>
@@ -428,29 +449,6 @@
     <category term="Data Structure" scheme="https://racleray.github.io/tags/Data-Structure/"/>
     
     <category term="DataBase" scheme="https://racleray.github.io/tags/DataBase/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>C++多线程笔记</title>
-    <link href="https://racleray.github.io/posts/24f0dc1c.html"/>
-    <id>https://racleray.github.io/posts/24f0dc1c.html</id>
-    <published>2023-09-12T14:53:11.000Z</published>
-    <updated>2024-01-09T10:17:59.359Z</updated>
-    
-    
-    <summary type="html">现代 C++ 多线程笔记</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="C++" scheme="https://racleray.github.io/categories/Notes/C/"/>
-    
-    
-    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
-    
-    <category term="Multi-threading" scheme="https://racleray.github.io/tags/Multi-threading/"/>
     
   </entry>
   
