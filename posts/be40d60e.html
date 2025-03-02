@@ -1,0 +1,629 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="Linux kernel network optimise">
+  <meta name="author" content="HeRui">
+  <meta name="keywords" content="Linux Network,TCP">
+  <meta name="description" content="Linux kernel network optimise">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux网络优化">
+<meta property="og:url" content="https://racleray.github.io/posts/be40d60e.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="Linux kernel network optimise">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-03-02T03:29:45.000Z">
+<meta property="article:modified_time" content="2025-03-02T03:34:00.772Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="Linux Network">
+<meta property="article:tag" content="TCP">
+<meta name="twitter:card" content="summary_large_image">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>Linux网络优化 - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Linux网络优化">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2025-03-02 11:29" pubdate>
+        2025年3月2日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.6k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      11 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Linux网络优化</h1>
+            
+            <div class="markdown-body">
+              <h2><span id="1-检查是否单核软中断太高">1. 检查是否单核软中断太高</span></h2>
+<h2><span id="2-检查是否开启rps报文是否适合-rps-算法">2. 检查是否开启
+RPS，报文是否适合 RPS 算法</span></h2>
+<h3><span id="rps-的工作原理">RPS 的工作原理</span></h3>
+<ul>
+<li><strong>多核处理器环境</strong>：当服务器具有多个 CPU
+核心时，默认情况下，所有的网络数据包可能会被发送到单个核心进行处理。这会使得该核心承担所有的网络负载，导致性能瓶颈。</li>
+<li><strong>数据包分配</strong>：RPS
+的主要目的是在多个处理核心之间分配接收到的网络数据包。这是通过将数据包根据特定的哈希算法分配到不同的
+CPU 核心，从而实现负载均衡。</li>
+<li><strong>提升性能</strong>：通过将网络数据包分散到多个核心处理，RPS
+可以提高整体网络性能和数据处理能力，降低单个核心的负载，从而防止拥塞。</li>
+</ul>
+<h3><span id="rps-的配置">RPS 的配置</span></h3>
+<p>在 Linux 系统中，RPS 可以通过以下步骤进行配置：</p>
+<ol type="1">
+<li><strong>检查 RPS 是否启用</strong>：可以通过查看
+<code>/proc/sys/net/core/rps_sock_flow_entries</code> 文件来检查 RPS
+的状态。</li>
+<li><strong>设置 RPS</strong>：
+<ul>
+<li>通过写入特定的值到
+<code>/proc/sys/net/core/rps_sock_flow_entries</code> 文件，可以调整 RPS
+的行为。</li>
+<li>还可以通过设置网卡的 RX (接收)
+处理队列，将接收到的数据包引导到不同的 CPU 核心。</li>
+</ul></li>
+<li><strong>使用 <code>tc</code> 命令</strong>：可以使用 <code>tc</code>
+命令进行高级流量控制，以便更精细地控制 RPS。</li>
+</ol>
+<h2><span id="3-绑核设置是否正确">3. 绑核设置是否正确</span></h2>
+<h2><span id="4-网卡参数检查调整">4. 网卡参数检查调整</span></h2>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-comment"># 查看队列 buff</span><br>ethtool -g enp1s0<br><span class="hljs-comment"># 设置队列 buff</span><br>ethtool -G enp1s0 max<br><br><span class="hljs-comment"># 查看网卡 offload</span><br>ethtool -k enp1s0<br><span class="hljs-comment"># 设置网卡特性</span><br>ethtool -K enp1s0 rx on<br><br><span class="hljs-comment"># RSS 队列查看</span><br>ethtool -x enp1s0<br><span class="hljs-comment"># RSS 队列设置</span><br>ethtool -X enp1s0 xxx<br></code></pre></div></td></tr></table></figure>
+<h2><span id="5-检查网卡中断配置是否正确">5. 检查网卡中断配置是否正确</span></h2>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">cat /proc/interrupts<br><br><span class="hljs-comment"># 调整 irqbalance</span><br><span class="hljs-built_in">echo</span> mask &gt; /proc/irq/xxx_number/smp_affinity<br></code></pre></div></td></tr></table></figure>
+<h2><span id="6-cpu和网卡队列个数配置">6. CPU和网卡队列个数配置</span></h2>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-comment"># CPU 数量大于网卡队列个数，需要协议栈开启RPS并设置RPS</span><br><span class="hljs-built_in">echo</span> mask(根据CPU配置) &gt; /sys/class/net/enp1s0/queues/rx-<span class="hljs-variable">$i</span>/rps_cpus<br><span class="hljs-built_in">echo</span> 4096(网卡buff) &gt; /sys/class/net/enp1s0/queues/rx-<span class="hljs-variable">$i</span>/rps_flow_cnt<br><br><span class="hljs-comment"># CPU小于网卡队列个数, 绑中断就可以, 关闭RPS</span><br><span class="hljs-built_in">echo</span> 0 &gt; /sys/class/net/enp1s0/queues/rx-<span class="hljs-variable">$i</span>/rps_cpus<br></code></pre></div></td></tr></table></figure>
+<h2><span id="7-根据-numa-配置-cpu">7. 根据 NUMA 配置 CPU</span></h2>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">ethtool -i enp1s0 | grep bus-info<br>lspci -s <span class="hljs-variable">$bus</span>-info -vv | grep node<br><br><span class="hljs-comment"># 重新配置 irqbalance 和 RPS mask</span><br><span class="hljs-built_in">echo</span> mask &gt; /proc/irq/xxx_number/smp_affinity<br><span class="hljs-built_in">echo</span> mask &gt; /sys/class/net/enp1s0/queues/rx-<span class="hljs-variable">$i</span>/rps_cpus<br></code></pre></div></td></tr></table></figure>
+<h2><span id="8-是否可以设置中断聚合">8. 是否可以设置中断聚合</span></h2>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-comment"># 查看是否支持</span><br>ethtool -c enp1s0<br><br><span class="hljs-comment"># 配置</span><br>ethtool -C enp1s0 adaptive-rx on<br></code></pre></div></td></tr></table></figure>
+<h2><span id="9-查看软中断队列是否溢出">9. 查看软中断队列是否溢出</span></h2>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">cat /proc/net/softnet_stat<br></code></pre></div></td></tr></table></figure>
+<p><code>net.core.netdev_max_backlog</code> 是一个控制 Linux
+网络栈中软中断（softirq）处理的参数。它定义了当内核接收网络数据包时，网络设备驱动程序在网络缓冲区中缓存数据包的最大数量。如果此值被设置得过低，当数据包到达但不能及时处理时，可能会导致数据包丢失。合适地设置这个值有助于提高网络性能，尤其是在高流量情况下。</p>
+<p>通过以下步骤来设置该参数：</p>
+<ol type="1">
+<li><p><strong>查看当前值</strong>：<br>
+使用以下命令查看当前的 <code>netdev_max_backlog</code> 值：<br>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">sysctl net.core.netdev_max_backlog<br></code></pre></div></td></tr></table></figure></p></li>
+<li><p><strong>临时设置</strong>：<br>
+可以使用 <code>sysctl</code> 命令临时设置此参数，直到下一次重启：
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">sudo sysctl -w net.core.netdev_max_backlog=&lt;desired_value&gt;<br></code></pre></div></td></tr></table></figure> 将 <code>&lt;desired_value&gt;</code>
+替换为你想要设置的数字。例如，如果想设置为 5000： <figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">sudo sysctl -w net.core.netdev_max_backlog=5000<br></code></pre></div></td></tr></table></figure></p></li>
+<li><p><strong>永久设置</strong>：<br>
+如果你想要在系统重启后仍然保持这个配置，可以将设置添加到
+<code>/etc/sysctl.conf</code> 文件中。打开文件并添加以下行： <figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs plaintext">net.core.netdev_max_backlog = &lt;desired_value&gt;<br></code></pre></div></td></tr></table></figure>
+然后保存并关闭文件。接下来，使用以下命令应用更改： <figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">sudo sysctl -p<br></code></pre></div></td></tr></table></figure></p></li>
+</ol>
+<p>在选择 <code>net.core.netdev_max_backlog</code>
+的值时，需要根据你的网络负载、系统资源以及具体应用场景进行调整。通常，服务器的网络负载越大，这个值需要设置得越高。
+设置得过高可能会导致内存占用增加，尤其是在流量波动时，可能会导致潜在的资源浪费。
+如果出现高丢包率或延迟，可能需要分析网络性能，以确定这个值是否需要调整。
+建议在监控网络流量和系统负载的同时进行调整，以找到一个合适的值。</p>
+<h2><span id="10-检查邻居表大小">10. 检查邻居表大小</span></h2>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">sysctl -a lgrep gc_thresh<br><br><span class="hljs-comment"># net.ipv4.neigh.default.gc_thresh1 = 128</span><br><span class="hljs-comment"># net.ipv4.neigh.default.gc_thresh2 = 512</span><br><span class="hljs-comment"># net.ipv4.neigh.default.gc_thresh3 = 4096</span><br></code></pre></div></td></tr></table></figure>
+<p>将 net.ipv4.neigh.default.gc_thresh1 增大 <figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">sudo sysctl -w net.ipv4.neigh.default.gc_thresh1=&lt;desired_value&gt;<br><br><span class="hljs-comment"># `/etc/sysctl.conf` </span><br>net.ipv4.neigh.default.gc_thresh1 = &lt;desired_value&gt;<br><span class="hljs-comment"># sudo sysctl -p</span><br></code></pre></div></td></tr></table></figure></p>
+<ul>
+<li>在选择 <code>gc_thresh1</code>
+的值时，需要考虑到系统的内存和网络负载。如果设置得过高，可能会增加系统的内存使用。</li>
+<li>除了 <code>gc_thresh1</code>，还可以考虑调整其他相关参数，比如
+<code>gc_thresh2</code> 和
+<code>gc_thresh3</code>，以便更全面地优化邻接缓存的行为。</li>
+</ul>
+<h2><span id="11-查看连接跟踪大小">11. 查看连接跟踪大小</span></h2>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">cat /proc/sys/net/netfilter/nf_conntrack_max<br></code></pre></div></td></tr></table></figure>
+<h2><span id="12-tcp-参数检查">12. TCP 参数检查</span></h2>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-comment"># 检查 TIME_WAIT 状态是否太多</span><br>netstat -s | grep -i <span class="hljs-built_in">wait</span><br><span class="hljs-comment"># 对应调整</span><br><span class="hljs-comment"># net.ipv4.tcp_max_tw_buckets</span><br><span class="hljs-comment"># net.ipv4.tcp_tw_recycle = 1</span><br><span class="hljs-comment"># net.ipv4.tcp_tw_reuse = 1</span><br><br><span class="hljs-comment"># 检查syn 队列是否太小</span><br>netstat -s | grep -i Syn<br><span class="hljs-comment"># 对应调整</span><br><span class="hljs-comment"># net.ipv4.tcp_max_syn_backlog=&lt;desired_value&gt;</span><br><br><span class="hljs-comment"># 检查 accept 队列</span><br>ss -lnt<br><span class="hljs-comment"># 对应调整</span><br><span class="hljs-comment"># net.core.somaxconn</span><br><span class="hljs-comment"># C语言接口中，调整 int listen(int sockfd,int backlog);</span><br><span class="hljs-comment"># 最后结果为 min(somaxconn, backlog)</span><br></code></pre></div></td></tr></table></figure>
+<p>另外 net.ipv4.tcp_abort_on_overflow=1 ，内核将会在 TCP
+接收缓冲区溢出并丢失数据包时直接中止连接，可以用于缓解服务器压力</p>
+<h2><span id="13-检查协议栈内存分配大小">13. 检查协议栈内存分配大小</span></h2>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-comment"># 内核应如何为TCP内存分配资源进行限制。参数是三个数字，代表低水位线、压力阈值和失败值</span><br>cat /proc/sys/net/ipv4/tcp_mem<br><span class="hljs-comment"># 显示TCP使用的最小接收窗口缓冲区大小、默认接收窗口缓冲区大小和最大接收窗口缓冲区大小</span><br>cat /proc/sys/net/ipv4/tcp_rmem<br><span class="hljs-comment"># TCP发送窗口缓冲区的大小设置</span><br>cat /proc/sys/net/ipv4/tcp_wmem<br></code></pre></div></td></tr></table></figure>
+<p>相应调整： net.ipv4.tcp_mem net.ipv4.tcp_wmem net.ipv4.tcp_rmem
+调整方法见上文。</p>
+<p>缓冲区最佳大小随具体情况而不同。在数据通信中，带宽时延乘积
+bandwidth-delay
+product，指的是一个数据链路的能力(每秒比特)与来回通信延迟(单位秒)的乘积。其结果是以比特(或字节)为单位的一个数据总量，等同在任何特定时间该网络线路上的最大数据量
+-- 已发送但尚未确认的数据。 <span class="math inline">\(BDP = 带宽 *
+RTT\)</span></p>
+<h2><span id="bonus">BONUS</span></h2>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-comment"># 粗粒度监控</span><br>iftop -i enp1s0<br><br>nload enp1s0<br><br>nethogs<br><br>watch -n 1 ifconfig<br><br>ifconfig | grep wlp2s0 -n -C 10<br></code></pre></div></td></tr></table></figure>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/LinuxNetwork/">LinuxNetwork</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Linux/">Linux</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Network/">Network</a>
+                    
+                      <a class="hover-with-bg" href="/tags/TCP/">TCP</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/b1a6eeba.html">
+                        <span class="hidden-mobile">Rust macro</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
