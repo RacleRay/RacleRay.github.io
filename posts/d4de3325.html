@@ -26,7 +26,7 @@
 <meta property="og:description" content="静态类型语言协变反变Note">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-03-05T12:18:38.464Z">
-<meta property="article:modified_time" content="2025-03-05T12:23:16.630Z">
+<meta property="article:modified_time" content="2025-03-05T13:11:47.146Z">
 <meta property="article:author" content="江左时雨">
 <meta property="article:tag" content="C++">
 <meta property="article:tag" content="Rust">
@@ -232,7 +232,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2.1k 字
+      2.2k 字
     </span>
   
 
@@ -297,7 +297,11 @@
 </ul>
 <p>Rust 中 *mut 是 invariant ，不能被子类型化，而 NonNull&lt;T&gt;
 是协变的。其实现方式，是通过转换为 *const T 的方式，而 *const T
-是协变的。 <figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">NonNull</span></span>&lt;T&gt; &#123;<br>    pointer: *<span class="hljs-keyword">const</span> T,<br>&#125;<br><br><span class="hljs-keyword">impl</span>&lt;T&gt; NonNull&lt;T&gt; &#123;<br>    <span class="hljs-keyword">pub</span> <span class="hljs-keyword">unsafe</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">new_unchecked</span></span>(ptr: *<span class="hljs-keyword">mut</span> T) -&gt; <span class="hljs-keyword">Self</span> &#123;<br>        <span class="hljs-comment">// SAFETY: the caller must guarantee that `ptr` is non-null.</span><br>        <span class="hljs-keyword">unsafe</span> &#123; NonNull &#123; pointer: ptr <span class="hljs-keyword">as</span> *<span class="hljs-keyword">const</span> T &#125; &#125;<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure></p>
+是协变的。</p>
+<p><code>&amp;'a mut T</code> 对于 <code>'a</code> 来说是协变(
+<code>covariant</code> )的，但是对于 <code>T</code> 是不变的(
+<code>invariant</code> )。</p>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">NonNull</span></span>&lt;T&gt; &#123;<br>    pointer: *<span class="hljs-keyword">const</span> T,<br>&#125;<br><br><span class="hljs-keyword">impl</span>&lt;T&gt; NonNull&lt;T&gt; &#123;<br>    <span class="hljs-keyword">pub</span> <span class="hljs-keyword">unsafe</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">new_unchecked</span></span>(ptr: *<span class="hljs-keyword">mut</span> T) -&gt; <span class="hljs-keyword">Self</span> &#123;<br>        <span class="hljs-comment">// SAFETY: the caller must guarantee that `ptr` is non-null.</span><br>        <span class="hljs-keyword">unsafe</span> &#123; NonNull &#123; pointer: ptr <span class="hljs-keyword">as</span> *<span class="hljs-keyword">const</span> T &#125; &#125;<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
 <p>另外，如果使用 NonNull&lt;T&gt;
 作为一个类的成员，为了不受到一些间接因素的影响，类型擦除或者其它间接的什么原因，使用一个
 _boo: PhantomData&lt;T&gt; 成员，来告诉编译器，NonNull 中一定是一个 T
@@ -579,23 +583,8 @@ C++，协变和反变主要体现在<strong>继承和模板</strong>的上下界
 
 
 <!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>
