@@ -6,7 +6,7 @@
   <link href="https://racleray.github.io/atom.xml" rel="self"/>
   
   <link href="https://racleray.github.io/"/>
-  <updated>2025-03-02T03:34:00.772Z</updated>
+  <updated>2025-03-05T12:23:16.630Z</updated>
   <id>https://racleray.github.io/</id>
   
   <author>
@@ -17,11 +17,34 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>静态类型语言黑话-协变</title>
+    <link href="https://racleray.github.io/posts/d4de3325.html"/>
+    <id>https://racleray.github.io/posts/d4de3325.html</id>
+    <published>2025-03-05T12:18:38.464Z</published>
+    <updated>2025-03-05T12:23:16.630Z</updated>
+    
+    
+    <summary type="html">静态类型语言协变反变Note</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
+    
+    
+    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
+    
+    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Linux网络优化</title>
     <link href="https://racleray.github.io/posts/be40d60e.html"/>
     <id>https://racleray.github.io/posts/be40d60e.html</id>
     <published>2025-03-02T03:29:45.000Z</published>
-    <updated>2025-03-02T03:34:00.772Z</updated>
+    <updated>2025-03-02T03:35:16.222Z</updated>
     
     
     <summary type="html">Linux kernel network optimise</summary>
@@ -430,29 +453,6 @@
     <category term="HTTP" scheme="https://racleray.github.io/tags/HTTP/"/>
     
     <category term="Web" scheme="https://racleray.github.io/tags/Web/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>B+、B-link、LSM数据库常用数据结构分析</title>
-    <link href="https://racleray.github.io/posts/a20f1877.html"/>
-    <id>https://racleray.github.io/posts/a20f1877.html</id>
-    <published>2023-09-12T14:54:34.000Z</published>
-    <updated>2024-01-09T10:20:30.376Z</updated>
-    
-    
-    <summary type="html">B+、B-link、LSM 数据结构分析</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="DataBase" scheme="https://racleray.github.io/categories/Notes/DataBase/"/>
-    
-    
-    <category term="Data Structure" scheme="https://racleray.github.io/tags/Data-Structure/"/>
-    
-    <category term="DataBase" scheme="https://racleray.github.io/tags/DataBase/"/>
     
   </entry>
   
