@@ -233,6 +233,67 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/posts/9e991c30.html" target="_self">
+          <img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/img/Pictures/2021/09/08/17-56-19-c66e4c.jpg" srcset="/img/loading.gif" lazyload alt="Embedding &amp; Searching">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/posts/9e991c30.html" target="_self">
+          Embedding &amp; Searching
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/posts/9e991c30.html" target="_self">
+          
+          
+            
+          
+          相似性搜索常见于以图搜图，听歌识曲...这类抽象查找问题中。你没有明确的Key，不能使用SQL之类的方法查找数据库。但是可以通过抽象的
+embedding 向量来进行检索。 一般样本向量表示可以通过 Skip-gram with
+negative sampling 方法、DSSM 这类方法、BERT
+这类方法等等。得到向量表达之后，一般还需要高效的召回索引方法，因为暴力匹配在较大数据量场景下
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-09-05 14:59" pubdate>
+              2021-09-05
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Notes/">Notes</a>
+            
+              <a href="/categories/Notes/NLP/">NLP</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/searching/">searching</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/posts/372ecc5c.html" target="_self">
           <img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/img/Pictures/2021/09/08/17-58-49-22dcea.png" srcset="/img/loading.gif" lazyload alt="Practical BERT">
         </a>
@@ -342,9 +403,9 @@ in-domain
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/topic-model/">topic model</a>
-            
               <a href="/tags/BERT/">BERT</a>
+            
+              <a href="/tags/topic-model/">topic model</a>
             
           </div>
         
@@ -542,77 +603,6 @@ Var(
     </article>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/posts/62f6fe86.html" target="_self">
-          <img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/img/simple/2021/09/08/18-06-00-e8e5db.png" srcset="/img/loading.gif" lazyload alt="Knowledge Distillation Note">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/posts/62f6fe86.html" target="_self">
-          Knowledge Distillation Note
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/posts/62f6fe86.html" target="_self">
-          
-          
-            
-          
-          知识蒸馏模型采用类似迁移学习的方法，通过采用预先训练好的老师模型(Teacher
-model）的输出作为监督信号去训练另外一个简单的学生模型(Student
-model)。
-所谓的知识就是从输入向量引至输出向量的节点图。
-大概分为三类：知识蒸馏（模型压缩），跨域迁移无标签转换，集成蒸馏。
-
-此处关注知识蒸馏（模型压缩）这一类。
-First Step
-原文， 综述
-1、训练复杂的教
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-04-18 23:39" pubdate>
-              2021-04-18
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/Notes/">Notes</a>
-            
-              <a href="/categories/Notes/Distillation/">Distillation</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/knowledge-distillation/">knowledge distillation</a>
-            
-              <a href="/tags/CRD/">CRD</a>
-            
-              <a href="/tags/SRRD/">SRRD</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
 
 
   <nav aria-label="navigation">
@@ -782,8 +772,23 @@ First Step
 
 
 <!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<script  src="/js/boot.js" ></script>
 
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>

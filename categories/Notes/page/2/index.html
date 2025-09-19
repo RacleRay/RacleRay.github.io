@@ -225,13 +225,19 @@
                 
 
 <div class="list-group">
-  <p class="h4">共计 96 篇文章</p>
+  <p class="h4">共计 97 篇文章</p>
   <hr>
   
   
     
       
       <p class="h5">2023</p>
+    
+    <a href="/posts/244a647.html" class="list-group-item list-group-item-action">
+      <span class="archive-post-title">CUDA 笔记</span>
+      <time style="float: right;">08-15</time>
+    </a>
+  
     
     <a href="/posts/598ff250.html" class="list-group-item list-group-item-action">
       <span class="archive-post-title">系统设计笔记</span>
@@ -347,12 +353,6 @@
     <a href="/posts/2ebe459a.html" class="list-group-item list-group-item-action">
       <span class="archive-post-title">optimizing software in cpp</span>
       <time style="float: right;">06-21</time>
-    </a>
-  
-    
-    <a href="/posts/351032d1.html" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">STL Tips</span>
-      <time style="float: right;">06-13</time>
     </a>
   
 </div>
@@ -499,8 +499,23 @@
 
 
 <!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<script  src="/js/boot.js" ></script>
 
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>

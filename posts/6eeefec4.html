@@ -1,0 +1,813 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="k8s 以前的环境记录 archive">
+  <meta name="author" content="HeRui">
+  <meta name="keywords" content="k8s,devops">
+  <meta name="description" content="k8s 以前的环境记录 archive">
+<meta property="og:type" content="article">
+<meta property="og:title" content="k8s_archive">
+<meta property="og:url" content="https://racleray.github.io/posts/6eeefec4.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="k8s 以前的环境记录 archive">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-09-19T15:08:29.000Z">
+<meta property="article:modified_time" content="2025-09-19T15:11:51.024Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="k8s">
+<meta property="article:tag" content="devops">
+<meta name="twitter:card" content="summary_large_image">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>k8s_archive - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="k8s_archive">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2025-09-19 23:08" pubdate>
+        2025年9月19日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      19k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      61 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">k8s_archive</h1>
+            
+            <div class="markdown-body">
+              <h3><span id="ubuntu-2404-docker-installl">Ubuntu 24.04 docker installl</span></h3>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">sudo vim /etc/apt/sources.list.d/ubuntu.sources<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs txt">Types: deb<br>URIs: http:&#x2F;&#x2F;mirrors.ustc.edu.cn&#x2F;ubuntu&#x2F;<br>Suites: noble noble-updates noble-security<br>Components: main restricted universe multiverse<br>Signed-By: &#x2F;usr&#x2F;share&#x2F;keyrings&#x2F;ubuntu-archive-keyring.gpg<br><br><br>Types: deb<br>URIs: http:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;ubuntu&#x2F;<br>Suites: noble noble-updates noble-security<br>Components: main restricted universe multiverse<br>Signed-By: &#x2F;usr&#x2F;share&#x2F;keyrings&#x2F;ubuntu-archive-keyring.gpg<br><br><br>Types: deb<br>URIs: http:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;ubuntu&#x2F;<br>Suites: noble noble-updates noble-security<br>Components: main restricted universe multiverse<br>Signed-By: &#x2F;usr&#x2F;share&#x2F;keyrings&#x2F;ubuntu-archive-keyring.gpg<br><br><br>Types: deb<br>URIs: http:&#x2F;&#x2F;mirrors.163.com&#x2F;ubuntu&#x2F;<br>Suites: noble noble-updates noble-security<br>Components: main restricted universe multiverse<br>Signed-By: &#x2F;usr&#x2F;share&#x2F;keyrings&#x2F;ubuntu-archive-keyring.gpg<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do apt-get remove $pkg; done<br><br>apt-get update<br>apt-get install ca-certificates curl gnupg<br><br><br>install -m 0755 -d /etc/apt/keyrings<br>curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg<br>sudo chmod a+r /etc/apt/keyrings/docker.gpg<br><br>echo \<br>  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://mirrors.tuna.tsinghua.edu.cn/docker-ce/linux/ubuntu \<br>  "$(. /etc/os-release &amp;&amp; echo "$VERSION_CODENAME")" stable" | \<br>  tee /etc/apt/sources.list.d/docker.list &gt; /dev/null<br><br><br>apt-get update<br>apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin<br></code></pre></div></td></tr></table></figure>
+<blockquote>
+<p>reference: <a href="https://mirrors.tuna.tsinghua.edu.cn/help/docker-ce/" target="_blank" rel="noopener">docker-ce |
+镜像站使用帮助 | 清华大学开源软件镜像站 | Tsinghua Open Source
+Mirror</a></p>
+</blockquote>
+<h3><span id="docker-without-root">docker without root</span></h3>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">sudo cat /etc/group | grep docker<br><br>sudo groupadd docker<br>sudo gpasswd -a $&#123;USER&#125; docker<br>sudo chmod a+rw /var/run/docker.sock<br>sudo systemctl restart docker<br></code></pre></div></td></tr></table></figure>
+<h3><span id="docker-mirror">docker mirror</span></h3>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">sudo tee /etc/docker/daemon.json &lt;&lt;EOF<br>&#123;<br>    "registry-mirrors": [<br>        "https://docker.xuanyuan.me"<br>    ]<br>&#125;<br>EOF<br></code></pre></div></td></tr></table></figure>
+<blockquote>
+<p>reference 1</p>
+<p>https://linuxmirrors.cn/docker.sh</p>
+<p>reference 2</p>
+<p><strong>国内主流 <a href="https://zhida.zhihu.com/search?content_id=253914305&amp;content_type=Article&amp;match_order=1&amp;q=Docker+Hub&amp;zhida_source=entity" target="_blank" rel="noopener">Docker
+Hub</a> 镜像加速站清单</strong></p>
+<table>
+<colgroup>
+<col style="width: 30%">
+<col style="width: 7%">
+<col style="width: 30%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>地址</th>
+<th>运营方</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://link.zhihu.com/?target=https%3A//docker.xuanyuan.me">https://docker.xuanyuan.me</a></td>
+<td>轩辕镜像免费版</td>
+<td><a href="https://zhida.zhihu.com/search?content_id=253914305&amp;content_type=Article&amp;match_order=1&amp;q=Cloudflare&amp;zhida_source=entity" target="_blank" rel="noopener">Cloudflare</a>+国内<a href="https://zhida.zhihu.com/search?content_id=253914305&amp;content_type=Article&amp;match_order=1&amp;q=CDN&amp;zhida_source=entity" target="_blank" rel="noopener">CDN</a></td>
+<td>官网支持搜索镜像、配置简单、有会员解答群、屏蔽违法内容、境内公司运营（非常稳定）</td>
+</tr>
+<tr class="even">
+<td><a href="https://link.zhihu.com/?target=https%3A//xuanyuan.cloud">https://xuanyuan.cloud</a></td>
+<td>轩辕镜像专业版</td>
+<td>国内CDN</td>
+<td>需要登录，速度稳定，支持爱快，群晖，极空间，威联通
+nas，支持搜索镜像、配置简单、有会员解答群、屏蔽违法内容、境内公司运营（非常稳定）</td>
+</tr>
+<tr class="odd">
+<td><a href="https://link.zhihu.com/?target=https%3A//mirror.ccs.tencentyun.com">https://mirror.ccs.tencentyun.com</a></td>
+<td>腾讯云</td>
+<td>国内CDN</td>
+<td>仅腾讯云服务器内推荐使用</td>
+</tr>
+<tr class="even">
+<td><a href="https://link.zhihu.com/?target=https%3A//xxx.mirror.aliyuncs.com">https://xxx.mirror.aliyuncs.com</a></td>
+<td>阿里云</td>
+<td>国内CDN</td>
+<td>仅阿里云服务器内推荐使用（<a href="https://link.zhihu.com/?target=https%3A//help.aliyun.com/zh/acr/user-guide/accelerate-the-pulls-of-docker-official-images%3Fspm%3Da2c4g.11186623.0.i7">https://help.aliyun.com/zh/acr/user-guide/accelerate-the-pulls-of-docker-official-images?spm=a2c4g.11186623.0.i7</a>）</td>
+</tr>
+<tr class="odd">
+<td>https://1ms.run/</td>
+<td>毫秒镜像</td>
+<td>Cloudflare、境内CDN</td>
+<td>免费、提供在线技术支持、长期维护、完整文档、活跃社区。</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<h3><span id="cri-dockerd">cri-dockerd</span></h3>
+<p><a href="https://github.com/Mirantis/cri-dockerd/releases" target="_blank" rel="noopener">Releases ·
+Mirantis/cri-dockerd</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">cat &gt; /etc/systemd/system/cri-dockerd.service&lt;&lt;-EOF<br>[Unit]<br>Description=CRI Interface for Docker Application Container Engine<br>Documentation=https://docs.mirantis.com<br>After=network-online.target firewalld.service docker.service<br>Wants=network-online.target<br>Requires=cri-dockerd.socket     #system cri-dockerd.socket<br> <br>[Service]<br>Type=notify<br>ExecStart=/usr/local/bin/cri-dockerd --pod-infra-container-image=registry.cn-hangzhou.aliyuncs.com/google_containers/pause<br> --network-plugin=cni --cni-conf-dir=/etc/cni/net.d --cni-bin-dir=/opt/cni/bin --container-runtime-endpoint=unix:///var/run/cri-dockerd.sock --cri-dockerd-root-directory=/var/lib/dockershim --docker-endpoint=unix:///var/run/docker.sock --cri-dockerd-root-directory=/var/lib/docker<br>ExecReload=/bin/kill -s HUP $MAINPID<br>TimeoutSec=0<br>RestartSec=2<br>Restart=always<br>StartLimitBurst=3<br>StartLimitInterval=60s<br>LimitNOFILE=infinity<br>LimitNPROC=infinity<br>LimitCORE=infinity<br>TasksMax=infinity<br>Delegate=yes<br>KillMode=process<br>[Install]<br>WantedBy=multi-user.target<br>EOF<br><br><br><br>cat &gt; /etc/systemd/system/cri-dockerd.socket &lt;&lt;-EOF<br>[Unit]<br>Description=CRI Docker Socket for the API<br>PartOf=cri-dockerd.service    #systemd cri-dockerd.servics<br> <br>[Socket]<br>ListenStream=/var/run/cri-dockerd.sock<br>SocketMode=0660<br>SocketUser=root<br>SocketGroup=docker<br> <br>[Install]<br>WantedBy=sockets.target<br>EOF<br></code></pre></div></td></tr></table></figure>
+<blockquote>
+<p># 从阿里云镜像仓库拉取 pause 镜像</p>
+<p>sudo docker pull
+registry.aliyuncs.com/google_containers/pause:3.10</p>
+<p># 重新标记为 k8s.io 的镜像</p>
+<p>sudo docker tag registry.aliyuncs.com/google_containers/pause:3.10
+registry.k8s.io/pause:3.10</p>
+<p># 验证镜像</p>
+<p>sudo docker images | grep pause</p>
+</blockquote>
+<blockquote>
+<p>if arch and pacman</p>
+<p>yay -S cri-dockerd-bin</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">systemctl daemon-reload<br>systemctl enable cri-dockerd.service<br>systemctl restart cri-dockerd.service<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">ls  /var/run | grep docker<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">sudo systemctl enable --now docker<br><br>sudo systemctl enable --now cri-dockerd<br><br>sudo systemctl enable --now kubelet<br></code></pre></div></td></tr></table></figure>
+<h3><span id="multi-nodes">multi nodes</span></h3>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash"> 分机器</span><br>sudo hostnamectl set-hostname "k8smaster"<br>sudo hostnamectl set-hostname "k8snode1"     <br>sudo hostnamectl set-hostname "k8snode2"<br><br><span class="hljs-meta">#</span><span class="bash"> 不分机器</span><br>cat &gt;&gt; /etc/hosts &lt;&lt; EOF<br>192.168.31.224 k8smaster<br>192.168.31.225 k8snode1<br>192.168.31.226 k8snode2<br>EOF<br><br>timedatectl set-timezone Asia/Shanghai<br><br>sudo apt install -y ntpsec-ntpdate<br>ntpdate ntp.aliyun.com<br><br>crontab -e<br>0 0 * * * ntpdate ntp.aliyun.com<br></code></pre></div></td></tr></table></figure>
+<p>内核转发和网桥过滤</p>
+<figure class="highlight lsl"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs lsl">cat &lt;&lt; <span class="hljs-literal">EOF</span> | tee /etc/sysctl.d/k8s.conf<br>net.bridge.bridge-nf-call-ip6tables = <span class="hljs-number">1</span><br>net.bridge.bridge-nf-call-iptables = <span class="hljs-number">1</span><br>net.ipv4.ip_forward = <span class="hljs-number">1</span><br><span class="hljs-literal">EOF</span><br><br><br>modprobe overlay<br>modprobe br_netfilter<br><br><br>cat &lt;&lt; <span class="hljs-literal">EOF</span> | tee /etc/modules-load.d/k8s.conf<br>overlay<br>br_netfilter<br><span class="hljs-literal">EOF</span><br><br><br>sysctl --system<br><br>sudo swapoff -a<br>sudo vim /etc/fstab<br>注释掉 /dev/sda2 none swap sw <span class="hljs-number">0</span> <span class="hljs-number">0</span><br></code></pre></div></td></tr></table></figure>
+<blockquote>
+<figure class="highlight cmake"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cmake">&gt;apt <span class="hljs-keyword">install</span> -y ipset ipvsadm<br></code></pre></div></td></tr></table></figure>
+<p><code>ipvs</code> stands for <strong>IP Virtual Server</strong>. It's
+a software-based load balancer that allows multiple network services to
+be presented to clients as a single virtual IP address.</p>
+<p>Key functions of <code>ipvs</code>:</p>
+<ul>
+<li><strong>Load balancing:</strong> Distributes incoming client
+requests across multiple servers, improving performance and
+availability.</li>
+<li><strong>Failover:</strong> Automatically redirects traffic to a
+backup server if the primary server becomes unavailable.</li>
+<li><strong>Persistence:</strong> Maintains client connections with a
+specific server, improving user experience for applications that require
+stateful connections.</li>
+<li><strong>Health checks:</strong> Monitors the health of backend
+servers and prevents traffic from being sent to unhealthy servers.</li>
+</ul>
+<p><code>ipvs</code> is commonly used in:</p>
+<ul>
+<li><strong>Web servers:</strong> Distributing web traffic to multiple
+web servers.</li>
+<li><strong>Application servers:</strong> Balancing requests to
+application servers.</li>
+<li><strong>Databases:</strong> Load balancing database
+connections.</li>
+</ul>
+</blockquote>
+<h3><span id="k8s-keyring">k8s keyring</span></h3>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.33/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg<br><br><span class="hljs-meta">#</span><span class="bash"> <span class="hljs-built_in">echo</span> <span class="hljs-string">'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.33/deb/ /'</span> | sudo tee /etc/apt/sources.list.d/kubernetes.list</span><br><br>echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://mirrors.tuna.tsinghua.edu.cn/kubernetes/core:/stable:/v1.33/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list<br><br><br>apt update<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">apt-cache policy kubeadm<br>apt-cache showpkg kubeadm<br>apt-cache madison kubeadm<br></code></pre></div></td></tr></table></figure>
+<p>防止自动更新</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">apt-mark hold kubelet kubeadm kubectl<br></code></pre></div></td></tr></table></figure>
+<p>进入文件kubelet，1.30版本之后都是在 /etc/default/kubelet，之前
+/etc/sysconfig/kubelet</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">vim /etc/default/kubelet<br><br>KUBELET_EXTRA_ARGS="--cgroup-driver=systemd"<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">systemctl enable kubelet<br></code></pre></div></td></tr></table></figure>
+<h3><span id="cidr">cidr</span></h3>
+<p>规划pod/service网段，原则只有一个：三个网段不重复，没有交叉即可</p>
+<ul>
+<li>宿主机网段：前面已经规划过。即：192.168.31.0/24</li>
+<li>service网段：10.96.0.0/12</li>
+<li>pod网段：10.244.0.0/16</li>
+</ul>
+<figure class="highlight routeros"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs routeros"><span class="hljs-comment"># master节点执行</span><br>kubeadm init <span class="hljs-attribute">--kubernetes-version</span>=1.33.3 <span class="hljs-attribute">--pod-network-cidr</span>=10.244.0.0/16 <span class="hljs-attribute">--service-cidr</span>=10.96.0.0/12  <span class="hljs-attribute">--image-repository</span>=registry.aliyuncs.com/google_containers  <span class="hljs-attribute">--cri-socket</span>=unix:///var/run/cri-dockerd.sock  --upload-certs  <span class="hljs-attribute">--v</span>=9<br></code></pre></div></td></tr></table></figure>
+<p>参数释义：</p>
+<ul>
+<li>kubernetes-version：指定k8s的版本，</li>
+<li>control-plane-endpoint：可以理解为集群master的命名，随意写即可</li>
+<li>apiserver-advertise-address：集群中master的地址</li>
+<li>pod-network-cidr：pod网段地址，只要不与集群网段和service网段重复即可</li>
+<li>service-cidr：service网段地址，只要不与集群网段和pod网段重复即可</li>
+<li>image-repository：指定使用国内镜像</li>
+<li>cri-socket：指定使用的容器运行时，如果你使用的containerd容器，那就不用写这个参数</li>
+<li>v：日志级别，9表示输出的信息会很详细</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sh">To start using your cluster, you need to run the following as a regular user:<br><br>  mkdir -p <span class="hljs-variable">$HOME</span>/.kube<br>  sudo cp -i /etc/kubernetes/admin.conf <span class="hljs-variable">$HOME</span>/.kube/config<br>  sudo chown $(id -u):$(id -g) <span class="hljs-variable">$HOME</span>/.kube/config<br><br>Alternatively, <span class="hljs-keyword">if</span> you are the root user, you can run:<br><br>  <span class="hljs-built_in">export</span> KUBECONFIG=/etc/kubernetes/admin.conf<br><br>You should now deploy a pod network to the cluster.<br>Run <span class="hljs-string">"kubectl apply -f [podnetwork].yaml"</span> with one of the options listed at:<br>  https://kubernetes.io/docs/concepts/cluster-administration/addons/<br><br>Then you can join any number of worker nodes by running the following on each as root:<br><br>kubeadm join 192.168.217.140:6443 --token xxxxxxxxxxxxxxxxx \<br>        --discovery-token-ca-cert-hash sha256:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sh"><span class="hljs-comment"># 其余 worker节点执行 cri-socket是指定容器运行时，如果是containerd，可以不用写该参数</span><br>kubeadm join k8smaster:6443 --token xxxxxxxxxxxxxxxxx \<br>	--discovery-token-ca-cert-hash sha256:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \<br>   --cri-socket=unix:///var/run/cri-dockerd.sock<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sh">kubectl get nodes<br></code></pre></div></td></tr></table></figure>
+<h3><span id="calico">calico</span></h3>
+<p><a href="https://docs.tigera.io/calico/latest/getting-started/kubernetes/k8s-single-node" target="_blank" rel="noopener">Tutorial:
+Install Calico on single-host k8s cluster | Calico Documentation</a></p>
+<figure class="highlight sh"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sh">kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.30.2/manifests/tigera-operator.yaml<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sh">wget  https://raw.githubusercontent.com/projectcalico/calico/v3.30.2/manifests/custom-resources.yaml<br></code></pre></div></td></tr></table></figure>
+<p>修改 custom-resources.yaml 中的 pod cidr
+10.244.0.0/16，然后等待上一个 create 执行完成，然后</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">kubectl create -f custom-resources.yaml<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">watch kubectl get pod -n calico-system<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">kubectl describe pod calico-node-pdf78  -n calico-system<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">kubectl get cs<br></code></pre></div></td></tr></table></figure>
+<p>集群目前还只有一个master节点，而k8s集群默认情况下是不会把pod调度到master节点的。可以解除这种限制：</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash"> 查看 taint 先</span><br>kubectl describe node ray-vubuntu<br>kubectl taint nodes --all node-role.kubernetes.io/control-plane-<br><br><br><span class="hljs-meta">#</span><span class="bash"> 设置污点</span><br>kubectl taint nodes &lt;node-name&gt; key1=value1:NoSchedule<br><span class="hljs-meta">#</span><span class="bash"> 去除污点</span><br>kubectl taint nodes &lt;node-name&gt; key1:NoSchedule-<br></code></pre></div></td></tr></table></figure>
+<h3><span id="reset-opreation">reset opreation</span></h3>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs jboss-cli"><span class="hljs-comment"># kubeadm reset</span><br>sudo kubeadm reset <span class="hljs-params">--force</span> <span class="hljs-params">--cri-socket=unix</span>:<span class="hljs-string">///var/run/cri-dockerd.sock</span><br><br>sudo rm -rf <span class="hljs-string">/root/.kube</span><br>sudo rm -rf <span class="hljs-string">/etc/cni/net.d</span><br>sudo rm -rf <span class="hljs-string">/etc/kubernetes/</span>*<br><br>sudo systemctl restart docker<br>sudo systemctl restart kubelet<br></code></pre></div></td></tr></table></figure>
+<h3><span id="metallb">metallb</span></h3>
+<p><a href="https://metallb.org/" target="_blank" rel="noopener">Documentation</a></p>
+<figure class="highlight sql"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sql">helm <span class="hljs-keyword">install</span> metallb metallb/metallb -n metallb-<span class="hljs-keyword">system</span> <span class="hljs-comment">--create-namespace</span><br></code></pre></div></td></tr></table></figure>
+<figure class="highlight coq"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs coq">kubectl <span class="hljs-built_in">apply</span> -f metallb/metallb-l2-pool.yaml<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs yaml"><span class="hljs-meta">---</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">metallb.io/v1beta1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">IPAddressPool</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">production</span><br>  <span class="hljs-attr">namespace:</span> <span class="hljs-string">metallb-system</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-comment"># Production services will go here. Public IPs are expensive.</span><br>  <span class="hljs-attr">addresses:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-number">10.69</span><span class="hljs-number">.220</span><span class="hljs-number">.50</span><span class="hljs-number">-10.69</span><span class="hljs-number">.220</span><span class="hljs-number">.70</span><br><br><span class="hljs-meta">---</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">metallb.io/v1beta1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">L2Advertisement</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">l2network</span><br>  <span class="hljs-attr">namespace:</span> <span class="hljs-string">metallb-system</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">ipAddressPools:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">production</span><br></code></pre></div></td></tr></table></figure>
+<h3><span id="k8s-gateway">k8s gateway</span></h3>
+<p><a href="https://github.com/ori-edge/k8s_gateway" target="_blank" rel="noopener">Git</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">helm repo add k8s_gateway https://ori-edge.github.io/k8s_gateway/<br>helm install exdns --set domain=pop.dev.cn k8s_gateway/k8s-gateway -n gateway --create-namespace<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs txt">&#x2F;etc&#x2F;systemd&#x2F;resolved.conf 中修改 DNS 添加 gateway external ip<br></code></pre></div></td></tr></table></figure>
+<h3><span id="cert-manager">cert manager</span></h3>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash"> kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.18.2/cert-manager.yaml</span><br><br>kubectl apply -f cert-manager/cert-manager.yaml<br></code></pre></div></td></tr></table></figure>
+<p>openssl 生成证书，或者证书链，配置上 ca-key-pair</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">kubectl create secret tls ca-key-pair --cert=tls/certs/ks-interm.pem --key=tls/keys/ks-interm.key.pem -n cert-manager<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">kubectl apply -f cert-manager/ca-cluster-issuer.yaml<br></code></pre></div></td></tr></table></figure>
+<blockquote>
+<p>检查证书的详细信息 openssl x509 -in &lt;(kubectl get secret
+simpleweb-tls -n default -o jsonpath='{.data.tls.crt}' | base64 -d)
+-text -noout</p>
+</blockquote>
+<h3><span id="openebs">openebs</span></h3>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">helm repo add openebs https://openebs.github.io/openebs<br>helm repo update<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">helm install openebs --namespace openebs openebs/openebs --set engines.replicated.mayastor.enabled=false  --create-namespace<br></code></pre></div></td></tr></table></figure>
+<blockquote>
+<p>单节点出现调度问题，可以将副本书设置为1</p>
+<p>kubectl -n openebs get sts openebs-loki -o yaml | grep -nA20
+affinity</p>
+<p>kubectl -n openebs scale sts openebs-loki --replicas=1</p>
+</blockquote>
+<h3><span id="promethus">promethus</span></h3>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">helm repo add prometheus-community https://prometheus-community.github.io/helm-charts<br><span class="hljs-meta">#</span><span class="bash"> helm repo add stable https://kubernetes-charts.storage.googleapis.com/</span><br>helm repo update<br><br><span class="hljs-meta">#</span><span class="bash"> helm show values prometheus-community/kube-prometheus-stack &gt; kube-prometheus-stack-values.yaml</span><br></code></pre></div></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">helm install prometheus prometheus-community/kube-prometheus-stack --namespace prometheus --create-namespace<br></code></pre></div></td></tr></table></figure>
+<p>网络问题解决方法一：</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash"> git <span class="hljs-built_in">clone</span> https://github.com/prometheus-community/helm-charts.git</span><br><br>helm dependency build charts/kube-prometheus-stack/<br><br>helm install prometheus ./charts/kube-prometheus-stack --namespace prometheus --create-namespace<br></code></pre></div></td></tr></table></figure>
+<blockquote>
+<h4><span id="port-forwardings">port-forwardings</span></h4>
+<p>Prometheus-UI</p>
+<p>​ kubectl port-forward service/prometheus-kube-prometheus-prometheus
+9090</p>
+<p>Alert Manager UI</p>
+<p>​ kubectl port-forward svc/prometheus-kube-prometheus-alertmanager
+9093</p>
+<p>Grafana</p>
+<p>​ kubectl port-forward deployment/prometheus-grafana 3000</p>
+<p>Grafana Dashboard credentials</p>
+<p>​ user: admin ​ pwd: prom-operator (from values.yaml file set as
+default)</p>
+<blockquote>
+<p>pwd get from:</p>
+<p>kubectl --namespace prometheus get secrets prometheus-grafana -o
+jsonpath="{.data.admin-password}" | base64 -d ; echo</p>
+</blockquote>
+<p>redis-exporter</p>
+<p>​ kubectl port-forward
+service/redis-exporter-prometheus-redis-exporter 9121</p>
+</blockquote>
+<h3><span id="exporter">exporter</span></h3>
+<p>比如 redis exporter 测试：</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">helm install redis-exporter prometheus-community/prometheus-redis-exporter -f prometheus-redis_values.yaml<br></code></pre></div></td></tr></table></figure>
+<p>测试一个 redis exporter 同时监控多个 redis 节点：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps/v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Deployment</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">redis-master-1</span><br>  <span class="hljs-attr">labels:</span><br>    <span class="hljs-attr">app:</span> <span class="hljs-string">redis</span><br>    <span class="hljs-attr">lg-scrape-redis:</span> <span class="hljs-string">default</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">selector:</span><br>    <span class="hljs-attr">matchLabels:</span><br>      <span class="hljs-attr">app:</span> <span class="hljs-string">redis</span><br>      <span class="hljs-attr">role:</span> <span class="hljs-string">master</span><br>      <span class="hljs-attr">tier:</span> <span class="hljs-string">backend</span><br>  <span class="hljs-attr">replicas:</span> <span class="hljs-number">1</span><br>  <span class="hljs-attr">template:</span><br>    <span class="hljs-attr">metadata:</span><br>      <span class="hljs-attr">labels:</span><br>        <span class="hljs-attr">app:</span> <span class="hljs-string">redis</span><br>        <span class="hljs-attr">role:</span> <span class="hljs-string">master</span><br>        <span class="hljs-attr">tier:</span> <span class="hljs-string">backend</span><br>    <span class="hljs-attr">spec:</span><br>      <span class="hljs-attr">containers:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">master</span><br>        <span class="hljs-attr">image:</span> <span class="hljs-string">redis</span><br>        <span class="hljs-attr">imagePullPolicy:</span> <span class="hljs-string">IfNotPresent</span><br>        <span class="hljs-attr">resources:</span><br>          <span class="hljs-attr">requests:</span><br>            <span class="hljs-attr">cpu:</span> <span class="hljs-string">100m</span><br>            <span class="hljs-attr">memory:</span> <span class="hljs-string">100Mi</span><br>        <span class="hljs-attr">ports:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">containerPort:</span> <span class="hljs-number">6379</span><br><br><span class="hljs-meta">---</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Service</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">redis-master-1</span><br>  <span class="hljs-attr">labels:</span><br>    <span class="hljs-attr">app:</span> <span class="hljs-string">redis</span><br>    <span class="hljs-attr">role:</span> <span class="hljs-string">master</span><br>    <span class="hljs-attr">tier:</span> <span class="hljs-string">backend</span><br>    <span class="hljs-attr">lg-scrape-redis:</span> <span class="hljs-string">default</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">ports:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">port:</span> <span class="hljs-number">6379</span><br>    <span class="hljs-attr">targetPort:</span> <span class="hljs-number">6379</span><br>    <span class="hljs-attr">nodePort:</span> <span class="hljs-number">30001</span><br>  <span class="hljs-attr">type:</span> <span class="hljs-string">NodePort</span><br>  <span class="hljs-attr">selector:</span><br>    <span class="hljs-attr">app:</span> <span class="hljs-string">redis</span><br>    <span class="hljs-attr">role:</span> <span class="hljs-string">master</span><br>    <span class="hljs-attr">tier:</span> <span class="hljs-string">backend</span><br><br><span class="hljs-meta">---</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps/v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Deployment</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">redis-master-2</span><br>  <span class="hljs-attr">labels:</span><br>    <span class="hljs-attr">app:</span> <span class="hljs-string">redis</span><br>    <span class="hljs-attr">lg-scrape-redis:</span> <span class="hljs-string">default</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">selector:</span><br>    <span class="hljs-attr">matchLabels:</span><br>      <span class="hljs-attr">app:</span> <span class="hljs-string">redis</span><br>      <span class="hljs-attr">role:</span> <span class="hljs-string">master</span><br>      <span class="hljs-attr">tier:</span> <span class="hljs-string">backend</span><br>  <span class="hljs-attr">replicas:</span> <span class="hljs-number">1</span><br>  <span class="hljs-attr">template:</span><br>    <span class="hljs-attr">metadata:</span><br>      <span class="hljs-attr">labels:</span><br>        <span class="hljs-attr">app:</span> <span class="hljs-string">redis</span><br>        <span class="hljs-attr">role:</span> <span class="hljs-string">master</span><br>        <span class="hljs-attr">tier:</span> <span class="hljs-string">backend</span><br>    <span class="hljs-attr">spec:</span><br>      <span class="hljs-attr">containers:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">master</span><br>        <span class="hljs-attr">image:</span> <span class="hljs-string">redis</span><br>        <span class="hljs-attr">imagePullPolicy:</span> <span class="hljs-string">IfNotPresent</span><br>        <span class="hljs-attr">resources:</span><br>          <span class="hljs-attr">requests:</span><br>            <span class="hljs-attr">cpu:</span> <span class="hljs-string">100m</span><br>            <span class="hljs-attr">memory:</span> <span class="hljs-string">100Mi</span><br>        <span class="hljs-attr">ports:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">containerPort:</span> <span class="hljs-number">6379</span><br><br><span class="hljs-meta">---</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Service</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">redis-master-2</span><br>  <span class="hljs-attr">labels:</span><br>    <span class="hljs-attr">app:</span> <span class="hljs-string">redis</span><br>    <span class="hljs-attr">role:</span> <span class="hljs-string">master</span><br>    <span class="hljs-attr">tier:</span> <span class="hljs-string">backend</span><br>    <span class="hljs-attr">lg-scrape-redis:</span> <span class="hljs-string">default</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">ports:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">port:</span> <span class="hljs-number">6379</span><br>    <span class="hljs-attr">targetPort:</span> <span class="hljs-number">6379</span><br>    <span class="hljs-attr">nodePort:</span> <span class="hljs-number">30002</span><br>  <span class="hljs-attr">type:</span> <span class="hljs-string">NodePort</span><br>  <span class="hljs-attr">selector:</span><br>    <span class="hljs-attr">app:</span> <span class="hljs-string">redis</span><br>    <span class="hljs-attr">role:</span> <span class="hljs-string">master</span><br>    <span class="hljs-attr">tier:</span> <span class="hljs-string">backend</span><br><br><span class="hljs-meta">---</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps/v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Deployment</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">redis-master-3</span><br>  <span class="hljs-attr">labels:</span><br>    <span class="hljs-attr">app:</span> <span class="hljs-string">redis</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">selector:</span><br>    <span class="hljs-attr">matchLabels:</span><br>      <span class="hljs-attr">app:</span> <span class="hljs-string">redis</span><br>      <span class="hljs-attr">role:</span> <span class="hljs-string">master</span><br>      <span class="hljs-attr">tier:</span> <span class="hljs-string">backend</span><br>  <span class="hljs-attr">replicas:</span> <span class="hljs-number">1</span><br>  <span class="hljs-attr">template:</span><br>    <span class="hljs-attr">metadata:</span><br>      <span class="hljs-attr">labels:</span><br>        <span class="hljs-attr">app:</span> <span class="hljs-string">redis</span><br>        <span class="hljs-attr">role:</span> <span class="hljs-string">master</span><br>        <span class="hljs-attr">tier:</span> <span class="hljs-string">backend</span><br>    <span class="hljs-attr">spec:</span><br>      <span class="hljs-attr">containers:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">master</span><br>        <span class="hljs-attr">image:</span> <span class="hljs-string">redis</span><br>        <span class="hljs-attr">imagePullPolicy:</span> <span class="hljs-string">IfNotPresent</span><br>        <span class="hljs-attr">resources:</span><br>          <span class="hljs-attr">requests:</span><br>            <span class="hljs-attr">cpu:</span> <span class="hljs-string">100m</span><br>            <span class="hljs-attr">memory:</span> <span class="hljs-string">100Mi</span><br>        <span class="hljs-attr">ports:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">containerPort:</span> <span class="hljs-number">6379</span><br><br><span class="hljs-meta">---</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Service</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">redis-master-3</span><br>  <span class="hljs-attr">labels:</span><br>    <span class="hljs-attr">app:</span> <span class="hljs-string">redis</span><br>    <span class="hljs-attr">role:</span> <span class="hljs-string">master</span><br>    <span class="hljs-attr">tier:</span> <span class="hljs-string">backend</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">ports:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">port:</span> <span class="hljs-number">6379</span><br>    <span class="hljs-attr">targetPort:</span> <span class="hljs-number">6379</span><br>    <span class="hljs-attr">nodePort:</span> <span class="hljs-number">30003</span><br>  <span class="hljs-attr">type:</span> <span class="hljs-string">NodePort</span><br>  <span class="hljs-attr">selector:</span><br>    <span class="hljs-attr">app:</span> <span class="hljs-string">redis</span><br>    <span class="hljs-attr">role:</span> <span class="hljs-string">master</span><br>    <span class="hljs-attr">tier:</span> <span class="hljs-string">backend</span><br></code></pre></div></td></tr></table></figure>
+<p>exporter 部署：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps/v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Deployment</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">labels:</span><br>    <span class="hljs-attr">app:</span> <span class="hljs-string">redis-exporter</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">redis-exporter</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">replicas:</span> <span class="hljs-number">1</span><br>  <span class="hljs-attr">selector:</span><br>    <span class="hljs-attr">matchLabels:</span><br>      <span class="hljs-attr">app:</span> <span class="hljs-string">redis-exporter</span><br>  <span class="hljs-attr">template:</span><br>    <span class="hljs-attr">metadata:</span><br>      <span class="hljs-attr">labels:</span><br>        <span class="hljs-attr">app:</span> <span class="hljs-string">redis-exporter</span><br>    <span class="hljs-attr">spec:</span><br>      <span class="hljs-attr">containers:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">redis-exporter</span><br>        <span class="hljs-attr">image:</span> <span class="hljs-string">oliver006/redis_exporter:latest</span><br>        <span class="hljs-attr">imagePullPolicy:</span> <span class="hljs-string">IfNotPresent</span><br>        <span class="hljs-attr">resources:</span><br>          <span class="hljs-attr">requests:</span><br>            <span class="hljs-attr">cpu:</span> <span class="hljs-string">100m</span><br>            <span class="hljs-attr">memory:</span> <span class="hljs-string">100Mi</span><br>        <span class="hljs-attr">ports:</span><br>          <span class="hljs-bullet">-</span> <span class="hljs-attr">containerPort:</span> <span class="hljs-number">9121</span><br><br><span class="hljs-meta">---</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Service</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">redis-exporter</span><br>  <span class="hljs-attr">labels:</span><br>    <span class="hljs-attr">app:</span> <span class="hljs-string">redis-exporter</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">ports:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">redis-exporter</span><br>    <span class="hljs-attr">port:</span> <span class="hljs-number">9121</span><br>    <span class="hljs-attr">targetPort:</span> <span class="hljs-number">9121</span><br>  <span class="hljs-attr">selector:</span><br>    <span class="hljs-attr">app:</span> <span class="hljs-string">redis-exporter</span><br></code></pre></div></td></tr></table></figure>
+<p>k8s sd 监控配置：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">monitoring.coreos.com/v1alpha1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">ScrapeConfig</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">k8s-sd-config</span><br>  <span class="hljs-attr">namespace:</span> <span class="hljs-string">default</span><br>  <span class="hljs-attr">labels:</span><br>    <span class="hljs-attr">release:</span> <span class="hljs-string">prometheus</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">jobName:</span> <span class="hljs-string">'redis_exporter_k8s_sd'</span><br>  <span class="hljs-attr">scrapeInterval:</span> <span class="hljs-string">10s</span><br>  <span class="hljs-attr">kubernetesSDConfigs:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">role:</span> <span class="hljs-string">endpoints</span><br>  <span class="hljs-attr">relabelings:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">sourceLabels:</span> <span class="hljs-string">[__meta_kubernetes_service_label_lg_scrape_redis]</span><br>      <span class="hljs-attr">action:</span> <span class="hljs-string">keep</span><br>      <span class="hljs-attr">regex:</span> <span class="hljs-string">default</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">targetLabel:</span> <span class="hljs-string">__metrics_path__</span><br>      <span class="hljs-attr">replacement:</span> <span class="hljs-string">/scrape</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">targetLabel:</span> <span class="hljs-string">__param_target</span><br>      <span class="hljs-attr">sourceLabels:</span> <span class="hljs-string">[__address__]</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">targetLabel:</span> <span class="hljs-string">__address__</span><br>      <span class="hljs-attr">replacement:</span> <span class="hljs-string">redis-exporter.default.svc.cluster.local:9121</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">action:</span> <span class="hljs-string">labelmap</span><br>      <span class="hljs-attr">regex:</span> <span class="hljs-string">__meta_kubernetes_service_label_(.+)</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">sourceLabels:</span> <span class="hljs-string">[__meta_kubernetes_namespace]</span><br>      <span class="hljs-attr">action:</span> <span class="hljs-string">replace</span><br>      <span class="hljs-attr">targetLabel:</span> <span class="hljs-string">kubernetes_namespace</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">sourceLabels:</span> <span class="hljs-string">[__meta_kubernetes_service_name]</span><br>      <span class="hljs-attr">action:</span> <span class="hljs-string">replace</span><br>      <span class="hljs-attr">targetLabel:</span> <span class="hljs-string">kubernetes_name</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">sourceLabels:</span> <span class="hljs-string">[__meta_kubernetes_pod_name]</span><br>      <span class="hljs-attr">action:</span> <span class="hljs-string">replace</span><br>      <span class="hljs-attr">targetLabel:</span> <span class="hljs-string">kubernetes_pod_name</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">sourceLabels:</span> <span class="hljs-string">[__meta_kubernetes_pod_name]</span><br>      <span class="hljs-attr">action:</span> <span class="hljs-string">replace</span><br>      <span class="hljs-attr">targetLabel:</span> <span class="hljs-string">instance</span><br>      <span class="hljs-attr">regex:</span> <span class="hljs-string">(.*redis.*)</span><br>    <span class="hljs-comment"># - sourceLabels: [__meta_kubernetes_pod_name]</span><br>    <span class="hljs-comment">#   action: keep</span><br>    <span class="hljs-comment">#   regex: (.*redis.*)</span><br>    <span class="hljs-comment"># - sourceLabels: [__meta_kubernetes_pod_container_name]</span><br>    <span class="hljs-comment">#   action: keep</span><br>    <span class="hljs-comment">#   regex: (.*redis.*)</span><br>    <span class="hljs-comment"># - sourceLabels: [__meta_kubernetes_pod_phase]</span><br>    <span class="hljs-comment">#   action: keep</span><br>    <span class="hljs-comment">#   regex: Running</span><br>    <span class="hljs-comment"># - sourceLabels: [__meta_kubernetes_endpoints_name]</span><br>    <span class="hljs-comment">#   action: keep</span><br>    <span class="hljs-comment">#   regex: (.*redis.*)</span><br>    <span class="hljs-comment"># - sourceLabels: [__meta_kubernetes_service_label_app_kubernetes_io_name]</span><br>    <span class="hljs-comment">#   action: keep</span><br>    <span class="hljs-comment">#   regex: (.*redis.*)</span><br>    <span class="hljs-comment"># - sourceLabels: [__meta_kubernetes_service_name]</span><br>    <span class="hljs-comment">#   action: keep</span><br>    <span class="hljs-comment">#   regex: (.*redis.*)</span><br>    <span class="hljs-comment"># - sourceLabels: [__meta_kuernetes_pod_label_app_kubernetes_io_name]</span><br>    <span class="hljs-comment">#   action: keep</span><br>    <span class="hljs-comment">#   regex: (.*redis.*)</span><br></code></pre></div></td></tr></table></figure>
+<p>通过 http:://exporter_addr:9121/scrape?target=redis_addr:6379
+查看指定结果。</p>
+<h3><span id="k8s-with-private-repository">k8s with private repository</span></h3>
+<p>docker-secret</p>
+<figure class="highlight yaml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Secret</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">my-registry-key</span><br><span class="hljs-attr">data:</span><br>  <span class="hljs-string">.dockerconfigjson:</span> <span class="hljs-string">base64-encoded-contents-of-.docker/config.json-file</span><br><span class="hljs-attr">type:</span> <span class="hljs-string">kubernetes.io/dockerconfigjson</span><br></code></pre></div></td></tr></table></figure>
+<p>deployment</p>
+<figure class="highlight yaml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps/v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Deployment</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">my-app</span><br>  <span class="hljs-attr">labels:</span><br>    <span class="hljs-attr">app:</span> <span class="hljs-string">my-app</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">replicas:</span> <span class="hljs-number">1</span><br>  <span class="hljs-attr">selector:</span><br>    <span class="hljs-attr">matchLabels:</span><br>      <span class="hljs-attr">app:</span> <span class="hljs-string">my-app</span><br>  <span class="hljs-attr">template:</span><br>    <span class="hljs-attr">metadata:</span><br>      <span class="hljs-attr">labels:</span><br>        <span class="hljs-attr">app:</span> <span class="hljs-string">my-app</span><br>    <span class="hljs-attr">spec:</span><br>      <span class="hljs-attr">imagePullSecrets:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">my-registry-key</span><br>      <span class="hljs-attr">containers:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">my-app</span><br>        <span class="hljs-attr">image:</span> <span class="hljs-string">privat-repo/my-app:1.3</span><br>        <span class="hljs-attr">imagePullPolicy:</span> <span class="hljs-string">Always</span><br>        <span class="hljs-attr">ports:</span><br>          <span class="hljs-bullet">-</span> <span class="hljs-attr">containerPort:</span> <span class="hljs-number">3000</span><br></code></pre></div></td></tr></table></figure>
+<blockquote>
+<h5><span id="print-full-dockerlogin-command-for-aws-ecr">print full docker
+login command for aws ecr</span></h5>
+<p>​ aws ecr get-login</p>
+<h5><span id="login-in-docker-private-repo">login in docker private repo</span></h5>
+<p>​ docker login -u username -p password</p>
+<h5><span id="generated-file">generated file</span></h5>
+<p>​ cat .docker/config.json ​ cat .docker/config.json | base64</p>
+<h5><span id="create-dockerlogin-secret-from-configjson-file">create docker
+login secret from config.json file</span></h5>
+<p>​ kubectl create secret generic my-registry-key<br>
+​--from-file=.dockerconfigjson=.docker/config.json<br>
+​--type=kubernetes.io/dockerconfigjson</p>
+<p>​ kubectl create secret generic my-registry-key
+--from-file=.dockerconfigjson=.docker/config.json
+--type=kubernetes.io/dockerconfigjson</p>
+<p>​ kubect get secret</p>
+<h5><span id="create-dockerlogin-secret-with-login-credentials">create docker
+login secret with login credentials</span></h5>
+<p>​ kubectl create secret docker-registry my-registry-key<br>
+​--docker-server=https://private-repo<br>
+​--docker-username=user<br>
+​--docker-password=pwd</p>
+<p>​ kubectl create secret docker-registry my-registry-key
+--docker-server=https://private-repo --docker-username=user
+--docker-password=pwd</p>
+<h5><span id="access-minikube-console">access minikube console</span></h5>
+<p>​ minikube ssh</p>
+<h5><span id="copy-configjsonfile-from-minikube-to-my-host">copy config.json
+file from Minikube to my host</span></h5>
+<p>​ scp -i <span class="math inline">\((minikube ssh-key)
+docker@\)</span>(minikube ip):.docker/config.json
+.docker/config.json</p>
+</blockquote>
+<h3><span id="ingress-nginx">ingress nginx</span></h3>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.13.0/deploy/static/provider/cloud/deploy.yaml<br></code></pre></div></td></tr></table></figure>
+<p>测试配置</p>
+<figure class="highlight yaml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs yaml"><span class="hljs-meta">---</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps/v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Deployment</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">simple-web</span><br>  <span class="hljs-attr">namespace:</span> <span class="hljs-string">default</span><br>  <span class="hljs-attr">labels:</span><br>    <span class="hljs-attr">app:</span> <span class="hljs-string">simple-web</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">replicas:</span> <span class="hljs-number">1</span><br>  <span class="hljs-attr">selector:</span><br>    <span class="hljs-attr">matchLabels:</span><br>      <span class="hljs-attr">app:</span> <span class="hljs-string">simple-web</span><br>  <span class="hljs-attr">template:</span><br>    <span class="hljs-attr">metadata:</span><br>      <span class="hljs-attr">labels:</span><br>        <span class="hljs-attr">app:</span> <span class="hljs-string">simple-web</span><br>    <span class="hljs-attr">spec:</span><br>      <span class="hljs-attr">containers:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">httpd</span><br>        <span class="hljs-attr">image:</span> <span class="hljs-string">httpd:latest</span><br>        <span class="hljs-attr">ports:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">containerPort:</span> <span class="hljs-number">80</span><br>        <span class="hljs-attr">resources:</span><br>          <span class="hljs-attr">requests:</span><br>            <span class="hljs-attr">memory:</span> <span class="hljs-string">"64Mi"</span><br>            <span class="hljs-attr">cpu:</span> <span class="hljs-string">"50m"</span><br>          <span class="hljs-attr">limits:</span><br>            <span class="hljs-attr">memory:</span> <span class="hljs-string">"128Mi"</span><br>            <span class="hljs-attr">cpu:</span> <span class="hljs-string">"100m"</span><br><span class="hljs-meta">---</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Service</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">simple-web-service</span><br>  <span class="hljs-attr">namespace:</span> <span class="hljs-string">default</span><br>  <span class="hljs-attr">labels:</span><br>    <span class="hljs-attr">app:</span> <span class="hljs-string">simple-web</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">selector:</span><br>    <span class="hljs-attr">app:</span> <span class="hljs-string">simple-web</span><br>  <span class="hljs-attr">ports:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">port:</span> <span class="hljs-number">80</span><br>    <span class="hljs-attr">targetPort:</span> <span class="hljs-number">80</span><br>    <span class="hljs-attr">protocol:</span> <span class="hljs-string">TCP</span><br>  <span class="hljs-attr">type:</span> <span class="hljs-string">ClusterIP</span><br><span class="hljs-meta">---</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">cert-manager.io/v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Certificate</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">simpleweb-tls</span><br>  <span class="hljs-attr">namespace:</span> <span class="hljs-string">default</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">secretName:</span> <span class="hljs-string">simpleweb-tls</span><br>  <span class="hljs-attr">issuerRef:</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">ca-issuer</span><br>    <span class="hljs-attr">kind:</span> <span class="hljs-string">ClusterIssuer</span><br>  <span class="hljs-attr">commonName:</span> <span class="hljs-string">simpleweb.dev.lg.com</span><br>  <span class="hljs-attr">dnsNames:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">simpleweb.dev.lg.com</span><br><span class="hljs-meta">---</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">networking.k8s.io/v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Ingress</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">simpleweb-ingress</span><br>  <span class="hljs-attr">namespace:</span> <span class="hljs-string">default</span><br>  <span class="hljs-attr">annotations:</span><br>    <span class="hljs-attr">cert-manager.io/cluster-issuer:</span> <span class="hljs-string">ca-issuer</span><br>    <span class="hljs-attr">nginx.ingress.kubernetes.io/ssl-redirect:</span> <span class="hljs-string">"true"</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">ingressClassName:</span> <span class="hljs-string">nginx</span><br>  <span class="hljs-attr">tls:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">hosts:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">simpleweb.dev.lg.com</span><br>    <span class="hljs-attr">secretName:</span> <span class="hljs-string">simpleweb-tls</span><br>  <span class="hljs-attr">rules:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">host:</span> <span class="hljs-string">simpleweb.dev.lg.com</span><br>    <span class="hljs-attr">http:</span><br>      <span class="hljs-attr">paths:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">path:</span> <span class="hljs-string">/</span><br>        <span class="hljs-attr">pathType:</span> <span class="hljs-string">Prefix</span><br>        <span class="hljs-attr">backend:</span><br>          <span class="hljs-attr">service:</span><br>            <span class="hljs-attr">name:</span> <span class="hljs-string">simple-web-service</span><br>            <span class="hljs-attr">port:</span><br>              <span class="hljs-attr">number:</span> <span class="hljs-number">80</span><br></code></pre></div></td></tr></table></figure>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/k8s/">k8s</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/tags/k8s/">k8s</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/d4de3325.html">
+                        <span class="hidden-mobile">静态类型语言黑话-协变</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

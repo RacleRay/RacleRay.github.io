@@ -6,7 +6,7 @@
   <link href="https://racleray.github.io/atom.xml" rel="self"/>
   
   <link href="https://racleray.github.io/"/>
-  <updated>2025-03-05T13:11:47.146Z</updated>
+  <updated>2025-09-19T15:11:51.024Z</updated>
   <id>https://racleray.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>k8s_archive</title>
+    <link href="https://racleray.github.io/posts/6eeefec4.html"/>
+    <id>https://racleray.github.io/posts/6eeefec4.html</id>
+    <published>2025-09-19T15:08:29.000Z</published>
+    <updated>2025-09-19T15:11:51.024Z</updated>
+    
+    
+    <summary type="html">k8s 以前的环境记录 archive</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="k8s" scheme="https://racleray.github.io/categories/Notes/k8s/"/>
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/tags/Notes/"/>
+    
+    <category term="k8s" scheme="https://racleray.github.io/tags/k8s/"/>
+    
+  </entry>
   
   <entry>
     <title>静态类型语言黑话-协变</title>
@@ -430,29 +453,6 @@
     <category term="Multi-threading" scheme="https://racleray.github.io/tags/Multi-threading/"/>
     
     <category term="Coroutine" scheme="https://racleray.github.io/tags/Coroutine/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>HTTP1.0到3.0浅析</title>
-    <link href="https://racleray.github.io/posts/3465c9da.html"/>
-    <id>https://racleray.github.io/posts/3465c9da.html</id>
-    <published>2023-11-09T06:43:14.000Z</published>
-    <updated>2024-01-09T10:21:38.146Z</updated>
-    
-    
-    <summary type="html">HTTP 技术迭代演进</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="Web" scheme="https://racleray.github.io/categories/Notes/Web/"/>
-    
-    
-    <category term="HTTP" scheme="https://racleray.github.io/tags/HTTP/"/>
-    
-    <category term="Web" scheme="https://racleray.github.io/tags/Web/"/>
     
   </entry>
   
