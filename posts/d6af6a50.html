@@ -1,0 +1,625 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="C++ tips recently, C++ 抽象代价">
+  <meta name="author" content="HeRui">
+  <meta name="keywords" content="C++">
+  <meta name="description" content="C++ tips recently, C++ 抽象代价">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++Tips">
+<meta property="og:url" content="https://racleray.github.io/posts/d6af6a50.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="C++ tips recently, C++ 抽象代价">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://images.unsplash.com/photo-1494625927555-6ec4433b1571?crop=entropy&amp;cs=srgb&amp;fm=jpg&amp;ixid=M3w2NDU1OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjA1MzMxMzJ8&amp;ixlib=rb-4.1.0&amp;q=85&amp;w=1024&amp;h=768">
+<meta property="article:published_time" content="2025-10-15T14:43:36.613Z">
+<meta property="article:modified_time" content="2025-10-15T14:47:43.010Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="C++">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://images.unsplash.com/photo-1494625927555-6ec4433b1571?crop=entropy&amp;cs=srgb&amp;fm=jpg&amp;ixid=M3w2NDU1OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjA1MzMxMzJ8&amp;ixlib=rb-4.1.0&amp;q=85&amp;w=1024&amp;h=768">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>C++Tips - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="C++Tips">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2025-10-15 22:43" pubdate>
+        2025年10月15日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      5.3k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      17 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">C++Tips</h1>
+            
+            <div class="markdown-body">
+              <figure>
+<img src="https://images.unsplash.com/photo-1494625927555-6ec4433b1571?crop=entropy&amp;cs=srgb&amp;fm=jpg&amp;ixid=M3w2NDU1OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NjA1MzMxMzJ8&amp;ixlib=rb-4.1.0&amp;q=85&amp;w=1024&amp;h=768" srcset="/img/loading.gif" lazyload alt="photo by 🧔‍♂️ Michal Kmeť(https://unsplash.com/@mitko?utm_source=templater_proxy&amp;utm_medium=referral) on Unsplash|990x657">
+<figcaption aria-hidden="true">photo by 🧔‍♂️ Michal
+Kmeť(https://unsplash.com/<span class="citation" data-cites="mitko?utm_source">@mitko?utm_source</span>=templater_proxy&amp;utm_medium=referral)
+on Unsplash|990x657</figcaption>
+</figure>
+<blockquote>
+<p>[!quote] Intuition is the supra-logic that cuts out all the routine
+processes of thought and leaps straight from the problem to the answer.
+— Robert Graves</p>
+</blockquote>
+<p>C++的零成本抽象相关概念需要注意的点。C++要达到运行时额外开销，达到零成本执行代码逻辑，需要额外注意代码写法（自由的代价）。</p>
+<h3><span id="虚函数">虚函数</span></h3>
+<p>虚函数的代价： - 虚函数表中转，多一次寻址 -
+间接调用函数，可能影响分支预测，导致降低CPU指令流水线执行效率（当然，这需要看实际场景，以及编译器优化）
+- 无法内联，这是最致命的
+如果只是需要多态特性，如果利用编译器多态不太麻烦，那么是一种提升执行效率的方法。</p>
+<h3><span id="隐藏拷贝">隐藏拷贝</span></h3>
+<p>对于非平凡类型（trivial，涉及堆内存分配，不只有基础数值类型），在
+member initialization 中需要注意写法 <figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">A</span> &#123;</span><br>	<span class="hljs-keyword">public</span>:<br>		A(B b): b_(<span class="hljs-built_in">std</span>::move(b)) &#123;&#125;<br>	<span class="hljs-keyword">private</span>:<br>		B b_;<br>&#125;<br></code></pre></div></td></tr></table></figure> 如果不是 move，那么b
+会在传参时构造一次，A构造时，再构造一次。</p>
+<p>对于 for 循环遍历复杂类型的容器，注意使用 type&amp;，而不是
+type。</p>
+<p>对于 lambda 捕获，注意使用 &amp;val 或者 std::move(val)
+(&gt;=C++14)。</p>
+<p>对于复杂类型，注意发生隐式类型转换，比如： <figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-built_in">std</span>::<span class="hljs-built_in">unordered_map</span>&lt;<span class="hljs-keyword">int</span>, <span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span>&gt; <span class="hljs-built_in">map</span>;<br><span class="hljs-keyword">for</span>(<span class="hljs-keyword">const</span> <span class="hljs-built_in">std</span>::pair&lt;<span class="hljs-keyword">int</span>, <span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span>&gt;&amp; p: <span class="hljs-built_in">map</span>)&#123;<br>	...<br>&#125;<br></code></pre></div></td></tr></table></figure>
+这段代码用了const引用，但是因为类型错了，所以还是会发生拷贝，因为unordered_map
+element的类型是<code>std::pair&lt;const int, std::string&gt;</code>，而不是代码中声明的
+<code>std::pair&lt;int, std::string&gt;</code> 的 const &amp;。 1.
+<code>for</code> 循环从 <code>map</code>
+中取出一个元素，这个元素的真实类型是
+<code>const std::pair&lt;const int, std::string&gt;&amp;</code>。 2.
+编译器发现需要将这个元素绑定到你的引用变量 <code>p</code> 上。 3.
+但是，<code>const std::pair&lt;int, std::string&gt;&amp;</code> 和
+<code>const std::pair&lt;const int, std::string&gt;&amp;</code>
+是两种不同的类型。<strong>一个非const的引用不能绑定到一个需要类型转换的对象上</strong>。
+4.
+因此，编译器找不到匹配的引用绑定规则，它会尝试寻找其他方式。它发现可以创建一个<strong>临时的、类型为
+<code>std::pair&lt;int, std::string&gt;</code> 的对象</strong>。 5.
+为了创建这个临时对象，编译器会调用 <code>std::pair</code>
+的拷贝构造函数，将 <code>map</code>
+中的原始元素（<code>std::pair&lt;const int, std::string&gt;</code>）拷贝到这个新的临时对象中。
+所以在遍历时，推荐使用const
+auto&amp;，对于map类型，也可以使用结构化绑定。 结构化绑定（Structured
+Binding）是 C++17 引入的一个非常方便的特性，在 python 中很常见。
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> <span class="hljs-keyword">auto</span>&amp; [key, value] : <span class="hljs-built_in">map</span>) &#123; ... &#125;<br></code></pre></div></td></tr></table></figure></p>
+<h3><span id="隐式析构">隐式析构</span></h3>
+<p>使用 RAII
+以及作用域自动析构时，需要意识到，被自动调用的析构函数，也许会引入当前代码之外的额外开销。
+比如，一个代码块中，某一个对象析构时需要做计时，资源回收等动作，那么，调用者需要时刻提醒自己，不要忘记这部分开销。如果可以缓存特殊对象，以复用，那么缓存它。</p>
+<h4><span id="平凡析构请使用-default">平凡析构请使用 = default</span></h4>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">A</span> &#123;</span><br>	<span class="hljs-keyword">public</span>:<br>		<span class="hljs-keyword">int</span> i;<br>	    <span class="hljs-keyword">int</span> j;<br>		~A() &#123;&#125;;<br>&#125;;<br><br><span class="hljs-comment">// or</span><br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">A</span> &#123;</span><br>	<span class="hljs-keyword">public</span>:<br>		<span class="hljs-keyword">int</span> i;<br>	    <span class="hljs-keyword">int</span> j;<br>		~A() = <span class="hljs-keyword">default</span>;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+<p>前一个实现中，非 default 的 nontrivial 类型析构，如果加入 {}
+析构，可能导致编译器优化失效，保留了无意义的赋值指令。无论是否是编译器差异，建议使用后一种。</p>
+<h3><span id="shared_ptr-非必要不要无脑用">shared_ptr 非必要不要无脑用</span></h3>
+<p>关于C++中指针的使用指导意见是： 1. 不涉及资源所有权时，使用裸指针。
+2. 使用 unique_ptr 或者 shared_ptr 都引入资源所有权管理。 3.
+除非需要共享资源所有权，否则使用 unique_ptr。 shared_ptr
+的构造/复制/析构，涉及原子操作，会比裸指针和 unique_ptr 慢
+10%到20%。shared_ptr 也要尽量避免拷贝。 <code>std::shared_ptr</code>
+一定要使用<code>std::make_shared&lt;T&gt;()</code>而不是<code>std::shared_ptr&lt;T&gt;(new T)</code>来构造，因为后者会分配两次内存，且原子计数和数据本身的内存是不挨着的，不利于cpu缓存。
+如果不是因为懒，那么使用 shared_ptr 常见场景是：缓存，异步资源析构。</p>
+<h3><span id="stdfunction和stdany-代价">std::function和std::any 代价</span></h3>
+<p>类型擦除类型在 C++ 中是有代价的： 1.
+std::function要占用32个字节，而函数指针只需要8个字节 2.
+std::function本质上是一个虚函数调用，因此虚函数的问题std::function都有，无法内联
+3.
+std::function可能涉及堆内存分配，比如用lambda捕获时，用std::function封装会需要在堆上分配内存</p>
+<p>除了作为存储不确定类型的函数，其它不推荐使用。如果需要多态函数调用，建议使用编译静态模板分发。</p>
+<p>std::any同理，也不推荐作为不确定类型存储之外的其它用途。</p>
+<h3><span id="stdvariant和stdoptional代价">std::variant和std::optional
+代价</span></h3>
+<ol type="1">
+<li>多余内存开销：std::optional有两个成员变量，类型分别为bool和T，由于内存对齐的原因，sizeof(std::optional)最多会是sizeof(T)的两倍。相比之下，rust语言的option实现则有null
+pointer
+optimization，即如果一个类的合法内存表示一定不会全部字节为零，比如std::reference_wrapper，那就可以零开销地表示std::optional，而C++由于需要兼容C的内存对齐，不可能实现这项优化</li>
+<li>gcc 8.0.0 之前 std::optional 被作为 trivial 类型，导致 T 如果是
+nontrivial ，那么必须也是 nontrivial 的 std::optional 和 gcc
+冲突，出现问题。</li>
+<li>NRVO 不友好（NRVO
+是：当一个函数的返回值是当前函数内的一个局部变量，且该局部变量的类型和返回值一致时，编译器会将该变量直接在函数的返回值接收处构造，不会发生拷贝和移动）
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-built_in">std</span>::optional&lt;A&gt; <span class="hljs-title">f</span><span class="hljs-params">()</span> </span>&#123;<br>    A v = A();<br>    <span class="hljs-keyword">return</span> v;<br>&#125;<br><br><span class="hljs-comment">// 应该改为</span><br><br>```cpp<br><span class="hljs-function"><span class="hljs-built_in">std</span>::optional&lt;A&gt; <span class="hljs-title">f</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-built_in">std</span>::optional&lt;A&gt; v;<br>    v = A();<br>    <span class="hljs-keyword">return</span> v;<br>&#125;<br></code></pre></div></td></tr></table></figure> <figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><br>### std::<span class="hljs-keyword">async</span><br>如果 <span class="hljs-keyword">async</span> 使用了默认的 std::launch::deferred policy 执行，那么不会异步执行，而是在 future.get() 是才开始延迟执行，变成同步调用。<br><span class="hljs-keyword">async</span> 返回的 future，它析构时，会同步等待函数返回结果才析构结束。所以<br>```cpp<br>	std::<span class="hljs-keyword">async</span>(std::launch::<span class="hljs-keyword">async</span>, func1);<br>    std::<span class="hljs-keyword">async</span>(std::launch::<span class="hljs-keyword">async</span>, func2);<br></code></pre></div></td></tr></table></figure> 是同步执行的，而 <figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-keyword">auto</span> future1 = <span class="hljs-built_in">std</span>::async(<span class="hljs-built_in">std</span>::launch::async, func1);<br><span class="hljs-keyword">auto</span> future2 = <span class="hljs-built_in">std</span>::async(<span class="hljs-built_in">std</span>::launch::async, func2);<br></code></pre></div></td></tr></table></figure> 才是异步执行的。</li>
+</ol>
+<p>然后，std::packaged_task 和 std::promise 构造的 std::future
+却不会在析构时同步等待，需要注意。</p>
+<h3><span id="滥用-stdmove">滥用 std::move</span></h3>
+<p>move 在以下场景下无用： 1. 对象是 nontrivial 类型 2. 对象是常量引用
+以下场景下为副作用： - 影响编译器 NRVO <figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function">A <span class="hljs-title">f</span><span class="hljs-params">()</span> </span>&#123;<br>  A v = A();<br>  <span class="hljs-keyword">return</span> <span class="hljs-built_in">std</span>::move(v);  <span class="hljs-comment">// NRVO 失效</span><br>&#125;<br></code></pre></div></td></tr></table></figure></p>
+<h3><span id="尾递归优化">尾递归优化</span></h3>
+<p>如果某个函数的最后一步操作是调用自身，那么编译器完全可以不用调用的指令(call)，而是用跳转(jmp)回当前函数的开头，省略了新开调用栈的开销。
+C++ 中，坏在运行时隐式操作，比如析构函数。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">unsigned</span> <span class="hljs-title">btd_tail</span><span class="hljs-params">(<span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span> input, <span class="hljs-keyword">int</span> v)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (input.empty()) &#123;<br>        <span class="hljs-keyword">return</span> v;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        v = v * <span class="hljs-number">2</span> + (input.front() - <span class="hljs-string">'0'</span>);<br>        <span class="hljs-comment">// input.~string();</span><br>        <span class="hljs-keyword">return</span> btd_tail(input.substr(<span class="hljs-number">1</span>), v);<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>此处，由于 input.~string() 这个 trivial
+析构的存在，不可平凡析构，导致尾递归失效（有副作用）。 如果换成
+std::string_view，这个可以 平凡析构 的 nontrivial
+类型，编译器根本不需要调用析构函数，则不影响尾递归优化。 <figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">unsigned</span> <span class="hljs-title">btd_tail</span><span class="hljs-params">(<span class="hljs-built_in">std</span>::string_view input, <span class="hljs-keyword">int</span> v)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (input.empty()) &#123;<br>        <span class="hljs-keyword">return</span> v;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        v = v * <span class="hljs-number">2</span> + (input.front() - <span class="hljs-string">'0'</span>);<br>        <span class="hljs-keyword">return</span> btd_tail(input.substr(<span class="hljs-number">1</span>), v);<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure></p>
+<h3><span id="向量化">向量化</span></h3>
+<p>编译器一般会利用现代CPU的向量化指令如 SSE/AVX 等 SIMD
+操作指令。但是存在条件： 1. 循环内部访问连续内存 2. 没有 if 分支 3.
+循环之间没有依赖 比如： <figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-keyword">enum</span> Type &#123; kAdd, kMul &#125;;<br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">add</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a, <span class="hljs-keyword">int</span> b)</span> </span>&#123; <span class="hljs-keyword">return</span> a + b; &#125;<br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">mul</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a, <span class="hljs-keyword">int</span> b)</span> </span>&#123; <span class="hljs-keyword">return</span> a * b; &#125;<br><br><span class="hljs-function"><span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; <span class="hljs-title">func</span><span class="hljs-params">(<span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; a, <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; b, Type t)</span> </span>&#123;<br>  <span class="hljs-function"><span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; <span class="hljs-title">c</span><span class="hljs-params">(a.size())</span></span>;<br>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; a.size(); ++i) &#123;<br>    <span class="hljs-keyword">if</span> (t == kAdd) &#123;<br>      c[i] = add(a[i], b[i]);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      c[i] = mul(a[i], b[i]);<br>    &#125;<br>  &#125;<br>  <span class="hljs-keyword">return</span> c;<br>&#125;<br></code></pre></div></td></tr></table></figure> 可以优化掉 if
+分支，以及使用内联函数： <figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-keyword">enum</span> Type &#123; kAdd, kMul &#125;;<br><span class="hljs-keyword">inline</span> __attribute__((always_inline)) <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">add</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a, <span class="hljs-keyword">int</span> b)</span> </span>&#123; <span class="hljs-keyword">return</span> a + b; &#125;<br><span class="hljs-keyword">inline</span> __attribute__((always_inline)) <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">mul</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a, <span class="hljs-keyword">int</span> b)</span> </span>&#123; <span class="hljs-keyword">return</span> a * b; &#125;<br><br><span class="hljs-keyword">template</span> &lt;Type t&gt;<br><span class="hljs-function"><span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; <span class="hljs-title">func</span><span class="hljs-params">(<span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; a, <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; b)</span> </span>&#123;<br>  <span class="hljs-function"><span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-keyword">int</span>&gt; <span class="hljs-title">c</span><span class="hljs-params">(a.size())</span></span>;<br>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; a.size(); ++i) &#123;<br>    <span class="hljs-function"><span class="hljs-keyword">if</span> <span class="hljs-title">constexpr</span> <span class="hljs-params">(t == kAdd)</span> </span>&#123;<br>      c[i] = add(a[i], b[i]);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      c[i] = mul(a[i], b[i]);<br>    &#125;<br>  &#125;<br>  <span class="hljs-keyword">return</span> c;<br>&#125;<br></code></pre></div></td></tr></table></figure> 使用模板，实现编译期分支优化。</p>
+<h3><span id="end">End</span></h3>
+<p>C++
+的自由度，一定程度上使得高性能没那么容易实现，但是也正是因为它的灵活性，让我更喜欢这门语言，而不是目前常用的
+Rust。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/C/">C++</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/C/">C++</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/6eeefec4.html">
+                        <span class="hidden-mobile">k8s_archive</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>
