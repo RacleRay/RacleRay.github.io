@@ -6,7 +6,7 @@
   <link href="https://racleray.github.io/atom.xml" rel="self"/>
   
   <link href="https://racleray.github.io/"/>
-  <updated>2025-10-15T14:47:43.010Z</updated>
+  <updated>2026-03-07T15:22:08.657Z</updated>
   <id>https://racleray.github.io/</id>
   
   <author>
@@ -17,11 +17,34 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>内存模型</title>
+    <link href="https://racleray.github.io/posts/e6493c73.html"/>
+    <id>https://racleray.github.io/posts/e6493c73.html</id>
+    <published>2026-03-06T15:12:13.000Z</published>
+    <updated>2026-03-07T15:22:08.657Z</updated>
+    
+    
+    <summary type="html">内存模型整理</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="Optimise" scheme="https://racleray.github.io/categories/Notes/Optimise/"/>
+    
+    
+    <category term="C" scheme="https://racleray.github.io/tags/C/"/>
+    
+    <category term="memory order" scheme="https://racleray.github.io/tags/memory-order/"/>
+    
+  </entry>
+  
+  <entry>
     <title>C++Tips</title>
     <link href="https://racleray.github.io/posts/d6af6a50.html"/>
     <id>https://racleray.github.io/posts/d6af6a50.html</id>
     <published>2025-10-15T14:43:36.613Z</published>
-    <updated>2025-10-15T14:47:43.010Z</updated>
+    <updated>2025-10-15T14:48:15.696Z</updated>
     
     
     <summary type="html">C++ tips recently, C++ 抽象代价</summary>
@@ -427,27 +450,6 @@
     <category term="Poetry" scheme="https://racleray.github.io/categories/Poetry/"/>
     
     <category term="Meditation" scheme="https://racleray.github.io/categories/Poetry/Meditation/"/>
-    
-    
-    <category term="Poetry" scheme="https://racleray.github.io/tags/Poetry/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Poetry</title>
-    <link href="https://racleray.github.io/posts/cdfe5c99.html"/>
-    <id>https://racleray.github.io/posts/cdfe5c99.html</id>
-    <published>2024-01-24T04:20:56.000Z</published>
-    <updated>2024-02-06T13:33:01.096Z</updated>
-    
-    
-    <summary type="html">Seven Times Have I Despised My Soul</summary>
-    
-    
-    
-    <category term="Poetry" scheme="https://racleray.github.io/categories/Poetry/"/>
-    
-    <category term="1" scheme="https://racleray.github.io/categories/Poetry/1/"/>
     
     
     <category term="Poetry" scheme="https://racleray.github.io/tags/Poetry/"/>
