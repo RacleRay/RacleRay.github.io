@@ -119,7 +119,7 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 
@@ -531,7 +531,7 @@ pooling，从实体所在位置处，分段进行pooling。</p>
 tuples 为 &lt;tag1 , tag2&gt;</p>
 <p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222172633928.png" srcset="/img/loading.gif" lazyload alt style="zoom:70%;"></p>
 <p>生成新pattern时，评估其与已有pattern的相似性，取一个阈值之上的，加入pattern集合。</p>
-<p>tuples要经过可信度计算，选择可信度高的留下，计算方法看<a href="http://www.mathcs.emory.edu/~eugene/papers/dl00.pdf" target="_blank" rel="noopener">论文</a>或者<a href="https://zhuanlan.zhihu.com/p/101058270" target="_blank" rel="noopener">blog</a>吧。</p>
+<p>tuples要经过可信度计算，选择可信度高的留下，计算方法看<a target="_blank" rel="noopener" href="http://www.mathcs.emory.edu/~eugene/papers/dl00.pdf">论文</a>或者<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/101058270">blog</a>吧。</p>
 <h5><span id="远程监督">远程监督</span></h5>
 <p>将已有的知识对应到丰富的非结构化语料中从而生成大量的训练数据。知识来源：人工标注、现有的知识库、特定的语句结构。</p>
 <p>Distant supervised
@@ -607,9 +607,9 @@ Selection)：图谱查询之后的结果可能存在多个，需要选择⼀个�
 以预先指定排序规则去选择答案。</p>
 </blockquote>
 <p>参考：</p>
-<p>实例：<a href="https://github.com/beader/tianchi_nl2sql" target="_blank" rel="noopener">NL2SQL比赛第三名方案</a>，待学习</p>
+<p>实例：<a target="_blank" rel="noopener" href="https://github.com/beader/tianchi_nl2sql">NL2SQL比赛第三名方案</a>，待学习</p>
 <h4><span id="基于知识表示的问答keqa">基于知识表示的问答KEQA</span></h4>
-<p><a href="http://research.baidu.com/Public/uploads/5c1c9a58317b3.pdf" target="_blank" rel="noopener">KEQA</a></p>
+<p><a target="_blank" rel="noopener" href="http://research.baidu.com/Public/uploads/5c1c9a58317b3.pdf">KEQA</a></p>
 <p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/知识图谱整理_pic/image-20210222181049264.png" srcset="/img/loading.gif" lazyload alt style="zoom:80%;"></p>
 <p>KEQA的目标不是直接推断头部实体和谓词，而是联合恢复知识图嵌入空间中问题的头部实体、谓词和尾部实体表示(eh,
 p, et)。分别训练两个模型，一个学习 谓词p 和 实体e
@@ -667,7 +667,7 @@ Detection for Knowledge Base Question Answering
               
                 <p class="note note-warning">
                   
-                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
                   
                 </p>
               
@@ -927,23 +927,8 @@ Detection for Knowledge Base Question Answering
 
 
 <!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>

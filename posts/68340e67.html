@@ -81,7 +81,7 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 
@@ -315,7 +315,7 @@ corpus"代理的训练数据分布，那么把模型拟合的分布<span class="
 <p>但是，<span class="math inline">\(\hat{p}(w|c)\)</span>还是有 <span class="math inline">\(Z_\theta(c)\)</span>
 啊，这不相当于构造这么多都白干了？</p>
 <p>所以NCE继续改进，将 <span class="math inline">\(Z_\theta(c)\)</span>
-整体但做一个关于 c 的参数，参数化。然后<a href="https://arxiv.org/abs/1206.6426" target="_blank" rel="noopener">一通操作</a>，发现在神经网络模型这种参数巨多的情况下，将
+整体但做一个关于 c 的参数，参数化。然后<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1206.6426">一通操作</a>，发现在神经网络模型这种参数巨多的情况下，将
 <span class="math inline">\(Z_\theta(c)\)</span> 直接设为 1
 ，反而是一种有效且高效的做法，文章里叫做 self-normalized。</p>
 <p>所以，得到的关于 参数 <span class="math inline">\(\theta\)</span>
@@ -382,7 +382,7 @@ loss形式的损失函数，求导分析极值，可以发现它最优时，模�
               
                 <p class="note note-warning">
                   
-                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
                   
                 </p>
               
@@ -642,23 +642,8 @@ loss形式的损失函数，求导分析极值，可以发现它最优时，模�
 
 
 <!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>

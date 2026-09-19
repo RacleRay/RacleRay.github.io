@@ -87,7 +87,7 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 
@@ -238,7 +238,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      5k 字
+      5.1k 字
     </span>
   
 
@@ -572,8 +572,8 @@ allowPOS=())</p>
 <li>用法： jieba.analyse.set_idf_path(file_name) #
 file_name为自定义语料库的路径
 <ul>
-<li>自定义语料库示例见<a href="https://github.com/fxsjy/jieba/blob/master/extra_dict/idf.txt.big" target="_blank" rel="noopener">这里</a></li>
-<li>用法示例见<a href="https://github.com/fxsjy/jieba/blob/master/test/extract_tags_idfpath.py" target="_blank" rel="noopener">这里</a></li>
+<li>自定义语料库示例见<a target="_blank" rel="noopener" href="https://github.com/fxsjy/jieba/blob/master/extra_dict/idf.txt.big">这里</a></li>
+<li>用法示例见<a target="_blank" rel="noopener" href="https://github.com/fxsjy/jieba/blob/master/test/extract_tags_idfpath.py">这里</a></li>
 </ul></li>
 </ul></li>
 <li><p>自定义停止词（Stop Words）文本语料库</p>
@@ -581,13 +581,13 @@ file_name为自定义语料库的路径
 <li>用法： jieba.analyse.set_stop_words(file_name) #
 file_name为自定义语料库的路径
 <ul>
-<li>自定义语料库示例见<a href="https://github.com/fxsjy/jieba/blob/master/extra_dict/stop_words.txt" target="_blank" rel="noopener">这里</a></li>
-<li>用法示例见<a href="https://github.com/fxsjy/jieba/blob/master/test/extract_tags_stop_words.py" target="_blank" rel="noopener">这里</a></li>
+<li>自定义语料库示例见<a target="_blank" rel="noopener" href="https://github.com/fxsjy/jieba/blob/master/extra_dict/stop_words.txt">这里</a></li>
+<li>用法示例见<a target="_blank" rel="noopener" href="https://github.com/fxsjy/jieba/blob/master/test/extract_tags_stop_words.py">这里</a></li>
 </ul></li>
 </ul></li>
 <li><p>关键词一并返回关键词权重值示例</p>
 <ul>
-<li>用法示例见<a href="https://github.com/fxsjy/jieba/blob/master/test/extract_tags_with_weight.py" target="_blank" rel="noopener">这里</a></li>
+<li>用法示例见<a target="_blank" rel="noopener" href="https://github.com/fxsjy/jieba/blob/master/test/extract_tags_with_weight.py">这里</a></li>
 </ul></li>
 </ul>
 <h3><span id="基于-textrank算法的关键词抽取"><strong>基于 TextRank
@@ -597,7 +597,7 @@ file_name为自定义语料库的路径
 allowPOS=('ns', 'n', 'vn', 'v'))
 直接使用，接口相同，注意默认过滤词性。</p></li>
 <li><p>jieba.analyse.TextRank() 新建自定义 TextRank 实例</p>
-<p>算法论文： <a href="http://web.eecs.umich.edu/~mihalcea/papers/mihalcea.emnlp04.pdf" target="_blank" rel="noopener">TextRank:
+<p>算法论文： <a target="_blank" rel="noopener" href="http://web.eecs.umich.edu/~mihalcea/papers/mihalcea.emnlp04.pdf">TextRank:
 Bringing Order into Texts</a></p></li>
 </ul>
 <p>基本思想:</p>
@@ -606,10 +606,10 @@ Bringing Order into Texts</a></p></li>
 <li>以固定窗口大小(默认为5，通过span属性调整)，词之间的共现关系，构建图</li>
 <li>计算图中节点的PageRank，注意是无向带权图</li>
 </ul>
-<p>详解见<a href="https://github.com/RacleRay/NotesForBlogs/blob/master/basic/textrank.html" target="_blank" rel="noopener">textrank</a></p>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> jieba.analyse <span class="hljs-keyword">as</span> analyse<br><br>analyse.textrank(lines, topK=<span class="hljs-number">20</span>, withWeight=<span class="hljs-literal">False</span>, allowPOS=(<span class="hljs-string">'ns'</span>, <span class="hljs-string">'n'</span>))<br></code></pre></div></td></tr></table></figure>
+<p>详解见<a target="_blank" rel="noopener" href="https://github.com/RacleRay/NotesForBlogs/blob/master/basic/textrank.html">textrank</a></p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> jieba.analyse <span class="hljs-keyword">as</span> analyse<br><br>analyse.textrank(lines, topK=<span class="hljs-number">20</span>, withWeight=<span class="hljs-literal">False</span>, allowPOS=(<span class="hljs-string">&#x27;ns&#x27;</span>, <span class="hljs-string">&#x27;n&#x27;</span>))<br></code></pre></div></td></tr></table></figure>
 <p>示例</p>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> jieba.analyse <span class="hljs-keyword">as</span> analyse<br><span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd<br><br>df = pd.read_csv(<span class="hljs-string">"./data/file.csv"</span>, encoding=<span class="hljs-string">'utf-8'</span>)<br>df = df.dropna()<br>lines=df.content.values.tolist()<br>content = <span class="hljs-string">""</span>.join(lines)  <span class="hljs-comment"># 一行输入</span><br><br>print(analyse.textrank(content, topK=<span class="hljs-number">20</span>, withWeight=<span class="hljs-literal">False</span>, allowPOS=(<span class="hljs-string">'ns'</span>, <span class="hljs-string">'n'</span>, <span class="hljs-string">'vn'</span>, <span class="hljs-string">'v'</span>)))<br>print(<span class="hljs-string">"-------------------------------------"</span>)<br>print(analyse.textrank(content, topK=<span class="hljs-number">20</span>, withWeight=<span class="hljs-literal">False</span>, allowPOS=(<span class="hljs-string">'ns'</span>, <span class="hljs-string">'n'</span>)))<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> jieba.analyse <span class="hljs-keyword">as</span> analyse<br><span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd<br><br>df = pd.read_csv(<span class="hljs-string">&quot;./data/file.csv&quot;</span>, encoding=<span class="hljs-string">&#x27;utf-8&#x27;</span>)<br>df = df.dropna()<br>lines=df.content.values.tolist()<br>content = <span class="hljs-string">&quot;&quot;</span>.join(lines)  <span class="hljs-comment"># 一行输入</span><br><br><span class="hljs-built_in">print</span>(analyse.textrank(content, topK=<span class="hljs-number">20</span>, withWeight=<span class="hljs-literal">False</span>, allowPOS=(<span class="hljs-string">&#x27;ns&#x27;</span>, <span class="hljs-string">&#x27;n&#x27;</span>, <span class="hljs-string">&#x27;vn&#x27;</span>, <span class="hljs-string">&#x27;v&#x27;</span>)))<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;-------------------------------------&quot;</span>)<br><span class="hljs-built_in">print</span>(analyse.textrank(content, topK=<span class="hljs-number">20</span>, withWeight=<span class="hljs-literal">False</span>, allowPOS=(<span class="hljs-string">&#x27;ns&#x27;</span>, <span class="hljs-string">&#x27;n&#x27;</span>)))<br></code></pre></div></td></tr></table></figure>
 
             </div>
             <hr>
@@ -639,7 +639,7 @@ Bringing Order into Texts</a></p></li>
               
                 <p class="note note-warning">
                   
-                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
                   
                 </p>
               
@@ -899,23 +899,8 @@ Bringing Order into Texts</a></p></li>
 
 
 <!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>

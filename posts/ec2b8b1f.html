@@ -111,7 +111,7 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 
@@ -619,7 +619,7 @@ finetune，然后再解冻第三层。以此类推，逐层往浅层推进，最
 <p>​ 因为 Self-attention 的存在，才使得 Transformer
 在做类似翻译问题的时候，可以让其 Encoder
 不用做序列输入，而是将整个序列一次全输入，并且超长序列的输入也变得可能。而具体到
-Self-attention 中，可以用下图表示。<a href="https://jalammar.github.io/illustrated-transformer/" target="_blank" rel="noopener">优质Blog</a></p>
+Self-attention 中，可以用下图表示。<a target="_blank" rel="noopener" href="https://jalammar.github.io/illustrated-transformer/">优质Blog</a></p>
 <figure>
 <img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示进阶.assets/image-20200225164948350.png" srcset="/img/loading.gif" lazyload alt="image">
 <figcaption aria-hidden="true">image</figcaption>
@@ -650,7 +650,7 @@ Self-attention。</li>
 </figure>
 <p>​ 结构展示：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/文本表示进阶.assets/image-20200225165500944.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:75%;"></p>
-<p>​ <a href="https://github.com/RacleRay/DeepLearningFoundation/blob/master/2.0-Transformer.ipynb" target="_blank" rel="noopener">Code</a></p>
+<p>​ <a target="_blank" rel="noopener" href="https://github.com/RacleRay/DeepLearningFoundation/blob/master/2.0-Transformer.ipynb">Code</a></p>
 <h2><span id="gpt">GPT</span></h2>
 <p>​ GPT 使用的 Transformer 是只用了
 Decoder，因为对于语言模型来讲，确实不需要 Encoder 的存在。</p>
@@ -901,7 +901,7 @@ finetune。</p>
               
                 <p class="note note-warning">
                   
-                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
                   
                 </p>
               
@@ -1161,23 +1161,8 @@ finetune。</p>
 
 
 <!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>

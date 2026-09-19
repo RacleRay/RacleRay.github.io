@@ -29,6 +29,7 @@
 <meta property="article:modified_time" content="2024-03-18T14:59:27.880Z">
 <meta property="article:author" content="江左时雨">
 <meta property="article:tag" content="terminal">
+<meta property="article:tag" content="configure">
 <meta name="twitter:card" content="summary_large_image">
   
      <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
@@ -80,7 +81,7 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 
@@ -231,7 +232,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2.6k 字
+      2.7k 字
     </span>
   
 
@@ -240,7 +241,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      8 分钟
+      9 分钟
     </span>
   
 
@@ -274,46 +275,46 @@
             <div class="markdown-body">
               <p>环境: Windows 10</p>
 <h3><span id="scoop-optional">scoop (optional)</span></h3>
-<p><a href="https://scoop.sh/#/" target="_blank" rel="noopener">Scoop</a></p>
+<p><a target="_blank" rel="noopener" href="https://scoop.sh/#/">Scoop</a></p>
 <figure class="highlight powershell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs powershell"><span class="hljs-built_in">Set-ExecutionPolicy</span> <span class="hljs-literal">-ExecutionPolicy</span> RemoteSigned <span class="hljs-literal">-Scope</span> CurrentUser<br><span class="hljs-built_in">Invoke-RestMethod</span> <span class="hljs-literal">-Uri</span> https://get.scoop.sh | <span class="hljs-built_in">Invoke-Expression</span><br></code></pre></div></td></tr></table></figure>
-<p><a href="https://github.com/ScoopInstaller/Install?tab=readme-ov-file#for-admin" target="_blank" rel="noopener">管理员权限下安装</a></p>
-<figure class="highlight powershell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs powershell">iex <span class="hljs-string">"&amp; &#123;<span class="hljs-variable">$</span>(irm get.scoop.sh)&#125; -RunAsAdmin"</span><br></code></pre></div></td></tr></table></figure>
+<p><a target="_blank" rel="noopener" href="https://github.com/ScoopInstaller/Install?tab=readme-ov-file#for-admin">管理员权限下安装</a></p>
+<figure class="highlight powershell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs powershell"><span class="hljs-built_in">iex</span> <span class="hljs-string">&quot;&amp; &#123;<span class="hljs-variable">$</span>(irm get.scoop.sh)&#125; -RunAsAdmin&quot;</span><br></code></pre></div></td></tr></table></figure>
 <h3><span id="neovim">neovim</span></h3>
-<p><a href="https://github.com/neovim/neovim/blob/master/INSTALL.md" target="_blank" rel="noopener">安装</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/neovim/neovim/blob/master/INSTALL.md">安装</a></p>
 <figure class="highlight powershell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs powershell">scoop install neovim<br></code></pre></div></td></tr></table></figure>
 <h3><span id="wezterm">wezterm</span></h3>
-<p><a href="https://wezfurlong.org/wezterm/install/windows.html" target="_blank" rel="noopener">下载安装</a></p>
+<p><a target="_blank" rel="noopener" href="https://wezfurlong.org/wezterm/install/windows.html">下载安装</a></p>
 <p>配置：</p>
 <ol type="1">
-<li><a href="https://github.com/KevinSilvester/wezterm-config" target="_blank" rel="noopener">KevinSilvester/wezterm-config</a></li>
-<li><a href="https://github.com/QianSong1/wezterm-config" target="_blank" rel="noopener">QianSong1/wezterm-config</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/KevinSilvester/wezterm-config">KevinSilvester/wezterm-config</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/QianSong1/wezterm-config">QianSong1/wezterm-config</a></li>
 </ol>
 <blockquote>
 <p>配置文件目录：<code>C:\Users\[your user name]\.config\wezterm</code></p>
 </blockquote>
 <p>主题：</p>
-<p><a href="https://github.com/catppuccin/wezterm" target="_blank" rel="noopener">catppuccin</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/catppuccin/wezterm">catppuccin</a></p>
 <p>快捷键导出：</p>
-<figure class="highlight powershell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs powershell">echo <span class="hljs-variable">$</span>(wezterm <span class="hljs-built_in">show-keys</span>) &gt;&gt; C:\\Users\\Administrator\\Desktop\\wez_keys.xls<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight powershell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs powershell"><span class="hljs-built_in">echo</span> <span class="hljs-variable">$</span>(wezterm <span class="hljs-built_in">show-keys</span>) &gt;&gt; C:\\Users\\Administrator\\Desktop\\wez_keys.xls<br></code></pre></div></td></tr></table></figure>
 <h3><span id="powershell">powershell</span></h3>
 <ol type="1">
-<li>starship: <a href="https://github.com/starship/starship/releases/" target="_blank" rel="noopener">Releases ·
+<li>starship: <a target="_blank" rel="noopener" href="https://github.com/starship/starship/releases/">Releases ·
 starship/starship (github.com)</a> 下载安装</li>
 <li>安装 posh</li>
 </ol>
-<figure class="highlight powershell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs powershell"><span class="hljs-built_in">Install-Module</span> posh<span class="hljs-literal">-git</span> <span class="hljs-literal">-Scope</span> CurrentUser <span class="hljs-comment"># posh-git</span><br><span class="hljs-built_in">Install-Module</span> oh<span class="hljs-literal">-my</span><span class="hljs-literal">-posh</span> <span class="hljs-literal">-Scope</span> CurrentUser <span class="hljs-literal">-RequiredVersion</span> <span class="hljs-number">2.0</span>.<span class="hljs-number">496</span> <span class="hljs-comment"># oh-my-posh</span><br></code></pre></div></td></tr></table></figure>
+<figure class="highlight powershell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs powershell"><span class="hljs-built_in">Install-Module</span> posh<span class="hljs-literal">-git</span> <span class="hljs-literal">-Scope</span> CurrentUser <span class="hljs-comment"># posh-git</span><br><span class="hljs-built_in">Install-Module</span> <span class="hljs-built_in">oh</span><span class="hljs-literal">-my-posh</span> <span class="hljs-literal">-Scope</span> CurrentUser <span class="hljs-literal">-RequiredVersion</span> <span class="hljs-number">2.0</span>.<span class="hljs-number">496</span> <span class="hljs-comment"># oh-my-posh</span><br></code></pre></div></td></tr></table></figure>
 <ol start="3" type="1">
 <li>修改配置文件</li>
 </ol>
 <figure class="highlight powershell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs powershell">nvim <span class="hljs-variable">$Profile</span><br></code></pre></div></td></tr></table></figure>
 <p>添加以下内容</p>
-<figure class="highlight powershell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs powershell"><span class="hljs-built_in">Import-Module</span> posh<span class="hljs-literal">-git</span> <span class="hljs-comment"># 引入 posh-git</span><br><span class="hljs-built_in">Import-Module</span> oh<span class="hljs-literal">-my</span><span class="hljs-literal">-posh</span> <span class="hljs-comment"># 引入 oh-my-posh</span><br><br><span class="hljs-built_in">Invoke-Expression</span> (&amp;starship init powershell) <span class="hljs-comment"># 引入Starship</span><br><br><span class="hljs-built_in">Set-PSReadLineOption</span> <span class="hljs-literal">-PredictionSource</span> History <span class="hljs-comment"># 设置预测文本来源为历史记录</span><br> <br><span class="hljs-built_in">Set-PSReadlineKeyHandler</span> <span class="hljs-literal">-Key</span> Tab <span class="hljs-literal">-Function</span> Complete <span class="hljs-comment"># 设置 Tab 键补全</span><br><span class="hljs-built_in">Set-PSReadLineKeyHandler</span> <span class="hljs-literal">-Key</span> <span class="hljs-string">"Ctrl+d"</span> <span class="hljs-literal">-Function</span> MenuComplete <span class="hljs-comment"># 设置 Ctrl+d 为菜单补全和 Intellisense</span><br><span class="hljs-built_in">Set-PSReadLineKeyHandler</span> <span class="hljs-literal">-Key</span> <span class="hljs-string">"Ctrl+z"</span> <span class="hljs-literal">-Function</span> Undo <span class="hljs-comment"># 设置 Ctrl+z 为撤销</span><br><span class="hljs-built_in">Set-PSReadLineKeyHandler</span> <span class="hljs-literal">-Key</span> UpArrow <span class="hljs-literal">-ScriptBlock</span> &#123;<br>	[<span class="hljs-type">Microsoft.PowerShell.PSConsoleReadLine</span>]::HistorySearchBackward()<br>	[<span class="hljs-type">Microsoft.PowerShell.PSConsoleReadLine</span>]::EndOfLine()<br>&#125;<br><span class="hljs-built_in">Set-PSReadLineKeyHandler</span> <span class="hljs-literal">-Key</span> DownArrow <span class="hljs-literal">-ScriptBlock</span> &#123;<br>	[<span class="hljs-type">Microsoft.PowerShell.PSConsoleReadLine</span>]::HistorySearchForward()<br>	[<span class="hljs-type">Microsoft.PowerShell.PSConsoleReadLine</span>]::EndOfLine()<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight powershell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs powershell"><span class="hljs-built_in">Import-Module</span> posh<span class="hljs-literal">-git</span> <span class="hljs-comment"># 引入 posh-git</span><br><span class="hljs-built_in">Import-Module</span> <span class="hljs-built_in">oh</span><span class="hljs-literal">-my-posh</span> <span class="hljs-comment"># 引入 oh-my-posh</span><br><br><span class="hljs-built_in">Invoke-Expression</span> (&amp;starship init powershell) <span class="hljs-comment"># 引入Starship</span><br><br><span class="hljs-built_in">Set-PSReadLineOption</span> <span class="hljs-literal">-PredictionSource</span> <span class="hljs-built_in">History</span> <span class="hljs-comment"># 设置预测文本来源为历史记录</span><br> <br><span class="hljs-built_in">Set-PSReadlineKeyHandler</span> <span class="hljs-literal">-Key</span> Tab <span class="hljs-literal">-Function</span> Complete <span class="hljs-comment"># 设置 Tab 键补全</span><br><span class="hljs-built_in">Set-PSReadLineKeyHandler</span> <span class="hljs-literal">-Key</span> <span class="hljs-string">&quot;Ctrl+d&quot;</span> <span class="hljs-literal">-Function</span> MenuComplete <span class="hljs-comment"># 设置 Ctrl+d 为菜单补全和 Intellisense</span><br><span class="hljs-built_in">Set-PSReadLineKeyHandler</span> <span class="hljs-literal">-Key</span> <span class="hljs-string">&quot;Ctrl+z&quot;</span> <span class="hljs-literal">-Function</span> Undo <span class="hljs-comment"># 设置 Ctrl+z 为撤销</span><br><span class="hljs-built_in">Set-PSReadLineKeyHandler</span> <span class="hljs-literal">-Key</span> UpArrow <span class="hljs-literal">-ScriptBlock</span> &#123;<br>	[<span class="hljs-type">Microsoft.PowerShell.PSConsoleReadLine</span>]::HistorySearchBackward()<br>	[<span class="hljs-type">Microsoft.PowerShell.PSConsoleReadLine</span>]::EndOfLine()<br>&#125;<br><span class="hljs-built_in">Set-PSReadLineKeyHandler</span> <span class="hljs-literal">-Key</span> DownArrow <span class="hljs-literal">-ScriptBlock</span> &#123;<br>	[<span class="hljs-type">Microsoft.PowerShell.PSConsoleReadLine</span>]::HistorySearchForward()<br>	[<span class="hljs-type">Microsoft.PowerShell.PSConsoleReadLine</span>]::EndOfLine()<br>&#125;<br></code></pre></div></td></tr></table></figure>
 <p>重启终端</p>
 <h3><span id="astronvim"></span></h3>
-<figure class="highlight powershell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs powershell"><span class="hljs-built_in">Move-Item</span> <span class="hljs-variable">$env:LOCALAPPDATA</span>\nvim <span class="hljs-variable">$env:LOCALAPPDATA</span>\nvim.bak<br><br><span class="hljs-built_in">Move-Item</span> <span class="hljs-variable">$env:LOCALAPPDATA</span>\nvim<span class="hljs-literal">-data</span> <span class="hljs-variable">$env:LOCALAPPDATA</span>\nvim<span class="hljs-literal">-data</span>.bak<br><br>git clone -<span class="hljs-literal">-depth</span> <span class="hljs-number">1</span> https://github.com/AstroNvim/AstroNvim <span class="hljs-variable">$env:LOCALAPPDATA</span>\nvim<br><br>nvim<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight powershell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs powershell"><span class="hljs-built_in">Move-Item</span> <span class="hljs-variable">$env:LOCALAPPDATA</span>\nvim <span class="hljs-variable">$env:LOCALAPPDATA</span>\nvim.bak<br><br><span class="hljs-built_in">Move-Item</span> <span class="hljs-variable">$env:LOCALAPPDATA</span>\nvim<span class="hljs-literal">-data</span> <span class="hljs-variable">$env:LOCALAPPDATA</span>\nvim<span class="hljs-literal">-data</span>.bak<br><br>git clone <span class="hljs-literal">--depth</span> <span class="hljs-number">1</span> https://github.com/AstroNvim/AstroNvim <span class="hljs-variable">$env:LOCALAPPDATA</span>\nvim<br><br>nvim<br></code></pre></div></td></tr></table></figure>
 <p>用户配置文件，Windows
 下配置目录为：<code>C:\Users\Administrator\AppData\Local\nvim</code>：</p>
-<p><a href="https://docs.astronvim.com/configuration/manage_user_config/" target="_blank" rel="noopener">Managing
+<p><a target="_blank" rel="noopener" href="https://docs.astronvim.com/configuration/manage_user_config/">Managing
 User Configuration | AstroNvim Docs</a></p>
 <h3><span id="astronvim-配置">AstroNvim 配置</span></h3>
 <blockquote>
@@ -327,7 +328,7 @@ User Configuration | AstroNvim Docs</a></p>
 <li><code>C:\Users\Administrator\AppData\Local\nvim\lua\user\init.lua</code>
 配置第三方包</li>
 </ol>
-<figure class="highlight lua"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs lua"><span class="hljs-keyword">return</span> &#123;<br>  <span class="hljs-comment">-- Add the community repository of plugin specifications</span><br>  <span class="hljs-string">"AstroNvim/astrocommunity"</span>,<br>  <span class="hljs-comment">-- example of importing a plugin, comment out to use it or add your own</span><br>  <span class="hljs-comment">-- available plugins can be found at https://github.com/AstroNvim/astrocommunity</span><br><br>  &#123; import = <span class="hljs-string">"astrocommunity.colorscheme.catppuccin"</span> &#125;,<br>  <span class="hljs-comment">-- &#123; import = "astrocommunity.completion.copilot-lua-cmp" &#125;,</span><br>  &#123; import = <span class="hljs-string">"astrocommunity.utility.noice-nvim"</span> &#125;,<br>  &#123; import = <span class="hljs-string">"astrocommunity.completion.cmp-cmdline"</span> &#125;,<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight lua"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs lua"><span class="hljs-keyword">return</span> &#123;<br>  <span class="hljs-comment">-- Add the community repository of plugin specifications</span><br>  <span class="hljs-string">&quot;AstroNvim/astrocommunity&quot;</span>,<br>  <span class="hljs-comment">-- example of importing a plugin, comment out to use it or add your own</span><br>  <span class="hljs-comment">-- available plugins can be found at https://github.com/AstroNvim/astrocommunity</span><br><br>  &#123; import = <span class="hljs-string">&quot;astrocommunity.colorscheme.catppuccin&quot;</span> &#125;,<br>  <span class="hljs-comment">-- &#123; import = &quot;astrocommunity.completion.copilot-lua-cmp&quot; &#125;,</span><br>  &#123; import = <span class="hljs-string">&quot;astrocommunity.utility.noice-nvim&quot;</span> &#125;,<br>  &#123; import = <span class="hljs-string">&quot;astrocommunity.completion.cmp-cmdline&quot;</span> &#125;,<br>&#125;<br></code></pre></div></td></tr></table></figure>
 <h4><span id="开始界面配置">开始界面配置</span></h4>
 <p><code>C:\Users\Administrator\AppData\Local\nvim\lua\user\plugins\core.lua</code>
 替换opts.section.header.val 字符串即可。</p>
@@ -363,7 +364,7 @@ User Configuration | AstroNvim Docs</a></p>
               
                 <p class="note note-warning">
                   
-                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
                   
                 </p>
               
@@ -581,23 +582,8 @@ User Configuration | AstroNvim Docs</a></p>
 
 
 <!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>

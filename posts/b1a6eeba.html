@@ -29,7 +29,6 @@
 <meta property="article:modified_time" content="2025-02-18T03:09:27.852Z">
 <meta property="article:author" content="江左时雨">
 <meta property="article:tag" content="Rust">
-<meta property="article:tag" content="Meta Programming">
 <meta name="twitter:card" content="summary_large_image">
   
      <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
@@ -81,7 +80,7 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 
@@ -283,13 +282,13 @@ macro）</strong>。</p>
 <h2><span id="声明宏">声明宏</span></h2>
 <p>像 <code>vec![]</code>、<code>println!</code>、以及
 <code>info!</code>，它们都是声明宏。</p>
-<p>常用的 tracing log 的宏定义（<a href="https://docs.rs/tracing/latest/src/tracing/macros.rs.html#2288-2311" target="_blank" rel="noopener">代码</a>）：</p>
-<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-built_in">macro_rules!</span> __tracing_log &#123;<br>    (target: $target:expr, $level:expr, $($field:tt)+ ) =&gt; &#123;<br>        $crate::if_log_enabled! &#123; $level, &#123;<br>            <span class="hljs-keyword">use</span> $crate::log;<br>            <span class="hljs-keyword">let</span> level = $crate::level_to_log!($level);<br>            <span class="hljs-keyword">if</span> level &lt;= log::max_level() &#123;<br>                <span class="hljs-keyword">let</span> log_meta = log::Metadata::builder()<br>                    .level(level)<br>                    .target($target)<br>                    .build();<br>                <span class="hljs-keyword">let</span> logger = log::logger();<br>                <span class="hljs-keyword">if</span> logger.enabled(&amp;log_meta) &#123;<br>                    logger.log(&amp;log::Record::builder()<br>                        .file(<span class="hljs-literal">Some</span>(<span class="hljs-built_in">file!</span>()))<br>                        .module_path(<span class="hljs-literal">Some</span>(<span class="hljs-built_in">module_path!</span>()))<br>                        .line(<span class="hljs-literal">Some</span>(<span class="hljs-built_in">line!</span>()))<br>                        .metadata(log_meta)<br>                        .args($crate::__mk_format_args!($($field)+))<br>                        .build());<br>                &#125;<br>            &#125;<br>        &#125;&#125;<br>    &#125;;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>常用的 tracing log 的宏定义（<a target="_blank" rel="noopener" href="https://docs.rs/tracing/latest/src/tracing/macros.rs.html#2288-2311">代码</a>）：</p>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-built_in">macro_rules!</span> __tracing_log &#123;<br>    (target: $target:expr, $level:expr, $($field:tt)+ ) =&gt; &#123;<br>        $crate::if_log_enabled! &#123; $level, &#123;<br>            <span class="hljs-keyword">use</span> $crate::log;<br>            <span class="hljs-keyword">let</span> <span class="hljs-variable">level</span> = $crate::level_to_log!($level);<br>            <span class="hljs-keyword">if</span> level &lt;= log::<span class="hljs-title function_ invoke__">max_level</span>() &#123;<br>                <span class="hljs-keyword">let</span> <span class="hljs-variable">log_meta</span> = log::Metadata::<span class="hljs-title function_ invoke__">builder</span>()<br>                    .<span class="hljs-title function_ invoke__">level</span>(level)<br>                    .<span class="hljs-title function_ invoke__">target</span>($target)<br>                    .<span class="hljs-title function_ invoke__">build</span>();<br>                <span class="hljs-keyword">let</span> <span class="hljs-variable">logger</span> = log::<span class="hljs-title function_ invoke__">logger</span>();<br>                <span class="hljs-keyword">if</span> logger.<span class="hljs-title function_ invoke__">enabled</span>(&amp;log_meta) &#123;<br>                    logger.<span class="hljs-title function_ invoke__">log</span>(&amp;log::Record::<span class="hljs-title function_ invoke__">builder</span>()<br>                        .<span class="hljs-title function_ invoke__">file</span>(<span class="hljs-title function_ invoke__">Some</span>(<span class="hljs-built_in">file!</span>()))<br>                        .<span class="hljs-title function_ invoke__">module_path</span>(<span class="hljs-title function_ invoke__">Some</span>(<span class="hljs-built_in">module_path!</span>()))<br>                        .<span class="hljs-title function_ invoke__">line</span>(<span class="hljs-title function_ invoke__">Some</span>(<span class="hljs-built_in">line!</span>()))<br>                        .<span class="hljs-title function_ invoke__">metadata</span>(log_meta)<br>                        .<span class="hljs-title function_ invoke__">args</span>($crate::__mk_format_args!($($field)+))<br>                        .<span class="hljs-title function_ invoke__">build</span>());<br>                &#125;<br>            &#125;<br>        &#125;&#125;<br>    &#125;;<br>&#125;<br></code></pre></div></td></tr></table></figure>
 <p>可以看到，它主要做的就是通过简单的接口，把不断重复的逻辑包装起来，然后在调用的地方展开而已，不涉及语法树的操作。</p>
 <p>Rust
 的声明宏相比C/C++更加安全，你无法在需要出现标识符的地方出现表达式，也无法让宏内部定义的变量污染宏外部的内容。
 如果重复性的代码无法用函数来封装，那么声明宏就是一个好的选择。</p>
-<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-meta">#[macro_export]</span><br><span class="hljs-built_in">macro_rules!</span> my_vec &#123;<br>    <span class="hljs-comment">// 没带任何参数的 my_vec，我们创建一个空的 vec</span><br>    () =&gt; &#123;<br>        std::vec::<span class="hljs-built_in">Vec</span>::new()<br>    &#125;;<br>    <span class="hljs-comment">// 处理 my_vec![1, 2, 3, 4]</span><br>    <span class="hljs-comment">//  $el:expr 是说把匹配到的表达式命名为 $el。$(...)</span><br>    <span class="hljs-comment">// * 告诉编译器可以匹配任意多个以逗号分隔的表达式，然后捕获到的每一个表达式可以用 $el 来访问</span><br>    ($($el:expr),*) =&gt; (&#123;<br>        <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span> v = std::vec::<span class="hljs-built_in">Vec</span>::new();<br>        <span class="hljs-comment">// $(v.push($el);)* 相当于匹配出多少个 $el就展开多少句 push 语句</span><br>        $(v.push($el);)*<br>        v<br>    &#125;);<br>    <span class="hljs-comment">// 处理 my_vec![0; 10]</span><br>    ($el:expr; $n:expr) =&gt; &#123;<br>        std::vec::from_elem($el, $n)<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-meta">#[macro_export]</span><br><span class="hljs-built_in">macro_rules!</span> my_vec &#123;<br>    <span class="hljs-comment">// 没带任何参数的 my_vec，我们创建一个空的 vec</span><br>    () =&gt; &#123;<br>        std::vec::<span class="hljs-type">Vec</span>::<span class="hljs-title function_ invoke__">new</span>()<br>    &#125;;<br>    <span class="hljs-comment">// 处理 my_vec![1, 2, 3, 4]</span><br>    <span class="hljs-comment">//  $el:expr 是说把匹配到的表达式命名为 $el。$(...)</span><br>    <span class="hljs-comment">// * 告诉编译器可以匹配任意多个以逗号分隔的表达式，然后捕获到的每一个表达式可以用 $el 来访问</span><br>    ($($el:expr),*) =&gt; (&#123;<br>        <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut </span><span class="hljs-variable">v</span> = std::vec::<span class="hljs-type">Vec</span>::<span class="hljs-title function_ invoke__">new</span>();<br>        <span class="hljs-comment">// $(v.push($el);)* 相当于匹配出多少个 $el就展开多少句 push 语句</span><br>        $(v.<span class="hljs-title function_ invoke__">push</span>($el);)*<br>        v<br>    &#125;);<br>    <span class="hljs-comment">// 处理 my_vec![0; 10]</span><br>    ($el:expr; $n:expr) =&gt; &#123;<br>        std::vec::<span class="hljs-title function_ invoke__">from_elem</span>($el, $n)<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
 <p>使用声明宏时，需要为参数明确类型，可用类型有：</p>
 <ul>
 <li><code>item</code>，比如一个函数、结构体、模块等。</li>
@@ -316,7 +315,7 @@ macro）：可以在其他代码块上添加属性，为代码块提供更多功
 <li><p>派生宏（derive macro）：为 derive 属性添加新的功能。</p></li>
 </ul>
 <blockquote>
-<p><a href="https://github.com/dtolnay/proc-macro-workshop" target="_blank" rel="noopener">proc-macro-workshop</a>:
+<p><a target="_blank" rel="noopener" href="https://github.com/dtolnay/proc-macro-workshop">proc-macro-workshop</a>:
 过程宏参考</p>
 </blockquote>
 <p>宏会为别人理解你的代码，使用你的代码带来额外的负担。由于宏会生成代码，大量使用宏会让你的代码在不知不觉中膨胀，也会导致二进制很大。当一个功能可以用函数表达时，不要用宏。不要过分迷信于编译时的处理，不要把它当成提高性能的手段。</p>
@@ -347,7 +346,7 @@ macro）：可以在其他代码块上添加属性，为代码块提供更多功
               
                 <p class="note note-warning">
                   
-                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
                   
                 </p>
               
@@ -565,23 +564,8 @@ macro）：可以在其他代码块上添加属性，为代码块提供更多功
 
 
 <!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>

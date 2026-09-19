@@ -1,461 +1,307 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>Racle`s Story</title>
-  
-  <subtitle>Recording &amp; Thinking &amp; Story telling</subtitle>
-  <link href="https://racleray.github.io/atom.xml" rel="self"/>
-  
-  <link href="https://racleray.github.io/"/>
-  <updated>2026-09-19T15:36:52.212Z</updated>
-  <id>https://racleray.github.io/</id>
-  
   <author>
     <name>江左时雨</name>
-    
   </author>
-  
   <generator uri="https://hexo.io/">Hexo</generator>
-  
+  <id>https://racleray.github.io/</id>
+  <link href="https://racleray.github.io/" rel="alternate"/>
+  <link href="https://racleray.github.io/atom.xml" rel="self"/>
+  <rights>All rights reserved 2026, 江左时雨</rights>
+  <subtitle>
+    <![CDATA[Recording & Thinking & Story telling]]>
+  </subtitle>
+  <title>Racle`s Story</title>
+  <updated>2026-09-19T15:36:52.212Z</updated>
   <entry>
-    <title>Rustonomicon</title>
-    <link href="https://racleray.github.io/posts/9a432d14.html"/>
-    <id>https://racleray.github.io/posts/9a432d14.html</id>
-    <published>2026-04-19T15:09:55.000Z</published>
-    <updated>2026-09-19T15:36:52.212Z</updated>
-    
-    
-    <summary type="html">Rustonomicon notes</summary>
-    
-    
-    
+    <author>
+      <name>江左时雨</name>
+    </author>
     <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
     <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
-    
-    
     <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
-    
     <category term="Unsafe" scheme="https://racleray.github.io/tags/Unsafe/"/>
-    
+    <id>https://racleray.github.io/posts/9a432d14.html</id>
+    <link href="https://racleray.github.io/posts/9a432d14.html"/>
+    <published>2026-04-19T15:09:55.000Z</published>
+    <summary>Rustonomicon notes</summary>
+    <title>Rustonomicon</title>
+    <updated>2026-09-19T15:36:52.212Z</updated>
   </entry>
-  
   <entry>
-    <title>内存模型</title>
-    <link href="https://racleray.github.io/posts/e6493c73.html"/>
-    <id>https://racleray.github.io/posts/e6493c73.html</id>
-    <published>2026-03-06T15:12:13.000Z</published>
-    <updated>2026-03-07T15:23:40.811Z</updated>
-    
-    
-    <summary type="html">内存模型整理</summary>
-    
-    
-    
+    <author>
+      <name>江左时雨</name>
+    </author>
     <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
     <category term="Optimise" scheme="https://racleray.github.io/categories/Notes/Optimise/"/>
-    
-    
     <category term="C" scheme="https://racleray.github.io/tags/C/"/>
-    
     <category term="memory order" scheme="https://racleray.github.io/tags/memory-order/"/>
-    
+    <id>https://racleray.github.io/posts/e6493c73.html</id>
+    <link href="https://racleray.github.io/posts/e6493c73.html"/>
+    <published>2026-03-06T15:12:13.000Z</published>
+    <summary>内存模型整理</summary>
+    <title>内存模型</title>
+    <updated>2026-03-07T15:23:40.811Z</updated>
   </entry>
-  
   <entry>
-    <title>C++Tips</title>
-    <link href="https://racleray.github.io/posts/d6af6a50.html"/>
-    <id>https://racleray.github.io/posts/d6af6a50.html</id>
-    <published>2025-10-15T14:43:36.613Z</published>
-    <updated>2026-03-07T15:23:37.905Z</updated>
-    
-    
-    <summary type="html">C++ tips recently, C++ 抽象代价</summary>
-    
-    
-    
+    <author>
+      <name>江左时雨</name>
+    </author>
     <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
     <category term="C++" scheme="https://racleray.github.io/categories/Notes/C/"/>
-    
-    
     <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
-    
+    <id>https://racleray.github.io/posts/d6af6a50.html</id>
+    <link href="https://racleray.github.io/posts/d6af6a50.html"/>
+    <published>2025-10-15T14:43:36.613Z</published>
+    <summary>C++ tips recently, C++ 抽象代价</summary>
+    <title>C++Tips</title>
+    <updated>2026-03-07T15:23:37.905Z</updated>
   </entry>
-  
   <entry>
-    <title>k8s_archive</title>
-    <link href="https://racleray.github.io/posts/6eeefec4.html"/>
-    <id>https://racleray.github.io/posts/6eeefec4.html</id>
-    <published>2025-09-19T15:08:29.000Z</published>
-    <updated>2025-09-20T07:02:55.306Z</updated>
-    
-    
-    <summary type="html">k8s 以前的环境记录 archive</summary>
-    
-    
-    
+    <author>
+      <name>江左时雨</name>
+    </author>
     <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
     <category term="k8s" scheme="https://racleray.github.io/categories/Notes/k8s/"/>
-    
-    
     <category term="Notes" scheme="https://racleray.github.io/tags/Notes/"/>
-    
     <category term="k8s" scheme="https://racleray.github.io/tags/k8s/"/>
-    
+    <id>https://racleray.github.io/posts/6eeefec4.html</id>
+    <link href="https://racleray.github.io/posts/6eeefec4.html"/>
+    <published>2025-09-19T15:08:29.000Z</published>
+    <summary>k8s 以前的环境记录 archive</summary>
+    <title>k8s_archive</title>
+    <updated>2025-09-20T07:02:55.306Z</updated>
   </entry>
-  
   <entry>
-    <title>静态类型语言黑话-协变</title>
-    <link href="https://racleray.github.io/posts/d4de3325.html"/>
+    <author>
+      <name>江左时雨</name>
+    </author>
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
+    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
+    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
     <id>https://racleray.github.io/posts/d4de3325.html</id>
+    <link href="https://racleray.github.io/posts/d4de3325.html"/>
     <published>2025-03-05T12:18:38.464Z</published>
+    <summary>静态类型语言协变反变Note</summary>
+    <title>静态类型语言黑话-协变</title>
     <updated>2025-03-05T13:11:47.146Z</updated>
-    
-    
-    <summary type="html">静态类型语言协变反变Note</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
-    
-    
-    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
-    
-    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
-    
   </entry>
-  
   <entry>
-    <title>Linux网络优化</title>
-    <link href="https://racleray.github.io/posts/be40d60e.html"/>
-    <id>https://racleray.github.io/posts/be40d60e.html</id>
-    <published>2025-03-02T03:29:45.000Z</published>
-    <updated>2025-03-02T03:35:16.222Z</updated>
-    
-    
-    <summary type="html">Linux kernel network optimise</summary>
-    
-    
-    
+    <author>
+      <name>江左时雨</name>
+    </author>
     <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
     <category term="LinuxNetwork" scheme="https://racleray.github.io/categories/Notes/LinuxNetwork/"/>
-    
-    
     <category term="Linux" scheme="https://racleray.github.io/tags/Linux/"/>
-    
     <category term="Network" scheme="https://racleray.github.io/tags/Network/"/>
-    
     <category term="TCP" scheme="https://racleray.github.io/tags/TCP/"/>
-    
+    <id>https://racleray.github.io/posts/be40d60e.html</id>
+    <link href="https://racleray.github.io/posts/be40d60e.html"/>
+    <published>2025-03-02T03:29:45.000Z</published>
+    <summary>Linux kernel network optimise</summary>
+    <title>Linux网络优化</title>
+    <updated>2025-03-02T03:35:16.222Z</updated>
   </entry>
-  
   <entry>
-    <title>Rust macro</title>
-    <link href="https://racleray.github.io/posts/b1a6eeba.html"/>
+    <author>
+      <name>江左时雨</name>
+    </author>
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
+    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
     <id>https://racleray.github.io/posts/b1a6eeba.html</id>
+    <link href="https://racleray.github.io/posts/b1a6eeba.html"/>
     <published>2025-02-17T14:32:42.569Z</published>
+    <summary>Rust Notes</summary>
+    <title>Rust macro</title>
     <updated>2025-02-18T03:09:27.852Z</updated>
-    
-    
-    <summary type="html">Rust Notes</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
-    
-    
-    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
-    
   </entry>
-  
   <entry>
-    <title>RUST-Project</title>
-    <link href="https://racleray.github.io/posts/c0f01f20.html"/>
+    <author>
+      <name>江左时雨</name>
+    </author>
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
+    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
     <id>https://racleray.github.io/posts/c0f01f20.html</id>
+    <link href="https://racleray.github.io/posts/c0f01f20.html"/>
     <published>2025-02-08T15:27:20.515Z</published>
+    <summary>Rust Notes on project staff</summary>
+    <title>RUST-Project</title>
     <updated>2025-02-08T15:58:51.593Z</updated>
-    
-    
-    <summary type="html">Rust Notes on project staff</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
-    
-    
-    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
-    
   </entry>
-  
   <entry>
-    <title>Rust-Send-Sync</title>
-    <link href="https://racleray.github.io/posts/18bd8400.html"/>
+    <author>
+      <name>江左时雨</name>
+    </author>
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
+    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
     <id>https://racleray.github.io/posts/18bd8400.html</id>
+    <link href="https://racleray.github.io/posts/18bd8400.html"/>
     <published>2025-01-07T14:55:16.669Z</published>
+    <summary>Rust Notes</summary>
+    <title>Rust-Send-Sync</title>
     <updated>2025-01-30T15:19:08.538Z</updated>
-    
-    
-    <summary type="html">Rust Notes</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
-    
-    
-    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
-    
   </entry>
-  
   <entry>
-    <title>RUST-Async</title>
-    <link href="https://racleray.github.io/posts/b9534ecc.html"/>
+    <author>
+      <name>江左时雨</name>
+    </author>
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
+    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
     <id>https://racleray.github.io/posts/b9534ecc.html</id>
+    <link href="https://racleray.github.io/posts/b9534ecc.html"/>
     <published>2025-01-05T13:50:19.000Z</published>
+    <summary>Rust Notes</summary>
+    <title>RUST-Async</title>
     <updated>2025-02-06T14:35:20.366Z</updated>
-    
-    
-    <summary type="html">Rust Notes</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
-    
-    
-    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
-    
   </entry>
-  
   <entry>
-    <title>Rust-TLS</title>
-    <link href="https://racleray.github.io/posts/dad61cf6.html"/>
+    <author>
+      <name>江左时雨</name>
+    </author>
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
+    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
     <id>https://racleray.github.io/posts/dad61cf6.html</id>
+    <link href="https://racleray.github.io/posts/dad61cf6.html"/>
     <published>2024-11-16T06:52:18.939Z</published>
+    <summary>Rust TLS notes</summary>
+    <title>Rust-TLS</title>
     <updated>2025-02-18T03:09:05.733Z</updated>
-    
-    
-    <summary type="html">Rust TLS notes</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
-    
-    
-    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
-    
   </entry>
-  
   <entry>
-    <title>RUST-concurrency</title>
-    <link href="https://racleray.github.io/posts/7b9437f8.html"/>
+    <author>
+      <name>江左时雨</name>
+    </author>
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
+    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
     <id>https://racleray.github.io/posts/7b9437f8.html</id>
+    <link href="https://racleray.github.io/posts/7b9437f8.html"/>
     <published>2024-11-14T13:12:29.198Z</published>
+    <summary>Rust Notes</summary>
+    <title>RUST-concurrency</title>
     <updated>2024-11-15T13:10:47.023Z</updated>
-    
-    
-    <summary type="html">Rust Notes</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
-    
-    
-    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
-    
   </entry>
-  
   <entry>
-    <title>RUST Part4</title>
-    <link href="https://racleray.github.io/posts/eb2aad59.html"/>
+    <author>
+      <name>江左时雨</name>
+    </author>
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
+    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
     <id>https://racleray.github.io/posts/eb2aad59.html</id>
+    <link href="https://racleray.github.io/posts/eb2aad59.html"/>
     <published>2024-11-14T11:03:25.564Z</published>
+    <summary>Rust Notes</summary>
+    <title>RUST Part4</title>
     <updated>2024-11-14T13:07:00.694Z</updated>
-    
-    
-    <summary type="html">Rust Notes</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
-    
-    
-    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
-    
   </entry>
-  
   <entry>
-    <title>RUST Part3</title>
-    <link href="https://racleray.github.io/posts/8110420.html"/>
+    <author>
+      <name>江左时雨</name>
+    </author>
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
+    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
     <id>https://racleray.github.io/posts/8110420.html</id>
+    <link href="https://racleray.github.io/posts/8110420.html"/>
     <published>2024-11-09T12:31:22.317Z</published>
+    <summary>Rust Notes</summary>
+    <title>RUST Part3</title>
     <updated>2024-11-10T13:31:11.188Z</updated>
-    
-    
-    <summary type="html">Rust Notes</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
-    
-    
-    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
-    
   </entry>
-  
   <entry>
-    <title>RUST Part2</title>
-    <link href="https://racleray.github.io/posts/7f1634b6.html"/>
+    <author>
+      <name>江左时雨</name>
+    </author>
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
+    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
     <id>https://racleray.github.io/posts/7f1634b6.html</id>
+    <link href="https://racleray.github.io/posts/7f1634b6.html"/>
     <published>2024-10-22T13:19:35.225Z</published>
+    <summary>Rust Notes</summary>
+    <title>RUST Part2</title>
     <updated>2024-11-09T12:30:42.322Z</updated>
-    
-    
-    <summary type="html">Rust Notes</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
-    
-    
-    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
-    
   </entry>
-  
   <entry>
-    <title>RUST Part1</title>
-    <link href="https://racleray.github.io/posts/9b4059d6.html"/>
+    <author>
+      <name>江左时雨</name>
+    </author>
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
+    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
     <id>https://racleray.github.io/posts/9b4059d6.html</id>
+    <link href="https://racleray.github.io/posts/9b4059d6.html"/>
     <published>2024-06-27T14:54:55.000Z</published>
+    <summary>Rust Notes</summary>
+    <title>RUST Part1</title>
     <updated>2024-06-27T14:59:34.346Z</updated>
-    
-    
-    <summary type="html">Rust Notes</summary>
-    
-    
-    
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
-    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
-    
-    
-    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
-    
   </entry>
-  
   <entry>
-    <title>Windows终端配置</title>
-    <link href="https://racleray.github.io/posts/a61fc9c9.html"/>
-    <id>https://racleray.github.io/posts/a61fc9c9.html</id>
-    <published>2024-03-18T14:42:15.000Z</published>
-    <updated>2024-03-18T14:59:27.880Z</updated>
-    
-    
-    <summary type="html">windows 配置 wezterm 终端环境记录（archive）</summary>
-    
-    
-    
+    <author>
+      <name>江左时雨</name>
+    </author>
     <category term="Tools" scheme="https://racleray.github.io/categories/Tools/"/>
-    
     <category term="Terminal" scheme="https://racleray.github.io/categories/Tools/Terminal/"/>
-    
-    
     <category term="terminal" scheme="https://racleray.github.io/tags/terminal/"/>
-    
     <category term="configure" scheme="https://racleray.github.io/tags/configure/"/>
-    
+    <id>https://racleray.github.io/posts/a61fc9c9.html</id>
+    <link href="https://racleray.github.io/posts/a61fc9c9.html"/>
+    <published>2024-03-18T14:42:15.000Z</published>
+    <summary>windows 配置 wezterm 终端环境记录（archive）</summary>
+    <title>Windows终端配置</title>
+    <updated>2024-03-18T14:59:27.880Z</updated>
   </entry>
-  
   <entry>
-    <title>Memory Pool</title>
-    <link href="https://racleray.github.io/posts/5d8e957f.html"/>
-    <id>https://racleray.github.io/posts/5d8e957f.html</id>
-    <published>2024-03-17T13:30:22.000Z</published>
-    <updated>2024-03-17T13:48:07.461Z</updated>
-    
-    
-    <summary type="html">内存池实现与对比</summary>
-    
-    
-    
+    <author>
+      <name>江左时雨</name>
+    </author>
     <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
     <category term="Memory" scheme="https://racleray.github.io/categories/Notes/Memory/"/>
-    
-    
     <category term="Memory Pool" scheme="https://racleray.github.io/tags/Memory-Pool/"/>
-    
     <category term="Memory" scheme="https://racleray.github.io/tags/Memory/"/>
-    
+    <id>https://racleray.github.io/posts/5d8e957f.html</id>
+    <link href="https://racleray.github.io/posts/5d8e957f.html"/>
+    <published>2024-03-17T13:30:22.000Z</published>
+    <summary>内存池实现与对比</summary>
+    <title>Memory Pool</title>
+    <updated>2024-03-17T13:48:07.461Z</updated>
   </entry>
-  
   <entry>
-    <title>NGINX Recap</title>
-    <link href="https://racleray.github.io/posts/e2369d80.html"/>
-    <id>https://racleray.github.io/posts/e2369d80.html</id>
-    <published>2024-03-09T15:57:33.000Z</published>
-    <updated>2024-03-09T16:02:34.925Z</updated>
-    
-    
-    <summary type="html">NGINX 一点小结</summary>
-    
-    
-    
+    <author>
+      <name>江左时雨</name>
+    </author>
     <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
     <category term="Nginx" scheme="https://racleray.github.io/categories/Notes/Nginx/"/>
-    
-    
     <category term="NGINX" scheme="https://racleray.github.io/tags/NGINX/"/>
-    
     <category term="Server Design" scheme="https://racleray.github.io/tags/Server-Design/"/>
-    
+    <id>https://racleray.github.io/posts/e2369d80.html</id>
+    <link href="https://racleray.github.io/posts/e2369d80.html"/>
+    <published>2024-03-09T15:57:33.000Z</published>
+    <summary>NGINX 一点小结</summary>
+    <title>NGINX Recap</title>
+    <updated>2024-03-09T16:02:34.925Z</updated>
   </entry>
-  
   <entry>
-    <title>REUSEPORT</title>
-    <link href="https://racleray.github.io/posts/e474b5c3.html"/>
-    <id>https://racleray.github.io/posts/e474b5c3.html</id>
-    <published>2024-03-03T16:06:07.000Z</published>
-    <updated>2024-03-03T16:16:19.515Z</updated>
-    
-    
-    <summary type="html">socket REUSEPORT 分析</summary>
-    
-    
-    
+    <author>
+      <name>江左时雨</name>
+    </author>
     <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    
     <category term="Computer Network" scheme="https://racleray.github.io/categories/Notes/Computer-Network/"/>
-    
-    
     <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
-    
     <category term="Network" scheme="https://racleray.github.io/tags/Network/"/>
-    
     <category term="Socket" scheme="https://racleray.github.io/tags/Socket/"/>
-    
+    <id>https://racleray.github.io/posts/e474b5c3.html</id>
+    <link href="https://racleray.github.io/posts/e474b5c3.html"/>
+    <published>2024-03-03T16:06:07.000Z</published>
+    <summary>socket REUSEPORT 分析</summary>
+    <title>REUSEPORT</title>
+    <updated>2024-03-03T16:16:19.515Z</updated>
   </entry>
-  
 </feed>

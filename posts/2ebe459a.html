@@ -29,6 +29,7 @@
 <meta property="article:modified_time" content="2024-01-09T10:23:26.744Z">
 <meta property="article:author" content="江左时雨">
 <meta property="article:tag" content="C++">
+<meta property="article:tag" content="Book">
 <meta name="twitter:card" content="summary_large_image">
   
      <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
@@ -80,7 +81,7 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 
@@ -298,7 +299,7 @@ register
 <p>volatile
 用于声明一个变量可被其他线程改变，阻止编译器依赖变量先前缓存的值来进行优化
 。</p>
-<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-keyword">volatile</span> <span class="hljs-keyword">int</span> seconds; <span class="hljs-comment">// incremented every second by another thread</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">DelayFiveSeconds</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>  seconds = <span class="hljs-number">0</span>;<br>  <span class="hljs-keyword">while</span> (seconds &lt; <span class="hljs-number">5</span>)<br>  &#123;<br>  <span class="hljs-comment">// do nothing while seconds count to 5</span><br>  &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-keyword">volatile</span> <span class="hljs-type">int</span> seconds; <span class="hljs-comment">// incremented every second by another thread</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">DelayFiveSeconds</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>  seconds = <span class="hljs-number">0</span>;<br>  <span class="hljs-keyword">while</span> (seconds &lt; <span class="hljs-number">5</span>)<br>  &#123;<br>  <span class="hljs-comment">// do nothing while seconds count to 5</span><br>  &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
 <p>上面的代码如果不声明为 volatile,
 编译器将任务while条件一直成立，即使别的线程中改变了seconds的值。</p>
 <h3><span id="thread-local">thread-local</span></h3>
@@ -462,9 +463,9 @@ switch语句的效率是最高的，因为它可以被实现为一个目标跳�
 </blockquote>
 <h3><span id="循环展开">循环展开</span></h3>
 <p>展开前</p>
-<figure class="highlight plain"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs text">int i;<br>for (i &#x3D; 0; i &lt; 20; i++)<br>&#123;<br> if (i % 2 &#x3D;&#x3D; 0); <br>  FuncA(i);<br> else<br>  FuncB(i);<br> FuncC(i);<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight text"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs text">int i;<br>for (i = 0; i &lt; 20; i++)<br>&#123;<br> if (i % 2 == 0); <br>  FuncA(i);<br> else<br>  FuncB(i);<br> FuncC(i);<br>&#125;<br></code></pre></div></td></tr></table></figure>
 <p>展开后</p>
-<figure class="highlight plain"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs text">int i;<br>for (i &#x3D; 0; i &lt; 20; i+&#x3D;2)<br>&#123;<br>    FuncA(i);<br>    FuncC(i);<br>    FuncB(i+1);<br>    FuncC(i+1);<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight text"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs text">int i;<br>for (i = 0; i &lt; 20; i+=2)<br>&#123;<br>    FuncA(i);<br>    FuncC(i);<br>    FuncB(i+1);<br>    FuncC(i+1);<br>&#125;<br></code></pre></div></td></tr></table></figure>
 <p>这样做的好处：</p>
 <ul>
 <li>循环次数变成了10次而不是20次，CPU可以更完美的进行预测</li>
@@ -708,7 +709,7 @@ false，如果它是一个普通的浮点数，则返回 true。</p>
               
                 <p class="note note-warning">
                   
-                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
                   
                 </p>
               
@@ -926,23 +927,8 @@ false，如果它是一个普通的浮点数，则返回 true。</p>
 
 
 <!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>

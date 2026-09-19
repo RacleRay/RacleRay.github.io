@@ -88,7 +88,7 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 
@@ -239,7 +239,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      3.4k 字
+      3.5k 字
     </span>
   
 
@@ -286,7 +286,7 @@
 <p>这些指标原先都是用来度量机器翻译结果质量的，并且被证明可以很好的反应待评测翻译结果的准确性，并且与人类对待评测翻译结果的评价存在强相关</p>
 <hr>
 <h3><span id="bleu">BLEU</span></h3>
-<p><a href="https://aclanthology.info/pdf/P/P02/P02-1040.pdf" target="_blank" rel="noopener">文献</a></p>
+<p><a target="_blank" rel="noopener" href="https://aclanthology.info/pdf/P/P02/P02-1040.pdf">文献</a></p>
 <blockquote>
 <p>只看中准确率的指标，就是说更加关心候选译文里的多少 n-gram
 是对的（即在参考译文里出现了），而不在乎召回率（参考译文里有哪些 n-gram
@@ -315,7 +315,7 @@ evaluation understudy，即：双语互译质量评估辅助工具。</p>
 <li>短译句的测评精度有时会较高；</li>
 <li>没有考虑同义词或相似表达的情况，可能会导致合理翻译被否定；</li>
 </ul>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> nltk.translate.bleu_score <span class="hljs-keyword">import</span> sentence_bleu<br><br>reference = [[<span class="hljs-string">'this'</span>, <span class="hljs-string">'is'</span>, <span class="hljs-string">'a'</span>, <span class="hljs-string">'test'</span>], [<span class="hljs-string">'this'</span>, <span class="hljs-string">'is'</span> <span class="hljs-string">'test'</span>]]<br>candidate = [<span class="hljs-string">'this'</span>, <span class="hljs-string">'is'</span>, <span class="hljs-string">'a'</span>, <span class="hljs-string">'test'</span>]<br><br>score = sentence_bleu(reference, candidate)<br>print(score)<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> nltk.translate.bleu_score <span class="hljs-keyword">import</span> sentence_bleu<br><br>reference = [[<span class="hljs-string">&#x27;this&#x27;</span>, <span class="hljs-string">&#x27;is&#x27;</span>, <span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;test&#x27;</span>], [<span class="hljs-string">&#x27;this&#x27;</span>, <span class="hljs-string">&#x27;is&#x27;</span> <span class="hljs-string">&#x27;test&#x27;</span>]]<br>candidate = [<span class="hljs-string">&#x27;this&#x27;</span>, <span class="hljs-string">&#x27;is&#x27;</span>, <span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;test&#x27;</span>]<br><br>score = sentence_bleu(reference, candidate)<br><span class="hljs-built_in">print</span>(score)<br></code></pre></div></td></tr></table></figure>
 <p>只能做到个大概判断，它的目标也只是给出一个快且不差自动评估解决方案</p>
 <figure>
 <img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/NLG任务评价指标_pic/image-20200707135951108.png" srcset="/img/loading.gif" lazyload alt="image">
@@ -334,7 +334,7 @@ evaluation understudy，即：双语互译质量评估辅助工具。</p>
 </figure>
 <hr>
 <h3><span id="rouge">ROUGE</span></h3>
-<p><a href="http://www.aclweb.org/anthology/W04-1013" target="_blank" rel="noopener">文献</a></p>
+<p><a target="_blank" rel="noopener" href="http://www.aclweb.org/anthology/W04-1013">文献</a></p>
 <blockquote>
 <p>ROUGE 和 BLEU 几乎一模一样，区别是 BLEU 计算准确率，而 ROUGE
 计算召回率。</p>
@@ -364,7 +364,7 @@ SMT，因为它不管候选译文流不流畅。</p>
 subsequence，最长公共子序列)的首字母，因为Rough-L使用了最长公共子序列。</p>
 <hr>
 <h3><span id="meteor">METEOR</span></h3>
-<p><a href="http://www.aclweb.org/anthology/W05-0909" target="_blank" rel="noopener">文献</a></p>
+<p><a target="_blank" rel="noopener" href="http://www.aclweb.org/anthology/W05-0909">文献</a></p>
 <p>METEOR
 大意是说有时候翻译模型翻译的结果是对的，只是碰巧跟参考译文没对上（比如用了一个同义词），于是用
 WordNet
@@ -392,7 +392,7 @@ grid search），参数一多听起来就不靠谱.</li>
 </figure>
 <hr>
 <h3><span id="cider">CIDEr</span></h3>
-<p><a href="https://www.cv-foundation.org/openaccess/content_cvpr_2015/papers/Vedantam_CIDEr_Consensus-Based_Image_2015_CVPR_paper.pdf" target="_blank" rel="noopener">文献</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cv-foundation.org/openaccess/content_cvpr_2015/papers/Vedantam_CIDEr_Consensus-Based_Image_2015_CVPR_paper.pdf">文献</a></p>
 <p>Consensus-based image description
 evaluation，通过度量待评测语句与其他大部分人工描述之间的相似性来评价。</p>
 <blockquote>
@@ -410,7 +410,7 @@ n-gram 相似度取平均得到最终结果。优点是不同的 n-gram 随着 T
 包含了更小的信息量。</p>
 <hr>
 <h3><span id="spice">SPICE</span></h3>
-<p><a href="https://link.springer.com/chapter/10.1007/978-3-319-46454-1_24" target="_blank" rel="noopener">SPICE</a></p>
+<p><a target="_blank" rel="noopener" href="https://link.springer.com/chapter/10.1007/978-3-319-46454-1_24">SPICE</a></p>
 <p>SPICE 是专门设计出来用于 image caption 问题的。全称是 Semantic
 Propositional Image Caption Evaluation。前面四个方法都是基于 n-gram
 计算的，SPICE 则不是。</p>
@@ -442,10 +442,10 @@ graphs。最后计算待评价的 caption 中 objects, attributes 和 relationsh
 <li>TER: 编辑的距离</li>
 <li>TERp: TER+同义替换</li>
 </ul>
-<p><a href="https://github.com/Maluuba/nlg-eval" target="_blank" rel="noopener">常用评测指标的开源实现</a></p>
-<p><a href="https://github.com/tylin/coco-caption" target="_blank" rel="noopener">MS COCO Caption
+<p><a target="_blank" rel="noopener" href="https://github.com/Maluuba/nlg-eval">常用评测指标的开源实现</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/tylin/coco-caption">MS COCO Caption
 Evaluation</a></p>
-<p><a href="https://gist.github.com/kracwarlock/c979b10433fe4ac9fb97" target="_blank" rel="noopener">COCO
+<p><a target="_blank" rel="noopener" href="https://gist.github.com/kracwarlock/c979b10433fe4ac9fb97">COCO
 demo</a></p>
 
             </div>
@@ -478,7 +478,7 @@ demo</a></p>
               
                 <p class="note note-warning">
                   
-                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
                   
                 </p>
               
@@ -738,23 +738,8 @@ demo</a></p>
 
 
 <!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>

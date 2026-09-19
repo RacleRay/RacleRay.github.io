@@ -99,7 +99,7 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 
@@ -333,9 +333,9 @@ masking，将概率小于 <span class="math inline">\(\beta\)</span>
 <li>Domain-relevance Data
 Filtering：对于外部搜集的数据，对于每个类别，都基于对所有示例进行排序属于该类别的概率，并选择概率最高的示例，构成外部数据。</li>
 </ol>
-<p><a href="https://github.com/google-research/uda?utm_source=catalyzex.com" target="_blank" rel="noopener">官方实现</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/google-research/uda?utm_source=catalyzex.com">官方实现</a></p>
 <h2><span id="mixmatch">MixMatch</span></h2>
-<p><a href="https://arxiv.org/abs/1905.02249" target="_blank" rel="noopener">paper</a>，<a href="https://github.com/ntozer/mixmatch-tensorflow2.0?utm_source=catalyzex.com" target="_blank" rel="noopener">tf2.0</a></p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1905.02249">paper</a>，<a target="_blank" rel="noopener" href="https://github.com/ntozer/mixmatch-tensorflow2.0?utm_source=catalyzex.com">tf2.0</a></p>
 <h3><span id="方法">方法</span></h3>
 <p>另一种混合有标签和无标签数据的方法。整体方法如下：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/note_pic/image-20210325222403576.png" srcset="/img/loading.gif" lazyload alt style="zoom:90%;"></p>
@@ -363,7 +363,7 @@ Guessing：<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/n
 <ol start="5" type="1">
 <li>模型训练时可采用滑动平均、weight decay等方法</li>
 </ol>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-meta">@tf.function</span><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">sharpen</span><span class="hljs-params">(p, T)</span>:</span><br>    <span class="hljs-keyword">return</span> tf.pow(p, <span class="hljs-number">1</span>/T) / tf.reduce_sum(tf.pow(p, <span class="hljs-number">1</span>/T), axis=<span class="hljs-number">1</span>, keepdims=<span class="hljs-literal">True</span>)<br><br><br><span class="hljs-meta">@tf.function</span><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">mixup</span><span class="hljs-params">(x1, x2, y1, y2, beta)</span>:</span><br>    beta = tf.maximum(beta, <span class="hljs-number">1</span>-beta)<br>    x = beta * x1 + (<span class="hljs-number">1</span> - beta) * x2<br>    y = beta * y1 + (<span class="hljs-number">1</span> - beta) * y2<br>    <span class="hljs-keyword">return</span> x, y<br><br>...<br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">ema</span><span class="hljs-params">(model, ema_model, ema_decay)</span>:</span><br>    <span class="hljs-keyword">for</span> var, ema_var <span class="hljs-keyword">in</span> zip(model.variables, ema_model.variables):<br>        <span class="hljs-keyword">if</span> var.trainable:<br>            ema_var.assign((<span class="hljs-number">1</span> - ema_decay) * var + ema_decay * ema_var)<br>        <span class="hljs-keyword">else</span>:<br>            ema_var.assign(tf.identity(var))<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-meta">@tf.function</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">sharpen</span>(<span class="hljs-params">p, T</span>):<br>    <span class="hljs-keyword">return</span> tf.<span class="hljs-built_in">pow</span>(p, <span class="hljs-number">1</span>/T) / tf.reduce_sum(tf.<span class="hljs-built_in">pow</span>(p, <span class="hljs-number">1</span>/T), axis=<span class="hljs-number">1</span>, keepdims=<span class="hljs-literal">True</span>)<br><br><br><span class="hljs-meta">@tf.function</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">mixup</span>(<span class="hljs-params">x1, x2, y1, y2, beta</span>):<br>    beta = tf.maximum(beta, <span class="hljs-number">1</span>-beta)<br>    x = beta * x1 + (<span class="hljs-number">1</span> - beta) * x2<br>    y = beta * y1 + (<span class="hljs-number">1</span> - beta) * y2<br>    <span class="hljs-keyword">return</span> x, y<br><br>...<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">ema</span>(<span class="hljs-params">model, ema_model, ema_decay</span>):<br>    <span class="hljs-keyword">for</span> var, ema_var <span class="hljs-keyword">in</span> <span class="hljs-built_in">zip</span>(model.variables, ema_model.variables):<br>        <span class="hljs-keyword">if</span> var.trainable:<br>            ema_var.assign((<span class="hljs-number">1</span> - ema_decay) * var + ema_decay * ema_var)<br>        <span class="hljs-keyword">else</span>:<br>            ema_var.assign(tf.identity(var))<br></code></pre></div></td></tr></table></figure>
 <p>消融实验结果：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/note_pic/image-20210325224211436.png" srcset="/img/loading.gif" lazyload alt style="zoom:80%;"></p>
 <p>使用论文中提到的所有方法，才能取得最好的结果。其中MixUp操作的影响最大。</p>
@@ -394,7 +394,7 @@ Guessing：<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/n
               
                 <p class="note note-warning">
                   
-                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
                   
                 </p>
               
@@ -654,23 +654,8 @@ Guessing：<img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/n
 
 
 <!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>

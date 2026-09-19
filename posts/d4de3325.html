@@ -81,7 +81,7 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 
@@ -232,7 +232,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2.2k 字
+      2.3k 字
     </span>
   
 
@@ -289,7 +289,7 @@
 <code>'b</code> 的子生命周期（<code>'a &lt;: 'b</code>），那么
 <code>&amp;'a T</code> 也是 <code>&amp;'b T</code> 的子类型。这意味着
 <code>&amp;'a T</code> 是 <strong>协变的（covariant）</strong>。</p>
-<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Container</span></span>&lt;<span class="hljs-symbol">'a</span>, T&gt;(&amp;<span class="hljs-symbol">'a</span> T);<br><br><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">co_variant</span></span>&lt;<span class="hljs-symbol">'short</span>, <span class="hljs-symbol">'long</span>&gt;(long: Container&lt;<span class="hljs-symbol">'long</span>, <span class="hljs-built_in">i32</span>&gt;) -&gt; Container&lt;<span class="hljs-symbol">'short</span>, <span class="hljs-built_in">i32</span>&gt;<br><span class="hljs-keyword">where</span><br>    <span class="hljs-symbol">'long</span>: <span class="hljs-symbol">'short</span>,  <span class="hljs-comment">// 'long 生命周期比 'short 长</span><br>&#123;<br>    long  <span class="hljs-comment">// 允许转换，因为 Container&lt;'a, T&gt; 对 'a 是协变的</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Container</span>&lt;<span class="hljs-symbol">&#x27;a</span>, T&gt;(&amp;<span class="hljs-symbol">&#x27;a</span> T);<br><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">co_variant</span>&lt;<span class="hljs-symbol">&#x27;short</span>, <span class="hljs-symbol">&#x27;long</span>&gt;(long: Container&lt;<span class="hljs-symbol">&#x27;long</span>, <span class="hljs-type">i32</span>&gt;) <span class="hljs-punctuation">-&gt;</span> Container&lt;<span class="hljs-symbol">&#x27;short</span>, <span class="hljs-type">i32</span>&gt;<br><span class="hljs-keyword">where</span><br>    <span class="hljs-symbol">&#x27;long</span>: <span class="hljs-symbol">&#x27;short</span>,  <span class="hljs-comment">// &#x27;long 生命周期比 &#x27;short 长</span><br>&#123;<br>    long  <span class="hljs-comment">// 允许转换，因为 Container&lt;&#x27;a, T&gt; 对 &#x27;a 是协变的</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
 <h4><span id="协变的意义">协变的意义</span></h4>
 <ul>
 <li><strong>允许生命周期缩短</strong>（即更“短暂”的借用可以替代“长久”的借用）。</li>
@@ -301,7 +301,7 @@
 <p><code>&amp;'a mut T</code> 对于 <code>'a</code> 来说是协变(
 <code>covariant</code> )的，但是对于 <code>T</code> 是不变的(
 <code>invariant</code> )。</p>
-<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">NonNull</span></span>&lt;T&gt; &#123;<br>    pointer: *<span class="hljs-keyword">const</span> T,<br>&#125;<br><br><span class="hljs-keyword">impl</span>&lt;T&gt; NonNull&lt;T&gt; &#123;<br>    <span class="hljs-keyword">pub</span> <span class="hljs-keyword">unsafe</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">new_unchecked</span></span>(ptr: *<span class="hljs-keyword">mut</span> T) -&gt; <span class="hljs-keyword">Self</span> &#123;<br>        <span class="hljs-comment">// SAFETY: the caller must guarantee that `ptr` is non-null.</span><br>        <span class="hljs-keyword">unsafe</span> &#123; NonNull &#123; pointer: ptr <span class="hljs-keyword">as</span> *<span class="hljs-keyword">const</span> T &#125; &#125;<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">pub</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">NonNull</span>&lt;T&gt; &#123;<br>    pointer: *<span class="hljs-keyword">const</span> T,<br>&#125;<br><br><span class="hljs-keyword">impl</span>&lt;T&gt; NonNull&lt;T&gt; &#123;<br>    <span class="hljs-keyword">pub</span> <span class="hljs-keyword">unsafe</span> <span class="hljs-keyword">fn</span> <span class="hljs-title function_">new_unchecked</span>(ptr: *<span class="hljs-keyword">mut</span> T) <span class="hljs-punctuation">-&gt;</span> <span class="hljs-keyword">Self</span> &#123;<br>        <span class="hljs-comment">// SAFETY: the caller must guarantee that `ptr` is non-null.</span><br>        <span class="hljs-keyword">unsafe</span> &#123; NonNull &#123; pointer: ptr <span class="hljs-keyword">as</span> *<span class="hljs-keyword">const</span> T &#125; &#125;<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
 <p>另外，如果使用 NonNull&lt;T&gt;
 作为一个类的成员，为了不受到一些间接因素的影响，类型擦除或者其它间接的什么原因，使用一个
 _boo: PhantomData&lt;T&gt; 成员，来告诉编译器，NonNull 中一定是一个 T
@@ -312,7 +312,7 @@ _boo: PhantomData&lt;T&gt; 成员，来告诉编译器，NonNull 中一定是一
 的。这意味着，如果 <code>'a &lt;: 'b</code>，那么
 <code>fn(&amp;'b i32) -&gt; ()</code> 可以赋值给
 <code>fn(&amp;'a i32) -&gt; ()</code>。</p>
-<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">contravariant_example</span></span>&lt;<span class="hljs-symbol">'short</span>, <span class="hljs-symbol">'long</span>&gt;(func: <span class="hljs-function"><span class="hljs-keyword">fn</span></span>(&amp;<span class="hljs-symbol">'short</span> <span class="hljs-built_in">i32</span>)) -&gt; <span class="hljs-function"><span class="hljs-keyword">fn</span></span>(&amp;<span class="hljs-symbol">'long</span> <span class="hljs-built_in">i32</span>)<br><span class="hljs-keyword">where</span><br>    <span class="hljs-symbol">'long</span>: <span class="hljs-symbol">'short</span>, <span class="hljs-comment">// 'long 生命周期比 'short 长</span><br>&#123;<br>    func <span class="hljs-comment">// 允许转换，因为函数参数的生命周期是逆变的</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">contravariant_example</span>&lt;<span class="hljs-symbol">&#x27;short</span>, <span class="hljs-symbol">&#x27;long</span>&gt;(func: <span class="hljs-title function_ invoke__">fn</span>(&amp;<span class="hljs-symbol">&#x27;short</span> <span class="hljs-type">i32</span>)) <span class="hljs-punctuation">-&gt;</span> <span class="hljs-title function_ invoke__">fn</span>(&amp;<span class="hljs-symbol">&#x27;long</span> <span class="hljs-type">i32</span>)<br><span class="hljs-keyword">where</span><br>    <span class="hljs-symbol">&#x27;long</span>: <span class="hljs-symbol">&#x27;short</span>, <span class="hljs-comment">// &#x27;long 生命周期比 &#x27;short 长</span><br>&#123;<br>    func <span class="hljs-comment">// 允许转换，因为函数参数的生命周期是逆变的</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
 <h4><span id="反变的意义"><strong>反变的意义</strong></span></h4>
 <ul>
 <li><strong>防止不安全的生命周期扩展</strong>（即不能让短生命周期的数据被长生命周期的函数引用）。</li>
@@ -326,7 +326,7 @@ C++，协变和反变主要体现在<strong>继承和模板</strong>的上下界
 <p>如果派生类 <code>Derived</code> 继承了 <code>Base</code>，那么返回
 <code>Derived*</code> 的函数可以覆盖返回 <code>Base*</code>
 的函数（<strong>返回值是协变的</strong>）。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Base</span> &#123;</span><br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> Base* <span class="hljs-title">get</span><span class="hljs-params">()</span> </span>&#123; <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>; &#125;<br>&#125;;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Derived</span> :</span> <span class="hljs-keyword">public</span> Base &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function">Derived* <span class="hljs-title">get</span><span class="hljs-params">()</span> <span class="hljs-keyword">override</span> </span>&#123; <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>; &#125;  <span class="hljs-comment">// 允许，返回值是协变的</span><br>&#125;;<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Base</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> Base* <span class="hljs-title">get</span><span class="hljs-params">()</span> </span>&#123; <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>; &#125;<br>&#125;;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Derived</span> : <span class="hljs-keyword">public</span> Base &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function">Derived* <span class="hljs-title">get</span><span class="hljs-params">()</span> <span class="hljs-keyword">override</span> </span>&#123; <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>; &#125;  <span class="hljs-comment">// 允许，返回值是协变的</span><br>&#125;;<br></code></pre></div></td></tr></table></figure>
 <h4><span id="协变的意义"><strong>协变的意义</strong></span></h4>
 <ul>
 <li><strong>允许更具体的返回类型</strong>，使得调用者可以获得更具体的对象，而不需要额外的类型转换。</li>
@@ -337,7 +337,7 @@ C++，协变和反变主要体现在<strong>继承和模板</strong>的上下界
 <code>Derived</code> 继承自 <code>Base</code>，则
 <code>void func(Derived*)</code> 不能替代
 <code>void func(Base*)</code>，但反过来可以。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Base</span> &#123;</span>&#125;;<br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Derived</span> :</span> <span class="hljs-keyword">public</span> Base &#123;&#125;;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">acceptBase</span><span class="hljs-params">(Base* b)</span> </span>&#123;&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">acceptDerived</span><span class="hljs-params">(Derived* d)</span> </span>&#123;&#125;<br><br><span class="hljs-keyword">using</span> FuncType = <span class="hljs-keyword">void</span> (*)(Derived*);<br><br>FuncType funcPtr = acceptBase;  <span class="hljs-comment">// ❌ 错误，参数类型是逆变的</span><br></code></pre></div></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Base</span> &#123;&#125;;<br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Derived</span> : <span class="hljs-keyword">public</span> Base &#123;&#125;;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">acceptBase</span><span class="hljs-params">(Base* b)</span> </span>&#123;&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">acceptDerived</span><span class="hljs-params">(Derived* d)</span> </span>&#123;&#125;<br><br><span class="hljs-keyword">using</span> FuncType = <span class="hljs-built_in">void</span> (*)(Derived*);<br><br>FuncType funcPtr = acceptBase;  <span class="hljs-comment">// ❌ 错误，参数类型是逆变的</span><br></code></pre></div></td></tr></table></figure>
 <h4><span id="反变的意义"><strong>反变的意义</strong></span></h4>
 <ul>
 <li><strong>防止子类对象被错误地当作父类处理</strong>，因为子类可能有额外的字段或行为。</li>
@@ -371,7 +371,7 @@ C++，协变和反变主要体现在<strong>继承和模板</strong>的上下界
               
                 <p class="note note-warning">
                   
-                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
                   
                 </p>
               
@@ -589,23 +589,8 @@ C++，协变和反变主要体现在<strong>继承和模板</strong>的上下界
 
 
 <!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>

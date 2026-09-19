@@ -38,8 +38,8 @@
 <meta property="article:published_time" content="2021-02-12T16:10:19.000Z">
 <meta property="article:modified_time" content="2023-08-07T11:54:31.025Z">
 <meta property="article:author" content="江左时雨">
-<meta property="article:tag" content="BERT">
 <meta property="article:tag" content="sentence embedding">
+<meta property="article:tag" content="BERT">
 <meta property="article:tag" content="nlp">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/BERT-flow%20and%20more_pic/image-20210113230557038.png">
@@ -93,7 +93,7 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 
@@ -354,7 +354,7 @@ p(x_{masked}|context_{of\ masked})=\sum_{t=1}^{T}mask_t \times
 p(x_t|context_t)
 \]</span> 两者建立model的共同形式如下： <span class="math display">\[
 p(x|context)=\frac{\exp(VectorFromNet_{context}^TEmbedding_x)}{\sum_{x&#39;}\exp(VectorFromNet_{context}^TEmbedding_{x&#39;})}
-\]</span> 这种表达形式的关键在<span class="math inline">\(VectorFromNet_{context}^TEmbedding_x\)</span>，以下简单写作<span class="math inline">\(h_c^Tw_x\)</span>。<a href="https://arxiv.org/abs/1711.03953" target="_blank" rel="noopener">这篇论文</a>证明了： <span class="math display">\[
+\]</span> 这种表达形式的关键在<span class="math inline">\(VectorFromNet_{context}^TEmbedding_x\)</span>，以下简单写作<span class="math inline">\(h_c^Tw_x\)</span>。<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1711.03953">这篇论文</a>证明了： <span class="math display">\[
 h_c^Tw_x\approx\log p^*(x|c) + \lambda_c=PMI(x,c)+\log p(x)+\lambda_c
 \]</span> ​ PMI指point wise mutual
 information。这种共现特征通常可以捕捉到语义信息，只是在“word”层面而言。</p>
@@ -366,7 +366,7 @@ embeddings的平均值，或者在[CLS]标记的位置提取。一般前一种�
 GloVe embeddings方法。</p>
 </blockquote>
 <p>为什么效果不及averaged GloVe embeddings？</p>
-<p>文章 <a href="https://arxiv.org/abs/1909.00512" target="_blank" rel="noopener">How Contextual are
+<p>文章 <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1909.00512">How Contextual are
 Contextualized Word Representations? Comparing the Geometry of BERT,
 ELMo, and GPT-2 Embeddings</a> 比较了预训练LM的word
 embedding，有如下结论：</p>
@@ -422,12 +422,12 @@ W^T\Sigma W=I
 \Sigma=U\Lambda U^T=(W^{-1})^TW^{-1}
 \]</span> 得到变换<span class="math inline">\(W\)</span>为： <span class="math display">\[
 W=U\sqrt{\Lambda^{-1}}
-\]</span> <a href="https://spaces.ac.cn/archives/8069" target="_blank" rel="noopener">作者</a>实验的结果显示，该方法简洁，且效果与flow模型相差无几。</p>
+\]</span> <a target="_blank" rel="noopener" href="https://spaces.ac.cn/archives/8069">作者</a>实验的结果显示，该方法简洁，且效果与flow模型相差无几。</p>
 <p>作者称该方法为BERT-whitening。</p>
 <p>核心代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">compute_w_bias</span><span class="hljs-params">(vecs, n_components)</span>:</span><br>    vecs = np.concatenate(vecs, axis=<span class="hljs-number">0</span>)<br>    mu = vecs.mean(axis=<span class="hljs-number">0</span>, keepdims=<span class="hljs-literal">True</span>)<br>    cov = np.cov(vecs.T)<br>    u, s, vh = np.linalg.svd(cov)<br>    W = np.np.dot(u, np.diag(<span class="hljs-number">1</span>/np.sqrt(s)))<br>    <span class="hljs-keyword">return</span> W[:, :n_components], -mu<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">compute_w_bias</span>(<span class="hljs-params">vecs, n_components</span>):<br>    vecs = np.concatenate(vecs, axis=<span class="hljs-number">0</span>)<br>    mu = vecs.mean(axis=<span class="hljs-number">0</span>, keepdims=<span class="hljs-literal">True</span>)<br>    cov = np.cov(vecs.T)<br>    u, s, vh = np.linalg.svd(cov)<br>    W = np.np.dot(u, np.diag(<span class="hljs-number">1</span>/np.sqrt(s)))<br>    <span class="hljs-keyword">return</span> W[:, :n_components], -mu<br></code></pre></div></td></tr></table></figure>
 <p>标准化</p>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">transform_and_normalize</span><span class="hljs-params">(vecs, kernel=None, bias=None)</span>:</span><br>    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> (kernel <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span> <span class="hljs-keyword">or</span> bias <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>):<br>        vecs = (vecs + bias).dot(kernel)<br>    <span class="hljs-keyword">return</span> vecs / (vecs**<span class="hljs-number">2</span>).sum(axis=<span class="hljs-number">1</span>, keepdims=<span class="hljs-literal">True</span>)**<span class="hljs-number">0.5</span><br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">transform_and_normalize</span>(<span class="hljs-params">vecs, kernel=<span class="hljs-literal">None</span>, bias=<span class="hljs-literal">None</span></span>):<br>    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> (kernel <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span> <span class="hljs-keyword">or</span> bias <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>):<br>        vecs = (vecs + bias).dot(kernel)<br>    <span class="hljs-keyword">return</span> vecs / (vecs**<span class="hljs-number">2</span>).<span class="hljs-built_in">sum</span>(axis=<span class="hljs-number">1</span>, keepdims=<span class="hljs-literal">True</span>)**<span class="hljs-number">0.5</span><br></code></pre></div></td></tr></table></figure>
 <h3><span id="实现细节">实现细节</span></h3>
 <ol type="1">
 <li>大语料计算内存问题？</li>
@@ -464,9 +464,9 @@ W=U\sqrt{\Lambda^{-1}}
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/BERT/">BERT</a>
-                    
                       <a class="hover-with-bg" href="/tags/sentence-embedding/">sentence embedding</a>
+                    
+                      <a class="hover-with-bg" href="/tags/BERT/">BERT</a>
                     
                       <a class="hover-with-bg" href="/tags/nlp/">nlp</a>
                     
@@ -476,7 +476,7 @@ W=U\sqrt{\Lambda^{-1}}
               
                 <p class="note note-warning">
                   
-                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
                   
                 </p>
               
@@ -736,23 +736,8 @@ W=U\sqrt{\Lambda^{-1}}
 
 
 <!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>

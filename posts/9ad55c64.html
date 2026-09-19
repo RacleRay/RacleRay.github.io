@@ -81,7 +81,7 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 
@@ -232,7 +232,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      3.2k 字
+      3.4k 字
     </span>
   
 
@@ -241,7 +241,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      10 分钟
+      11 分钟
     </span>
   
 
@@ -274,8 +274,8 @@
             
             <div class="markdown-body">
               <h2><span id="python函数">python函数</span></h2>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment"># 去空格及特殊符号  </span><br>en_str.strip().lstrip().rstrip(<span class="hljs-string">','</span>) <br><br><span class="hljs-comment"># 字符串替换</span><br>en_str.replace(<span class="hljs-string">'hello'</span>, <span class="hljs-string">'hi'</span>)<br><br><span class="hljs-comment"># 删除</span><br>zh_str.strip().replace(<span class="hljs-string">'大家好，'</span>, <span class="hljs-string">''</span>)<br><br><span class="hljs-comment"># 通过join的方式连接</span><br><span class="hljs-string">"，"</span>.join(strs)<br>或者<br>str1+str2<br><br><br><span class="hljs-comment"># 通过split的方式切分</span><br>tmp_str.split(<span class="hljs-string">"；"</span>)<br></code></pre></div></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment"># 以字母序排列，注意是以返回值形态返回排序结果，不改变原list</span><br>sorted(en_strs)<br><br>sorted(en_strs, key=<span class="hljs-keyword">lambda</span> x:x[<span class="hljs-number">2</span>].lower())<br><br><br><span class="hljs-comment"># 查找可以用index和find</span><br>zh_str.index(<span class="hljs-string">"陆超"</span>)   <span class="hljs-comment"># 第一个index</span><br><br>zh_str.find(<span class="hljs-string">"来了老弟"</span>)   <span class="hljs-comment"># 返回-1，不会报错</span><br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment"># 去空格及特殊符号  </span><br>en_str.strip().lstrip().rstrip(<span class="hljs-string">&#x27;,&#x27;</span>) <br><br><span class="hljs-comment"># 字符串替换</span><br>en_str.replace(<span class="hljs-string">&#x27;hello&#x27;</span>, <span class="hljs-string">&#x27;hi&#x27;</span>)<br><br><span class="hljs-comment"># 删除</span><br>zh_str.strip().replace(<span class="hljs-string">&#x27;大家好，&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>)<br><br><span class="hljs-comment"># 通过join的方式连接</span><br><span class="hljs-string">&quot;，&quot;</span>.join(strs)<br>或者<br>str1+str2<br><br><br><span class="hljs-comment"># 通过split的方式切分</span><br>tmp_str.split(<span class="hljs-string">&quot;；&quot;</span>)<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment"># 以字母序排列，注意是以返回值形态返回排序结果，不改变原list</span><br><span class="hljs-built_in">sorted</span>(en_strs)<br><br><span class="hljs-built_in">sorted</span>(en_strs, key=<span class="hljs-keyword">lambda</span> x:x[<span class="hljs-number">2</span>].lower())<br><br><br><span class="hljs-comment"># 查找可以用index和find</span><br>zh_str.index(<span class="hljs-string">&quot;陆超&quot;</span>)   <span class="hljs-comment"># 第一个index</span><br><br>zh_str.find(<span class="hljs-string">&quot;来了老弟&quot;</span>)   <span class="hljs-comment"># 返回-1，不会报错</span><br></code></pre></div></td></tr></table></figure>
 <figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment"># 大小写与其他变化</span><br>en_str.title()<br><br>a = en_str.translate(en_str)<br><br>en_str.lower().upper()<br><br>en_str.capitalize()  <span class="hljs-comment"># capitalize</span><br></code></pre></div></td></tr></table></figure>
 <p>函数帮助（help(func)）</p>
 <h2><span id="正则表达式">正则表达式</span></h2>
@@ -283,18 +283,18 @@
 http://regexr.com/</p>
 <p>https://alf.nu/RegexGolf 练习地址</p>
 <h4><span id="re模块">re模块</span></h4>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment"># encoding: UTF-8</span><br><span class="hljs-keyword">import</span> re<br> <br><span class="hljs-comment"># 将正则表达式编译成Pattern对象</span><br>pattern = re.compile(<span class="hljs-string">r'hello.*\!'</span>)<br> <br><span class="hljs-comment"># 使用Pattern匹配文本，获得匹配结果，无法匹配时将返回None</span><br>match = pattern.match(<span class="hljs-string">'hello, hanxiaoyang! How are you?'</span>)<br><span class="hljs-comment"># match从头开始匹配</span><br> <br><span class="hljs-keyword">if</span> match:<br>    <span class="hljs-comment"># 使用Match获得分组信息</span><br>    <span class="hljs-keyword">print</span> match.group()<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment"># encoding: UTF-8</span><br><span class="hljs-keyword">import</span> re<br> <br><span class="hljs-comment"># 将正则表达式编译成Pattern对象</span><br>pattern = re.<span class="hljs-built_in">compile</span>(<span class="hljs-string">r&#x27;hello.*\!&#x27;</span>)<br> <br><span class="hljs-comment"># 使用Pattern匹配文本，获得匹配结果，无法匹配时将返回None</span><br><span class="hljs-keyword">match</span> = pattern.<span class="hljs-keyword">match</span>(<span class="hljs-string">&#x27;hello, hanxiaoyang! How are you?&#x27;</span>)<br><span class="hljs-comment"># match从头开始匹配</span><br> <br><span class="hljs-keyword">if</span> <span class="hljs-keyword">match</span>:<br>    <span class="hljs-comment"># 使用Match获得分组信息</span><br>    <span class="hljs-built_in">print</span> <span class="hljs-keyword">match</span>.group()<br></code></pre></div></td></tr></table></figure>
 <p>​ <strong>re.compile('pattern', re.I | re.M)</strong>
 ：re.I(re.IGNORECASE): 忽略大小写（括号内是完整写法，下同）
 re.M(MULTILINE): 多行模式，改变'^'和'$'的行为。</p>
 <p>​
 <strong>Match</strong>对象是一次匹配的结果，包含了很多关于此次匹配的信息，可以使用Match提供的可读属性或方法来获取这些信息</p>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">re.match<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">re.<span class="hljs-keyword">match</span><br></code></pre></div></td></tr></table></figure>
 <p>​
 <strong>Pattern</strong>对象是一个编译好的正则表达式，通过Pattern提供的一系列方法可以对文本进行匹配查找。</p>
 <p>​
 <strong>Pattern</strong>不能直接实例化，必须使用re.compile()进行构造。</p>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment"># Pattern提供了几个可读属性用于获取表达式的相关信息：</span><br><span class="hljs-comment">#   pattern: 编译时用的表达式字符串。</span><br><span class="hljs-comment">#   flags: 编译时用的匹配模式。数字形式。</span><br><span class="hljs-comment">#   groups: 表达式中分组的数量。</span><br><span class="hljs-comment">#   groupindex: 以表达式中有别名的组的别名为键、以该组对应的编号为值的字典，没有别名的组不包含在内。</span><br><br><span class="hljs-comment"># re.S(DOTALL): 点任意匹配模式</span><br>re.compile(<span class="hljs-string">r'(\w+) (\w+)(?P&lt;sign&gt;.*)'</span>, re.DOTALL)<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment"># Pattern提供了几个可读属性用于获取表达式的相关信息：</span><br><span class="hljs-comment">#   pattern: 编译时用的表达式字符串。</span><br><span class="hljs-comment">#   flags: 编译时用的匹配模式。数字形式。</span><br><span class="hljs-comment">#   groups: 表达式中分组的数量。</span><br><span class="hljs-comment">#   groupindex: 以表达式中有别名的组的别名为键、以该组对应的编号为值的字典，没有别名的组不包含在内。</span><br><br><span class="hljs-comment"># re.S(DOTALL): 点任意匹配模式</span><br>re.<span class="hljs-built_in">compile</span>(<span class="hljs-string">r&#x27;(\w+) (\w+)(?P&lt;sign&gt;.*)&#x27;</span>, re.DOTALL)<br></code></pre></div></td></tr></table></figure>
 <h4><span id="使用pattern">使用pattern</span></h4>
 <ol type="1">
 <li><p><strong>match(string[, pos[, endpos]]) | re.match(pattern,
@@ -326,27 +326,27 @@ count用于指定最多替换次数，不指定时全部替换。</li>
 maxsplit]): 按照能够匹配的子串将string分割后返回列表。maxsplit
 用于指定最大分割次数，不指定将全部分割。</p></li>
 </ol>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">p = re.compile(<span class="hljs-string">r'\d+'</span>)<br>print(p.split(<span class="hljs-string">'one1two2three3four4'</span>))<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">p = re.<span class="hljs-built_in">compile</span>(<span class="hljs-string">r&#x27;\d+&#x27;</span>)<br><span class="hljs-built_in">print</span>(p.split(<span class="hljs-string">&#x27;one1two2three3four4&#x27;</span>))<br></code></pre></div></td></tr></table></figure>
 <ol start="5" type="1">
 <li>findall(string[, pos[, endpos]]) | re.findall(pattern, string[,
 flags]):
 搜索string，<strong>以列表形式返回全部能匹配的子串</strong>。</li>
 </ol>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">p = re.compile(<span class="hljs-string">r'\d+'</span>)<br>print(p.findall(<span class="hljs-string">'one1two2three3four4'</span>)<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">p = re.<span class="hljs-built_in">compile</span>(<span class="hljs-string">r&#x27;\d+&#x27;</span>)<br><span class="hljs-built_in">print</span>(p.findall(<span class="hljs-string">&#x27;one1two2three3four4&#x27;</span>)<br></code></pre></div></td></tr></table></figure>
 <ol start="6" type="1">
 <li>finditer(string[, pos[, endpos]]) | <strong>re.finditer(pattern,
 string[, flags])</strong>:
 搜索string，返回一个顺序访问每一个匹配结果（Match对象）的迭代器。</li>
 </ol>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">p = re.compile(<span class="hljs-string">r'\d+'</span>)<br><span class="hljs-keyword">for</span> m <span class="hljs-keyword">in</span> p.finditer(<span class="hljs-string">'one1two2three3four4'</span>):<br>	print(m.group())<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">p = re.<span class="hljs-built_in">compile</span>(<span class="hljs-string">r&#x27;\d+&#x27;</span>)<br><span class="hljs-keyword">for</span> m <span class="hljs-keyword">in</span> p.finditer(<span class="hljs-string">&#x27;one1two2three3four4&#x27;</span>):<br>	<span class="hljs-built_in">print</span>(m.group())<br></code></pre></div></td></tr></table></figure>
 <ol start="7" type="1">
 <li><p><strong>subn(repl, string[, count]) |re.subn(pattern, repl,
 string[, count]): </strong></p>
 <p>返回 (sub(repl, string[, count]), 替换次数)。</p></li>
 </ol>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">p = re.compile(<span class="hljs-string">r'(\w+) (\w+)'</span>)<br>s = <span class="hljs-string">'i say, hello world!'</span><br> <br>print(p.subn(<span class="hljs-string">r'\2 \1'</span>, s))<br> <br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">func</span><span class="hljs-params">(m)</span>:</span><br>    <span class="hljs-keyword">return</span> m.group(<span class="hljs-number">1</span>).title() + <span class="hljs-string">' '</span> + m.group(<span class="hljs-number">2</span>).title()<br> <br>print(p.subn(func, s))<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">p = re.<span class="hljs-built_in">compile</span>(<span class="hljs-string">r&#x27;(\w+) (\w+)&#x27;</span>)<br>s = <span class="hljs-string">&#x27;i say, hello world!&#x27;</span><br> <br><span class="hljs-built_in">print</span>(p.subn(<span class="hljs-string">r&#x27;\2 \1&#x27;</span>, s))<br> <br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>(<span class="hljs-params">m</span>):<br>    <span class="hljs-keyword">return</span> m.group(<span class="hljs-number">1</span>).title() + <span class="hljs-string">&#x27; &#x27;</span> + m.group(<span class="hljs-number">2</span>).title()<br> <br><span class="hljs-built_in">print</span>(p.subn(func, s))<br></code></pre></div></td></tr></table></figure>
 <h4><span id="词条和解释抽取">词条和解释抽取</span></h4>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment"># 引入爬虫工具库</span><br><span class="hljs-keyword">import</span> requests <span class="hljs-keyword">as</span> rq<br><span class="hljs-keyword">import</span> re<br><br><span class="hljs-comment"># 发送请求</span><br>page = rq.get(<span class="hljs-string">"https://baike.sogou.com/v231013.htm"</span>)<br><br><span class="hljs-comment"># 返回状态码正常</span><br>page.status_code<br><br><span class="hljs-comment"># 词条正则表达式抽取</span><br>title_pattern = re.compile(<span class="hljs-string">r'&lt;h1 id="title".*?&gt;(.*?)&lt;/h1&gt;'</span>) <br>title = title_pattern.search(page.text) <br>print(title.group(<span class="hljs-number">1</span>))<br><br><span class="hljs-comment"># 词条正则表达式抽取</span><br>content_pattern = re.compile(<span class="hljs-string">r'&lt;p&gt;(.*?)&lt;\\/p&gt;'</span>) <br>contents = content_pattern.findall(page.text) <br>print(contents)<br><br><br>list(map(<span class="hljs-keyword">lambda</span> x:re.sub(<span class="hljs-string">"&lt;a .*?&gt;|&lt;\\\/[ab]&gt;"</span>, <span class="hljs-string">""</span>,x), contents))<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment"># 引入爬虫工具库</span><br><span class="hljs-keyword">import</span> requests <span class="hljs-keyword">as</span> rq<br><span class="hljs-keyword">import</span> re<br><br><span class="hljs-comment"># 发送请求</span><br>page = rq.get(<span class="hljs-string">&quot;https://baike.sogou.com/v231013.htm&quot;</span>)<br><br><span class="hljs-comment"># 返回状态码正常</span><br>page.status_code<br><br><span class="hljs-comment"># 词条正则表达式抽取</span><br>title_pattern = re.<span class="hljs-built_in">compile</span>(<span class="hljs-string">r&#x27;&lt;h1 id=&quot;title&quot;.*?&gt;(.*?)&lt;/h1&gt;&#x27;</span>) <br>title = title_pattern.search(page.text) <br><span class="hljs-built_in">print</span>(title.group(<span class="hljs-number">1</span>))<br><br><span class="hljs-comment"># 词条正则表达式抽取</span><br>content_pattern = re.<span class="hljs-built_in">compile</span>(<span class="hljs-string">r&#x27;&lt;p&gt;(.*?)&lt;\\/p&gt;&#x27;</span>) <br>contents = content_pattern.findall(page.text) <br><span class="hljs-built_in">print</span>(contents)<br><br><br><span class="hljs-built_in">list</span>(<span class="hljs-built_in">map</span>(<span class="hljs-keyword">lambda</span> x:re.sub(<span class="hljs-string">&quot;&lt;a .*?&gt;|&lt;\\\/[ab]&gt;&quot;</span>, <span class="hljs-string">&quot;&quot;</span>,x), contents))<br></code></pre></div></td></tr></table></figure>
 
             </div>
             <hr>
@@ -376,7 +376,7 @@ string[, count]): </strong></p>
               
                 <p class="note note-warning">
                   
-                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
                   
                 </p>
               
@@ -594,23 +594,8 @@ string[, count]): </strong></p>
 
 
 <!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>

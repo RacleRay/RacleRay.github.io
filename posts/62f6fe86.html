@@ -108,7 +108,7 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 
@@ -308,7 +308,7 @@ model)。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/Contrastive Knowledge Distillation_pic/image-20210417161513300.png" srcset="/img/loading.gif" lazyload alt style="zoom:80%;"></p>
 <p>此处关注知识蒸馏（模型压缩）这一类。</p>
 <h2><span id="first-step">First Step</span></h2>
-<p><a href="https://arxiv.org/abs/1503.02531" target="_blank" rel="noopener">原文</a>， <a href="https://arxiv.org/pdf/2004.05937" target="_blank" rel="noopener">综述</a></p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1503.02531">原文</a>， <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2004.05937">综述</a></p>
 <p>1、训练复杂的教师模型（teacher model）：先用硬目标（hard
 target），也就是正常的标签（label）训练大模型。</p>
 <p>2、计算软目标（soft target）：利用训练好的大模型来计算软目标（soft
@@ -337,7 +337,7 @@ Knowledge
 Distillation）同时学习中间层的表示。TinyBERT将embedding层也纳入学习的范畴。同时关注新的基于对比学习的方法。</p>
 <h2><span id="contrastiverepresentation-distillation">Contrastive
 Representation Distillation</span></h2>
-<p><a href="https://arxiv.org/abs/1910.10699" target="_blank" rel="noopener">论文</a>， <a href="https://github.com/HobbitLong/RepDistiller" target="_blank" rel="noopener">Git</a></p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1910.10699">论文</a>， <a target="_blank" rel="noopener" href="https://github.com/HobbitLong/RepDistiller">Git</a></p>
 <p>基本假设，知识蒸馏应该要迁移的是表征representation，而不是概率分布（不管是使用KL散度还是L2距离）。同时之前的不是基于对比学习的方法，会丢失Teacher模型输出表征representation的结构信息，即忽略了维度间有很复杂的依赖关系。</p>
 <p>因为KL散度或者L2距离计算将每个维度认为是独立的，在表征学习中，很难保证这里的独立假设是完成成立的。</p>
 <p>符号定义：</p>
@@ -382,7 +382,7 @@ L_{critic}(h)\)</span></p>
 <p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/Contrastive Knowledge Distillation_pic/image-20210417163257078.png" srcset="/img/loading.gif" lazyload alt style="zoom:67%;"></p>
 <h2><span id="softmaxregression-representation-distillation">Softmax
 Regression Representation Distillation</span></h2>
-<p><a href="https://openreview.net/forum?id=ZzwDy_wiWv" target="_blank" rel="noopener">论文</a>，<a href="https://github.com/jingyang2017/KD_SRRL" target="_blank" rel="noopener">Git</a></p>
+<p><a target="_blank" rel="noopener" href="https://openreview.net/forum?id=ZzwDy_wiWv">论文</a>，<a target="_blank" rel="noopener" href="https://github.com/jingyang2017/KD_SRRL">Git</a></p>
 <p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/Contrastive Knowledge Distillation_pic/image-20210417172241058.png" srcset="/img/loading.gif" lazyload alt style="zoom:80%;"></p>
 <p>方法基本如图所示，就是设计了三种损失相加。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/Contrastive Knowledge Distillation_pic/image-20210417172649103.png" srcset="/img/loading.gif" lazyload alt style="zoom:90%;"></p>
@@ -425,7 +425,7 @@ Regression Representation Distillation</span></h2>
               
                 <p class="note note-warning">
                   
-                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
                   
                 </p>
               
@@ -685,23 +685,8 @@ Regression Representation Distillation</span></h2>
 
 
 <!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>

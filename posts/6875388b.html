@@ -91,7 +91,7 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 
@@ -323,13 +323,13 @@ decoder在vocabulary上的预测分布，以 Pgen 加权的结果。</p>
 Network产生的，随着模型逐渐收敛，这个概率下降到47%。然而，在测试环节中，有83%的输出序列是由Pointer
 Network产生的。作者猜测这个差异的原因在于：训练环节的decoder使用了真实的目标序列。</p>
 <p>（3）作者曾尝试使用一个15万长度的大词表，但是并不能显著改善模型效果。</p>
-<p><a href="https://github.com/RacleRay/TextSummerization/tree/master/pointer" target="_blank" rel="noopener">Code</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/RacleRay/TextSummerization/tree/master/pointer">Code</a></p>
 <p>其他同类模型：</p>
 <ol type="1">
-<li>将LM部分也变为 attention ，进行多个 source text 的输入的生成任务。<a href="https://arxiv.org/abs/1808.06885" target="_blank" rel="noopener">Multi-Source Pointer
+<li>将LM部分也变为 attention ，进行多个 source text 的输入的生成任务。<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1808.06885">Multi-Source Pointer
 Network</a></li>
 <li>不计算 <span class="math inline">\(P_{gen}\)</span> ，而直接分成多种
-情况，进行不同的 生成过程。<a href="https://arxiv.org/abs/1603.06393" target="_blank" rel="noopener">CopyNet</a></li>
+情况，进行不同的 生成过程。<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1603.06393">CopyNet</a></li>
 </ol>
 
             </div>
@@ -360,7 +360,7 @@ Network</a></li>
               
                 <p class="note note-warning">
                   
-                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
                   
                 </p>
               
@@ -620,23 +620,8 @@ Network</a></li>
 
 
 <!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>

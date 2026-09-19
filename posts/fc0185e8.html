@@ -83,7 +83,7 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 
@@ -302,7 +302,7 @@
 old are you?]和[What’s your
 age?]，很有可能不是一个个体。最大的原因在于训练模型的数据来源于大量不同的用户，这导致机器人失去了固定统一的人格。</p>
 <h4><span id="对话模型的评测">对话模型的评测</span></h4>
-<p>​ 在开放域中的对话系统没有一个清晰的优化目标。用于机器翻译的评测指标<a href="https://en.wikipedia.org/wiki/BLEU" target="_blank" rel="noopener">BLEU</a>不能适用于此，是因为它的计算基础是语言表面上的匹配程度，而对话中的回答可以是完全不同词型但语义通顺的语句。</p>
+<p>​ 在开放域中的对话系统没有一个清晰的优化目标。用于机器翻译的评测指标<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/BLEU">BLEU</a>不能适用于此，是因为它的计算基础是语言表面上的匹配程度，而对话中的回答可以是完全不同词型但语义通顺的语句。</p>
 <h4><span id="意图和回复多样性">意图和回复多样性</span></h4>
 <p>​
 生成式模型中的一个普遍问题是，它们可能生成一些通用的回答，例如[That’s
@@ -313,29 +313,29 @@ great!]和[I don’t know]这样的可以应付许多的用户询问。</p>
 目前深度学习的价值主要体现在能够获取大量数据的特定领域。目前一个无法做的事情是产生一个有意义的对话。</p>
 <h3><span id="公开语料">公开语料</span></h3>
 <ol type="1">
-<li><a href="https://github.com/rustch3n/dgk_lost_conv" target="_blank" rel="noopener">dgk_shooter_min.conv.zip</a>
+<li><a target="_blank" rel="noopener" href="https://github.com/rustch3n/dgk_lost_conv">dgk_shooter_min.conv.zip</a>
 中文电影对白语料，噪音比较大，许多对白问答关系没有对应好</li>
-<li><a href="https://github.com/kite1988/nus-sms-corpus" target="_blank" rel="noopener">The NUS SMS
+<li><a target="_blank" rel="noopener" href="https://github.com/kite1988/nus-sms-corpus">The NUS SMS
 Corpus</a> 包含中文和英文短信息语料，据说是世界最大公开的短消息语料</li>
-<li><a href="https://github.com/gunthercox/chatterbot-corpus/tree/master/chatterbot_corpus/data" target="_blank" rel="noopener">ChatterBot中文基本聊天语料</a>
+<li><a target="_blank" rel="noopener" href="https://github.com/gunthercox/chatterbot-corpus/tree/master/chatterbot_corpus/data">ChatterBot中文基本聊天语料</a>
 ChatterBot聊天引擎提供的一点基本中文聊天语料，量很少，但质量比较高</li>
-<li><a href="https://github.com/karthikncode/nlp-datasets" target="_blank" rel="noopener">Datasets for
+<li><a target="_blank" rel="noopener" href="https://github.com/karthikncode/nlp-datasets">Datasets for
 Natural Language Processing</a>
 这是他人收集的自然语言处理相关数据集，主要包含Question
 Answering，Dialogue Systems， Goal-Oriented Dialogue
 Systems三部分，都是英文文本。可以使用机器翻译为中文，供中文对话使用</li>
-<li><a href="https://github.com/rustch3n/dgk_lost_conv/tree/master/results" target="_blank" rel="noopener">小黄鸡</a>
+<li><a target="_blank" rel="noopener" href="https://github.com/rustch3n/dgk_lost_conv/tree/master/results">小黄鸡</a>
 据传这就是小黄鸡的语料：xiaohuangji50w_fenciA.conv.zip （已分词） 和
 xiaohuangji50w_nofenci.conv.zip （未分词）</li>
-<li><a href="https://github.com/Samurais/egret-wenda-corpus" target="_blank" rel="noopener">白鹭时代中文问答语料</a>
+<li><a target="_blank" rel="noopener" href="https://github.com/Samurais/egret-wenda-corpus">白鹭时代中文问答语料</a>
 由白鹭时代官方论坛问答板块10,000+
 问题中，选择被标注了“最佳答案”的纪录汇总而成。人工review raw
-data，给每一个问题，一个可以接受的答案。目前，语料库只包含2907个问答。(<a href="http://localhost:8888/notebooks/9%20机器客服语音助手/2.generative_chatbot/egret-wenda-corpus.zip" target="_blank" rel="noopener">备份</a>)</li>
-<li><a href="https://github.com/Marsan-Ma/chat_corpus" target="_blank" rel="noopener">Chat corpus
+data，给每一个问题，一个可以接受的答案。目前，语料库只包含2907个问答。(<a target="_blank" rel="noopener" href="http://localhost:8888/notebooks/9%20机器客服语音助手/2.generative_chatbot/egret-wenda-corpus.zip">备份</a>)</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/Marsan-Ma/chat_corpus">Chat corpus
 repository</a> chat corpus collection from various open sources
 包括：开放字幕、英文电影字幕、中文歌词、英文推文</li>
-<li><a href="https://github.com/Samurais/insuranceqa-corpus-zh" target="_blank" rel="noopener">保险行业QA语料库</a>
-通过翻译 <a href="https://github.com/shuzi/insuranceQA" target="_blank" rel="noopener">insuranceQA</a>产生的数据集。train_data含有问题12,889条，数据
+<li><a target="_blank" rel="noopener" href="https://github.com/Samurais/insuranceqa-corpus-zh">保险行业QA语料库</a>
+通过翻译 <a target="_blank" rel="noopener" href="https://github.com/shuzi/insuranceQA">insuranceQA</a>产生的数据集。train_data含有问题12,889条，数据
 141779条，正例：负例 = 1:10； test_data含有问题2,000条，数据
 22000条，正例：负例 = 1:10；valid_data含有问题2,000条，数据
 22000条，正例：负例 = 1:10</li>
@@ -353,8 +353,8 @@ Tensorflow：https://github.com/dennybritz/chatbot-retrieval/</p>
 <p>​ 数据可以在Google
 Drive文件夹中找到：https://drive.google.com/open?id=1RIIbsS-vxR7Dlo2_v6FWHDFE7q1XPPgj</p>
 <p>​ 数据文件需要:</p>
-<figure class="highlight gcode"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs gcode">- glove<span class="hljs-number">.6</span>B<span class="hljs-number">.50</span>d.txt <span class="hljs-comment">(Subfolder GloVe)</span><br>- trai<span class="hljs-symbol">ning_10000</span>.csv <span class="hljs-comment">(Subfolder MAIN FILES)</span><br>- validatio<span class="hljs-symbol">n_1000</span>.csv <span class="hljs-comment">(Subfolder MAIN FILES)</span><br>- testi<span class="hljs-symbol">ng_same_structure_1000</span>.csv <span class="hljs-comment">(Subfolder MAIN FILES)</span><br>- testi<span class="hljs-symbol">ng_different_structure_100</span>.csv <span class="hljs-comment">(Subfolder MAIN FILES)</span><br>- saved_model_<span class="hljs-number">10000</span>_gpu.pt <span class="hljs-comment">(Subfolder SAVED MODELS)</span><br></code></pre></div></td></tr></table></figure>
-<p>​ 数据集为Ubuntu对话数据集。<a href="https://github.com/dennybritz/chatbot-retrieval" target="_blank" rel="noopener">chatbot-retrieval</a>/<a href="https://github.com/dennybritz/chatbot-retrieval/tree/master/notebooks" target="_blank" rel="noopener">notebooks</a>/Data
+<figure class="highlight dns"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs dns">- glove.<span class="hljs-number">6</span>B.<span class="hljs-number">50d</span>.<span class="hljs-keyword">txt</span> <span class="hljs-punctuation">(</span>Subfolder GloVe<span class="hljs-punctuation">)</span><br>- training_10000.csv <span class="hljs-punctuation">(</span>Subfolder MAIN FILES<span class="hljs-punctuation">)</span><br>- validation_1000.csv <span class="hljs-punctuation">(</span>Subfolder MAIN FILES<span class="hljs-punctuation">)</span><br>- testing_same_structure_1000.csv <span class="hljs-punctuation">(</span>Subfolder MAIN FILES<span class="hljs-punctuation">)</span><br>- testing_different_structure_100.csv <span class="hljs-punctuation">(</span>Subfolder MAIN FILES<span class="hljs-punctuation">)</span><br>- saved_model_10000_gpu.pt <span class="hljs-punctuation">(</span>Subfolder SAVED MODELS<span class="hljs-punctuation">)</span><br></code></pre></div></td></tr></table></figure>
+<p>​ 数据集为Ubuntu对话数据集。<a target="_blank" rel="noopener" href="https://github.com/dennybritz/chatbot-retrieval">chatbot-retrieval</a>/<a target="_blank" rel="noopener" href="https://github.com/dennybritz/chatbot-retrieval/tree/master/notebooks">notebooks</a>/Data
 Exploration.ipynb文件为数据分析。</p>
 <h4><span id="ubuntu对话数据集">Ubuntu对话数据集</span></h4>
 <h5><span id="训练集">训练集</span></h5>
@@ -362,12 +362,12 @@ Exploration.ipynb文件为数据分析。</p>
 训练数据有1,000,000条实例，其中一半是正例（label为1），一半是负例（label为0，负例为随机生成）。</p>
 <p>​
 每条实例包括一段上下文信息（context），即Query；和一段可能的回复内容，即Response；Label为1表示该Response确实是Query的回复，Label为0则表示不是。</p>
-<p>​ 数据集的生成使用了<a href="http://www.nltk.org/" target="_blank" rel="noopener">NLTK工具</a>，包括分词、stemmed、lemmatized等文本预处理步骤；同时还使用了NER技术，将文本中的实体，如姓名、地点、组织、URL等替换成特殊字符。这些文本预处理并不是必须的，但是能够提升一些模型的性能。</p>
+<p>​ 数据集的生成使用了<a target="_blank" rel="noopener" href="http://www.nltk.org/">NLTK工具</a>，包括分词、stemmed、lemmatized等文本预处理步骤；同时还使用了NER技术，将文本中的实体，如姓名、地点、组织、URL等替换成特殊字符。这些文本预处理并不是必须的，但是能够提升一些模型的性能。</p>
 <p>​ query的平均长度为86个word，而response的平均长度为17个word。</p>
 <h5><span id="测试集和验证集">测试集和验证集</span></h5>
 <p>​
 与训练集不同，在测试集和验证集中，对于每一条实例，有一个正例和九个负例数据（也称为干扰数据）。模型的目标在于给正例的得分尽可能的高，而给负例的得分尽可能的低。</p>
-<p>​ 负例生成方法可以参考谷歌的Smart Reply则使用了<a href="http://arxiv.org/abs/1606.04870" target="_blank" rel="noopener">聚类技术</a>，将每个类的中取一些作为负例，这样生成负例的方式显得更加合理（考虑了负例数据的多样性，同时减少时间开销）。</p>
+<p>​ 负例生成方法可以参考谷歌的Smart Reply则使用了<a target="_blank" rel="noopener" href="http://arxiv.org/abs/1606.04870">聚类技术</a>，将每个类的中取一些作为负例，这样生成负例的方式显得更加合理（考虑了负例数据的多样性，同时减少时间开销）。</p>
 <h5><span id="评测">评测</span></h5>
 <p>​
 模型的评测<strong>recall@k</strong>，即经模型对候选的response排序后，前k个候选中存在正例数据（正确的那个）的占比；显然k值越大，该指标会越高。</p>
@@ -375,7 +375,7 @@ Exploration.ipynb文件为数据分析。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/chatbot简述.assets/image-20200228194327764.png" srcset="/img/loading.gif" lazyload alt="image" style="zoom:67%;"></p>
 <p>大致的流程如下：</p>
 <ol type="1">
-<li><p>Query和Response都是经过分词的，分词后每个词embedded为向量形式。初始的词向量使用<a href="http://nlp.stanford.edu/projects/glove/" target="_blank" rel="noopener">GloVe
+<li><p>Query和Response都是经过分词的，分词后每个词embedded为向量形式。初始的词向量使用<a target="_blank" rel="noopener" href="http://nlp.stanford.edu/projects/glove/">GloVe
 vectors</a>，之后词向量随着模型的训练会进行fine-tuned（实验发现，初始的词向量使用GloVe并没有在性能上带来显著的提升）。</p></li>
 <li><p>Query和Response经过相同的RNN（word by
 word）。RNN最终生成一个向量表示，捕捉了Query和Response之间的[语义联系]（图中的c和r）；这个向量的维度是可以指定的，这里指定为256维。</p></li>
@@ -409,7 +409,7 @@ word）。RNN最终生成一个向量表示，捕捉了Query和Response之间的
               
                 <p class="note note-warning">
                   
-                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
                   
                 </p>
               
@@ -627,23 +627,8 @@ word）。RNN最终生成一个向量表示，捕捉了Query和Response之间的
 
 
 <!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>

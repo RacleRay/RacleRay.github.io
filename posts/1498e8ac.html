@@ -83,7 +83,7 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 
@@ -315,7 +315,7 @@ fan_in表示输入单元个数，每个输入单元的激活值与对应的权�
 <span class="math display">\[
 Var(Z_l)=fan\_in^{l} \times \prod_{l=1}^{L}Var(w_l) \times Var(Z_{l-1})
 \]</span> 同时考虑反向传播的过程，其差异在于fan_in 变为
-fan_out，详细过程见<a href="https://proceedings.mlr.press/v9/glorot10a/glorot10a.pdf" target="_blank" rel="noopener">论文</a>。同时约束前向和反向的系数都为1，那么，可以假设权重的分布为
+fan_out，详细过程见<a target="_blank" rel="noopener" href="https://proceedings.mlr.press/v9/glorot10a/glorot10a.pdf">论文</a>。同时约束前向和反向的系数都为1，那么，可以假设权重的分布为
 <span class="math display">\[
 N(0, \frac{2}{fan\_in+fan\_out})
 \]</span> 若为均匀分布，可以假设 <span class="math display">\[
@@ -340,13 +340,13 @@ N(0, \frac{4}{fan\_in + fan\_out})
 \]</span></p>
 <p>当然也可以不从激活函数入手，使用Normalization方法，强制变换分布。</p>
 <h2><span id="来自神经网络训练动力学研究的一点点总结">来自神经网络训练动力学研究的一点点总结</span></h2>
-<p>神经网络学习过程，可以从信号频域角度分析。神经网络擅长并且优先学习低频信号信息，而不擅长学习高频振荡信号。也因此，通常模型的参数学习结果是一个比较平滑的曲面（该研究主要是在浅层网络上实验）。<a href="https://arxiv.org/abs/2101.00747" target="_blank" rel="noopener">论文</a>中说，如无必要，勿增频率。</p>
-<p><a href="https://www.bilibili.com/video/BV19Q4y1X7RV" target="_blank" rel="noopener">报告</a>中还展示了一种设计思路，以提高网络处理高频信号的能力，就是scale到较低的值域，以获得相对较小的参数空间。</p>
+<p>神经网络学习过程，可以从信号频域角度分析。神经网络擅长并且优先学习低频信号信息，而不擅长学习高频振荡信号。也因此，通常模型的参数学习结果是一个比较平滑的曲面（该研究主要是在浅层网络上实验）。<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2101.00747">论文</a>中说，如无必要，勿增频率。</p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV19Q4y1X7RV">报告</a>中还展示了一种设计思路，以提高网络处理高频信号的能力，就是scale到较低的值域，以获得相对较小的参数空间。</p>
 <p>而参数的初始化，不仅对参数的频率信息有影响，还影响着模型在不同条件下的收敛速度和收敛性（报告展示了浅层网络在MNIST实验的结果）。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/回顾神经网络初始化方法_pic/image-20210617002135477.png" srcset="/img/loading.gif" lazyload alt style="zoom:60%;"></p>
 <p>实验也指出了多种常用初始化在该理论中，都具有较好的性能。这里的变量和公式，比较复杂，这里也只关心了结论。</p>
 <blockquote>
-<p><a href="https://arxiv.org/abs/2105.11686" target="_blank" rel="noopener">凝聚机制</a></p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2105.11686">凝聚机制</a></p>
 <p>大模型训练后期，参数会偏向简化参数空间，向更少的方向聚集参数梯度向量，出现趋向相同方向的权重。</p>
 <p>所以论文的结论为，神经网络存在这小网络偏好，如无必要，勿增<strong>神经元</strong>。</p>
 </blockquote>
@@ -379,7 +379,7 @@ N(0, \frac{4}{fan\_in + fan\_out})
               
                 <p class="note note-warning">
                   
-                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
                   
                 </p>
               
@@ -639,23 +639,8 @@ N(0, \frac{4}{fan\_in + fan\_out})
 
 
 <!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>

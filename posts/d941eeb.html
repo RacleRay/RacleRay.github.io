@@ -88,7 +88,7 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 
@@ -281,7 +281,7 @@
             
             <div class="markdown-body">
               <p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images//pic/贝叶斯超参数搜索_pic/image-20201125225639541.png" srcset="/img/loading.gif" lazyload></p>
-<p><a href="http://proceedings.mlr.press/v28/bergstra13.pdf" target="_blank" rel="noopener">paper by
+<p><a target="_blank" rel="noopener" href="http://proceedings.mlr.press/v28/bergstra13.pdf">paper by
 Bergstra et al</a></p>
 <p>一句话概括Bayesian hyperparameter optimization：</p>
 <blockquote>
@@ -326,8 +326,8 @@ Optimization</span></h3>
 Function</strong>），称为选择函数，用于评估从替代模型中下一步要选择的超参数</p></li>
 <li><p>该算法由（得分，超参数）对组成的历史记录，该历史对由算法用于更新代理模型</p></li>
 </ol>
-<p>代理模型的选择有：<a href="https://en.wikipedia.org/wiki/Gaussian_process" target="_blank" rel="noopener">Gaussian
-Processes</a>, <a href="http://aad.informatik.uni-freiburg.de/papers/13-GECCO-BBOB_SMAC.pdf" target="_blank" rel="noopener">Random
+<p>代理模型的选择有：<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Gaussian_process">Gaussian
+Processes</a>, <a target="_blank" rel="noopener" href="http://aad.informatik.uni-freiburg.de/papers/13-GECCO-BBOB_SMAC.pdf">Random
 Forest Regressions</a>, , Tree Parzen Estimators (TPE).</p>
 <p><strong>criteria</strong>常用Expected Improvement</p>
 <p>代理模型，也称为响应面，是利用以前的评估结果建立的目标函数的概率表示。</p>
@@ -354,11 +354,11 @@ Parzen Estimator (TPE)</strong></span></h4>
 g(x)</em>的比值成反比。提高EI，正是需要从l(x)中多得到p (x | y)的值。</p>
 <p>该算法利用历史得分建立l(x)和g(x)，提出目标函数的概率模型，代理模型随着每次迭代而改进。</p>
 <h3><span id="工具">工具</span></h3>
-<p><a href="https://github.com/JasperSnoek/spearmint" target="_blank" rel="noopener">Spearmint</a>， <a href="https://github.com/Yelp/MOE" target="_blank" rel="noopener">MOE</a> ： Gaussian Process
+<p><a target="_blank" rel="noopener" href="https://github.com/JasperSnoek/spearmint">Spearmint</a>， <a target="_blank" rel="noopener" href="https://github.com/Yelp/MOE">MOE</a> ： Gaussian Process
 (surrogate)</p>
-<p><a href="https://github.com/hyperopt/hyperopt" target="_blank" rel="noopener">Hyperopt</a>
-：Tree-structured Parzen Estimator <a href="https://github.com/RacleRay/DeepLearningFoundation/blob/master/%E8%B6%85%E5%8F%82%E6%95%B0%E6%90%9C%E7%B4%A2.ipynb" target="_blank" rel="noopener">Notebook示例</a>，<a href="https://github.com/jaberg/hyperopt/wiki/FMin" target="_blank" rel="noopener">示例</a>，<a href="https://www.programcreek.com/python/example/98788/hyperopt.Trials" target="_blank" rel="noopener">示例</a></p>
-<p><a href="https://github.com/automl/SMAC3" target="_blank" rel="noopener">SMAC</a> ：Random Forest
+<p><a target="_blank" rel="noopener" href="https://github.com/hyperopt/hyperopt">Hyperopt</a>
+：Tree-structured Parzen Estimator <a target="_blank" rel="noopener" href="https://github.com/RacleRay/DeepLearningFoundation/blob/master/%E8%B6%85%E5%8F%82%E6%95%B0%E6%90%9C%E7%B4%A2.ipynb">Notebook示例</a>，<a target="_blank" rel="noopener" href="https://github.com/jaberg/hyperopt/wiki/FMin">示例</a>，<a target="_blank" rel="noopener" href="https://www.programcreek.com/python/example/98788/hyperopt.Trials">示例</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/automl/SMAC3">SMAC</a> ：Random Forest
 regression.</p>
 <p>都使用Expected Improvement选择函数。</p>
 
@@ -388,7 +388,7 @@ regression.</p>
               
                 <p class="note note-warning">
                   
-                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
                   
                 </p>
               
@@ -648,23 +648,8 @@ regression.</p>
 
 
 <!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>

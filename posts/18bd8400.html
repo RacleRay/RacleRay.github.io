@@ -29,7 +29,6 @@
 <meta property="article:modified_time" content="2025-01-30T15:19:08.538Z">
 <meta property="article:author" content="江左时雨">
 <meta property="article:tag" content="Rust">
-<meta property="article:tag" content="Concurrency">
 <meta name="twitter:card" content="summary_large_image">
   
      <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
@@ -81,7 +80,7 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 
@@ -232,7 +231,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2.8k 字
+      2.9k 字
     </span>
   
 
@@ -275,20 +274,20 @@
             <div class="markdown-body">
               <p>线程模型下，多个线程在同一时刻对同一个数据进行读写或者写写，会导致线程不安全。另外，与线程绑定的操作，在多线程中也会出现线程不安全的问题。</p>
 <p>而 Send 和 Sync marker trait ，让多线程编程更直白明确。</p>
-<p><a href="https://doc.rust-lang.org/std/marker/trait.Send.html" target="_blank" rel="noopener">Send</a>
-类型可以在线程间安全地被复制或着移动。<a href="https://doc.rust-lang.org/std/marker/trait.Sync.html" target="_blank" rel="noopener">Sync</a>
+<p><a target="_blank" rel="noopener" href="https://doc.rust-lang.org/std/marker/trait.Send.html">Send</a>
+类型可以在线程间安全地被复制或着移动。<a target="_blank" rel="noopener" href="https://doc.rust-lang.org/std/marker/trait.Sync.html">Sync</a>
 类型可以在线程间安全地共享引用（&amp;T）。&amp;mut T 天然地被 Rust
 借用规则限制，不可能两个线程同时拥有 &amp;mut T。</p>
 <h3><span id="send">Send</span></h3>
-<p>除 pointer 类型外，所有 <a href="https://doc.rust-lang.org/std/index.html#primitives" target="_blank" rel="noopener">primitives
+<p>除 pointer 类型外，所有 <a target="_blank" rel="noopener" href="https://doc.rust-lang.org/std/index.html#primitives">primitives
 类型</a>都是 Send。</p>
 <blockquote>
-<p><code>unsafe impl&lt;T: Sync + ?Sized&gt; Send for &amp;T {}</code>
+<p><code>unsafe impl&lt;T: Sync + ?Sized&gt; Send for &amp;T &#123;&#125;</code>
 表示如果 T 是 Sync，其不可变引用 &amp;T
 可以复制到其他线程被安全地使用</p>
 </blockquote>
 <h3><span id="sync">Sync</span></h3>
-<p>Rust 中的 <a href="https://doc.rust-lang.org/reference/interior-mutability.html" target="_blank" rel="noopener">内部可变性模式</a>
+<p>Rust 中的 <a target="_blank" rel="noopener" href="https://doc.rust-lang.org/reference/interior-mutability.html">内部可变性模式</a>
 (Cell/Atomic等)，&amp;T 并不能保证只读数据，因此 Sync 解决的问题就是
 &amp;T 跨线程的安全性。</p>
 <p>UnsafeCell 不是 Sync，Rc 和 RefCell 也不是
@@ -296,7 +295,7 @@ Sync。而如果是拥有同步机制的实现，AtomicBool、Arc、Mutex 等，
 Sync。</p>
 <p>而如果 T 不是具有内部可变性的类型，&amp;T 只读数据，因此 T
 可以跨线程共享引用，已经满足 Sync。</p>
-<p>除 pointer 类型外，所有 <a href="https://doc.rust-lang.org/std/index.html#primitives" target="_blank" rel="noopener">primitives
+<p>除 pointer 类型外，所有 <a target="_blank" rel="noopener" href="https://doc.rust-lang.org/std/index.html#primitives">primitives
 类型</a>都是 Sync。基于 Sync 类型实现的 struct/enum 等也会自动实现
 Sync。</p>
 <p>Send 和 Sync 都是 auto marker
@@ -315,20 +314,20 @@ Send。&amp;mut T 是 Sync 的前提是 &amp;&amp;mut T 为 Send，而
 <li><p>T: Send 等价于 &amp;mut T: Send</p>
 <p>&amp;mut T 某种程度可以看作拥有 T 的所有权（只不过它不能将 T 完全
 drop，需要保证引用在其生命周期内有效），因为 &amp;mut T 可以通过
-<code>*ref = T</code> 来覆写其整个数据（原数据被 drop），也可以通过 <a href="https://doc.rust-lang.org/std/mem/fn.replace.html" target="_blank" rel="noopener">std::mem::replace</a>
+<code>*ref = T</code> 来覆写其整个数据（原数据被 drop），也可以通过 <a target="_blank" rel="noopener" href="https://doc.rust-lang.org/std/mem/fn.replace.html">std::mem::replace</a>
 将其指向的原数据 move 走。所以 &amp;mut T 是 Send 的前提是 T
 必须可以在线程间安全地 move，即 T 为 Send。</p></li>
 </ul>
 <h3><span id="send-与-sync-示例">Send 与 Sync 示例</span></h3>
 <p><strong>Send + Sync</strong></p>
 <ol type="1">
-<li><p>绝大多数 <a href="https://doc.rust-lang.org/std/index.html#primitives" target="_blank" rel="noopener">primitives
+<li><p>绝大多数 <a target="_blank" rel="noopener" href="https://doc.rust-lang.org/std/index.html#primitives">primitives
 类型</a>：bool、i32、array</p></li>
 <li><p>Atomic 类型：AtomicBool、AtomicI32</p></li>
 <li><p>基于 Send + Sync 类型构建的 struct、tuple、enum</p></li>
 <li><p>Arc:
-<code>unsafe impl&lt;T: ?Sized + Sync + Send, A: Allocator + Sync&gt; Sync for Arc&lt;T, A&gt; {}</code>,
-<code>unsafe impl&lt;T: ?Sized + Sync + Send, A: Allocator + Send&gt; Send for Arc&lt;T, A&gt; {}</code></p>
+<code>unsafe impl&lt;T: ?Sized + Sync + Send, A: Allocator + Sync&gt; Sync for Arc&lt;T, A&gt; &#123;&#125;</code>,
+<code>unsafe impl&lt;T: ?Sized + Sync + Send, A: Allocator + Send&gt; Send for Arc&lt;T, A&gt; &#123;&#125;</code></p>
 <ul>
 <li><p>因为 Arc 是共享所有权，因此不确定 T 最终会在哪个线程上被
 drop，因此 Arc 是 Send 的前提之一是 T 是 Send</p></li>
@@ -338,8 +337,8 @@ drop，因此 Arc 是 Send 的前提之一是 T 是 Send</p></li>
 本质是一样的，因为两者都可以通过 clone 拿到一个新的 Arc</p></li>
 </ul></li>
 <li><p>Mutex:
-<code>unsafe impl&lt;T: ?Sized + Send&gt; Send for Mutex&lt;T&gt; {}</code>,
-<code>unsafe impl&lt;T: ?Sized + Send&gt; Sync for Mutex&lt;T&gt; {}</code></p>
+<code>unsafe impl&lt;T: ?Sized + Send&gt; Send for Mutex&lt;T&gt; &#123;&#125;</code>,
+<code>unsafe impl&lt;T: ?Sized + Send&gt; Sync for Mutex&lt;T&gt; &#123;&#125;</code></p>
 <ul>
 <li>如果 T 不是 Send，那么 Mutex 被发送到其他线程后获取锁
 MutexGuard，进而通过 DerefMut 获取到 &amp;mut T，而 &amp;mut T
@@ -351,8 +350,8 @@ MutexGuard，进而通过 DerefMut 获取到 &amp;mut T，而 &amp;mut T
 Sync</li>
 </ul></li>
 <li><p>RwLock:
-<code>unsafe impl&lt;T: ?Sized + Send&gt; Send for RwLock&lt;T&gt; {}</code>,
-<code>unsafe impl&lt;T: ?Sized + Send + Sync&gt; Sync for RwLock&lt;T&gt; {}</code></p>
+<code>unsafe impl&lt;T: ?Sized + Send&gt; Send for RwLock&lt;T&gt; &#123;&#125;</code>,
+<code>unsafe impl&lt;T: ?Sized + Send + Sync&gt; Sync for RwLock&lt;T&gt; &#123;&#125;</code></p>
 <ul>
 <li>如果 T 不是 Send，那么 RwLock 被发送到其他线程后获取写锁
 RwLockWriteGuard，进而通过 DerefMut 获取到 &amp;mut T，而 &amp;mut T
@@ -385,7 +384,7 @@ Sync（<code>impl&lt;T: ?Sized + Sync&gt; Sync for MutexGuard&lt;'_, T&gt;</code
 <li>Rc，其内部引用计数非原子更新，Rc 和 &amp;Rc
 均无法发送到其他线程，因为两者都可以通过 clone 改变内部引用计数器</li>
 </ul>
-<p><a href="https://systemxlabs.github.io/blog/rust-send-sync/" target="_blank" rel="noopener">ref:
+<p><a target="_blank" rel="noopener" href="https://systemxlabs.github.io/blog/rust-send-sync/">ref:
 SystemX Labs</a></p>
 
             </div>
@@ -414,7 +413,7 @@ SystemX Labs</a></p>
               
                 <p class="note note-warning">
                   
-                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
                   
                 </p>
               
@@ -632,23 +631,8 @@ SystemX Labs</a></p>
 
 
 <!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>

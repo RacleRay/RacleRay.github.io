@@ -88,7 +88,7 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 
@@ -281,7 +281,7 @@
             
             <div class="markdown-body">
               <p>文本对比学习不同于图像的一点，就是增广方式。文本随机删除、乱序、替换，好像都可以，但是有没有道理，效果能有多大提升，都不那么清楚。这方面也没有比较公认处理方法流程。</p>
-<p><a href="https://arxiv.org/abs/2104.08821" target="_blank" rel="noopener">论文 SimCSE</a> (<a href="https://github.com/princeton-nlp/SimCSE" target="_blank" rel="noopener">Git</a>)，提出一种简单的对比学习方法，直接在BERT类模型之上，使用设计的对比学习损失进行fine
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2104.08821">论文 SimCSE</a> (<a target="_blank" rel="noopener" href="https://github.com/princeton-nlp/SimCSE">Git</a>)，提出一种简单的对比学习方法，直接在BERT类模型之上，使用设计的对比学习损失进行fine
 tune，取得了比较好的效果。</p>
 <h2><span id="方法">方法</span></h2>
 <p>首先在图像领域使用的对比学习损失公式是</p>
@@ -305,7 +305,7 @@ rate时，无监督句子向量的效果最好。STS-B任务的Spearman`s correl
 <p>在看Bert
 Flow时，了解到向量表示的各向异性很重要，尤其在语义相似性任务中，对相似性指标影响很大。另外，直觉来讲，对比学习目的就是将同类相似的聚在一起，同时将向量分布尽量保持均匀，以保留更可能多的信息。</p>
 <p>好的学习效果，应该保证 结果的对齐性和均匀性(Alignment and
-uniformity)。<a href="https://arxiv.org/abs/2005.10242" target="_blank" rel="noopener">原论文</a>推导较多，结论就是，对比学习的损失，可以转换为对齐损失和均匀损失之和。过程挺复杂的，这里并不关心(挺麻烦的)。</p>
+uniformity)。<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2005.10242">原论文</a>推导较多，结论就是，对比学习的损失，可以转换为对齐损失和均匀损失之和。过程挺复杂的，这里并不关心(挺麻烦的)。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/SimCSE-文本对比学习_pic/image-20210615210108744.png" srcset="/img/loading.gif" lazyload alt style="zoom:70%;"></p>
 <p>论文给出了代码：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/SimCSE-文本对比学习_pic/image-20210615210324110.png" srcset="/img/loading.gif" lazyload alt style="zoom:80%;"></p>
@@ -347,7 +347,7 @@ embedding的对比学习效果。两个指标，都是尽量小更好，但是�
               
                 <p class="note note-warning">
                   
-                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
                   
                 </p>
               
@@ -607,23 +607,8 @@ embedding的对比学习效果。两个指标，都是尽量小更好，但是�
 
 
 <!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>

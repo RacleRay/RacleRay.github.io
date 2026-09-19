@@ -99,7 +99,7 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 
@@ -292,7 +292,7 @@
             
             <div class="markdown-body">
               <h2><span id="fasttext">fastText</span></h2>
-<p>​ <a href="https://github.com/facebookresearch/fastText/tree/master/python" target="_blank" rel="noopener">官方Git</a></p>
+<p>​ <a target="_blank" rel="noopener" href="https://github.com/facebookresearch/fastText/tree/master/python">官方Git</a></p>
 <p>​ fastText是Facebook AI Research在16年开源的一个文本分类器。
 其特点就是fast。相对于其它文本分类模型，如SVM，Logistic
 Regression和neural
@@ -320,7 +320,7 @@ fastText
 将输入序列（一整句话，而不是CBOW的窗口输入），进行字符n-gram。n-gram一定程度上克服了CBOW这类bag
 of words模型无视了语序的缺点。</p>
 <p>​ 罕见词仍然可以被分解成字符n-gram。</p>
-<figure class="highlight xml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs xml">apple &gt;&gt;&gt; <br>    “<span class="hljs-tag">&lt;<span class="hljs-name">ap”,</span> “<span class="hljs-attr">app</span>”, “<span class="hljs-attr">ppl</span>”, “<span class="hljs-attr">ple</span>”, “<span class="hljs-attr">le</span>&gt;</span>”<br>    <span class="hljs-tag">&lt;<span class="hljs-name">表示前缀，</span>&gt;</span>表示后缀<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight bnf"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bnf">apple &gt;&gt;&gt; <br>    “<span class="hljs-attribute">&lt;ap”, “app”, “ppl”, “ple”, “le&gt;</span>”<br>    <span class="hljs-attribute">&lt;表示前缀，&gt;</span>表示后缀<br></code></pre></div></td></tr></table></figure>
 <p>​
 隐藏表征在不同类别所有分类器中进行共享，使得文本信息在不同类别中能够共同使用。</p>
 <h3><span id="层次-softmax-分类">层次 Softmax 分类</span></h3>
@@ -437,7 +437,7 @@ LSTM可以分解为（红色）线性块和（蓝色）element-wise部分，但�
               
                 <p class="note note-warning">
                   
-                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
                   
                 </p>
               
@@ -697,23 +697,8 @@ LSTM可以分解为（红色）线性块和（蓝色）element-wise部分，但�
 
 
 <!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>

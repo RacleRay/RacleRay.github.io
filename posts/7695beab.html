@@ -44,8 +44,9 @@
 <meta property="article:published_time" content="2022-04-05T14:57:55.000Z">
 <meta property="article:modified_time" content="2024-01-09T03:12:40.582Z">
 <meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="nlp">
 <meta property="article:tag" content="prompt">
-<meta property="article:tag" content=" adaptor">
+<meta property="article:tag" content="adaptor">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/img/picgo/2022/04/07/20-29-01-558987.png">
   
@@ -98,7 +99,7 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 
@@ -307,7 +308,7 @@ prompt。充分利用预训练信息，这种方式看起来是不错的。</p>
 <p>问题来了，怎么确定一个好的 verbalizer mapping ？</p>
 <h3><span id="petpattern-exploitingtraining">PET(Pattern-Exploiting
 Training)</span></h3>
-<p><a href="https://aclanthology.org/2021.eacl-main.20.pdf" target="_blank" rel="noopener">PET</a>
+<p><a target="_blank" rel="noopener" href="https://aclanthology.org/2021.eacl-main.20.pdf">PET</a>
 方案（少量样本半监督情景）：</p>
 <ol type="1">
 <li>在监督数据上，进行多个Prompt范式tuning，得到多组 prompt
@@ -327,7 +328,7 @@ fine-tuning
 方式下，构建人工标注数据的成本呢？又该怎么说？是不是还简单直接一些？</p>
 <h3><span id="lm-bffbetterfew-shot-fine-tuning-of-language-models">LM-BFF(better
 few-shot fine-tuning of language models)</span></h3>
-<p><a href="https://aclanthology.org/2021.acl-long.295.pdf" target="_blank" rel="noopener">LM-BFF</a>
+<p><a target="_blank" rel="noopener" href="https://aclanthology.org/2021.acl-long.295.pdf">LM-BFF</a>
 则是另一种思路，增加更多的提示信息，输入到model。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/img/picgo/2022/04/07/20-29-01-558987.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
 <p>将上图改为：</p>
@@ -342,12 +343,12 @@ template，进行学习。然后在模型没有见过的任务上，再进行pro
 inference，期望模型实现 zero-shot
 inference。论文实验结果显示，使用T5或者T0模型进行多任务Prompt，更少的参数量就可以达到甚至超过GPT3的效果。</p>
 <blockquote>
-<p><a href="https://github.com/bigscience-workshop/t-zero" target="_blank" rel="noopener">T0 Prompt
+<p><a target="_blank" rel="noopener" href="https://github.com/bigscience-workshop/t-zero">T0 Prompt
 repo</a></p>
 <p>Other multitask based：</p>
 <ul>
-<li><a href="https://arxiv.org/abs/2110.07904#:~:text=SPoT%3A%20%EE%80%80Better%20Frozen%20Model%20Adaptation%20through%20Soft%20Prompt,learns%20task-specific%20%EE%80%80soft%EE%80%81%20prompts%20to%20condition%20a%20" target="_blank" rel="noopener">SPoT</a></li>
-<li><a href="https://www.arxiv-vanity.com/papers/2110.07602/#:~:text=We%20present%20P-tuning%20v2%2C%20a%20prompting%20method%20that,adapted%20one%20of%20prefix-tuning%20and%20deep%20prompt%20tuning." target="_blank" rel="noopener">P-tuning
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2110.07904#:~:text=SPoT%3A%20%EE%80%80Better%20Frozen%20Model%20Adaptation%20through%20Soft%20Prompt,learns%20task-specific%20%EE%80%80soft%EE%80%81%20prompts%20to%20condition%20a%20">SPoT</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.arxiv-vanity.com/papers/2110.07602/#:~:text=We%20present%20P-tuning%20v2%2C%20a%20prompting%20method%20that,adapted%20one%20of%20prefix-tuning%20and%20deep%20prompt%20tuning.">P-tuning
 v2</a></li>
 </ul>
 </blockquote>
@@ -369,20 +370,20 @@ Fine-tuning，不训练原预训练模型的参数，只训练设计的 Adaptor
 <p>fine-tuning 的想法是训练原模型参数，产生相应任务的有效 hidden
 representation。但是 Adaptor 是固定原模型参数，设计结构在原 hidden
 representation 基础上得到任务相关的 hidden representation。</p>
-<p><a href="https://github.com/Adapter-Hub/adapter-transformers" target="_blank" rel="noopener">工具库</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/Adapter-Hub/adapter-transformers">工具库</a></p>
 <h3><span id="adaptor">Adaptor</span></h3>
-<p><a href="http://proceedings.mlr.press/v97/houlsby19a/houlsby19a.pdf#:~:text=Parameter-Ef%EF%AC%81cient%20Transfer%20Learning%20for%20NLP%20Both%20feature-based%20transfer,adapter%20tuning%20method%20is%20even%20more%20parameter%20ef%EF%AC%81cient." target="_blank" rel="noopener">Adaptor</a></p>
+<p><a target="_blank" rel="noopener" href="http://proceedings.mlr.press/v97/houlsby19a/houlsby19a.pdf#:~:text=Parameter-Ef%EF%AC%81cient%20Transfer%20Learning%20for%20NLP%20Both%20feature-based%20transfer,adapter%20tuning%20method%20is%20even%20more%20parameter%20ef%EF%AC%81cient.">Adaptor</a></p>
 <p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/img/picgo/2022/04/07/21-39-16-15ceaa.png" srcset="/img/loading.gif" lazyload style="zoom:80%;"></p>
 <p>只训练 Adapter 层参数。更少的训练参数，更好的训练效果。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/img/picgo/2022/04/07/21-44-43-eeebc8.png" srcset="/img/loading.gif" lazyload style="zoom:67%;"></p>
 <h3><span id="loralow-rank-adaptation">LoRA(Low-Rank Adaptation)</span></h3>
-<p><a href="https://arxiv.org/abs/2106.09685v1" target="_blank" rel="noopener">LoRA</a></p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2106.09685v1">LoRA</a></p>
 <p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/img/picgo/2022/04/07/21-47-19-e9b041.png" srcset="/img/loading.gif" lazyload style="zoom:80%;"></p>
 <p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/img/picgo/2022/04/07/21-48-52-4a055f.png" srcset="/img/loading.gif" lazyload style="zoom:33%;"></p>
 <p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/img/picgo/2022/04/07/21-49-24-ec0cf4.png" srcset="/img/loading.gif" lazyload style="zoom:33%;"></p>
 <p>只在 Feed-forward 层，增加 Low-Rank Adaptation。</p>
 <h3><span id="prefix-tuning">Prefix Tuning</span></h3>
-<p><a href="https://arxiv.org/abs/2101.00190v1#:~:text=Prefix-Tuning%3A%20Optimizing%20Continuous%20Prompts%20for%20Generation%20Xiang%20Lisa,necessitates%20storing%20a%20full%20copy%20for%20each%20task." target="_blank" rel="noopener">Prefix
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2101.00190v1#:~:text=Prefix-Tuning%3A%20Optimizing%20Continuous%20Prompts%20for%20Generation%20Xiang%20Lisa,necessitates%20storing%20a%20full%20copy%20for%20each%20task.">Prefix
 Tuning</a> 是 Prompt 中的一种方法，它也是高效训练的一种设计。只更新
 Prefix 的参数。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/img/picgo/2022/04/07/21-57-55-638843.png" srcset="/img/loading.gif" lazyload style="zoom:70%;"></p>
@@ -391,9 +392,9 @@ Prefix 的参数。</p>
 对于多任务训练，有更高的效率。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/img/picgo/2022/04/07/22-09-39-cd7905.png" srcset="/img/loading.gif" lazyload style="zoom:70%;"></p>
 <p>直接将不同的 prefix 一起多任务训练。这比 PET
-这种“老古董模型”效率上强多了。<a href="https://arxiv.org/pdf/2104.08691v2.pdf" target="_blank" rel="noopener">ref</a></p>
+这种“老古董模型”效率上强多了。<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2104.08691v2.pdf">ref</a></p>
 <h3><span id="混合型">混合型</span></h3>
-<p><a href="https://arxiv.org/pdf/2110.04366v1.pdf" target="_blank" rel="noopener">TOWARDS A UNIFIED
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2110.04366v1.pdf">TOWARDS A UNIFIED
 VIEW OF PARAMETER-EFFICIENT TRANSFER LEARNING</a>
 结合了几种常见方法：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/img/picgo/2022/04/07/22-01-45-61d48c.png" srcset="/img/loading.gif" lazyload style="zoom:80%;"></p>
@@ -408,13 +409,13 @@ VIEW OF PARAMETER-EFFICIENT TRANSFER LEARNING</a>
 <p>在每一层都设置一个输出层，联合每一层输出进行损失计算，并给更高的层更大的权重。最后选择其中一层最为
 inference 输出。可以指定某一层。动态输出的方法有下面几种。</p>
 <h4><span id="shallow-deep">Shallow-deep</span></h4>
-<p><a href="http://proceedings.mlr.press/v97/kaya19a/kaya19a.pdf" target="_blank" rel="noopener">Shallow-deep</a>其中使用方法是，对于每一层分类结果，选择第一个大于某个阈值的层，进行最终输出。</p>
+<p><a target="_blank" rel="noopener" href="http://proceedings.mlr.press/v97/kaya19a/kaya19a.pdf">Shallow-deep</a>其中使用方法是，对于每一层分类结果，选择第一个大于某个阈值的层，进行最终输出。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/img/picgo/2022/04/07/22-26-13-68339e.png" srcset="/img/loading.gif" lazyload style="zoom:67%;"></p>
 <h4><span id="deebert">DeeBERT</span></h4>
-<p><a href="https://arxiv.org/pdf/2004.12993.pdf" target="_blank" rel="noopener">DeeBERT</a>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2004.12993.pdf">DeeBERT</a>
 相比Shallow-deep，只是指标不一样，使用entropy进行比较。</p>
 <h4><span id="pabee">PABEE</span></h4>
-<p><a href="https://papers.nips.cc/paper/2020/file/d4dd111a4fd973394238aca5c05bebe3-Paper.pdf" target="_blank" rel="noopener">PABEE</a>
+<p><a target="_blank" rel="noopener" href="https://papers.nips.cc/paper/2020/file/d4dd111a4fd973394238aca5c05bebe3-Paper.pdf">PABEE</a>
 思路比较简单，模型从下往上层，连续输出同一个 label
 的次数超过限制，就进行输出。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/img/picgo/2022/04/07/22-30-57-1ddf49.png" srcset="/img/loading.gif" lazyload style="zoom:50%;"></p>
@@ -473,7 +474,7 @@ free，直接不attention了，使用其他方式。不同维度全连接层融�
               
                 <p class="note note-warning">
                   
-                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
                   
                 </p>
               
@@ -691,23 +692,8 @@ free，直接不attention了，使用其他方式。不同维度全连接层融�
 
 
 <!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>

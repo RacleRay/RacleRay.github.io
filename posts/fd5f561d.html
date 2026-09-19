@@ -43,7 +43,6 @@
 <meta property="article:author" content="江左时雨">
 <meta property="article:tag" content="Database">
 <meta property="article:tag" content="MySQL">
-<meta property="article:tag" content="InnoDB">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/11/09-06-f8c8ed2108ab31427467f475904d5f23-4cc330.png">
   
@@ -96,7 +95,7 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 
@@ -295,7 +294,7 @@
 </blockquote>
 <h2><span id="mysql登录">MySQL登录</span></h2>
 <p>MySQL是一个需要账户名密码登录的数据库，登陆后使用，它提供了一个默认的root账号，使用安装时设置的密码即可登录。</p>
-<figure class="highlight plain"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs txt">格式1：cmd&gt; mysql –u用户名 –p密码<br>例如：mysql -uroot –proot<br><br>格式2: mysql –u用户名 –p<br>请输入密码: root<br><br>格式2：cmd&gt; mysql --host&#x3D;ip地址 --user&#x3D;用户名 --password&#x3D;密码<br>例如：mysql --host&#x3D;127.0.0.1 --user&#x3D;root --password&#x3D;root<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight txt"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs txt">格式1：cmd&gt; mysql –u用户名 –p密码<br>例如：mysql -uroot –proot<br><br>格式2: mysql –u用户名 –p<br>请输入密码: root<br><br>格式2：cmd&gt; mysql --host=ip地址 --user=用户名 --password=密码<br>例如：mysql --host=127.0.0.1 --user=root --password=root<br></code></pre></div></td></tr></table></figure>
 <h2><span id="sql">SQL</span></h2>
 <p>数据定义语言：简称DDL(Data Definition
 Language)：create，alter，drop等</p>
@@ -307,7 +306,7 @@ Language)：定义数据库的访问权限和安全级别，及创建用户</p>
 <p>SQL语句可以单行或多行书写，以分号结尾。</p>
 <blockquote>
 <p>注释形式：</p>
-<figure class="highlight sql"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs SQL"><span class="hljs-comment">-- 单行注释内容</span><br><span class="hljs-comment">/* 多行注释 */</span><br><span class="hljs-comment"># 单行注释内容</span><br></code></pre></div></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs SQL"><span class="hljs-comment">-- 单行注释内容</span><br><span class="hljs-comment">/* 多行注释 */</span><br># 单行注释内容<br></code></pre></div></td></tr></table></figure>
 </blockquote>
 <p>NOTE: 常用功能查 AI 效率得多，NICE</p>
 <h3><span id="注意点">注意点</span></h3>
@@ -351,21 +350,21 @@ Language)：定义数据库的访问权限和安全级别，及创建用户</p>
 <h4><span id="子查询">子查询</span></h4>
 <p>子查询允许把一个查询嵌套在另一个查询当中。</p>
 <h3><span id="备份与恢复">备份与恢复</span></h3>
-<figure class="highlight nginx"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs nginx"><span class="hljs-attribute">mysqldump</span>  -u用户名 -p密码 数据库名&gt;生成的脚本文件路径<br></code></pre></div></td></tr></table></figure>
-<figure class="highlight properties"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs properties"><span class="hljs-attr">mysql</span> <span class="hljs-string">-uroot -p密码 数据库名 &lt; 文件路径</span><br><br><span class="hljs-meta">或者在</span> <span class="hljs-string">mysql 命令行外：</span><br><span class="hljs-attr">source</span> <span class="hljs-string">SQL脚本路径</span><br></code></pre></div></td></tr></table></figure>
+<figure class="highlight css"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs css">mysqldump  -u用户名 -<span class="hljs-selector-tag">p</span>密码 数据库名&gt;生成的脚本文件路径<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight css"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs css">mysql -uroot -<span class="hljs-selector-tag">p</span>密码 数据库名 &lt; 文件路径<br><br>或者在 mysql 命令行外：<br><span class="hljs-selector-tag">source</span> SQL脚本路径<br></code></pre></div></td></tr></table></figure>
 <h3><span id="关系">关系</span></h3>
 <p>一对一：比如，一个男的只能取一个女的当老婆。</p>
-<figure class="highlight sql"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sql"><span class="hljs-comment">#外键唯一</span><br><span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">TABLE</span> husband <span class="hljs-keyword">ADD</span> wid <span class="hljs-built_in">INT</span> <span class="hljs-keyword">UNIQUE</span>;<br><span class="hljs-comment">#外键约束</span><br><span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> husband <span class="hljs-keyword">add</span> <span class="hljs-keyword">foreign</span> <span class="hljs-keyword">key</span> (wid) <span class="hljs-keyword">references</span> wife(<span class="hljs-keyword">id</span>);<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sql">#外键唯一<br><span class="hljs-keyword">ALTER TABLE</span> husband <span class="hljs-keyword">ADD</span> wid <span class="hljs-type">INT</span> <span class="hljs-keyword">UNIQUE</span>;<br>#外键约束<br><span class="hljs-keyword">alter table</span> husband <span class="hljs-keyword">add</span> <span class="hljs-keyword">foreign key</span> (wid) <span class="hljs-keyword">references</span> wife(id);<br></code></pre></div></td></tr></table></figure>
 <p>一对多：比如，客户与订单，一个客户可以在商城中下多个订单。</p>
 <p>唯一区别就是外键不唯一。</p>
 <p>多对多：比如，学生与课程，一个学校有很多学生，学生都可以学很多课程。</p>
 <p>需要中间表去完成多对多关系的创建，多对多关系其实就是两个一对多关系的组合。</p>
 <h3><span id="连接">连接</span></h3>
 <h4><span id="笛卡尔积">笛卡尔积</span></h4>
-<figure class="highlight sql"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sql"><span class="hljs-comment">-- 查询的时候</span><br><span class="hljs-comment">-- 左边表中的每一条记录和右边表的每一条记录都进行组合了</span><br><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> worker, department;<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sql"><span class="hljs-comment">-- 查询的时候</span><br><span class="hljs-comment">-- 左边表中的每一条记录和右边表的每一条记录都进行组合了</span><br><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> worker, department;<br></code></pre></div></td></tr></table></figure>
 <p>有一些数据其实是无用的，只有满足 worker.depart_id = department.id
 这个条件，过滤出来的数据才是我们想要的最终结果。</p>
-<figure class="highlight sql"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> worker, department <span class="hljs-keyword">where</span> worker.depart_id = department.id;<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> worker, department <span class="hljs-keyword">where</span> worker.depart_id <span class="hljs-operator">=</span> department.id;<br></code></pre></div></td></tr></table></figure>
 <ul>
 <li><p>隐式内连接（使用 where 关键字来指定条件）</p></li>
 <li><p>显示内连接（使用 inner..join..on 语句）</p></li>
@@ -386,8 +385,8 @@ commit（提交）命令的时候，才会同步到数据表中。如果遇上 r
 断开连接，那么它都会去清空事务日志。</p>
 </blockquote>
 <p><img src="https://cdn.jsdelivr.net/gh/RacleRay/image_storage/image/picgo-clipboard-images/01/11/09-06-b2ade802ba8241184d5f0439b7dc825d-24cc24.png" srcset="/img/loading.gif" lazyload style="zoom:60%;"></p>
-<figure class="highlight pgsql"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs pgsql">第一步：开启事务<br>第二步：执行你的 <span class="hljs-keyword">SQL</span> 语句<br>第三步：提交事务<br>第四步：如果出现问题的话，则回滚事务（数据）<br></code></pre></div></td></tr></table></figure>
-<figure class="highlight pgsql"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs pgsql">第一步：开启事务<br><span class="hljs-keyword">start</span> <span class="hljs-keyword">transaction</span>;<br>第二步：执行你的 <span class="hljs-keyword">SQL</span> 语句<br><span class="hljs-keyword">update</span> bankCount <span class="hljs-keyword">set</span> <span class="hljs-type">money</span> = <span class="hljs-type">money</span> - <span class="hljs-number">500</span> <span class="hljs-keyword">where</span> <span class="hljs-type">name</span> = <span class="hljs-string">'cuihua'</span>;<br><span class="hljs-keyword">update</span> bankCount <span class="hljs-keyword">set</span> <span class="hljs-type">money</span> = <span class="hljs-type">money</span> + <span class="hljs-number">500</span> <span class="hljs-keyword">where</span> <span class="hljs-type">name</span> = <span class="hljs-string">'banban'</span>;<br>第三步：如果出现问题的话，则回滚事务（数据）<br><span class="hljs-keyword">commit</span>;<br>// <span class="hljs-keyword">rollback</span>;<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sql">第一步：开启事务<br>第二步：执行你的 <span class="hljs-keyword">SQL</span> 语句<br>第三步：提交事务<br>第四步：如果出现问题的话，则回滚事务（数据）<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight pgsql"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs pgsql">第一步：开启事务<br><span class="hljs-keyword">start</span> <span class="hljs-keyword">transaction</span>;<br>第二步：执行你的 <span class="hljs-keyword">SQL</span> 语句<br><span class="hljs-keyword">update</span> bankCount <span class="hljs-keyword">set</span> <span class="hljs-type">money</span> = <span class="hljs-type">money</span> - <span class="hljs-number">500</span> <span class="hljs-keyword">where</span> <span class="hljs-type">name</span> = <span class="hljs-string">&#x27;cuihua&#x27;</span>;<br><span class="hljs-keyword">update</span> bankCount <span class="hljs-keyword">set</span> <span class="hljs-type">money</span> = <span class="hljs-type">money</span> + <span class="hljs-number">500</span> <span class="hljs-keyword">where</span> <span class="hljs-type">name</span> = <span class="hljs-string">&#x27;banban&#x27;</span>;<br>第三步：如果出现问题的话，则回滚事务（数据）<br><span class="hljs-keyword">commit</span>;<br>// <span class="hljs-keyword">rollback</span>;<br></code></pre></div></td></tr></table></figure>
 <h4><span id="特性">特性</span></h4>
 <ul>
 <li>原子性（操作）：Atomicity
@@ -696,7 +695,7 @@ Profiler工具）查看SQL执行时的资源使用情况。</p></li>
               
                 <p class="note note-warning">
                   
-                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
                   
                 </p>
               
@@ -914,23 +913,8 @@ Profiler工具）查看SQL执行时的资源使用情况。</p></li>
 
 
 <!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>

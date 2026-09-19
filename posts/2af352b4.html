@@ -92,7 +92,7 @@
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 
@@ -243,7 +243,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      7.5k 字
+      7.6k 字
     </span>
   
 
@@ -252,7 +252,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      23 分钟
+      24 分钟
     </span>
   
 
@@ -576,7 +576,7 @@ x_{n}=\sum_{i=1}^{l_{n}} x_{n, i}
 <p>A --最终可以获取的词向量信息</p>
 </blockquote>
 <h3><span id="词向量的作用与获取">词向量的作用与获取</span></h3>
-<p>​ 高阶的深度学习自然语言处理任务，都可以用词向量作为基础。可以从<a href="https://github.com/Embedding/Chinese-Word-Vectors" target="_blank" rel="noopener">开源链接</a>获取。</p>
+<p>​ 高阶的深度学习自然语言处理任务，都可以用词向量作为基础。可以从<a target="_blank" rel="noopener" href="https://github.com/Embedding/Chinese-Word-Vectors">开源链接</a>获取。</p>
 <h4><span id="词向量的意义">词向量的意义</span></h4>
 <ul>
 <li>基于词与其他词的某种共现关系
@@ -600,7 +600,7 @@ x_{n}=\sum_{i=1}^{l_{n}} x_{n, i}
 </ul></li>
 <li>基于其他监督学习任务
 <ul>
-<li>词向量并不只是语言模型可以得到，基于有监督学习也可以得到：C&amp;W<a href="http://licstar.net/archives/328#s22" target="_blank" rel="noopener">了解</a></li>
+<li>词向量并不只是语言模型可以得到，基于有监督学习也可以得到：C&amp;W<a target="_blank" rel="noopener" href="http://licstar.net/archives/328#s22">了解</a></li>
 <li>基于词向量构建成句子向量进而完成文本分类或文本相似度判断的任务</li>
 </ul></li>
 </ul>
@@ -639,7 +639,7 @@ x_{n}=\sum_{i=1}^{l_{n}} x_{n, i}
 计算各类别下，组内词语与聚类中心的距离（欧几里得距离），按聚类大小进行升序排序；</p>
 <p>（6） 对候选关键词计算结果得到排名前TopN个词汇作为文本关键词。</p>
 <p>步骤（4）中需要人为给定聚类的个数，具体参考文档主题的个数。</p>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> sklearn.cluster <span class="hljs-keyword">import</span> KMeans<br><span class="hljs-keyword">from</span> sklearn.decomposition <span class="hljs-keyword">import</span> PCA<br><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">getkeywords_kmeans</span><span class="hljs-params">(data,topK)</span>:</span><br>    words = data[<span class="hljs-string">"word"</span>] <span class="hljs-comment"># 词汇</span><br>    vecs = data.ix[:,<span class="hljs-number">1</span>:] <span class="hljs-comment"># 向量表示</span><br><br>    kmeans = KMeans(n_clusters=<span class="hljs-number">1</span>,random_state=<span class="hljs-number">10</span>).fit(vecs)<br>    labels = kmeans.labels_ <span class="hljs-comment">#类别结果标签</span><br>    labels = pd.DataFrame(labels,columns=[<span class="hljs-string">'label'</span>])<br>    new_df = pd.concat([labels,vecs],axis=<span class="hljs-number">1</span>)<br>    vec_center = kmeans.cluster_centers_ <span class="hljs-comment">#聚类中心</span><br>    <br>    <span class="hljs-comment"># 计算距离（相似性） 采用欧几里得距离（欧式距离）</span><br>    distances = []<br>    vec_words = np.array(vecs) <span class="hljs-comment"># 候选关键词向量，dataFrame转array</span><br>    vec_center = vec_center[<span class="hljs-number">0</span>] <span class="hljs-comment"># 第一个类别聚类中心,本例只有一个类别</span><br>    length = len(vec_center) <span class="hljs-comment"># 向量维度</span><br>    <span class="hljs-keyword">for</span> index <span class="hljs-keyword">in</span> range(len(vec_words)): <span class="hljs-comment"># 候选关键词个数</span><br>        cur_wordvec = vec_words[index] <span class="hljs-comment"># 当前词语的词向量</span><br>        dis = <span class="hljs-number">0</span> <span class="hljs-comment"># 向量距离</span><br>        <span class="hljs-keyword">for</span> index2 <span class="hljs-keyword">in</span> range(length):<br>            dis += (vec_center[index2]-cur_wordvec[index2])*(vec_center[index2]-cur_wordvec[index2])<br>        dis = math.sqrt(dis)<br>        distances.append(dis)<br>    distances = pd.DataFrame(distances,columns=[<span class="hljs-string">'dis'</span>])<br><br>    result = pd.concat([words, labels ,distances], axis=<span class="hljs-number">1</span>) <span class="hljs-comment"># 拼接词语与其对应中心点的距离</span><br>    result = result.sort_values(by=<span class="hljs-string">"dis"</span>,ascending = <span class="hljs-literal">True</span>) <span class="hljs-comment"># 按照距离大小进行升序排序</span><br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> sklearn.cluster <span class="hljs-keyword">import</span> KMeans<br><span class="hljs-keyword">from</span> sklearn.decomposition <span class="hljs-keyword">import</span> PCA<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">getkeywords_kmeans</span>(<span class="hljs-params">data,topK</span>):<br>    words = data[<span class="hljs-string">&quot;word&quot;</span>] <span class="hljs-comment"># 词汇</span><br>    vecs = data.ix[:,<span class="hljs-number">1</span>:] <span class="hljs-comment"># 向量表示</span><br><br>    kmeans = KMeans(n_clusters=<span class="hljs-number">1</span>,random_state=<span class="hljs-number">10</span>).fit(vecs)<br>    labels = kmeans.labels_ <span class="hljs-comment">#类别结果标签</span><br>    labels = pd.DataFrame(labels,columns=[<span class="hljs-string">&#x27;label&#x27;</span>])<br>    new_df = pd.concat([labels,vecs],axis=<span class="hljs-number">1</span>)<br>    vec_center = kmeans.cluster_centers_ <span class="hljs-comment">#聚类中心</span><br>    <br>    <span class="hljs-comment"># 计算距离（相似性） 采用欧几里得距离（欧式距离）</span><br>    distances = []<br>    vec_words = np.array(vecs) <span class="hljs-comment"># 候选关键词向量，dataFrame转array</span><br>    vec_center = vec_center[<span class="hljs-number">0</span>] <span class="hljs-comment"># 第一个类别聚类中心,本例只有一个类别</span><br>    length = <span class="hljs-built_in">len</span>(vec_center) <span class="hljs-comment"># 向量维度</span><br>    <span class="hljs-keyword">for</span> index <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(vec_words)): <span class="hljs-comment"># 候选关键词个数</span><br>        cur_wordvec = vec_words[index] <span class="hljs-comment"># 当前词语的词向量</span><br>        dis = <span class="hljs-number">0</span> <span class="hljs-comment"># 向量距离</span><br>        <span class="hljs-keyword">for</span> index2 <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(length):<br>            dis += (vec_center[index2]-cur_wordvec[index2])*(vec_center[index2]-cur_wordvec[index2])<br>        dis = math.sqrt(dis)<br>        distances.append(dis)<br>    distances = pd.DataFrame(distances,columns=[<span class="hljs-string">&#x27;dis&#x27;</span>])<br><br>    result = pd.concat([words, labels ,distances], axis=<span class="hljs-number">1</span>) <span class="hljs-comment"># 拼接词语与其对应中心点的距离</span><br>    result = result.sort_values(by=<span class="hljs-string">&quot;dis&quot;</span>,ascending = <span class="hljs-literal">True</span>) <span class="hljs-comment"># 按照距离大小进行升序排序</span><br></code></pre></div></td></tr></table></figure>
 <p>可使用PCA降维，但具体视效果而定。</p>
 
             </div>
@@ -672,7 +672,7 @@ x_{n}=\sum_{i=1}^{l_{n}} x_{n, i}
               
                 <p class="note note-warning">
                   
-                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
                   
                 </p>
               
@@ -932,23 +932,8 @@ x_{n}=\sum_{i=1}^{l_{n}} x_{n, i}
 
 
 <!-- 主题的启动项 保持在最底部 -->
-<script  src="/js/boot.js" ></script>
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>
