@@ -6,7 +6,7 @@
   <link href="https://racleray.github.io/atom.xml" rel="self"/>
   
   <link href="https://racleray.github.io/"/>
-  <updated>2026-03-07T15:22:08.657Z</updated>
+  <updated>2026-09-19T15:20:59.321Z</updated>
   <id>https://racleray.github.io/</id>
   
   <author>
@@ -17,11 +17,34 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Rustonomicon</title>
+    <link href="https://racleray.github.io/posts/9a432d14.html"/>
+    <id>https://racleray.github.io/posts/9a432d14.html</id>
+    <published>2026-04-19T15:09:55.000Z</published>
+    <updated>2026-09-19T15:20:59.321Z</updated>
+    
+    
+    <summary type="html">Rustonomicon notes</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    
+    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
+    
+    
+    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
+    
+    <category term="Unsafe" scheme="https://racleray.github.io/tags/Unsafe/"/>
+    
+  </entry>
+  
+  <entry>
     <title>内存模型</title>
     <link href="https://racleray.github.io/posts/e6493c73.html"/>
     <id>https://racleray.github.io/posts/e6493c73.html</id>
     <published>2026-03-06T15:12:13.000Z</published>
-    <updated>2026-03-07T15:22:08.657Z</updated>
+    <updated>2026-03-07T15:23:40.811Z</updated>
     
     
     <summary type="html">内存模型整理</summary>
@@ -44,7 +67,7 @@
     <link href="https://racleray.github.io/posts/d6af6a50.html"/>
     <id>https://racleray.github.io/posts/d6af6a50.html</id>
     <published>2025-10-15T14:43:36.613Z</published>
-    <updated>2025-10-15T14:48:15.696Z</updated>
+    <updated>2026-03-07T15:23:37.905Z</updated>
     
     
     <summary type="html">C++ tips recently, C++ 抽象代价</summary>
@@ -432,27 +455,6 @@
     <category term="Network" scheme="https://racleray.github.io/tags/Network/"/>
     
     <category term="Socket" scheme="https://racleray.github.io/tags/Socket/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Dangle</title>
-    <link href="https://racleray.github.io/posts/e3a85bcd.html"/>
-    <id>https://racleray.github.io/posts/e3a85bcd.html</id>
-    <published>2024-02-12T14:45:50.000Z</published>
-    <updated>2024-02-12T15:00:59.813Z</updated>
-    
-    
-    <summary type="html">凡人</summary>
-    
-    
-    
-    <category term="Poetry" scheme="https://racleray.github.io/categories/Poetry/"/>
-    
-    <category term="Meditation" scheme="https://racleray.github.io/categories/Poetry/Meditation/"/>
-    
-    
-    <category term="Poetry" scheme="https://racleray.github.io/tags/Poetry/"/>
     
   </entry>
   
