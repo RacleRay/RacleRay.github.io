@@ -1,0 +1,1006 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="Exploring-Async-Basics-with-Rust notes">
+  <meta name="author" content="HeRui">
+  <meta name="keywords" content="async rust">
+  <meta name="description" content="Exploring-Async-Basics-with-Rust notes">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Exploring-Async-Basics-with-Rust">
+<meta property="og:url" content="https://racleray.github.io/posts/e1708a14.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="Exploring-Async-Basics-with-Rust notes">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://images.unsplash.com/photo-1622979358300-68884045fa62?crop=entropy&amp;cs=srgb&amp;fm=jpg&amp;ixid=M3w2NDU1OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3ODk5MTkwOTR8&amp;ixlib=rb-4.1.0&amp;q=85&amp;w=1024&amp;h=768">
+<meta property="article:published_time" content="2026-05-20T15:44:56.000Z">
+<meta property="article:modified_time" content="2026-09-20T15:48:55.940Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="Rust">
+<meta property="article:tag" content="Async">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://images.unsplash.com/photo-1622979358300-68884045fa62?crop=entropy&amp;cs=srgb&amp;fm=jpg&amp;ixid=M3w2NDU1OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3ODk5MTkwOTR8&amp;ixlib=rb-4.1.0&amp;q=85&amp;w=1024&amp;h=768">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>Exploring-Async-Basics-with-Rust - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Exploring-Async-Basics-with-Rust">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2026-05-20 23:44" pubdate>
+        2026年5月20日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      19k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      59 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Exploring-Async-Basics-with-Rust</h1>
+            
+            <div class="markdown-body">
+              <p>Whenever you have eliminated the impossible, whatever remains,
+however improbable, must be the truth.</p>
+<p>— Arthur Conan Doyle</p>
+<hr>
+<figure>
+<img src="https://images.unsplash.com/photo-1622979358300-68884045fa62?crop=entropy&amp;cs=srgb&amp;fm=jpg&amp;ixid=M3w2NDU1OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3ODk5MTkwOTR8&amp;ixlib=rb-4.1.0&amp;q=85&amp;w=1024&amp;h=768" srcset="/img/loading.gif" lazyload alt="photo by Samuel Field(https://unsplash.com/@s_giovanni?utm_source=templater_proxy&amp;utm_medium=referral) on Unsplash">
+<figcaption aria-hidden="true">photo by Samuel
+Field(https://unsplash.com/<span class="citation" data-cites="s_giovanni?utm_source">@s_giovanni?utm_source</span>=templater_proxy&amp;utm_medium=referral)
+on Unsplash</figcaption>
+</figure>
+<h2><span id="第-1-章并发-vs-并行">第 1 章：并发 vs 并行</span></h2>
+<h3><span id="11-核心定义">1.1 核心定义</span></h3>
+<table>
+<colgroup>
+<col style="width: 29%">
+<col style="width: 44%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>概念</th>
+<th>一句话定义</th>
+<th>关注点</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>并发 (Concurrency)</strong></td>
+<td>同一时间<strong>处理</strong>(dealing with)许多事情</td>
+<td>资源的<strong>效用与效率</strong></td>
+</tr>
+<tr class="even">
+<td><strong>并行 (Parallelism)</strong></td>
+<td>同一时间<strong>做</strong>(doing)许多事情</td>
+<td><strong>增加</strong>资源投入</td>
+</tr>
+<tr class="odd">
+<td><strong>多任务 (Multitasking)</strong></td>
+<td>同一时间使多个任务取得进展 (progress)</td>
+<td>实现方式：并发 或 并行</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>经典比喻：<strong>并发是更聪明地工作；并行是投入更多资源到问题上。</strong></p>
+</blockquote>
+<figure class="highlight text"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs text">并发（单核交替推进，任务&quot;可中断&quot;）:<br>Task A: ████----████------████<br>Task B: ----████----██████----<br>时间轴:  ──────────────────────→  （虚线 = 暂停等待）<br><br>并行（多核同时执行）:<br>Core 1 / Task A: ████████████████<br>Core 2 / Task B: ████████████████<br>时间轴:          ────────────────→<br></code></pre></div></td></tr></table></figure>
+<h3><span id="12-为什么需要并发两大场景">1.2 为什么需要并发（两大场景）</span></h3>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-comment">// 场景 1：I/O 等待 —— 等待外部事件时不能干等</span><br><span class="hljs-comment">// 查询数据库时 CPU 闲置，应切去跑别的任务</span><br><span class="hljs-title function_ invoke__">db_query</span>(sql, |result| &#123; <span class="hljs-comment">/* 数据回来再继续 */</span> &#125;);<br><br><span class="hljs-comment">// 场景 2：公平性 —— 防止一个任务饿死其他任务（典型：UI 响应）</span><br><span class="hljs-comment">// 单核上每 16ms 打断一次重计算，保证 UI 以 60Hz 刷新</span><br><span class="hljs-keyword">loop</span> &#123;<br>    heavy_task.<span class="hljs-title function_ invoke__">run_for</span>(<span class="hljs-number">16</span>.ms);<br>    ui.<span class="hljs-title function_ invoke__">refresh</span>();          <span class="hljs-comment">// 每 16ms 让 UI &quot;进展&quot; 一次</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h3><span id="13-关键洞察参照系frame-ofreference">1.3 关键洞察：参照系（Frame of
+Reference）</span></h3>
+<p><strong>"同步执行"是一场错觉</strong>——它只在"你写的代码"这个参照系中成立：</p>
+<pre><code class=" mermaid">graph TD
+    subgraph 三层参照系
+        A[&quot;程序员视角&lt;br/&gt;自己的代码按顺序执行&lt;br/&gt;&#x27;看起来是同步的&#x27;&quot;]
+        B[&quot;OS 视角&lt;br/&gt;抢占式调度&lt;br/&gt;随时暂停/恢复你的线程&quot;]
+        C[&quot;CPU 视角&lt;br/&gt;随时被硬件中断&lt;br/&gt;流水线+乱序执行&quot;]
+    end
+    A --&gt;|&quot;其实被&quot;| B --&gt;|&quot;其实被&quot;| C
+</code></pre>
+<blockquote>
+<p>谈论并发时若不先声明参照系，很快就会陷入混乱——这是理解后文一切的基础。</p>
+</blockquote>
+<hr>
+<h2><span id="第-2-章异步的历史">第 2 章：异步的历史</span></h2>
+<h3><span id="21-演进时间线">2.1 演进时间线</span></h3>
+<pre><code class=" mermaid">graph LR
+    A[&quot;单 CPU&lt;br/&gt;顺序执行&quot;] --&gt; B[&quot;非抢占式多任务&lt;br/&gt;(协作式, DOS/Win95)&quot;]
+    B --&gt; C[&quot;抢占式多任务&lt;br/&gt;(OS 负责调度, 现代 OS)&quot;]
+    C --&gt; D[&quot;超线程&lt;br/&gt;1 核模拟 2 逻辑核&quot;]
+    D --&gt; E[&quot;多核处理器&lt;br/&gt;+ 每核超线程&quot;]
+</code></pre>
+<h3><span id="22-非抢占式-vs-抢占式多任务">2.2 非抢占式 vs 抢占式多任务</span></h3>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-comment">// ── 非抢占式（协作式）：程序员必须主动交还控制权 ──</span><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">window_message_loop</span>() &#123;<br>    <span class="hljs-keyword">loop</span> &#123;<br>        <span class="hljs-title function_ invoke__">handle_one_event</span>();<br>        <span class="hljs-title function_ invoke__">yield_to_os</span>();        <span class="hljs-comment">// 忘记写这行 → 整个系统卡死！</span><br>    &#125;                         <span class="hljs-comment">// (Win95 时代拖拽卡死的窗口能画满全屏)</span><br>&#125;<br><br><span class="hljs-comment">// ── 抢占式：OS 强行收走 CPU，程序员无感知 ──</span><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">my_code</span>() &#123;<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">x</span> = <span class="hljs-number">1</span> + <span class="hljs-number">1</span>;   <span class="hljs-comment">// OS 可能在任意两条指令间暂停本线程</span><br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">y</span> = x * <span class="hljs-number">2</span>;   <span class="hljs-comment">// 去运行鼠标更新/其他进程，然后再切回来</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+<ul>
+<li><strong>非抢占式</strong>：调度责任在程序员，一个 bug
+拖垮整个系统</li>
+<li><strong>抢占式</strong>：OS
+每秒多次<strong>上下文切换</strong>，保证 UI/后台任务/I/O
+都拿到时间片（现代 OS 的标准设计）</li>
+</ul>
+<h3><span id="23-超线程hyperthreading">2.3 超线程（Hyperthreading）</span></h3>
+<figure class="highlight text"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs text">一个物理核内有多个运算单元（如 ALU）：<br>线程 1 使用 ALU 时，线程 2 可利用闲置的浮点单元/逻辑单元<br>→ 1 个物理核 = 2 个逻辑核（如 6 核 12 线程）<br>→ 额外性能约 +30%（取决于工作负载，自 1990s 持续改进）<br></code></pre></div></td></tr></table></figure>
+<h3><span id="24你的代码有多同步三个视角再回顾">2.4
+"你的代码有多同步？"——三个视角再回顾</span></h3>
+<ul>
+<li><strong>程序/线程视角</strong>：按编写顺序执行 ✔（同步的错觉）</li>
+<li><strong>OS 视角</strong>：可能中断、暂停、恢复你的代码</li>
+<li><strong>CPU
+视角</strong>：流水线（当前指令执行时预取下一条）、分支预测、<strong>乱序重排指令</strong>（不告知程序员/OS）——所以"A
+发生在 B
+之前"在硬件层并无保证，这正是同步原语（mutex/atomic）存在的原因</li>
+</ul>
+<hr>
+<h2><span id="第-3-章os-与-cpu">第 3 章：OS 与 CPU</span></h2>
+<h3><span id="31-os假装同步">3.1 OS"假装"同步</span></h3>
+<p>OS 自 1990s
+以来就"假装"以同步方式执行程序。所谓同步代码只是<strong>对程序员看似同步</strong>；OS
+采用抢占式调度，你无法保证代码不被中断地逐条执行。</p>
+<h3><span id="32-系统调用syscall与os-通信的唯一正道">3.2 系统调用（syscall）——与
+OS 通信的唯一正道</span></h3>
+<p>你无权直接操作硬件（如网卡），必须通过 syscall 请求 OS 代劳。</p>
+<p><strong>三个抽象层次实现同一个功能（向 stdout 输出）：</strong></p>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-comment">// ── 层次 1：内联汇编（直接给 CPU 下指令）──</span><br><span class="hljs-comment">// Linux: write 是 1 号系统调用, 1 也是 stdout 的 fd</span><br><span class="hljs-keyword">unsafe</span> &#123;<br>    llvm_asm!(<span class="hljs-string">&quot;</span><br><span class="hljs-string">        mov $$1, %rax      # syscall 号: write</span><br><span class="hljs-string">        mov $$1, %rdi      # fd: stdout</span><br><span class="hljs-string">        mov $0,  %rsi      # 缓冲区地址</span><br><span class="hljs-string">        mov $1,  %rdx      # 长度</span><br><span class="hljs-string">        syscall            # 进入内核</span><br><span class="hljs-string">    &quot;</span> : : <span class="hljs-string">&quot;r&quot;</span>(msg_ptr), <span class="hljs-string">&quot;r&quot;</span>(len) : <span class="hljs-string">&quot;rax&quot;</span>,<span class="hljs-string">&quot;rdi&quot;</span>,<span class="hljs-string">&quot;rsi&quot;</span>,<span class="hljs-string">&quot;rdx&quot;</span>);<br>&#125;<br><span class="hljs-comment">// macOS 几乎相同, 仅系统调用号不同: 0x2000004</span><br><span class="hljs-comment">// Windows: 无稳定调用号保证(逆向工程表), 绝不可用此方式!</span><br><br><span class="hljs-comment">// ── 层次 2：链接 OS 提供的 C 库/WinAPI ──</span><br><span class="hljs-meta">#[cfg(not(target_os = <span class="hljs-string">&quot;windows&quot;</span>))]</span><br><span class="hljs-meta">#[link(name = <span class="hljs-string">&quot;c&quot;</span>)]</span><br><span class="hljs-keyword">extern</span> <span class="hljs-string">&quot;C&quot;</span> &#123;                       <span class="hljs-comment">// UNIX: libc, C 调用约定</span><br>    <span class="hljs-keyword">fn</span> <span class="hljs-title function_">write</span>(fd: <span class="hljs-type">u32</span>, buf: *<span class="hljs-keyword">const</span> <span class="hljs-type">u8</span>, count: <span class="hljs-type">usize</span>) <span class="hljs-punctuation">-&gt;</span> <span class="hljs-type">i32</span>;<br>&#125;<br><br><span class="hljs-meta">#[cfg(target_os = <span class="hljs-string">&quot;windows&quot;</span>)]</span><br><span class="hljs-meta">#[link(name = <span class="hljs-string">&quot;kernel32&quot;</span>)]</span><br><span class="hljs-keyword">extern</span> <span class="hljs-string">&quot;stdcall&quot;</span> &#123;                 <span class="hljs-comment">// Windows: stdlib 调用约定, 更复杂</span><br>    <span class="hljs-keyword">fn</span> <span class="hljs-title function_">GetStdHandle</span>(nStdHandle: <span class="hljs-type">i32</span>) <span class="hljs-punctuation">-&gt;</span> <span class="hljs-type">i32</span>;          <span class="hljs-comment">// -11 = stdout</span><br>    <span class="hljs-keyword">fn</span> <span class="hljs-title function_">WriteConsoleW</span>(h: <span class="hljs-type">i32</span>, buf: *<span class="hljs-keyword">const</span> <span class="hljs-type">u16</span>, ...);   <span class="hljs-comment">// 需 utf-16!</span><br>&#125;<br><br><span class="hljs-comment">// ── 层次 3：标准库（最高抽象）──</span><br><span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;Hello world from Stdlib&quot;</span>);<br></code></pre></div></td></tr></table></figure>
+<p><strong>要点：</strong></p>
+<ul>
+<li><code>syscall</code> 指令比早期 <code>int 0x80</code> 软中断快，借助
+<strong>VDSO</strong>（附属于进程的内存页）避免上下文切换</li>
+<li>Windows 的 <code>WriteConsoleW</code> 需要
+<strong>utf-16</strong>，故需 <code>message.encode_utf16()</code>
+转换；<code>W</code>=Unicode，<code>A</code>=ANSI</li>
+<li>FFI 调用必须 <code>unsafe</code>；Linux/macOS API 简单相似，Windows
+需要更多数据结构与代码</li>
+</ul>
+<h3><span id="33-跨平台抽象的隐藏复杂性">3.3 跨平台抽象的隐藏复杂性</span></h3>
+<p>代码只跑 Linux/macOS
+很省事，一旦跨平台代码量爆炸。社区方案：<code>libc</code>
+crate（封装函数+常量）、<code>mio</code>、<code>libuv</code>。边缘情况（如"所有合法
+utf-8 都能转 utf-16 正确显示吗？"）是额外的难题。</p>
+<h3><span id="34-cpu-与-os的暗中合作安全机制">3.4 CPU 与 OS
+的暗中合作（安全机制）</span></h3>
+<p>一个"为什么 CPU 知道不允许解引用
+<code>99999999999999</code>"的实验引出整套硬件级安全机制：</p>
+<pre><code class=" mermaid">graph TD
+    A[&quot;代码解引用指针&quot;] --&gt; B[&quot;MMU 查页表&lt;br/&gt;虚拟地址 → 物理地址&quot;]
+    B --&gt;|&quot;找到映射&quot;| C[&quot;正常读取数据 ✔&quot;]
+    B --&gt;|&quot;页表中无映射&quot;| D[&quot;触发 Page Fault 异常&quot;]
+    D --&gt; E[&quot;CPU 查中断描述符表 IDT&lt;br/&gt;(OS 启动时注册)&quot;]
+    E --&gt; F[&quot;跳转到 OS 的处理程序&lt;br/&gt;输出: segmentation fault&quot;]
+
+    G[&quot;Ring 0 内核态&quot;] -.-&gt;|&quot;可改页表、访问设备&quot;| B
+    H[&quot;Ring 3 用户态&quot;] -.-&gt;|&quot;受限访问, 违规即异常&quot;| B
+</code></pre>
+<ul>
+<li><strong>虚拟内存 + 页表</strong>：每个进程有独立页表，CPU
+特殊寄存器指向它</li>
+<li><strong>特权级 Ring 0（内核）/ Ring
+3（用户）</strong>：用户态代码试图改页表 → 异常 → 跳转到 OS
+处理程序。这就是<strong>除系统调用外你别无选择</strong>与内核/硬件交互的原因</li>
+</ul>
+<hr>
+<h2><span id="第-4-章中断-固件-io">第 4 章：中断 | 固件 | I/O</span></h2>
+<h3><span id="41从网卡读取数据的全流程简化">4.1
+从网卡读取数据的全流程（简化）</span></h3>
+<pre><code class=" mermaid">graph TD
+    A[&quot;1. 我们的代码&lt;br/&gt;syscall 注册 socket&lt;br/&gt;(得 fd / handle)&quot;] --&gt; B[&quot;2. 向 OS 注册&lt;br/&gt;感兴趣的事件&quot;]
+    B --&gt; C[&quot;3. 网卡固件&lt;br/&gt;专用微控制器检测到&lt;br/&gt;数据到达&quot;]
+    C --&gt; D[&quot;4. 硬件中断&lt;br/&gt;IRQ 电信号发给 CPU&quot;]
+    D --&gt; E[&quot;5. CPU 查 IDT&lt;br/&gt;跳到中断处理程序&quot;]
+    E --&gt; F[&quot;6. DMA&lt;br/&gt;网卡直接把数据&lt;br/&gt;写入内存缓冲区&quot;]
+    F --&gt; G[&quot;7. 驱动程序&lt;br/&gt;通知内核数据就绪&quot;]
+    G --&gt; H[&quot;8. OS 按注册方式通知我们&quot;]
+</code></pre>
+<h3><span id="42-第-2-步注册事件的三种姿势">4.2 第 2 步"注册事件"的三种姿势</span></h3>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-comment">// A) 阻塞式: OS 挂起我的线程, 直到事件发生</span><br><span class="hljs-comment">//    → 简单, 但线程被挂起干不了别的</span><br><span class="hljs-title function_ invoke__">blocking_read</span>(fd);<br><br><span class="hljs-comment">// B) 非阻塞式: 立即返回句柄, 自己负责轮询检查</span><br><span class="hljs-comment">//    → 不阻塞, 但要忙轮询(浪费 CPU)</span><br><span class="hljs-keyword">match</span> <span class="hljs-title function_ invoke__">nonblocking_poll</span>(fd) &#123;<br>    Ready     =&gt; <span class="hljs-title function_ invoke__">read</span>(fd),<br>    NotReady  =&gt; <span class="hljs-comment">/* 再等等, 周期性再查 */</span><br>&#125;<br><br><span class="hljs-comment">// C) 事件队列: 一次订阅多个事件, 轮询队列时阻塞</span><br><span class="hljs-comment">//    → epoll/kqueue/IOCP 的模型, 兼顾效率与灵活</span><br>event_queue.<span class="hljs-title function_ invoke__">register</span>(fd, Read);<br><span class="hljs-keyword">for</span> <span class="hljs-variable">event</span> <span class="hljs-keyword">in</span> event_queue.<span class="hljs-title function_ invoke__">wait</span>() &#123;   <span class="hljs-comment">// 阻塞直到任一事件发生</span><br>    <span class="hljs-title function_ invoke__">read</span>(event.fd);<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h3><span id="43-硬件中断-软件中断-固件">4.3 硬件中断 / 软件中断 / 固件</span></h3>
+<ul>
+<li><strong>硬件中断</strong>：IRQ 线上的电信号，随时打断 CPU →
+存寄存器状态 → 查 IDT 跳转处理程序</li>
+<li><strong>软件中断</strong>：由指令主动触发（如旧式
+<code>int 0x80</code> 系统调用）</li>
+<li><strong>IDT 位于主内存</strong>的固定位置，CPU
+只在寄存器存指向它的指针（网卡类中断的处理程序通常由<strong>驱动程序</strong>注册）</li>
+<li><strong>固件</strong>：系统中"隐藏的小 CPU"无处不在（网卡、甚至 CPU
+自身）。网卡固件已在轮询数据，我们若再让 CPU
+忙轮询就是重复劳动——<strong>并发即效率</strong>的又一体现</li>
+</ul>
+<hr>
+<h2><span id="第-5-章处理-io-的三大策略">第 5 章：处理 I/O 的三大策略</span></h2>
+<h3><span id="策略对比总表">策略对比总表</span></h3>
+<table>
+<colgroup>
+<col style="width: 2%">
+<col style="width: 36%">
+<col style="width: 23%">
+<col style="width: 37%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>策略1: OS 线程</th>
+<th>策略2: 绿色线程</th>
+<th>策略3: OS 事件队列(epoll/kqueue/IOCP)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>代表</td>
+<td>传统服务器</td>
+<td>Go</td>
+<td><strong>Node / Rust async</strong></td>
+</tr>
+<tr class="even">
+<td>优点</td>
+<td>简单易写；性能尚可；免费获得并行</td>
+<td>用法像 OS 线程；可控调度/优先级</td>
+<td><strong>接近最佳资源利用率</strong>；最大灵活性</td>
+</tr>
+<tr class="odd">
+<td>缺点</td>
+<td>栈大（海量任务耗尽内存）；syscall 开销大；OS 调度不可控</td>
+<td>需要运行时，重复 OS 已做的事；实现难</td>
+<td>各 OS
+差异大；复杂；<strong>只解决"等待"，仍需暂停任务的方案</strong></td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-comment">// 策略 1：一任务一线程（简单粗暴）</span><br><span class="hljs-keyword">for</span> <span class="hljs-variable">conn</span> <span class="hljs-keyword">in</span> incoming &#123;<br>    thread::<span class="hljs-title function_ invoke__">spawn</span>(<span class="hljs-keyword">move</span> || <span class="hljs-title function_ invoke__">handle</span>(conn));  <span class="hljs-comment">// 10k 连接 = 10k 线程 ≈ 内存爆炸</span><br>&#125;<br><br><span class="hljs-comment">// 策略 2：绿色线程（Go 风格，运行时自己调度轻量线程）</span><br>go!(|| <span class="hljs-title function_ invoke__">handle</span>(conn));   <span class="hljs-comment">// 有运行时, 自己管栈和调度</span><br><br><span class="hljs-comment">// 策略 3：OS 事件队列（本书主角）</span><br>epoll.<span class="hljs-title function_ invoke__">register</span>(conn, READABLE, token);<br><span class="hljs-keyword">loop</span> &#123;                                  <span class="hljs-comment">// 单线程管理所有连接</span><br>    <span class="hljs-keyword">for</span> <span class="hljs-variable">ev</span> <span class="hljs-keyword">in</span> epoll.<span class="hljs-title function_ invoke__">wait</span>() &#123;            <span class="hljs-comment">// 阻塞直到有事件</span><br>        <span class="hljs-title function_ invoke__">dispatch</span>(ev);                   <span class="hljs-comment">// 事件到了再处理</span><br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<blockquote>
+<p><strong>关键结论</strong>：策略 3
+只解决了"何时知道就绪"，<strong>如何暂停/恢复任务</strong>仍需上层方案——</p>
+<ul>
+<li><strong>Node 的答案：回调 (callbacks)</strong></li>
+<li><strong>Rust 的答案：Futures 状态机（暂停点即状态）</strong></li>
+</ul>
+<p>Node 运行时 = 策略 1 + 策略 3 组合，但尽量强制 I/O 走策略 3——这是
+Node 擅长海量并发连接的原因。</p>
+</blockquote>
+<hr>
+<h2><span id="第-6-章epoll-kqueue-iocp">第 6 章：Epoll | Kqueue | IOCP</span></h2>
+<h3><span id="61-谁在用它们">6.1 谁在用它们</span></h3>
+<figure class="highlight text"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs text">Node  → libuv   (跨平台异步 I/O 库, Julia/Pyuv 也用)<br>Rust  → mio     (tokio 的 OS 事件队列后端; tokio之于Actix Web...)<br>本书  → minimio (作者手写的玩具版 mio)<br></code></pre></div></td></tr></table></figure>
+<h3><span id="62-两种模型的根本差异">6.2 两种模型的根本差异</span></h3>
+<pre><code class=" mermaid">sequenceDiagram
+    participant P as epoll/kqueue (就绪型)
+    Note over P: 告诉你&quot;可以读了&quot;, 数据你自己取
+    P-&gt;&gt;P: epoll_create()/kqueue() 建队列
+    P-&gt;&gt;P: 注册 fd 的 Read 兴趣
+    P-&gt;&gt;P: epoll_wait()/kevent() 阻塞等待
+    P--&gt;&gt;P: 返回&quot;socket N 可读&quot;
+    P-&gt;&gt;P: 自己调 read(N)
+
+    participant C as IOCP (完成型)
+    Note over C: 告诉你&quot;已经读好了&quot;, 数据已在缓冲区
+    C-&gt;&gt;C: CreateIoCompletionPort() 建队列
+    C-&gt;&gt;C: 注册 Read + 借出缓冲区给 OS
+    C-&gt;&gt;C: GetQueuedCompletionStatusEx() 阻塞
+    C--&gt;&gt;C: 返回&quot;数据已读入你的缓冲区&quot;
+</code></pre>
+<table>
+<colgroup>
+<col style="width: 8%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>Epoll (Linux)</th>
+<th>Kqueue (macOS/BSD)</th>
+<th>IOCP (Windows)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>模型</td>
+<td><strong>就绪型</strong> readiness</td>
+<td><strong>就绪型</strong> readiness</td>
+<td><strong>完成型</strong> completion</td>
+</tr>
+<tr class="even">
+<td>通知含义</td>
+<td>"可以执行操作了"</td>
+<td>同左</td>
+<td>"操作已完成，数据已进缓冲区"</td>
+</tr>
+<tr class="odd">
+<td>缓冲区</td>
+<td>自己管理</td>
+<td>自己管理</td>
+<td><strong>借给 OS</strong>（等待期间不可动，借用检查器大显身手）</td>
+</tr>
+<tr class="even">
+<td>特点</td>
+<td>大量事件下高效</td>
+<td>概念类似但更抽象通用</td>
+<td>官方文档好</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>跨平台库设计经验</strong>：让"就绪型"表现得像"完成型"更容易 →
+<strong>先按 IOCP（完成型）设计，再适配 epoll/kqueue</strong>。</p>
+</blockquote>
+<hr>
+<h2><span id="第-7-章例子">第 7 章：例子</span></h2>
+<h3><span id="71-目标代码js-风格的-rust">7.1 目标代码（JS 风格的 Rust）</span></h3>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-comment">// 把这个函数想象成你写的 JavaScript 程序</span><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">javascript</span>() &#123;<br>    Fs::<span class="hljs-title function_ invoke__">read</span>(<span class="hljs-string">&quot;test.txt&quot;</span>, |result| &#123;              <span class="hljs-comment">// 回调式异步</span><br>        <span class="hljs-keyword">let</span> <span class="hljs-variable">text</span> = result.<span class="hljs-title function_ invoke__">into_string</span>().<span class="hljs-title function_ invoke__">unwrap</span>();<br>        Crypto::<span class="hljs-title function_ invoke__">encrypt</span>(text.<span class="hljs-title function_ invoke__">len</span>(), |result| &#123;   <span class="hljs-comment">// 回调嵌套(类似 JS)</span><br>            <span class="hljs-title function_ invoke__">print</span>(result.<span class="hljs-title function_ invoke__">into_int</span>().<span class="hljs-title function_ invoke__">unwrap</span>());<br>        &#125;);<br>    &#125;);<br>    <span class="hljs-title function_ invoke__">set_timeout</span>(<span class="hljs-number">0</span>, |_| <span class="hljs-title function_ invoke__">print</span>(<span class="hljs-string">&quot;Immediate1&quot;</span>));     <span class="hljs-comment">// 计时器</span><br>    Http::<span class="hljs-title function_ invoke__">http_get_slow</span>(<span class="hljs-string">&quot;www.google.com&quot;</span>, <span class="hljs-number">2000</span>, |result| &#123;<br>        <span class="hljs-title function_ invoke__">print_content</span>(result.<span class="hljs-title function_ invoke__">into_string</span>().<span class="hljs-title function_ invoke__">unwrap</span>(), <span class="hljs-string">&quot;web call&quot;</span>);<br>    &#125;);<br>&#125;<br><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() &#123;<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">rt</span> = Runtime::<span class="hljs-title function_ invoke__">new</span>();<br>    rt.<span class="hljs-title function_ invoke__">run</span>(javascript);   <span class="hljs-comment">// 运行时驱动一切</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p><code>Js</code> 枚举模拟 JS
+的动态类型（<code>Undefined/String/Int</code>），因为 Rust
+是静态类型语言。</p>
+<h3><span id="72-什么是-node破除误解">7.2 什么是 Node（破除误解）</span></h3>
+<pre><code class=" mermaid">graph TD
+    subgraph Node 架构
+        V[&quot;V8 引擎&lt;br/&gt;JIT 编译执行 JS&lt;br/&gt;(不能 I/O)&quot;]
+        R[&quot;Node 运行时&quot;]
+        EL[&quot;事件循环&lt;br/&gt;(用户代码只跑在这一个线程!)&quot;]
+        TP[&quot;线程池 x4&lt;br/&gt;(默认)&quot;]
+        EQ[&quot;libuv&lt;br/&gt;epoll/kqueue/IOCP 事件队列&quot;]
+    end
+    JS[&quot;你的 JS 代码&quot;] --&gt; V --&gt; R
+    R --&gt; EL
+    EL --&gt;|&quot;I/O 密集&quot;| EQ
+    EL --&gt;|&quot;CPU 密集 / epoll 处理不了的 I/O&lt;br/&gt;(如文件读取)&quot;| TP
+</code></pre>
+<ul>
+<li><strong>JS 本身没有事件循环</strong>——浏览器或 Node
+提供运行时才有</li>
+<li><strong>Node 是多线程的</strong>（线程池 + epoll
+线程），但<strong>你的代码只跑在单个主线程</strong>上——"别阻塞事件循环"指的就是它</li>
+<li>受 I/O 限制 → 事件队列；受 CPU 限制 → 线程池（大多数 C++
+扩展也在此执行）</li>
+</ul>
+<h3><span id="73-实现计划">7.3 实现计划</span></h3>
+<p>需要：<strong>两个事件队列</strong>（线程池 +
+minimio）｜<strong>一个运行时</strong>（存回调、发任务、注册事件、轮询、处理计时器）｜<strong>三个模块</strong>（Fs/Crypto/Http）｜辅助函数（<code>print</code>/<code>print_content</code>/<code>current</code>）</p>
+<hr>
+<h2><span id="第-8-章实现自己的运行时">第 8 章：实现自己的运行时</span></h2>
+<h3><span id="81-运行时的状态runtimestruct-逐字段">8.1 运行时的状态（Runtime
+struct 逐字段）</span></h3>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">pub</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">Runtime</span> &#123;<br>    available_threads: <span class="hljs-type">Vec</span>&lt;<span class="hljs-type">usize</span>&gt;,                 <span class="hljs-comment">// 线程池空闲线程 id</span><br>    callbacks_to_run: <span class="hljs-type">Vec</span>&lt;(<span class="hljs-type">usize</span>, Js)&gt;,            <span class="hljs-comment">// 本 tick 待运行的 (回调id, 数据)</span><br>    callback_queue: HashMap&lt;<span class="hljs-type">usize</span>, <span class="hljs-type">Box</span>&lt;<span class="hljs-keyword">dyn</span> <span class="hljs-title function_ invoke__">FnOnce</span>(Js)&gt;&gt;, <span class="hljs-comment">// 所有已注册回调</span><br>    epoll_pending_events: <span class="hljs-type">usize</span>,                   <span class="hljs-comment">// epoll 待处理计数(仅打印用)</span><br>    epoll_registrator: minimio::Registrator,       <span class="hljs-comment">// 向 OS 注册事件</span><br>    epoll_thread: thread::JoinHandle&lt;()&gt;,          <span class="hljs-comment">// epoll 线程句柄</span><br>    epoll_timeout: Arc&lt;Mutex&lt;<span class="hljs-type">Option</span>&lt;<span class="hljs-type">i32</span>&gt;&gt;&gt;,        <span class="hljs-comment">// None=无限等待 Some(n)=n ms</span><br>    event_reciever: Receiver&lt;PollEvent&gt;,           <span class="hljs-comment">// 线程池+epoll 共同的事件通道!</span><br>    identity_token: <span class="hljs-type">usize</span>,                         <span class="hljs-comment">// 回调 id 生成器</span><br>    pending_events: <span class="hljs-type">usize</span>,                         <span class="hljs-comment">// 归零 =&gt; 程序结束</span><br>    thread_pool: <span class="hljs-type">Vec</span>&lt;NodeThread&gt;,                  <span class="hljs-comment">// 线程池句柄</span><br>    timers: BTreeMap&lt;Instant, <span class="hljs-type">usize</span>&gt;,              <span class="hljs-comment">// 到期时间 -&gt; 回调id (有序!)</span><br>    timers_to_remove: <span class="hljs-type">Vec</span>&lt;Instant&gt;,                <span class="hljs-comment">// 复用缓冲,避免循环内分配</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>支撑类型：</p>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Task</span> &#123;                              <span class="hljs-comment">// 发给线程池的工作单元</span><br>    task: <span class="hljs-type">Box</span>&lt;<span class="hljs-keyword">dyn</span> <span class="hljs-title function_ invoke__">Fn</span>() <span class="hljs-punctuation">-&gt;</span> Js + <span class="hljs-built_in">Send</span>&gt;,      <span class="hljs-comment">// 真正的活(Send 才能跨线程)</span><br>    callback_id: <span class="hljs-type">usize</span>,                    <span class="hljs-comment">// 干完活回调谁</span><br>    kind: ThreadPoolTaskKind,              <span class="hljs-comment">// FileRead | Encrypt | Close</span><br>&#125;<br><br><span class="hljs-keyword">enum</span> <span class="hljs-title class_">PollEvent</span> &#123;                           <span class="hljs-comment">// 主循环统一收到的事件</span><br>    <span class="hljs-title function_ invoke__">Threadpool</span>((thread_id, callback_id, Js)), <span class="hljs-comment">// 线程池完成(带数据)</span><br>    <span class="hljs-title function_ invoke__">Epoll</span>(event_id),                          <span class="hljs-comment">// epoll 事件就绪</span><br>    Timeout,                                  <span class="hljs-comment">// epoll 等待超时(该查计时器了)</span><br>&#125;<br><br><span class="hljs-keyword">static</span> <span class="hljs-keyword">mut</span> RUNTIME: *<span class="hljs-keyword">mut</span> Runtime = std::ptr::<span class="hljs-title function_ invoke__">null_mut</span>();  <span class="hljs-comment">// 全局运行时指针(unsafe hack)</span><br></code></pre></div></td></tr></table></figure>
+<h3><span id="82-主循环仿-node-的-6-阶段">8.2 主循环（仿 Node 的 6 阶段）</span></h3>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">pub</span> <span class="hljs-keyword">fn</span> <span class="hljs-title function_">run</span>(<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>, f: <span class="hljs-keyword">impl</span> <span class="hljs-title class_">Fn</span>()) &#123;<br>    <span class="hljs-keyword">unsafe</span> &#123; RUNTIME = &amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span> &#125;;   <span class="hljs-comment">// 全局指针 hack(单线程访问,安全)</span><br>    <span class="hljs-title function_ invoke__">f</span>();                              <span class="hljs-comment">// 先同步跑一遍&quot;JS程序&quot;→ 注册一堆事件</span><br><br>    <span class="hljs-keyword">while</span> <span class="hljs-keyword">self</span>.pending_events &gt; <span class="hljs-number">0</span> &#123;   <span class="hljs-comment">// 没有待处理事件 =&gt; 结束</span><br>        <span class="hljs-comment">// 1. TIMERS: 到期计时器的回调入队</span><br>        <span class="hljs-keyword">self</span>.<span class="hljs-title function_ invoke__">process_expired_timers</span>();<br><br>        <span class="hljs-comment">// 2. CALLBACKS: 跑掉所有排队的回调</span><br>        <span class="hljs-keyword">self</span>.<span class="hljs-title function_ invoke__">run_callbacks</span>();<br><br>        <span class="hljs-comment">// 3. IDLE/PREPARE (Node 内部用, 略)</span><br><br>        <span class="hljs-comment">// 4. POLL: 计算最近一个计时器的超时, 写入共享变量</span><br>        <span class="hljs-keyword">let</span> <span class="hljs-variable">next_timeout</span> = <span class="hljs-keyword">self</span>.<span class="hljs-title function_ invoke__">get_next_timer</span>();<br>        *<span class="hljs-keyword">self</span>.epoll_timeout.<span class="hljs-title function_ invoke__">lock</span>().<span class="hljs-title function_ invoke__">unwrap</span>() = next_timeout;<br>        <span class="hljs-title function_ invoke__">drop</span>(lock);                            <span class="hljs-comment">// ★ 必须先放锁再等待,否则死锁!</span><br><br>        <span class="hljs-comment">//    阻塞等待: 线程池完成 / epoll 就绪 / 超时, 三者任一</span><br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">let</span> <span class="hljs-variable">Ok</span>(event) = <span class="hljs-keyword">self</span>.event_reciever.<span class="hljs-title function_ invoke__">recv</span>() &#123;<br>            <span class="hljs-keyword">match</span> event &#123;<br>                Timeout =&gt; (),                 <span class="hljs-comment">// 转回去查计时器</span><br>                <span class="hljs-title function_ invoke__">Threadpool</span>((tid, cb_id, data)) =&gt; <span class="hljs-keyword">self</span>.<span class="hljs-title function_ invoke__">process_threadpool_events</span>(..),<br>                <span class="hljs-title function_ invoke__">Epoll</span>(event_id)                =&gt; <span class="hljs-keyword">self</span>.<span class="hljs-title function_ invoke__">process_epoll_events</span>(..),<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">self</span>.<span class="hljs-title function_ invoke__">run_callbacks</span>();                  <span class="hljs-comment">// 事件转化出的回调立刻跑</span><br><br>        <span class="hljs-comment">// 5. CHECK (setImmediate 钩子, 略)   6. CLOSE CALLBACKS (略)</span><br>    &#125;<br>    <span class="hljs-comment">// 清理: 发 Close 任务给每个池线程并 join, 关闭 epoll 循环并 join</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+<pre><code class=" mermaid">graph TD
+    S[&quot;run(f) 先同步执行用户代码&lt;br/&gt;注册 timers/线程池任务/epoll 事件&quot;] --&gt; L&#123;&quot;pending_events &gt; 0 ?&quot;&#125;
+    L --&gt;|&quot;否&quot;| Z[&quot;清理并退出&quot;]
+    L --&gt;|&quot;是&quot;| T1[&quot;1. Timers&lt;br/&gt;到期回调入队&quot;]
+    T1 --&gt; T2[&quot;2. Callbacks&lt;br/&gt;执行排队的回调&quot;]
+    T2 --&gt; T4[&quot;4. Poll&lt;br/&gt;设 timeout=最近计时器&lt;br/&gt;阻塞 recv 事件通道&quot;]
+    T4 --&gt; E&#123;&quot;收到什么事件?&quot;&#125;
+    E --&gt;|&quot;Timeout&quot;| T1
+    E --&gt;|&quot;Threadpool 完成&quot;| T2
+    E --&gt;|&quot;Epoll 就绪&quot;| T2
+</code></pre>
+<h3><span id="83-线程池的搭建runtimenew上半场">8.3 线程池的搭建（Runtime::new
+上半场）</span></h3>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-comment">// 1 条主通道: 线程池+epoll线程 → 主循环</span><br><span class="hljs-keyword">let</span> (event_sender, event_receiver) = channel::&lt;PollEvent&gt;();<br><br><span class="hljs-keyword">for</span> <span class="hljs-variable">i</span> <span class="hljs-keyword">in</span> <span class="hljs-number">0</span>..<span class="hljs-number">4</span> &#123;                                  <span class="hljs-comment">// Node 默认 4 线程</span><br>    <span class="hljs-keyword">let</span> (evt_sender, evt_receiver) = channel::&lt;Task&gt;();  <span class="hljs-comment">// 每线程独立通道</span><br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">event_sender</span> = event_sender.<span class="hljs-title function_ invoke__">clone</span>();<br><br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">handle</span> = thread::Builder::<span class="hljs-title function_ invoke__">new</span>().<span class="hljs-title function_ invoke__">name</span>(<span class="hljs-built_in">format!</span>(<span class="hljs-string">&quot;pool&#123;&#125;&quot;</span>, i))<br>        .<span class="hljs-title function_ invoke__">spawn</span>(<span class="hljs-keyword">move</span> || &#123;<br>            <span class="hljs-keyword">while</span> <span class="hljs-keyword">let</span> <span class="hljs-variable">Ok</span>(task) = evt_receiver.<span class="hljs-title function_ invoke__">recv</span>() &#123;  <span class="hljs-comment">// recv 会 park 线程(零消耗)</span><br>                <span class="hljs-keyword">if</span> <span class="hljs-keyword">let</span> <span class="hljs-variable">ThreadPoolTaskKind</span>::Close = task.kind &#123; <span class="hljs-keyword">break</span>; &#125;<br>                <span class="hljs-keyword">let</span> <span class="hljs-variable">res</span> = (task.task)();                 <span class="hljs-comment">// 干活,返回 Js</span><br>                event_sender.<span class="hljs-title function_ invoke__">send</span>(PollEvent::<span class="hljs-title function_ invoke__">Threadpool</span>((i, task.callback_id, res)));<br>            &#125;                                            <span class="hljs-comment">// ↑ 干完通知主循环</span><br>        &#125;).<span class="hljs-title function_ invoke__">unwrap</span>();<br>    threads.<span class="hljs-title function_ invoke__">push</span>(NodeThread &#123; handle, sender: evt_sender &#125;);<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h3><span id="84-epoll-线程runtimenew下半场">8.4 epoll 线程（Runtime::new
+下半场）</span></h3>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">let</span> <span class="hljs-keyword">mut </span><span class="hljs-variable">poll</span> = minimio::Poll::<span class="hljs-title function_ invoke__">new</span>().<span class="hljs-title function_ invoke__">unwrap</span>();     <span class="hljs-comment">// syscall 向 OS 要 epoll/kqueue/IOCP 句柄</span><br><span class="hljs-keyword">let</span> <span class="hljs-variable">registrator</span> = poll.<span class="hljs-title function_ invoke__">registrator</span>();             <span class="hljs-comment">// 注册器与 Poll 分离:</span><br>                                                  <span class="hljs-comment">// 主线程持有 Registrator,</span><br>                                                  <span class="hljs-comment">// Poll 发给 epoll 线程</span><br>                                                  <span class="hljs-comment">// (共享 AtomicBool 判断队列是否存活)</span><br><span class="hljs-keyword">let</span> <span class="hljs-variable">epoll_timeout</span> = Arc::<span class="hljs-title function_ invoke__">new</span>(Mutex::<span class="hljs-title function_ invoke__">new</span>(<span class="hljs-literal">None</span>));   <span class="hljs-comment">// 与主线程共享的超时值</span><br><br>thread::Builder::<span class="hljs-title function_ invoke__">new</span>().<span class="hljs-title function_ invoke__">name</span>(<span class="hljs-string">&quot;epoll&quot;</span>.<span class="hljs-title function_ invoke__">into</span>()).<span class="hljs-title function_ invoke__">spawn</span>(<span class="hljs-keyword">move</span> || &#123;<br>    <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut </span><span class="hljs-variable">events</span> = minimio::Events::<span class="hljs-title function_ invoke__">with_capacity</span>(<span class="hljs-number">1024</span>); <span class="hljs-comment">// 只分配一次!</span><br>    <span class="hljs-keyword">loop</span> &#123;<br>        <span class="hljs-keyword">let</span> <span class="hljs-variable">timeout</span> = *epoll_timeout_clone.<span class="hljs-title function_ invoke__">lock</span>().<span class="hljs-title function_ invoke__">unwrap</span>();<br>        <span class="hljs-title function_ invoke__">drop</span>(lock);                               <span class="hljs-comment">// ★ 同样: 先放锁再 poll</span><br><br>        <span class="hljs-keyword">match</span> poll.<span class="hljs-title function_ invoke__">poll</span>(&amp;<span class="hljs-keyword">mut</span> events, timeout) &#123;   <span class="hljs-comment">// OS 级阻塞等待(线程被 park)</span><br>            <span class="hljs-title function_ invoke__">Ok</span>(v) <span class="hljs-keyword">if</span> v &gt; <span class="hljs-number">0</span> =&gt; &#123; <span class="hljs-comment">/* 就绪事件逐个 send PollEvent::Epoll(id) */</span> &#125;<br>            <span class="hljs-title function_ invoke__">Ok</span>(<span class="hljs-number">0</span>)             =&gt; &#123; <span class="hljs-comment">/* 超时/伪唤醒: send PollEvent::Timeout */</span> &#125;<br>            <span class="hljs-title function_ invoke__">Err</span>(Interrupted)  =&gt; <span class="hljs-keyword">break</span>,           <span class="hljs-comment">// 收到关闭信号</span><br>            <span class="hljs-title function_ invoke__">Err</span>(e)            =&gt; <span class="hljs-built_in">panic!</span>(e),<br>        &#125;<br>    &#125;<br>&#125;);<br></code></pre></div></td></tr></table></figure>
+<blockquote>
+<p>两个 <code>drop(lock)</code>
+是<strong>全书最重要的并发细节</strong>：<code>poll</code>/<code>recv</code>
+会阻塞线程，若持有锁去等待，另一端将永远无法写入 →
+<strong>死锁</strong>。</p>
+</blockquote>
+<h3><span id="85-timersbtreemap-的妙用">8.5 Timers：BTreeMap 的妙用</span></h3>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">process_expired_timers</span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>) &#123;<br>    <span class="hljs-comment">// BTreeMap 按到期时间有序 → range 一刀切出所有已到期者</span><br>    <span class="hljs-keyword">self</span>.timers.<span class="hljs-title function_ invoke__">range</span>(..=Instant::<span class="hljs-title function_ invoke__">now</span>())<br>        .<span class="hljs-title function_ invoke__">for_each</span>(|(k, _)| timers_to_remove.<span class="hljs-title function_ invoke__">push</span>(*k));   <span class="hljs-comment">// 先收集(借用检查)</span><br><br>    <span class="hljs-keyword">while</span> <span class="hljs-keyword">let</span> <span class="hljs-variable">Some</span>(key) = <span class="hljs-keyword">self</span>.timers_to_remove.<span class="hljs-title function_ invoke__">pop</span>() &#123;  <span class="hljs-comment">// 再删除</span><br>        <span class="hljs-keyword">let</span> <span class="hljs-variable">cb_id</span> = <span class="hljs-keyword">self</span>.timers.<span class="hljs-title function_ invoke__">remove</span>(&amp;key).<span class="hljs-title function_ invoke__">unwrap</span>();<br>        <span class="hljs-keyword">self</span>.callbacks_to_run.<span class="hljs-title function_ invoke__">push</span>((cb_id, Js::Undefined)); <span class="hljs-comment">// 只入队不执行</span><br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">get_next_timer</span>(&amp;<span class="hljs-keyword">self</span>) <span class="hljs-punctuation">-&gt;</span> <span class="hljs-type">Option</span>&lt;<span class="hljs-type">i32</span>&gt; &#123;<br>    <span class="hljs-keyword">self</span>.timers.<span class="hljs-title function_ invoke__">iter</span>().<span class="hljs-title function_ invoke__">nth</span>(<span class="hljs-number">0</span>).<span class="hljs-title function_ invoke__">map</span>(|(&amp;instant, _)|         <span class="hljs-comment">// 首个 = 最近到期</span><br>        (instant - Instant::<span class="hljs-title function_ invoke__">now</span>()).<span class="hljs-title function_ invoke__">as_millis</span>() <span class="hljs-keyword">as</span> <span class="hljs-type">i32</span>)<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<blockquote>
+<p>选 <code>BTreeMap</code> 而非
+<code>HashMap</code>/<code>BST</code>：键天然有序；相比 BST
+每节点存多个值（小 Vec），<strong>缓存友好</strong>。</p>
+</blockquote>
+<h3><span id="86callbacksboxltdyn-fnoncejsgt">8.6
+Callbacks：<code>Box&lt;dyn FnOnce(Js)&gt;</code></span></h3>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">run_callbacks</span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>) &#123;<br>    <span class="hljs-keyword">while</span> <span class="hljs-keyword">let</span> <span class="hljs-variable">Some</span>((cb_id, data)) = <span class="hljs-keyword">self</span>.callbacks_to_run.<span class="hljs-title function_ invoke__">pop</span>() &#123;<br>        <span class="hljs-keyword">let</span> <span class="hljs-variable">cb</span> = <span class="hljs-keyword">self</span>.callback_queue.<span class="hljs-title function_ invoke__">remove</span>(&amp;cb_id).<span class="hljs-title function_ invoke__">unwrap</span>();<br>        <span class="hljs-title function_ invoke__">cb</span>(data);                      <span class="hljs-comment">// ★ 回调里的长代码会阻塞整个事件循环!</span><br>        <span class="hljs-keyword">self</span>.pending_events -= <span class="hljs-number">1</span>;      <span class="hljs-comment">// 这就是&quot;别阻塞事件循环&quot;的本质</span><br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<blockquote>
+<p><code>FnOnce</code>：闭包捕获并<strong>消耗</strong>环境变量，只能调用一次——正是回调语义，还顺便借
+RAII 清理资源。trait 无固定大小 → 必须 <code>Box</code> 上堆。</p>
+</blockquote>
+<h3><span id="87-三个注册api模块与运行时的接口">8.7 三个注册
+API（模块与运行时的接口）</span></h3>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-comment">// ① 注册 epoll 事件 (Http 模块用)</span><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">register_event_epoll</span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>, token: <span class="hljs-type">usize</span>, cb: <span class="hljs-keyword">impl</span> <span class="hljs-title class_">FnOnce</span>(Js)) &#123;<br>    <span class="hljs-keyword">self</span>.<span class="hljs-title function_ invoke__">add_callback</span>(token, cb);          <span class="hljs-comment">// token 即回调 id (1:1 映射)</span><br>    <span class="hljs-keyword">self</span>.pending_events += <span class="hljs-number">1</span>;<br>&#125;<br><br><span class="hljs-comment">// ② 注册线程池任务 (Fs/Crypto 模块用)</span><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">register_event_threadpool</span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>, task: <span class="hljs-keyword">impl</span> <span class="hljs-title class_">Fn</span>()<span class="hljs-punctuation">-&gt;</span>Js+<span class="hljs-built_in">Send</span>,<br>                             kind: ThreadPoolTaskKind, cb: <span class="hljs-keyword">impl</span> <span class="hljs-title class_">FnOnce</span>(Js)) &#123;<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">cb_id</span> = <span class="hljs-keyword">self</span>.<span class="hljs-title function_ invoke__">generate_cb_identity</span>();<br>    <span class="hljs-keyword">self</span>.<span class="hljs-title function_ invoke__">add_callback</span>(cb_id, cb);<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">available</span> = <span class="hljs-keyword">self</span>.<span class="hljs-title function_ invoke__">get_available_thread</span>();       <span class="hljs-comment">// 无空闲线程直接 panic(书中捷径)</span><br>    <span class="hljs-keyword">self</span>.thread_pool[available].sender.<span class="hljs-title function_ invoke__">send</span>(Task &#123; task: <span class="hljs-type">Box</span>::<span class="hljs-title function_ invoke__">new</span>(task), .. &#125;);<br>    <span class="hljs-keyword">self</span>.pending_events += <span class="hljs-number">1</span>;<br>&#125;<br><br><span class="hljs-comment">// ③ set_timeout (计时器)</span><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">set_timeout</span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>, ms: <span class="hljs-type">u64</span>, cb: <span class="hljs-keyword">impl</span> <span class="hljs-title class_">Fn</span>(Js)) &#123;<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">cb_id</span> = <span class="hljs-keyword">self</span>.<span class="hljs-title function_ invoke__">generate_cb_identity</span>();<br>    <span class="hljs-keyword">self</span>.<span class="hljs-title function_ invoke__">add_callback</span>(cb_id, cb);<br>    <span class="hljs-keyword">self</span>.timers.<span class="hljs-title function_ invoke__">insert</span>(Instant::<span class="hljs-title function_ invoke__">now</span>() + Duration::<span class="hljs-title function_ invoke__">from_millis</span>(ms), cb_id);<br>    <span class="hljs-keyword">self</span>.pending_events += <span class="hljs-number">1</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>事件回流的处理：</p>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">process_threadpool_events</span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>, thread_id, callback_id, data: Js) &#123;<br>    <span class="hljs-keyword">self</span>.callbacks_to_run.<span class="hljs-title function_ invoke__">push</span>((callback_id, data));  <span class="hljs-comment">// 结果数据直接带给回调</span><br>    <span class="hljs-keyword">self</span>.available_threads.<span class="hljs-title function_ invoke__">push</span>(thread_id);           <span class="hljs-comment">// ★ 线程归还池子</span><br>&#125;<br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">process_epoll_events</span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>, event_id: <span class="hljs-type">usize</span>) &#123;<br>    <span class="hljs-keyword">self</span>.callbacks_to_run.<span class="hljs-title function_ invoke__">push</span>((event_id, Js::Undefined)); <span class="hljs-comment">// 不带数据! 只报&quot;就绪&quot;</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+<blockquote>
+<p><strong>安全扩展</strong>：完成型模型（IOCP）要为每个 Read/Write
+借出缓冲区，恶意客户端可借注册大量不发生的事件耗尽内存——生产实现需设"高水位线"限制待处理事件数。</p>
+</blockquote>
+<h3><span id="88-基础设施杂项">8.8 基础设施杂项</span></h3>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">generate_identity</span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>) <span class="hljs-punctuation">-&gt;</span> <span class="hljs-type">usize</span> &#123;<br>    <span class="hljs-keyword">self</span>.identity_token = <span class="hljs-keyword">self</span>.identity_token.<span class="hljs-title function_ invoke__">wrapping_add</span>(<span class="hljs-number">1</span>); <span class="hljs-comment">// 溢出回绕</span><br>    <span class="hljs-keyword">self</span>.identity_token<br>&#125;<br><span class="hljs-comment">// generate_cb_identity: 撞 id 就循环再生成(64 位上每纳秒一个 id 也要 585 年才绕完一圈)</span><br></code></pre></div></td></tr></table></figure>
+<hr>
+<h2><span id="第-9-章模块相当于-node-的c-扩展">第 9 章：模块（相当于 Node 的
+C++ 扩展）</span></h2>
+<h3><span id="90-全局-runtime-的-unsafe及为何安全">9.0 全局 RUNTIME 的 unsafe
+及为何安全</span></h3>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">pub</span> <span class="hljs-keyword">fn</span> <span class="hljs-title function_">set_timeout</span>(ms: <span class="hljs-type">u64</span>, cb: <span class="hljs-keyword">impl</span> <span class="hljs-title class_">Fn</span>(Js) + <span class="hljs-symbol">&#x27;static</span>) &#123;<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">rt</span> = <span class="hljs-keyword">unsafe</span> &#123; &amp;<span class="hljs-keyword">mut</span> *(RUNTIME <span class="hljs-keyword">as</span> *<span class="hljs-keyword">mut</span> Runtime) &#125;;  <span class="hljs-comment">// 模拟 JS 的全局函数</span><br>    rt.<span class="hljs-title function_ invoke__">set_timeout</span>(ms, cb);<br>&#125;<br><span class="hljs-comment">// 安全性依据: ① RUNTIME 只在一个线程访问</span><br><span class="hljs-comment">//            ② 模块只会在 Runtime.run() 内被调用, 此时指针必有效</span><br></code></pre></div></td></tr></table></figure>
+<h3><span id="91-fs-模块-彩蛋为什么文件-io-走线程池而不是-epoll">9.1 Fs 模块 +
+彩蛋：为什么文件 I/O 走线程池而不是 epoll？</span></h3>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">impl</span> <span class="hljs-title class_">Fs</span> &#123;<br>    <span class="hljs-keyword">fn</span> <span class="hljs-title function_">read</span>(path: &amp;<span class="hljs-symbol">&#x27;static</span> <span class="hljs-type">str</span>, cb: <span class="hljs-keyword">impl</span> <span class="hljs-title class_">Fn</span>(Js)) &#123;<br>        <span class="hljs-keyword">let</span> <span class="hljs-variable">work</span> = <span class="hljs-keyword">move</span> || &#123;<br>            thread::<span class="hljs-title function_ invoke__">sleep</span>(Duration::<span class="hljs-title function_ invoke__">from_secs</span>(<span class="hljs-number">1</span>));   <span class="hljs-comment">// 模拟大文件,便于观察</span><br>            <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut </span><span class="hljs-variable">buffer</span> = <span class="hljs-type">String</span>::<span class="hljs-title function_ invoke__">new</span>();<br>            fs::File::<span class="hljs-title function_ invoke__">open</span>(&amp;path).<span class="hljs-title function_ invoke__">unwrap</span>().<span class="hljs-title function_ invoke__">read_to_string</span>(&amp;<span class="hljs-keyword">mut</span> buffer).<span class="hljs-title function_ invoke__">unwrap</span>();<br>            Js::<span class="hljs-title function_ invoke__">String</span>(buffer)                       <span class="hljs-comment">// 结果作为回调的输入</span><br>        &#125;;<br>        <span class="hljs-keyword">unsafe</span> &#123; &amp;<span class="hljs-keyword">mut</span> *RUNTIME &#125;.<span class="hljs-title function_ invoke__">register_event_threadpool</span>(work, FileRead, cb);<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p><strong>文件 I/O 走线程池的原因：</strong></p>
+<ol type="1">
+<li>OS
+大量缓存文件，读<strong>通常立即就绪</strong>——注册事件+等通知反而比直接读更慢</li>
+<li>但"从 OS 缓存拷进你的缓冲区"仍耗时，会阻塞主循环 → 丢给线程池</li>
+<li>Linux/macOS 的就绪型模型对异步文件支持差；Windows(IOCP)/新版
+Linux(io_uring) 才有好的完成型支持</li>
+</ol>
+<figure class="highlight text"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs text">线程池方案:  代码简单 ✔ | 性能够好 ✔ | 多数场景(如 web 服务器)几乎无损失<br>异步文件I/O: 复杂度高 ✘ | API 贫乏且平台差异大 ✘ | 实际收益甚微<br></code></pre></div></td></tr></table></figure>
+<h3><span id="92-crypto-模块cpu密集型代表">9.2 Crypto 模块（CPU
+密集型代表）</span></h3>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">impl</span> <span class="hljs-title class_">Crypto</span> &#123;<br>    <span class="hljs-keyword">fn</span> <span class="hljs-title function_">encrypt</span>(n: <span class="hljs-type">usize</span>, cb: <span class="hljs-keyword">impl</span> <span class="hljs-title class_">Fn</span>(Js)) &#123;<br>        <span class="hljs-keyword">let</span> <span class="hljs-variable">work</span> = <span class="hljs-keyword">move</span> || &#123;<br>            <span class="hljs-keyword">fn</span> <span class="hljs-title function_">fib</span>(n: <span class="hljs-type">usize</span>) <span class="hljs-punctuation">-&gt;</span> <span class="hljs-type">usize</span> &#123;            <span class="hljs-comment">// 递归斐波那契:</span><br>                <span class="hljs-keyword">match</span> n &#123; <span class="hljs-number">0</span> =&gt; <span class="hljs-number">0</span>, <span class="hljs-number">1</span> =&gt; <span class="hljs-number">1</span>, _ =&gt; <span class="hljs-title function_ invoke__">fib</span>(n-<span class="hljs-number">1</span>) + <span class="hljs-title function_ invoke__">fib</span>(n-<span class="hljs-number">2</span>) &#125;<br>            &#125;                                      <span class="hljs-comment">// 经典的烧 CPU  workload</span><br>            Js::<span class="hljs-title function_ invoke__">Int</span>(<span class="hljs-title function_ invoke__">fib</span>(n))<br>        &#125;;<br>        <span class="hljs-keyword">unsafe</span> &#123; &amp;<span class="hljs-keyword">mut</span> *RUNTIME &#125;.<span class="hljs-title function_ invoke__">register_event_threadpool</span>(work, Encrypt, cb);<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h3><span id="93-http-模块epoll路线的代表">9.3 Http 模块（epoll
+路线的代表）</span></h3>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">impl</span> <span class="hljs-title class_">Http</span> &#123;<br>    <span class="hljs-keyword">fn</span> <span class="hljs-title function_">http_get_slow</span>(url: &amp;<span class="hljs-type">str</span>, delay_ms: <span class="hljs-type">u32</span>, cb: <span class="hljs-keyword">impl</span> <span class="hljs-title class_">Fn</span>(Js)) &#123;<br>        <span class="hljs-keyword">let</span> <span class="hljs-variable">rt</span> = <span class="hljs-keyword">unsafe</span> &#123; &amp;<span class="hljs-keyword">mut</span> *RUNTIME &#125;;<br>        <span class="hljs-comment">// minimio::TcpStream 而非 std 的: 为了跨平台抽象(epoll就绪/IOCP完成两种模型)</span><br>        <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut </span><span class="hljs-variable">stream</span> = minimio::TcpStream::<span class="hljs-title function_ invoke__">connect</span>(<span class="hljs-string">&quot;slowwly...:80&quot;</span>).<span class="hljs-title function_ invoke__">unwrap</span>();<br>        stream.<span class="hljs-title function_ invoke__">write_all</span>(<span class="hljs-built_in">format!</span>(<span class="hljs-string">&quot;GET /delay/&#123;&#125; ... HTTP/1.1\r\n...&quot;</span>, delay_ms).<span class="hljs-title function_ invoke__">as_bytes</span>());<br>        <span class="hljs-comment">// ↑ 书中捷径: 写是阻塞的(真实实现写也应异步)</span><br><br>        <span class="hljs-keyword">let</span> <span class="hljs-variable">token</span> = rt.<span class="hljs-title function_ invoke__">generate_cb_identity</span>();          <span class="hljs-comment">// token == callback_id</span><br>        rt.epoll_registrator.<span class="hljs-title function_ invoke__">register</span>(&amp;<span class="hljs-keyword">mut</span> stream, token,<br>                                      minimio::Interests::READABLE).<span class="hljs-title function_ invoke__">unwrap</span>();<br>        <span class="hljs-comment">// ↑ 需要 &amp;mut stream 是为了 IOCP: 借出缓冲区期间借用检查器保证没人碰它</span><br><br>        <span class="hljs-keyword">let</span> <span class="hljs-variable">wrapped</span> = <span class="hljs-keyword">move</span> |_| &#123;                        <span class="hljs-comment">// 包装: 就绪后再真正 read</span><br>            <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut </span><span class="hljs-variable">buffer</span> = <span class="hljs-type">String</span>::<span class="hljs-title function_ invoke__">new</span>();<br>            stream.<span class="hljs-title function_ invoke__">read_to_string</span>(&amp;<span class="hljs-keyword">mut</span> buffer);<br>            <span class="hljs-title function_ invoke__">cb</span>(Js::<span class="hljs-title function_ invoke__">String</span>(buffer));<br>        &#125;;<br>        rt.<span class="hljs-title function_ invoke__">register_event_epoll</span>(token, wrapped);<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<blockquote>
+<p><strong>伪唤醒 (spurious wakeup)</strong>：OS
+可能"不确定事件是否发生"时依然唤醒线程。契约要求程序员<strong>重注册事件再检查</strong>，而非假设数据已到。真实实现应在读到
+<code>WouldBlock</code> 时重新注册读事件。</p>
+</blockquote>
+<hr>
+<h2><span id="第-10~11-章组装与最终代码">第 10~11 章：组装与最终代码</span></h2>
+<h3><span id="101-入口与全局架构图">10.1 入口与全局架构图</span></h3>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() &#123;<br>    <span class="hljs-keyword">let</span> <span class="hljs-variable">rt</span> = Runtime::<span class="hljs-title function_ invoke__">new</span>();    <span class="hljs-comment">// 建 4 线程池 + epoll 线程 + 共享通道</span><br>    rt.<span class="hljs-title function_ invoke__">run</span>(javascript);         <span class="hljs-comment">// 跑&quot;JS程序&quot;, 进入事件循环直到 pending_events==0</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+<pre><code class=" mermaid">graph TD
+    subgraph 主线程 main
+        M[&quot;Runtime::run 事件循环&lt;br/&gt;timers→callbacks→poll→...&quot;]
+        CB[&quot;callback_queue / callbacks_to_run&quot;]
+        T[&quot;timers (BTreeMap)&quot;]
+    end
+
+    subgraph 工作者
+        P0[&quot;pool0&quot;]
+        P1[&quot;pool1~3&quot;]
+        E[&quot;epoll 线程&lt;br/&gt;minimio::Poll&quot;]
+    end
+
+    OS[&quot;OS 事件队列&lt;br/&gt;epoll/kqueue/IOCP&quot;]
+    R[&quot;Registrator&lt;br/&gt;(主线程持有)&quot;]
+
+    M --&gt;|&quot;Task 经每线程独立通道&quot;| P0
+    M --&gt;|&quot;Task&quot;| P1
+    P0 --&gt;|&quot;PollEvent::Threadpool(id,cb_id,Js)&quot;| CH[&quot;event_reciever&lt;br/&gt;(共享 mpsc 通道)&quot;]
+    P1 --&gt; CH
+    E --&gt;|&quot;PollEvent::Epoll(token)&quot;| CH
+    E --&gt;|&quot;PollEvent::Timeout&quot;| CH
+    CH --&gt; M
+    R --&gt;|&quot;register(fd, token, READABLE)&quot;| OS
+    OS --&gt;|&quot;就绪事件+token&quot;| E
+    M -.-&gt;|&quot;写入共享 epoll_timeout&quot;| E
+</code></pre>
+<h3><span id="111-运行输出揭示了什么tick视角">11.1 运行输出揭示了什么（TICK
+视角）</span></h3>
+<figure class="highlight text"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs text">main: ===== TICK 1 =====<br>main: Immediate1 timed out / Immediate2 timed out   ← 0ms 计时器第一轮就到期<br>pool2/pool3: finished File read                      ← 线程池与主循环并行工作<br>main: First count: 39 characters.                    ← 文件结果回调<br>main: ===== TICK 2 =====<br>main: SETTIMEOUT                                     ← 1000ms 计时器<br>...<br>epoll: epoll event 7 is ready                        ← http 响应就绪<br>...<br>main: FINISHED<br></code></pre></div></td></tr></table></figure>
+<p>关键观察：</p>
+<ul>
+<li>用户代码注册的<strong>所有</strong>事件先同步注册完，循环才开始</li>
+<li><strong>回调在主线程跑，任务在线程池/OS
+跑</strong>——这就是"并发但不（在用户代码层面）并行"</li>
+<li>嵌套回调（文件读完再读下一个）自然产生新的 TICK</li>
+<li><code>pending_events</code> 每注册 +1、每回调执行
+-1，归零即退出</li>
+</ul>
+<hr>
+<h2><span id="第-12-章捷径与改进">第 12 章：捷径与改进</span></h2>
+<p>书中的简化点：</p>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-comment">// 1. 单 tick 回调积压上限: 防止回调太多饿死 I/O 资源</span><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">run_callbacks</span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>) &#123;<br>    <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut </span><span class="hljs-variable">n</span> = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">while</span> n &lt; MAX_CALLBACKS_PER_TICK &#123; <span class="hljs-comment">/* ... */</span> n += <span class="hljs-number">1</span>; &#125;  <span class="hljs-comment">// 剩余的下轮再跑</span><br>&#125;<br><br><span class="hljs-comment">// 2. 无线程可用时 panic → 应改为排队等待</span><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">get_available_thread</span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>) <span class="hljs-punctuation">-&gt;</span> <span class="hljs-type">Option</span>&lt;<span class="hljs-type">usize</span>&gt; &#123;<br>    <span class="hljs-keyword">self</span>.available_threads.<span class="hljs-title function_ invoke__">pop</span>()      <span class="hljs-comment">// None 时把任务挂到待发队列</span><br>&#125;<br><br><span class="hljs-comment">// 3. 动态 park 时长: 有积压时不等待/短等待, 避免延迟</span><br><span class="hljs-comment">// 4. Vec 只增不减(高负载后内存居高不下) → 换 LinkedList 等结构</span><br><span class="hljs-comment">// 5. 未实现: process.nextTick / setImmediate / 一轮 poll 多事件处理</span><br><span class="hljs-comment">//    / Http 读写全异步 / 伪唤醒重注册 ...</span><br></code></pre></div></td></tr></table></figure>
+<hr>
+<h2><span id="全书核心结论">全书核心结论</span></h2>
+<ol type="1">
+<li><strong>同步是错觉</strong>：从程序员/OS/CPU
+三个参照系看，"顺序执行"只在第一个成立</li>
+<li><strong>并发管效率，并行管吞吐</strong>：并发不能让单个任务更快，只能让一组任务总耗时更优</li>
+<li><strong>一切 I/O 皆系统调用</strong>：用户态(Ring 3)到内核态(Ring
+0)没有捷径</li>
+<li><strong>硬件早已为异步准备好</strong>：中断(IDT/IRQ) + DMA +
+固件，CPU 全程参与事件通知</li>
+<li><strong>策略 3(OS 事件队列)
+是最优解但只解决一半</strong>——"如何暂停任务"由运行时决定：Node
+用<strong>回调</strong>，Rust 用<strong>状态机 Future</strong></li>
+<li><strong>事件循环 = Timers → Callbacks → Poll(阻塞等待三路事件)
+的循环</strong>，<code>pending_events == 0</code> 时自然退出</li>
+<li><strong>"别阻塞事件循环"的机理</strong>：所有回调都在主线程串行执行，一个慢回调
+= 所有任务停摆</li>
+<li><strong>锁与阻塞的交互是死锁高发区</strong>：先 <code>drop</code>
+锁再去 <code>poll</code>/<code>recv</code></li>
+<li><strong>就绪型(epoll/kqueue)与完成型(IOCP)的抽象差异</strong>是跨平台异步库的核心难题（借出缓冲区的所有权问题甚至惊动了借用检查器）</li>
+</ol>
+<blockquote>
+<p>延伸阅读：<em>Exploring Epoll, Kqueue and IOCP with
+Rust</em>、<em>Green threads explained in 200 lines of
+Rust</em>、<em>Exploring Rust Futures</em></p>
+</blockquote>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/Rust/">Rust</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Rust/">Rust</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Async/">Async</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/9a432d14.html">
+                        <span class="hidden-mobile">Rustonomicon</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/mermaid/8.8.3/mermaid.min.js" ></script>
+  <script>
+    if (window.mermaid) {
+      mermaid.initialize({"theme":"default"});
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>

@@ -12,7 +12,22 @@
     <![CDATA[Recording & Thinking & Story telling]]>
   </subtitle>
   <title>Racle`s Story</title>
-  <updated>2026-09-19T15:36:52.212Z</updated>
+  <updated>2026-09-20T15:48:55.940Z</updated>
+  <entry>
+    <author>
+      <name>江左时雨</name>
+    </author>
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
+    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
+    <category term="Async" scheme="https://racleray.github.io/tags/Async/"/>
+    <id>https://racleray.github.io/posts/e1708a14.html</id>
+    <link href="https://racleray.github.io/posts/e1708a14.html"/>
+    <published>2026-05-20T15:44:56.000Z</published>
+    <summary>Exploring-Async-Basics-with-Rust notes</summary>
+    <title>Exploring-Async-Basics-with-Rust</title>
+    <updated>2026-09-20T15:48:55.940Z</updated>
+  </entry>
   <entry>
     <author>
       <name>江左时雨</name>
@@ -287,21 +302,5 @@
     <summary>NGINX 一点小结</summary>
     <title>NGINX Recap</title>
     <updated>2024-03-09T16:02:34.925Z</updated>
-  </entry>
-  <entry>
-    <author>
-      <name>江左时雨</name>
-    </author>
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    <category term="Computer Network" scheme="https://racleray.github.io/categories/Notes/Computer-Network/"/>
-    <category term="C++" scheme="https://racleray.github.io/tags/C/"/>
-    <category term="Network" scheme="https://racleray.github.io/tags/Network/"/>
-    <category term="Socket" scheme="https://racleray.github.io/tags/Socket/"/>
-    <id>https://racleray.github.io/posts/e474b5c3.html</id>
-    <link href="https://racleray.github.io/posts/e474b5c3.html"/>
-    <published>2024-03-03T16:06:07.000Z</published>
-    <summary>socket REUSEPORT 分析</summary>
-    <title>REUSEPORT</title>
-    <updated>2024-03-03T16:16:19.515Z</updated>
   </entry>
 </feed>
