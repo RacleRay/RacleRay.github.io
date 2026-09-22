@@ -12,7 +12,22 @@
     <![CDATA[Recording & Thinking & Story telling]]>
   </subtitle>
   <title>Racle`s Story</title>
-  <updated>2026-09-20T15:48:55.940Z</updated>
+  <updated>2026-09-22T14:47:14.129Z</updated>
+  <entry>
+    <author>
+      <name>江左时雨</name>
+    </author>
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    <category term="Program Design" scheme="https://racleray.github.io/categories/Notes/Program-Design/"/>
+    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
+    <category term="Design" scheme="https://racleray.github.io/tags/Design/"/>
+    <id>https://racleray.github.io/posts/35195d0c.html</id>
+    <link href="https://racleray.github.io/posts/35195d0c.html"/>
+    <published>2026-09-22T14:28:40.000Z</published>
+    <summary>设计不变量关系驱动的编译期错误检查</summary>
+    <title>Invariant-at-Complie-Time</title>
+    <updated>2026-09-22T14:47:14.129Z</updated>
+  </entry>
   <entry>
     <author>
       <name>江左时雨</name>
@@ -26,7 +41,7 @@
     <published>2026-05-20T15:44:56.000Z</published>
     <summary>Exploring-Async-Basics-with-Rust notes</summary>
     <title>Exploring-Async-Basics-with-Rust</title>
-    <updated>2026-09-20T15:48:55.940Z</updated>
+    <updated>2026-09-20T15:49:03.214Z</updated>
   </entry>
   <entry>
     <author>
@@ -287,20 +302,5 @@
     <summary>内存池实现与对比</summary>
     <title>Memory Pool</title>
     <updated>2024-03-17T13:48:07.461Z</updated>
-  </entry>
-  <entry>
-    <author>
-      <name>江左时雨</name>
-    </author>
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    <category term="Nginx" scheme="https://racleray.github.io/categories/Notes/Nginx/"/>
-    <category term="NGINX" scheme="https://racleray.github.io/tags/NGINX/"/>
-    <category term="Server Design" scheme="https://racleray.github.io/tags/Server-Design/"/>
-    <id>https://racleray.github.io/posts/e2369d80.html</id>
-    <link href="https://racleray.github.io/posts/e2369d80.html"/>
-    <published>2024-03-09T15:57:33.000Z</published>
-    <summary>NGINX 一点小结</summary>
-    <title>NGINX Recap</title>
-    <updated>2024-03-09T16:02:34.925Z</updated>
   </entry>
 </feed>

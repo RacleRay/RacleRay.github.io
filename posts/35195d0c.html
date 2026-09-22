@@ -1,0 +1,637 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="设计不变量关系驱动的编译期错误检查">
+  <meta name="author" content="HeRui">
+  <meta name="keywords" content="Rust,Invariant,Software Engineering">
+  <meta name="description" content="设计不变量关系驱动的编译期错误检查">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Invariant-at-Complie-Time">
+<meta property="og:url" content="https://racleray.github.io/posts/35195d0c.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="设计不变量关系驱动的编译期错误检查">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-22T14:28:40.000Z">
+<meta property="article:modified_time" content="2026-09-22T14:47:14.129Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="Rust">
+<meta property="article:tag" content="Design">
+<meta name="twitter:card" content="summary_large_image">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>Invariant-at-Complie-Time - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Invariant-at-Complie-Time">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2026-09-22 22:28" pubdate>
+        2026年9月22日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      6.1k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      19 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Invariant-at-Complie-Time</h1>
+            
+            <div class="markdown-body">
+              <p>As our case is new, we must think and act anew.</p>
+<p>— Abraham Lincoln</p>
+<pre><code class=" mermaid">graph TB
+    D[&quot;① 定义 Definition&lt;br/&gt;类型 + 文档化的不变量&quot;] --&gt; E[&quot;② 强制 Enforcement&lt;br/&gt;封装 · unsafe impl · 宏&lt;br/&gt;保证属性永不被破坏&quot;]
+    E --&gt; C[&quot;③ 消费 Consumption&lt;br/&gt;把属性当前置条件&lt;br/&gt;换取优化与健全性&quot;]
+    C -.-&gt;|&quot;新抽象成为下一层构建块&lt;br/&gt;(turtles all the way down)&quot;| D
+</code></pre>
+<h3><span id="定义definition">定义（Definition）</span></h3>
+<p>定义一个 Rust 类型系统可推理的对象，并<strong>用文字文档附上</strong>
+Rust 无法推理的安全属性：</p>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Node</span>&lt;T&gt; &#123;<br>    <span class="hljs-comment">// INVARIANT: `left` 中所有值都小于 `value`</span><br>    left: <span class="hljs-type">Option</span>&lt;<span class="hljs-type">Box</span>&lt;Node&lt;T&gt;&gt;&gt;,<br><br>    <span class="hljs-comment">// INVARIANT: `right` 中所有值都大于 `value`</span><br>    right: <span class="hljs-type">Option</span>&lt;<span class="hljs-type">Box</span>&lt;Node&lt;T&gt;&gt;&gt;,<br><br>    value: T,<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h3><span id="强制enforcement">强制（Enforcement）</span></h3>
+<p><strong>构造时</strong>建立不变量，<strong>修改时</strong>保持不变量，并且用封装（字段私有）堵住外部破坏的入口：</p>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">impl</span>&lt;T&gt; Node&lt;T&gt; &#123;<br>    <span class="hljs-keyword">pub</span> <span class="hljs-keyword">fn</span> <span class="hljs-title function_">new</span>(value: T) <span class="hljs-punctuation">-&gt;</span> Node&lt;T&gt; &#123;<br>        Node &#123; left: <span class="hljs-literal">None</span>, right: <span class="hljs-literal">None</span>, value &#125;<br>    &#125;<br><br>    <span class="hljs-comment">// 前置条件：不变量成立</span><br>    <span class="hljs-comment">// 后置条件：不变量仍成立</span><br>    <span class="hljs-keyword">pub</span> <span class="hljs-keyword">fn</span> <span class="hljs-title function_">insert</span>(&amp;<span class="hljs-keyword">mut</span> <span class="hljs-keyword">self</span>, value: T) <span class="hljs-punctuation">-&gt;</span> <span class="hljs-type">Option</span>&lt;T&gt; &#123; <span class="hljs-comment">/* 维护有序地插入 */</span> &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h3><span id="消费consumption">消费（Consumption）</span></h3>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">impl</span>&lt;T: <span class="hljs-built_in">Ord</span>&gt; Node&lt;T&gt; &#123;<br>    <span class="hljs-comment">// 依赖&quot;有序&quot;不变量 → 可以 O(log N) 定位，无需全树遍历</span><br>    <span class="hljs-keyword">pub</span> <span class="hljs-keyword">fn</span> <span class="hljs-title function_">contains</span>(&amp;<span class="hljs-keyword">self</span>, target: &amp;T) <span class="hljs-punctuation">-&gt;</span> <span class="hljs-type">bool</span> &#123;<br>        <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut </span><span class="hljs-variable">cur</span> = <span class="hljs-keyword">self</span>;<br>        <span class="hljs-keyword">loop</span> &#123;<br>            <span class="hljs-keyword">match</span> cur.value.<span class="hljs-title function_ invoke__">cmp</span>(target) &#123;<br>                Equal =&gt; <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>,<br>                Less  =&gt; cur = cur.left.<span class="hljs-title function_ invoke__">as_deref</span>()?,<br>                Greater =&gt; cur = cur.right.<span class="hljs-title function_ invoke__">as_deref</span>()?,<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<blockquote>
+<p>对模块外的 <strong>safe
+代码</strong>而言，"语言提供的安全保证"与"本模块提供的不变量"<strong>没有任何区别</strong>——违反两者的代码都编译不过。等于给
+Rust 增加了一个新安全属性。</p>
+</blockquote>
+<hr>
+<h2><span id="示例一线程安全">示例一：线程安全</span></h2>
+<p>Rust
+引以为傲的线程安全<strong>并非语言特性</strong>，而是标准库用核心抽象实现的，原则上可以由第三方
+crate 提供。</p>
+<h3><span id="起点spawn必须走出语言边界">起点：<code>spawn</code>
+必须走出语言边界</span></h3>
+<p>线程是 OS 概念，语言本身无法与线程交互，只能 <code>unsafe</code>
+调系统 API：</p>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">pub</span> <span class="hljs-keyword">fn</span> <span class="hljs-title function_">spawn</span>&lt;F: <span class="hljs-title function_ invoke__">FnOnce</span>()&gt;(f: F) &#123;<br>    <span class="hljs-keyword">unsafe</span> &#123; libc::<span class="hljs-title function_ invoke__">pthread_create</span>(<span class="hljs-comment">/* ... */</span>) &#125;;   <span class="hljs-comment">// Rust 无法推理其行为</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p><code>unsafe</code> 的含义：不是"必定出事"，而是"<strong>Rust
+不够聪明、无法自证安全</strong>，程序员证明soundness"。</p>
+<h3><span id="问题不是所有值都能跨线程">问题：不是所有值都能跨线程</span></h3>
+<p>上述 <code>spawn</code> 是 <strong>unsound</strong>
+的——闭包可能捕获非线程安全的值。解法：把"线程安全"编码进类型系统。</p>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-comment">/// # Safety</span><br><span class="hljs-comment">/// 实现者必须保证：Self 可以安全地跨线程传递。</span><br><span class="hljs-keyword">pub</span> <span class="hljs-keyword">unsafe</span> <span class="hljs-keyword">trait</span> <span class="hljs-title class_">Send</span> &#123;&#125;<br><span class="hljs-comment">//     ^^^^^^ unsafe trait：实现者须显式 unsafe impl，主动担责</span><br><br><span class="hljs-keyword">pub</span> <span class="hljs-keyword">fn</span> <span class="hljs-title function_">spawn</span>&lt;F: <span class="hljs-title function_ invoke__">FnOnce</span>() + <span class="hljs-built_in">Send</span>&gt;(f: F) &#123;   <span class="hljs-comment">// 加上 bound → sound ✅</span><br>    <span class="hljs-keyword">unsafe</span> &#123; libc::<span class="hljs-title function_ invoke__">pthread_create</span>(<span class="hljs-comment">/* ... */</span>) &#125;;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h3><span id="实现axiom-式声明-组合式传播">实现：axiom 式声明 +
+组合式传播</span></h3>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-comment">// ① 对已知线程安全的基础类型：直接&quot;钦定&quot;（Rust 只能相信我们）</span><br><span class="hljs-keyword">unsafe</span> <span class="hljs-keyword">impl</span> <span class="hljs-title class_">Send</span> <span class="hljs-keyword">for</span> <span class="hljs-title class_">u8</span> &#123;&#125;<br><span class="hljs-keyword">unsafe</span> <span class="hljs-keyword">impl</span> <span class="hljs-title class_">Send</span> <span class="hljs-keyword">for</span> <span class="hljs-title class_">u32</span> &#123;&#125;<br><br><span class="hljs-comment">// ② 组合类型：受约束地实现</span><br><span class="hljs-keyword">unsafe</span> <span class="hljs-keyword">impl</span>&lt;<span class="hljs-symbol">&#x27;a</span>, T: <span class="hljs-built_in">Send</span>&gt; <span class="hljs-built_in">Send</span> <span class="hljs-keyword">for</span> &amp;<span class="hljs-symbol">&#x27;a</span> Mutex&lt;T&gt; &#123;&#125;<br><br><span class="hljs-comment">// ③ derive（由 auto trait 机制达成同样效果）</span><br><span class="hljs-meta">#[derive(Send)]</span><br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Foo</span>&lt;T, U&gt;(T, U);<br><span class="hljs-comment">// derive 展开 ≈</span><br><span class="hljs-keyword">unsafe</span> <span class="hljs-keyword">impl</span>&lt;T: <span class="hljs-built_in">Send</span>, U: <span class="hljs-built_in">Send</span>&gt; <span class="hljs-built_in">Send</span> <span class="hljs-keyword">for</span> <span class="hljs-title class_">Foo</span>&lt;T, U&gt; &#123;&#125;<br></code></pre></div></td></tr></table></figure>
+<p>使用侧：</p>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">let</span> <span class="hljs-variable">foo</span>: Foo&lt;&amp;Mutex&lt;<span class="hljs-type">u8</span>&gt;, <span class="hljs-type">u16</span>&gt; = <span class="hljs-comment">/* ... */</span>;<br><span class="hljs-title function_ invoke__">spawn</span>(<span class="hljs-keyword">move</span> || &#123; <span class="hljs-comment">/* use foo */</span> &#125;);   <span class="hljs-comment">// 编译通过：整条 Send 链成立</span><br></code></pre></div></td></tr></table></figure>
+<hr>
+<h2><span id="示例二编译期死锁预防">示例二：编译期死锁预防</span></h2>
+<h3><span id="问题锁顺序不一致-死锁">问题：锁顺序不一致 → 死锁</span></h3>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Stack</span> &#123;<br>    ip: Mutex&lt;IpState&gt;,<br>    device: Mutex&lt;DeviceState&gt;,<br>&#125;<br><br><span class="hljs-comment">// Thread A                 // Thread B</span><br>stack.ip.<span class="hljs-title function_ invoke__">lock</span>();            stack.device.<span class="hljs-title function_ invoke__">lock</span>();<br>stack.device.<span class="hljs-title function_ invoke__">lock</span>();        stack.ip.<span class="hljs-title function_ invoke__">lock</span>();      <span class="hljs-comment">// 经典死锁</span><br></code></pre></div></td></tr></table></figure>
+<pre><code class=" mermaid">sequenceDiagram
+    participant TA as 线程 A
+    participant TB as 线程 B
+    TA-&gt;&gt;TA: lock(ip) 成功
+    TB-&gt;&gt;TB: lock(device) 成功
+    TA-&gt;&gt;TA: 阻塞：等待 device
+    TB-&gt;&gt;TB: 阻塞：等待 ip
+    Note over TA,TB: 互相持有对方想要的锁 → 死锁 💀
+</code></pre>
+<p>两个线程在"锁获取图"上形成环。思路：<strong>把无环锁顺序图编码进类型系统，且只允许沿图加锁</strong>。</p>
+<pre><code class=" mermaid">graph TB
+    U[&quot;Unlocked（起点）&quot;] --&gt; IP[&quot;IpLock&quot;]
+    U --&gt; DEV[&quot;DeviceLock&quot;]
+    IP --&gt;|&quot;允许：先 ip 后 device&quot;| DEV
+    DEV -.-&gt;|&quot;❌ 环：此边无法通过编译&quot;| IP
+</code></pre>
+<h3><span id="第一步给每个互斥锁命名">第一步：给每个互斥锁命名</span></h3>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Mutex</span>&lt;Id, T&gt; &#123;<br>    mtx: std::sync::Mutex&lt;T&gt;,<br>    _marker: PhantomData&lt;Id&gt;,   <span class="hljs-comment">// 仅存在于类型层面，零运行时成本</span><br>&#125;<br><br><span class="hljs-keyword">enum</span> <span class="hljs-title class_">IpLock</span> &#123;&#125;       <span class="hljs-comment">// 永不构造，只当&quot;名字&quot;用</span><br><span class="hljs-keyword">enum</span> <span class="hljs-title class_">DeviceLock</span> &#123;&#125;<br></code></pre></div></td></tr></table></figure>
+<h3><span id="第二步把锁顺序图编码为trait">第二步：把锁顺序图编码为
+trait</span></h3>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-comment">/// # Safety</span><br><span class="hljs-comment">/// 实现所构成的图必须无环！</span><br><span class="hljs-keyword">pub</span> <span class="hljs-keyword">unsafe</span> <span class="hljs-keyword">trait</span> <span class="hljs-title class_">LockAfter</span>&lt;M&gt; &#123;&#125;<br><span class="hljs-keyword">pub</span> <span class="hljs-keyword">unsafe</span> <span class="hljs-keyword">trait</span> <span class="hljs-title class_">LockBefore</span>&lt;M&gt; &#123;&#125;<br><span class="hljs-keyword">unsafe</span> <span class="hljs-keyword">impl</span>&lt;B: LockAfter&lt;A&gt;, A&gt; LockBefore&lt;B&gt; <span class="hljs-keyword">for</span> <span class="hljs-title class_">A</span> &#123;&#125;   <span class="hljs-comment">// 对偶推导，A befoer B == B after A</span><br><br><span class="hljs-built_in">macro_rules!</span> impl_lock_after &#123;<br>    ($A:ty =&gt; $B:ty) =&gt; &#123;<br>        <span class="hljs-comment">// SAFETY: 若引入环，blanket impl 之间会冲突  编译失败</span><br>        <span class="hljs-keyword">unsafe</span> <span class="hljs-keyword">impl</span> <span class="hljs-title class_">LockAfter</span>&lt;$A&gt; <span class="hljs-keyword">for</span> $B &#123;&#125;<br>        <span class="hljs-keyword">unsafe</span> <span class="hljs-keyword">impl</span>&lt;X: LockBefore&lt;$A&gt;&gt; LockAfter&lt;X&gt; <span class="hljs-keyword">for</span> $B &#123;&#125;<br>    &#125;;<br>&#125;<br><br><span class="hljs-comment">// 声明图：Unlocked → IpLock → DeviceLock</span><br>impl_lock_after!(Unlocked =&gt; IpLock);<br>impl_lock_after!(IpLock =&gt; DeviceLock);<br></code></pre></div></td></tr></table></figure>
+<p>宏展开出的 blanket impl 使得一旦声明出环，impl
+之间发生冲突，<strong>有环的图直接编译不过</strong>。</p>
+<h3><span id="第三步用lockctx-跟踪当前在图上的位置">第三步：用
+<code>LockCtx</code> 跟踪"当前在图上的位置"</span></h3>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">LockCtx</span>&lt;Id&gt;(PhantomData&lt;Id&gt;);   <span class="hljs-comment">// 零大小类型</span><br><br><span class="hljs-keyword">pub</span> <span class="hljs-keyword">enum</span> <span class="hljs-title class_">Unlocked</span> &#123;&#125;                   <span class="hljs-comment">// 图的根</span><br><span class="hljs-keyword">impl</span> <span class="hljs-title class_">LockCtx</span>&lt;Unlocked&gt; &#123;<br>    <span class="hljs-keyword">pub</span> <span class="hljs-keyword">const</span> UNLOCKED: <span class="hljs-keyword">Self</span> = <span class="hljs-title function_ invoke__">LockCtx</span>(PhantomData);<br>&#125;<br><br><span class="hljs-keyword">impl</span>&lt;Id, T&gt; Mutex&lt;Id, T&gt; &#123;<br>    <span class="hljs-keyword">pub</span> <span class="hljs-keyword">fn</span> <span class="hljs-title function_">lock</span>&lt;L&gt;(&amp;<span class="hljs-keyword">self</span>, ctx: &amp;<span class="hljs-keyword">mut</span> LockCtx&lt;L&gt;)<br>        <span class="hljs-punctuation">-&gt;</span> (MutexGuard&lt;<span class="hljs-symbol">&#x27;_</span>, T&gt;, LockCtx&lt;Id&gt;)<br>    <span class="hljs-keyword">where</span><br>        L: LockBefore&lt;Id&gt;,            <span class="hljs-comment">// 只能沿图往下游加锁</span><br>    &#123;<br>        (<span class="hljs-keyword">self</span>.mtx.<span class="hljs-title function_ invoke__">lock</span>().<span class="hljs-title function_ invoke__">unwrap</span>(), <span class="hljs-title function_ invoke__">LockCtx</span>(PhantomData))<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>签名里的三个机关：</p>
+<ol type="1">
+<li><code>&amp;mut LockCtx&lt;L&gt;</code>：<strong>可变借用</strong>旧上下文
+→ 持锁期间旧上下文被"冻结"，不可复用；</li>
+<li><code>L: LockBefore&lt;Id&gt;</code>：新锁必须是当前节点的<strong>下游</strong>
+→ 已持有的锁不可能再锁（无环）；</li>
+<li>返回新
+<code>LockCtx&lt;Id&gt;</code>：持锁期间<strong>唯一可用</strong>的上下文，且只允许继续往下游走。</li>
+</ol>
+<h3><span id="第四步使用与编译期报错">第四步：使用与"编译期报错"</span></h3>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-comment">// ✅ 顺序合法</span><br><span class="hljs-keyword">let</span> <span class="hljs-keyword">mut </span><span class="hljs-variable">ctx</span> = LockCtx::UNLOCKED;<br><span class="hljs-keyword">let</span> (ip,   <span class="hljs-keyword">mut</span> ctx) = stack.ip.<span class="hljs-title function_ invoke__">lock</span>(&amp;<span class="hljs-keyword">mut</span> ctx);<br><span class="hljs-keyword">let</span> (dev,  ctx)     = stack.device.<span class="hljs-title function_ invoke__">lock</span>(&amp;<span class="hljs-keyword">mut</span> ctx);<br><br><span class="hljs-comment">// ❌ 违反顺序 → 编译错误</span><br><span class="hljs-keyword">let</span> <span class="hljs-keyword">mut </span><span class="hljs-variable">ctx</span> = LockCtx::UNLOCKED;<br><span class="hljs-keyword">let</span> (dev,  <span class="hljs-keyword">mut</span> ctx) = stack.device.<span class="hljs-title function_ invoke__">lock</span>(&amp;<span class="hljs-keyword">mut</span> ctx);<br><span class="hljs-keyword">let</span> (ip,   _)       = stack.ip.<span class="hljs-title function_ invoke__">lock</span>(&amp;<span class="hljs-keyword">mut</span> ctx);<br><span class="hljs-comment">//                       ^^^^^^^^^^^^ ERROR: Unlocked 不是 DeviceLock 的 LockBefore</span><br></code></pre></div></td></tr></table></figure>
+<hr>
+<h2><span id="实践建议">实践建议</span></h2>
+<h3><span id="部分函数partialfunction-bad-smell">"部分函数（partial
+function）" bad smell</span></h3>
+<p>公开函数不应 panic，也不应因为"调用方传了非法值"而返回
+<code>Option</code>/<code>Result</code>（I/O
+失败这类<strong>内在</strong>错误除外）——"非法参数"这种代码本来就不该编译通过：</p>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-comment">// ❌ bad smell：错误被推迟到运行时</span><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">set_port</span>(p: <span class="hljs-type">u16</span>) <span class="hljs-punctuation">-&gt;</span> <span class="hljs-type">Result</span>&lt;(), InvalidPort&gt;;<br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">get</span>(l: &amp;List, i: <span class="hljs-type">usize</span>) <span class="hljs-punctuation">-&gt;</span> <span class="hljs-type">Option</span>&lt;Item&gt;;<br><br><span class="hljs-comment">// ✅ 让非法状态不可表示（illegal states unrepresentable）</span><br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Port</span>(NonZeroU16);              <span class="hljs-comment">// 0 端口在类型上不可能</span><br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Index</span>(<span class="hljs-type">usize</span>);<br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">get</span>(l: &amp;List, i: Index) <span class="hljs-punctuation">-&gt;</span> Item;   <span class="hljs-comment">// Index 只能经 l.new_index() 等合法途径产生</span><br></code></pre></div></td></tr></table></figure>
+<h3><span id="让-api-精确匹配问题">让 API 精确匹配问题</span></h3>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-keyword">pub</span> <span class="hljs-keyword">enum</span> <span class="hljs-title class_">IpParseError</span>&lt;I: IcmpIpExt&gt; &#123;<br>    Parse &#123; error: ParseError &#125;,<br>    ParameterProblem &#123;<br>        src_ip: I::Addr,<br>        dst_ip: I::Addr,<br>        pointer: I::ParameterProblemPointer,  <span class="hljs-comment">// IPv4: u8 / IPv6: u32 —— 泛型锁定宽度</span><br>        must_send_icmp: <span class="hljs-type">bool</span>,<br>        <span class="hljs-comment">// ...</span><br>    &#125;,<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h3><span id="简单是隐藏复杂的艺术">简单是隐藏复杂的艺术</span></h3>
+<p>内部可以很丑，但用户的心智模型必须极简：</p>
+<figure class="highlight text"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs text">锁顺序库内部：blanket impl 对偶推导 + 宏展开 + PhantomData 状态机（丑）<br>用户心智模型：环 → 编译错误（5 个字）<br></code></pre></div></td></tr></table></figure>
+<h3><span id="内部-api-严格">内部 API 严格</span></h3>
+<p>内部 API 也要有安全要求就标 <code>unsafe fn</code>，可能 panic
+就写文档</p>
+<figure class="highlight rust"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs rust"><span class="hljs-comment">/// # Safety</span><br><span class="hljs-comment">/// `buf` 必须以一个完整的 IP 头部开头。</span><br><span class="hljs-keyword">unsafe</span> <span class="hljs-keyword">fn</span> <span class="hljs-title function_">parse_ip</span>(buf: &amp;[<span class="hljs-type">u8</span>]) <span class="hljs-punctuation">-&gt;</span> IpHeader;   <span class="hljs-comment">// 内部函数照样 unsafe + 文档</span><br></code></pre></div></td></tr></table></figure>
+<hr>
+<h2><span id="收益">收益</span></h2>
+<ol type="1">
+<li>若整类 bug 在编译期消失，code review
+与测试的压力骤减，开发速度有望大幅提升（不是取消
+review，而是让它聚焦于真正需要人的部分）。</li>
+<li>软件复杂度随代码规模超线性增长，且大多是<strong>偶然复杂度</strong>；人的心智容量有限，偶然复杂度会挤占对本质复杂度的推理能力，限制我们能解决的问题上限。该方法论在每个模块上省下的小额复杂度会在大型代码库中<strong>复利式叠加</strong>。</li>
+<li>AI 在这种类似问题场景下，缺少zero shot的能力。</li>
+</ol>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/Program-Design/">Program Design</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Rust/">Rust</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Design/">Design</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/e1708a14.html">
+                        <span class="hidden-mobile">Exploring-Async-Basics-with-Rust</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/mermaid/8.8.3/mermaid.min.js" ></script>
+  <script>
+    if (window.mermaid) {
+      mermaid.initialize({"theme":"default"});
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>
