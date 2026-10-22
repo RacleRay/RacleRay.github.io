@@ -2739,11 +2739,11 @@
       
         <tags>
             
+            <tag> text similarity </tag>
+            
             <tag> DSSM </tag>
             
             <tag> CDSSM </tag>
-            
-            <tag> text similarity </tag>
             
         </tags>
       
@@ -3153,9 +3153,9 @@
             
             <tag> fastText </tag>
             
-            <tag> representation </tag>
-            
             <tag> word2vec </tag>
+            
+            <tag> representation </tag>
             
         </tags>
       
