@@ -27,7 +27,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://images.unsplash.com/photo-1435732960391-11053ee5e6b6?crop=entropy&amp;cs=srgb&amp;fm=jpg&amp;ixid=M3w2NDU1OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3ODIzNTE3MzR8&amp;ixlib=rb-4.1.0&amp;q=85&amp;w=1024&amp;h=768">
 <meta property="article:published_time" content="2026-04-19T15:09:55.000Z">
-<meta property="article:modified_time" content="2026-09-19T15:36:52.212Z">
+<meta property="article:modified_time" content="2026-09-19T15:36:54.000Z">
 <meta property="article:author" content="江左时雨">
 <meta property="article:tag" content="Rust">
 <meta property="article:tag" content="Unsafe">
@@ -293,69 +293,69 @@ on Unsplash</figcaption>
 <col style="width: 68%">
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>章</th>
 <th>标题</th>
 <th>主题</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>1</td>
 <td>Meet Safe and Unsafe</td>
 <td><code>unsafe</code> 语义、UB 清单、健全性与模块化</td>
 </tr>
-<tr class="even">
+<tr>
 <td>2</td>
 <td>Data Layout</td>
 <td>repr 家族、对齐与大小、DST/ZST/空类型</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>3</td>
 <td>Ownership</td>
 <td>引用、别名、生命周期、variance、dropck、PhantomData</td>
 </tr>
-<tr class="even">
+<tr>
 <td>4</td>
 <td>Type Conversions</td>
 <td>强制转换、点操作符、<code>as</code>、transmute</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>5</td>
 <td>Uninitialized Memory</td>
 <td>初始化分析、drop 标志、MaybeUninit</td>
 </tr>
-<tr class="even">
+<tr>
 <td>6</td>
 <td>OBRM (RAII)</td>
 <td>构造/析构约定、递归 drop、泄漏与 mem::forget</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>7</td>
 <td>Unwinding</td>
 <td>栈展开、两级异常安全、中毒</td>
 </tr>
-<tr class="even">
+<tr>
 <td>8</td>
 <td>Concurrency</td>
 <td>数据竞争、Send/Sync、原子与内存顺序</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>9</td>
 <td>Implementing Vec</td>
 <td>稳定 Rust 从零手写 Vec</td>
 </tr>
-<tr class="even">
+<tr>
 <td>10</td>
 <td>Implementing Arc</td>
 <td>手写 Arc：引用计数与内存顺序</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>11</td>
 <td>FFI</td>
 <td>extern、导出符号、repr(C)、C-unwind</td>
 </tr>
-<tr class="even">
+<tr>
 <td>12</td>
 <td>Beneath std</td>
 <td>no_std 与 panic_handler</td>
@@ -430,27 +430,27 @@ no-op，泛型语境威力巨大：</p>
 <col style="width: 74%">
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>陷阱</th>
 <th>说明</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>repr(u8)</code> 抑制 niche</td>
 <td><code>#[repr(u8)] enum MyOption&lt;&amp;u16&gt;</code> 占 16
 字节，不带则 8 字节（空指针优化被关掉）</td>
 </tr>
-<tr class="even">
+<tr>
 <td>非法枚举值 = UB</td>
 <td><code>unsafe &#123; transmute::&lt;i32, Color&gt;(99) &#125;</code> ❌ 即使带
 <code>repr(C)</code> 也不允许无对应变体的值</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>packed 取引用</td>
 <td><code>let r = &amp;w.b;</code> ❌ 未对齐引用，未来是硬错误</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Option 与 FFI</td>
 <td><code>Option&lt;&amp;T&gt;</code> /
 <code>Option&lt;extern fn&gt;</code> 与 <code>T</code> 布局相同，可对应
@@ -495,7 +495,7 @@ C 的可空指针</td>
 <p><strong>必背 variance 表</strong>：</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>类型</th>
 <th>对 <code>'a</code></th>
 <th>对 <code>T</code></th>
@@ -503,43 +503,43 @@ C 的可空指针</td>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>&amp;'a T</code></td>
 <td>协变</td>
 <td>协变</td>
 <td></td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>&amp;'a mut T</code></td>
 <td>协变</td>
 <td><strong>不变</strong></td>
 <td></td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>Box&lt;T&gt;</code> / <code>Vec&lt;T&gt;</code></td>
 <td></td>
 <td>协变</td>
 <td></td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>UnsafeCell&lt;T&gt;</code> / <code>Cell&lt;T&gt;</code></td>
 <td></td>
 <td><strong>不变</strong></td>
 <td></td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>fn(T) -&gt; U</code></td>
 <td></td>
 <td><strong>逆变</strong></td>
 <td>协变</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>*const T</code></td>
 <td></td>
 <td>协变</td>
 <td></td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>*mut T</code></td>
 <td></td>
 <td><strong>不变</strong></td>
@@ -572,37 +572,37 @@ outlive)</strong>：</p>
 <col style="width: 68%">
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Phantom 类型</th>
 <th>效果（对 T 的 variance / Send+Sync / drop 悬垂许可）</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>PhantomData&lt;T&gt;</code></td>
 <td>协变 / 继承 / <strong>不允许</strong>（声明"拥有 T"）</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>PhantomData&lt;&amp;'a T&gt;</code></td>
 <td>协变 / 需 <code>T: Sync</code> / 允许</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>PhantomData&lt;&amp;'a mut T&gt;</code></td>
 <td>不变 / 继承 / 允许</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>PhantomData&lt;*const T&gt;</code></td>
 <td>协变 / !Send+!Sync / 允许</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>PhantomData&lt;*mut T&gt;</code></td>
 <td>不变 / !Send+!Sync / 允许</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>PhantomData&lt;fn(T)&gt;</code></td>
 <td>逆变 / Send+Sync / 允许</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>PhantomData&lt;fn() -&gt; T&gt;</code></td>
 <td>协变 / Send+Sync / 允许</td>
 </tr>
@@ -848,45 +848,45 @@ Safe Rust。</p>
 <col style="width: 55%">
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>工具</th>
 <th>一句话用途</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>ptr::write</code> / <code>ptr::read</code></td>
 <td>初始化 / 移出（绕过赋值的"读旧值+drop"）</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>ptr::copy</code></td>
 <td>memmove（重叠区间安全，参数序与 C 相反）</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>mem::forget</code> / <code>ManuallyDrop</code></td>
 <td>阻止析构、防双重释放</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>Option::take</code></td>
 <td>从字段中安全移出值（Drop 解法标配）</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>MaybeUninit</code></td>
 <td>未初始化内存的唯一正确处理</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>NonNull</code> + <code>PhantomData</code></td>
 <td>裸指针容器标配：variance + dropck + auto trait</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>#[repr(C)]</code> / <code>#[repr(transparent)]</code></td>
 <td>唯一可依赖的布局保证</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>Ordering</code></td>
 <td>SeqCst 保底 / 锁 Acquire-Release / 计数 Relaxed</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>NonNull::dangling()</code></td>
 <td>ZST 与"未分配"的合法占位指针</td>
 </tr>
@@ -903,77 +903,77 @@ Safe Rust。</p>
 <col style="width: 35%">
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>英文</th>
 <th>中文</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>soundness</td>
 <td>健全性</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Undefined Behavior (UB)</td>
 <td>未定义行为</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>aliasing</td>
 <td>别名</td>
 </tr>
-<tr class="even">
+<tr>
 <td>variance (covariant/contravariant/invariant)</td>
 <td>可变性（协变/逆变/不变）</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>drop check (dropck)</td>
 <td>Drop 检查</td>
 </tr>
-<tr class="even">
+<tr>
 <td>unwinding</td>
 <td>栈展开</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>exception safety</td>
 <td>异常安全</td>
 </tr>
-<tr class="even">
+<tr>
 <td>poisoning</td>
 <td>中毒</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>data race / race condition</td>
 <td>数据竞争 / 竞态条件</td>
 </tr>
-<tr class="even">
+<tr>
 <td>dangling pointer</td>
 <td>悬垂指针</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>niche / null pointer optimization</td>
 <td>空位 / 空指针优化</td>
 </tr>
-<tr class="even">
+<tr>
 <td>DST / ZST</td>
 <td>动态 / 零大小类型</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>OBRM / RAII</td>
 <td>基于所有权的资源管理</td>
 </tr>
-<tr class="even">
+<tr>
 <td>leak amplification</td>
 <td>泄漏放大</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>GEP (getelementptr)</td>
 <td>LLVM 指针偏移指令</td>
 </tr>
-<tr class="even">
+<tr>
 <td>HRTB</td>
 <td>高阶 trait 约束</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>opaque struct</td>
 <td>不透明结构体</td>
 </tr>

@@ -1,0 +1,925 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#1aa3ff">
+  <meta name="description" content="futex deeper note">
+  <meta name="author" content="HeRui">
+  <meta name="keywords" content="Multi thread,mutex,futex">
+  <meta name="description" content="futex deeper note">
+<meta property="og:type" content="article">
+<meta property="og:title" content="futex-more">
+<meta property="og:url" content="https://racleray.github.io/posts/e52f8a.html">
+<meta property="og:site_name" content="Racle&#96;s Story">
+<meta property="og:description" content="futex deeper note">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-05-22T15:36:56.000Z">
+<meta property="article:modified_time" content="2026-10-22T15:44:35.680Z">
+<meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="multi-thread">
+<meta property="article:tag" content="performance">
+<meta name="twitter:card" content="summary_large_image">
+  
+     <meta name="baidu-site-verification" content="code-tH44R5Z2fc" /> <meta name="msvalidate.01" content="4E3B92EC6A38584E946DBE40929107D9" /> <meta name="google-site-verification" content="c-8NXvOa-KKHK4OB0TyzjFeRUuIPFXEXM9h5hYePPpw" /> 
+  
+  <title>futex-more - Racle`s Story</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.4.0/styles/night-owl.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap.css">
+<link rel="stylesheet" href="/css/custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"racleray.github.io","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Racle`s Story" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="link link--kukuri" href="/", data-letters="Racle`s Story">
+      Racle`s Story
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/talking/">
+                <i class="iconfont icon-comment"></i>
+                说说
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/46.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="futex-more">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2026-05-22 23:36" pubdate>
+        2026年5月22日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      11k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      34 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">futex-more</h1>
+            
+            <div class="markdown-body">
+              <h1><span id="futex">Futex</span></h1>
+<p><strong>futex</strong> = <strong>Fast Userspace
+muTexes</strong>（快速用户空间互斥体），2002 年由 IBM 的 Hubertus Franke
+等人在 Linux 上提出，2.5.7
+起进入内核。它不是一把锁，而是一份<strong>用户态与内核态的合作契约</strong>：</p>
+<blockquote>
+<p>[!tip] 一句话本质
+无竞争时在用户态用一条原子指令完成加解锁；仅当真的发生竞争时，才通过
+<code>futex(2)</code>
+系统调用陷入内核，把线程挂到内核按地址索引的等待队列上休眠。</p>
+</blockquote>
+<p>相关笔记：[[多线程]]、[[内核中的同步]]、[[进程：调度]]、[[内存模型]]、[[协程]]</p>
+<hr>
+<h2><span id="1-第一性原理为什么需要-futex">1 第一性原理：为什么需要 futex</span></h2>
+<p>从成本模型出发，只有两个事实：</p>
+<ol type="1">
+<li><strong>锁在绝大多数时刻是无竞争的</strong>。一个线程拿到锁、出临界区的窗口内，往往根本没别人来抢。</li>
+<li><strong>系统调用比原子指令贵几个数量级</strong>。系统调用要陷入内核、上下文切换；原子指令（x86
+的 <code>cmpxchg</code>/<code>lock</code>
+前缀）虽比普通指令贵，但仍在用户态完成。</li>
+</ol>
+<p>而 futex 之前的同步原语（System V 信号量 <code>semop</code>、文件锁
+<code>flock</code>）把两件事都做错了：<strong>每次加锁/解锁都无条件陷入内核</strong>去操作内核对象——哪怕根本没人竞争。</p>
+<p>因此 futex 的设计必然是<strong>两层</strong>的：</p>
+<table>
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr>
+<th>层</th>
+<th>形态</th>
+<th>职责</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>用户态</td>
+<td>一个 32 位原子变量（位于共享内存）</td>
+<td>快速路径：CAS 判定无竞争，直接完成</td>
+</tr>
+<tr>
+<td>内核态</td>
+<td><code>futex(2)</code> 系统调用</td>
+<td>慢速路径：休眠等待 / 唤醒等待者</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>[!warning] futex 机制 ≠ futex 系统调用 直接拿 <code>futex(2)</code>
+写应用代码是错的。futex 机制的性能来自用户态那一半（glibc
+已替你写好），系统调用只是慢速路径。应用层永远用 <code>std::mutex</code>
+/ <code>pthread_mutex</code>。</p>
+</blockquote>
+<hr>
+<h2><span id="2-全景时序">2 全景时序</span></h2>
+<p>以两线程竞争 <code>pthread_mutex</code> 为例（state：0 无主 / 1
+有主无等待 / 2 有主有等待）：</p>
+<pre><code class=" mermaid">sequenceDiagram
+    participant T1 as 线程 T1
+    participant U as 用户态锁变量 state
+    participant K as 内核 futex
+    participant T2 as 线程 T2
+
+    T1-&gt;&gt;U: CAS(0 → 1) 成功
+    Note over T1,U: 无竞争，纯用户态，零系统调用
+    T2-&gt;&gt;U: CAS(0 → 1) 失败（state==1）
+    T2-&gt;&gt;U: 置 state = 2（标记有等待者）
+    T2-&gt;&gt;K: futex(&amp;state, FUTEX_WAIT, 2)
+    K-&gt;&gt;K: 校验 *uaddr==2 → 挂入哈希桶等待队列，休眠
+    T1-&gt;&gt;U: 临界区执行完毕，unlock
+    T1-&gt;&gt;U: xchg(state → 0)，发现旧值==2
+    Note over T1: 旧值&gt;1 说明有人在睡，必须叫醒
+    T1-&gt;&gt;K: futex(&amp;state, FUTEX_WAKE, 1)
+    K-&gt;&gt;T2: 移出队列，置 TASK_RUNNING，重新调度
+    T2-&gt;&gt;U: 返回用户态重抢：CAS(0 → 2)，成功
+</code></pre>
+<p>关键在 unlock 一侧：<strong>只有发现旧值是
+2（曾有等待者）才进内核唤醒</strong>——这就是「无竞争不系统调用」在释放路径上的体现。</p>
+<hr>
+<h2><span id="3-futex-系统调用">3 futex 系统调用</span></h2>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;linux/futex.h&gt;</span></span><br><span class="hljs-type">long</span> <span class="hljs-title function_">futex</span><span class="hljs-params">(<span class="hljs-type">uint32_t</span> *uaddr, <span class="hljs-type">int</span> futex_op, <span class="hljs-type">uint32_t</span> val,</span><br><span class="hljs-params">           <span class="hljs-type">const</span> <span class="hljs-keyword">struct</span> timespec *timeout,   <span class="hljs-comment">/* 或 uint32_t val2 */</span></span><br><span class="hljs-params">           <span class="hljs-type">uint32_t</span> *uaddr2, <span class="hljs-type">uint32_t</span> val3)</span>;<br></code></pre></div></td></tr></table></figure>
+<table>
+<colgroup>
+<col style="width: 29%">
+<col style="width: 70%">
+</colgroup>
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>uaddr</code></td>
+<td>用户态共享内存中 futex
+变量的地址（内核只存地址，<strong>不给它赋予任何语义</strong>）</td>
+</tr>
+<tr>
+<td><code>futex_op</code> = <code>FUTEX_WAIT</code></td>
+<td>若 <code>*uaddr == val</code> 则休眠，挂到 <code>uaddr</code>
+对应的等待队列；否则立即返回 <code>EAGAIN</code></td>
+</tr>
+<tr>
+<td><code>futex_op</code> = <code>FUTEX_WAKE</code></td>
+<td>最多唤醒 <code>val</code> 个等待在 <code>uaddr</code>
+上的任务，返回实际唤醒数</td>
+</tr>
+<tr>
+<td><code>FUTEX_PRIVATE_FLAG</code></td>
+<td>op 的低位标志：声明 futex 仅用于进程内线程同步，内核可走更快的 key
+计算路径</td>
+</tr>
+<tr>
+<td>其他 op</td>
+<td><code>FUTEX_REQUEUE</code>、<code>FUTEX_WAKE_OP</code>、<code>FUTEX_LOCK_PI</code>（优先级继承）等进阶操作</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>[!note] <code>EAGAIN</code> 防「丢失唤醒」 <code>FUTEX_WAIT</code>
+要求调用者先读 <code>*uaddr</code>
+再传入。若在「读之后、入睡之前」值被人改了，说明该事件已在半路发生——内核拒绝入睡并返回
+<code>EAGAIN</code>，让调用者回到用户态重新检查条件。没有这个约定，唤醒方在检查之后、入睡之前的缝隙里发出的
+<code>FUTEX_WAKE</code> 就会永远丢失。</p>
+</blockquote>
+<p>两个必须写进肌肉记忆的语义：</p>
+<ol type="1">
+<li><strong>虚假唤醒（spurious
+wakeup）</strong>：<code>FUTEX_WAIT</code>
+可能无缘无故返回（信号、races），所以等待逻辑必须放在循环里重新验证条件。</li>
+<li><strong>返回值语义</strong>：<code>WAIT</code> 成功返回
+0；<code>WAKE</code> 返回唤醒的任务数（可能为
+0——没人可叫不算错误）。</li>
+</ol>
+<p>最小可用示例（mmap 共享内存 + fork，父子进程握手）：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;linux/futex.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/syscall.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/mman.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;errno.h&gt;</span></span><br><br><span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">futex</span><span class="hljs-params">(<span class="hljs-type">int</span> *uaddr, <span class="hljs-type">int</span> op, <span class="hljs-type">int</span> val,</span><br><span class="hljs-params">                 <span class="hljs-type">const</span> <span class="hljs-keyword">struct</span> timespec *timeout, <span class="hljs-type">int</span> *uaddr2, <span class="hljs-type">int</span> val3)</span> &#123;<br>    <span class="hljs-keyword">return</span> syscall(SYS_futex, uaddr, op, val, timeout, uaddr2, val3);<br>&#125;<br><br><span class="hljs-type">void</span> <span class="hljs-title function_">wait_on_futex_value</span><span class="hljs-params">(<span class="hljs-type">int</span>* futex_addr, <span class="hljs-type">int</span> desired_val)</span> &#123;<br>    <span class="hljs-keyword">while</span> (<span class="hljs-number">1</span>) &#123;<br>        <span class="hljs-type">int</span> observed = *futex_addr;<br>        <span class="hljs-keyword">if</span> (observed == desired_val) <span class="hljs-keyword">return</span>;          <span class="hljs-comment">// 条件已满足</span><br>        <span class="hljs-type">int</span> rc = futex(futex_addr, FUTEX_WAIT, observed, <span class="hljs-literal">NULL</span>, <span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>);<br>        <span class="hljs-comment">// EAGAIN：读后被改过 → 回去重查；EINTR：被信号打断 → 重试</span><br>        <span class="hljs-keyword">if</span> (rc == <span class="hljs-number">-1</span> &amp;&amp; errno != EAGAIN &amp;&amp; errno != EINTR) &#123;<br>            perror(<span class="hljs-string">&quot;FUTEX_WAIT&quot;</span>); <span class="hljs-built_in">exit</span>(<span class="hljs-number">1</span>);<br>        &#125;<br>        <span class="hljs-comment">// 虚假唤醒或被唤醒后回到循环头重新检查</span><br>    &#125;<br>&#125;<br><br><span class="hljs-type">void</span> <span class="hljs-title function_">wake_futex</span><span class="hljs-params">(<span class="hljs-type">int</span>* futex_addr)</span> &#123;<br>    <span class="hljs-type">int</span> rc = futex(futex_addr, FUTEX_WAKE, <span class="hljs-number">1</span>, <span class="hljs-literal">NULL</span>, <span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>);<br>    <span class="hljs-keyword">if</span> (rc == <span class="hljs-number">-1</span>) &#123; perror(<span class="hljs-string">&quot;FUTEX_WAKE&quot;</span>); <span class="hljs-built_in">exit</span>(<span class="hljs-number">1</span>); &#125;  <span class="hljs-comment">// rc==0 表示没人可唤醒，正常</span><br>&#125;<br><br><span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> &#123;<br>    <span class="hljs-comment">// 必须共享内存：fork 后普通写内存会 COW 私有化</span><br>    <span class="hljs-type">int</span> shm_id = shmget(IPC_PRIVATE, <span class="hljs-number">4096</span>, IPC_CREAT | <span class="hljs-number">0666</span>);<br>    <span class="hljs-type">int</span>* shared = shmat(shm_id, <span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>);<br>    *shared = <span class="hljs-number">0</span>;<br><br>    <span class="hljs-keyword">if</span> (fork() == <span class="hljs-number">0</span>) &#123;                    <span class="hljs-comment">// 子进程：等 A → 写 B</span><br>        wait_on_futex_value(shared, <span class="hljs-number">0xA</span>);<br>        *shared = <span class="hljs-number">0xB</span>;<br>        wake_futex(shared);<br>    &#125; <span class="hljs-keyword">else</span> &#123;                              <span class="hljs-comment">// 父进程：写 A → 等 B</span><br>        *shared = <span class="hljs-number">0xA</span>;<br>        wake_futex(shared);               <span class="hljs-comment">// 可能唤醒 0 个（子进程还没睡）</span><br>        wait_on_futex_value(shared, <span class="hljs-number">0xB</span>);<br>        wait(<span class="hljs-literal">NULL</span>);<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<hr>
+<h2><span id="4-用户态视角mutex的三态状态机">4 用户态视角：mutex
+的三态状态机</span></h2>
+<p>Ulrich Drepper《Futexes Are Tricky》中的经典实现（glibc 低层锁 lll 与
+Go runtime 同款思路），用一个 <code>std::atomic&lt;int&gt;</code>
+承载三个状态：</p>
+<pre><code class=" mermaid">stateDiagram-v2
+    [*] --&gt; s0: 初始
+    s0: 0 = 无锁
+    s1: 1 = 有锁，无等待者
+    s2: 2 = 有锁，有等待者
+    s0 --&gt; s1: lock: CAS(0→1) 成功（快速路径）
+    s1 --&gt; s2: 新的 lock 失败者 CAS(1→2)，随后 FUTEX_WAIT
+    s2 --&gt; s2: FUTEX_WAIT 中休眠
+    s1 --&gt; s0: unlock: fetch_sub 后旧值==1（快速路径，无需唤醒）
+    s2 --&gt; s0: unlock: 旧值==2 → 置 0 并 FUTEX_WAKE
+    s2 --&gt; s1: 被唤醒者重抢成功
+</code></pre>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Mutex</span> &#123;<br>    std::atomic&lt;<span class="hljs-type">int</span>&gt; atom_;   <span class="hljs-comment">// 0 无锁 / 1 有锁无等待 / 2 有锁有等待</span><br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">lock</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">cmpxchg</span>(&amp;atom_, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>) != <span class="hljs-number">0</span>) &#123;        <span class="hljs-comment">// 快速路径失败</span><br>            <span class="hljs-keyword">do</span> &#123;<br>                <span class="hljs-comment">// 标记“有等待者”：置 2。已是 2 则跳过原子操作</span><br>                <span class="hljs-keyword">if</span> (c == <span class="hljs-number">2</span> || <span class="hljs-built_in">cmpxchg</span>(&amp;atom_, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>) != <span class="hljs-number">0</span>)<br>                    <span class="hljs-comment">// 睡在“值为 2”上；虚假唤醒无害，</span><br>                    <span class="hljs-comment">// 因为只有 CAS(0→2) 成功才会退出循环</span><br>                    <span class="hljs-built_in">syscall</span>(SYS_futex, (<span class="hljs-type">int</span>*)&amp;atom_, FUTEX_WAIT, <span class="hljs-number">2</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);<br>            &#125; <span class="hljs-keyword">while</span> ((c = <span class="hljs-built_in">cmpxchg</span>(&amp;atom_, <span class="hljs-number">0</span>, <span class="hljs-number">2</span>)) != <span class="hljs-number">0</span>);  <span class="hljs-comment">// 醒后重抢</span><br>        &#125;<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">unlock</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (atom_.<span class="hljs-built_in">fetch_sub</span>(<span class="hljs-number">1</span>) != <span class="hljs-number">1</span>) &#123;   <span class="hljs-comment">// 旧值!=1 → 曾有等待者</span><br>            atom_.<span class="hljs-built_in">store</span>(<span class="hljs-number">0</span>);<br>            <span class="hljs-built_in">syscall</span>(SYS_futex, (<span class="hljs-type">int</span>*)&amp;atom_, FUTEX_WAKE, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);<br>        &#125;<br>    &#125;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+<blockquote>
+<p>[!note] 为什么需要状态 2？
+它是<strong>唤醒方视角的“可能有睡着的等待者”标记</strong>。没有它，unlock
+无法区分「没人等，直接返回」和「有人在内核里睡，必须叫醒」，要么每次
+unlock 都白进一次内核，要么丢失唤醒。glibc <code>lowlevellock.h</code>
+的注释把三态写作 <code>0 / 1 / &gt;1</code>，同一个意思。</p>
+</blockquote>
+<hr>
+<h2><span id="5内核视角按地址索引的哈希等待队列">5
+内核视角：按地址索引的哈希等待队列</span></h2>
+<p>内核里 futex
+的本体是<strong>一张全局哈希表</strong>，把「用户态某地址上睡着的任务」组织起来。Eli
+的转述：<em>futex 是内核替用户空间维护的队列</em>。</p>
+<pre><code class=" mermaid">flowchart LR
+    subgraph 用户态传入
+        UA[uaddr + flags]
+    end
+    UA --&gt;|get_futex_key| KEY[futex_key]
+    KEY --&gt;|jhash| HB[&quot;全局哈希表 __futex_data&lt;br/&gt;256 × num_possible_cpus 个桶&quot;]
+    HB --&gt; B0[&quot;futex_hash_bucket&lt;br/&gt;spinlock_t lock&lt;br/&gt;plist_head chain（优先级链）&quot;]
+    B0 --&gt; Q1[futex_q: task_struct + key + plist 节点]
+    B0 --&gt; Q2[futex_q ...]
+</code></pre>
+<h3><span id="51-关键数据结构">5.1 关键数据结构</span></h3>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">/* 一个等待者 = 一条 futex_q：唤醒/休眠操作都先找到它 */</span><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">futex_q</span> &#123;</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">plist_node</span> <span class="hljs-title">list</span>;</span>      <span class="hljs-comment">// 链入 bucket 的优先级链表节点</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">task_struct</span> *<span class="hljs-title">task</span>;</span>    <span class="hljs-comment">// 被挂起的线程</span><br>    <span class="hljs-type">spinlock_t</span> *lock_ptr;        <span class="hljs-comment">// 引用所在 bucket 的自旋锁</span><br>    <span class="hljs-class"><span class="hljs-keyword">union</span> <span class="hljs-title">futex_key</span> <span class="hljs-title">key</span>;</span>         <span class="hljs-comment">// 哈希 key（该 futex 变量的唯一标识）</span><br>    u32 <span class="hljs-built_in">bitset</span>;                  <span class="hljs-comment">// 掩码，配合 FUTEX_WAKE_BITSET</span><br>    <span class="hljs-comment">/* pi_state / rt_waiter ... 与优先级继承（PI futex）相关 */</span><br>&#125;;<br><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">futex_hash_bucket</span> &#123;</span><br>    <span class="hljs-type">atomic_t</span> waiters;            <span class="hljs-comment">// 桶上等待者计数（wake 可快速判空）</span><br>    <span class="hljs-type">spinlock_t</span> lock;             <span class="hljs-comment">// 桶级自旋锁（细粒度分锁）</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">plist_head</span> <span class="hljs-title">chain</span>;</span>     <span class="hljs-comment">// 优先级链表：RT 按 0~99 排序，普通线程 FIFO</span><br>&#125; ____cacheline_aligned_in_smp;  <span class="hljs-comment">// 桶按缓存行对齐，避免伪共享</span><br><br><span class="hljs-comment">/* key 是 union，按同步范围二选一解释 */</span><br><span class="hljs-class"><span class="hljs-keyword">union</span> <span class="hljs-title">futex_key</span> &#123;</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> &#123;</span> u64 i_seq; <span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> pgoff; <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> offset; &#125; shared;<br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> &#123;</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">mm_struct</span> *<span class="hljs-title">mm</span>;</span> <span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> address; <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> offset; &#125; private;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+<p><strong>key 的推导是「private/shared 之分」的根源</strong>：</p>
+<table>
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr>
+<th>场景</th>
+<th>虚拟地址唯一吗</th>
+<th>key 构成</th>
+<th>成本</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>线程间（private）</td>
+<td>是——同进程线程共享地址空间</td>
+<td><code>(mm_struct 地址, 虚拟地址)</code></td>
+<td>一次比较，极快</td>
+</tr>
+<tr>
+<td>进程间（shared）</td>
+<td>否——各进程映射地址不同</td>
+<td><code>(inode-&gt;i_seq, page-&gt;index, 页内偏移)</code>，即<strong>物理页定位</strong></td>
+<td>需查页表取物理页，慢得多</td>
+</tr>
+</tbody>
+</table>
+<p>默认走 private 快路径；<code>FUTEX_PRIVATE_FLAG</code> 缺失时才按
+shared
+处理。<strong>把这个区分暴露给用户态，本身就是一项性能优化</strong>——绝大多数锁是线程锁。哈希表在
+<code>futex_init</code>（<code>core_initcall</code>）时按
+<code>256 × CPU 数</code> 建桶，配合桶级自旋锁把争抢分散。</p>
+<h3><span id="52-futex_wait-流程">5.2 futex_wait 流程</span></h3>
+<pre><code class=" mermaid">flowchart TD
+    A[&quot;futex_wait(uaddr, val)&quot;] --&gt; B[&quot;futex_wait_setup:&lt;br/&gt;get_futex_key + hash_futex 定位桶，持桶锁&quot;]
+    B --&gt; C&#123;&quot;*uaddr == val ?&quot;&#125;
+    C -- 否 --&gt; X[返回 EAGAIN&lt;br/&gt;防丢失唤醒]
+    C -- 是 --&gt; D[&quot;futex_wait_queue_me:&lt;br/&gt;置 TASK_INTERRUPTIBLE&lt;br/&gt;queue_me 挂入桶链&lt;br/&gt;启动 hrtimer（若带超时）&quot;]
+    D --&gt; E[freezable_schedule 让出 CPU]
+    E --&gt; F&#123;被唤醒 / 超时 / 信号?&#125;
+    F -- 唤醒 --&gt; G[&quot;unqueue_me 出队，返回 0&quot;]
+    F -- 虚假唤醒 --&gt; A
+    F -- 超时 --&gt; H[返回 ETIMEDOUT]
+    F -- 信号 --&gt; I[返回 ERESTARTSYS]
+</code></pre>
+<p>伪代码：</p>
+<figure class="highlight text"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs text">futex_wait(uaddr, val):<br>    key  = get_futex_key(uaddr, flags)     # 线程锁→(mm,addr)；进程锁→物理定位<br>    hb   = hash_futex(key)                 # jhash → bucket<br>    spin_lock(hb.lock)<br>    if *uaddr != val:                      # 持桶锁状态下的最后校验<br>        spin_unlock; return EAGAIN         # 值非预期，拒绝入睡<br>    current.state = TASK_INTERRUPTIBLE<br>    queue_me(futex_q, hb)                  # 挂链<br>    spin_unlock(hb.lock)<br>    schedule()                             # 睡；醒来后从下一行继续<br>    return 0<br></code></pre></div></td></tr></table></figure>
+<h3><span id="53-futex_wake-流程">5.3 futex_wake 流程</span></h3>
+<figure class="highlight text"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs text">futex_wake(uaddr, nr_wake):<br>    key = get_futex_key(uaddr, flags)<br>    hb  = hash_futex(key)<br>    if !hb_waiters_pending(hb): return 0    # 桶上没人，直接返回<br>    wake_q = &#123;&#125;<br>    spin_lock(hb.lock)<br>    for q in hb.chain where match_futex(q.key, key):<br>        wake_q += q.task                    # 收集，先不出队<br>        if len(wake_q) &gt;= nr_wake: break<br>    spin_unlock(hb.lock)<br>    wake_up_q(wake_q)                       # 锁外逐个置 TASK_RUNNING 并重调度<br></code></pre></div></td></tr></table></figure>
+<p>先收集到临时
+<code>wake_q</code>、放锁后再统一唤醒，避免持自旋锁时做唤醒重调度，缩短临界区。</p>
+<hr>
+<h2><span id="6-从-stdmutex-到futex完整调用链">6 从 std::mutex 到
+futex：完整调用链</span></h2>
+<p><code>std::mutex</code> → glibc-nptl → <code>futex(2)</code></p>
+<pre><code class=" mermaid">flowchart TD
+    A[&quot;C++ std::mutex::lock()&quot;] --&gt;|__gthread_mutex_lock| B[&quot;glibc pthread_mutex_lock&lt;br/&gt;（nptl/pthread_mutex_lock.c）&quot;]
+    B --&gt;|类型==TIMED_NP 默认锁| C[&quot;LLL_MUTEX_LOCK 宏&quot;]
+    C --&gt; D[&quot;__lll_lock 宏：&lt;br/&gt;CAS(lock, 1, 0) 成功 → 完成（纯用户态）&quot;]
+    D --&gt;|失败| E[&quot;__lll_lock_wait_private（汇编）&lt;br/&gt;lock 置 2 → syscall SYS_futex&quot;]
+    E --&gt; F[&quot;内核 do_futex → futex_wait&quot;]
+</code></pre>
+<p>glibc 侧 <code>pthread_mutex_t</code> 的状态字段与分发逻辑：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">union</span> &#123;</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> __<span class="hljs-title">pthread_mutex_s</span> &#123;</span><br>        <span class="hljs-type">int</span> __lock;          <span class="hljs-comment">// 三态：0 无锁 / 1 有锁 / 2 有锁+有竞争</span><br>        <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> __count;   <span class="hljs-comment">// 可重入锁的递归计数</span><br>        <span class="hljs-type">int</span> __owner;            <span class="hljs-comment">// 持有线程 TID</span><br>        <span class="hljs-type">int</span> __kind;             <span class="hljs-comment">// 位 0~6 锁类型；位 7 (128) = process-shared</span><br>        <span class="hljs-type">__pthread_list_t</span> __list;<br>    &#125; __data;<br>&#125; <span class="hljs-type">pthread_mutex_t</span>;<br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> __lll_lock(futex, private)                                          \</span><br><span class="hljs-meta">    ((void) (&#123;                                                              \</span><br><span class="hljs-meta">        int *__futex = (futex);                                             \</span><br><span class="hljs-meta">        <span class="hljs-keyword">if</span> (atomic_compare_and_exchange_bool_acq(__futex, 1, 0))            \</span><br><span class="hljs-meta">            __lll_lock_wait(__futex, private);   <span class="hljs-comment">/* CAS 失败才进内核 */</span>      \</span><br><span class="hljs-meta">    &#125;))</span><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> __lll_unlock(futex, private)                                        \</span><br><span class="hljs-meta">    ((void) (&#123;                                                              \</span><br><span class="hljs-meta">        int *__futex = (futex);                                             \</span><br><span class="hljs-meta">        int __oldval = atomic_exchange_rel(__futex, 0);                     \</span><br><span class="hljs-meta">        <span class="hljs-keyword">if</span> (__glibc_unlikely(__oldval &gt; 1))                                 \</span><br><span class="hljs-meta">            __lll_lock_wake(__futex, private);   <span class="hljs-comment">/* 旧值 2 才需要唤醒 */</span>     \</span><br><span class="hljs-meta">    &#125;))</span><br></code></pre></div></td></tr></table></figure>
+<p><code>__kind</code> 的第 8 位 <code>PTHREAD_MUTEX_PSHARED</code>
+正对应 <code>FUTEX_PRIVATE_FLAG</code>——用户态声明与内核 key
+快慢路径一一衔接。</p>
+<p>Android bionic 的
+<code>pthread_mutex</code>是同一思想的精简版：<code>atomic_exchange(state, locked_contended) != unlocked</code>
+则 <code>__futex_wait_ex</code>；unlock 时
+<code>exchange(state, unlocked) == locked_contended</code> 则
+<code>__futex_wake_ex</code>。<code>pthread_cond</code>（wait/signal）、<code>pthread_rwlock</code>
+也都落在 <code>futex_wait/futex_wake</code> 上。Java
+侧：<code>synchronized</code> 由 ART 虚拟机实现，monitor 锁先 CAS
+自旋，迟迟拿不到则膨胀为重量级锁，最终
+<code>futex(FUTEX_WAIT_PRIVATE)</code> 休眠；JUC 的锁体系底层同样收敛到
+futex。</p>
+<p>Go runtime 不依赖 libc，自建锁：<code>sync.Mutex</code>
+快速路径原子交换，慢速路径
+<code>runtime.lock</code>（<code>lock_futex.go</code>，常量
+<code>mutex_unlocked/locked/sleeping = 0/1/2</code>）→
+<code>futexsleep</code> → <code>FUTEX_WAIT_PRIVATE</code>。</p>
+<hr>
+<h2><span id="7-内核优化前沿">7 内核优化前沿</span></h2>
+<p>针对「同步 IPC 场景下 T1 唤醒 T2、自己休眠，随后 T2 反向唤醒
+T1」的乒乓模式，共四次系统调用、多次调度往返，社区给出了一条递进优化链：</p>
+<pre><code class=" mermaid">flowchart LR
+    A[&quot;wake + wait&lt;br/&gt;4 次系统调用&quot;] --&gt;|合并为 1 次调用| B[&quot;futex_swap&lt;br/&gt;切换耗时 -29.5%&quot;]
+    B --&gt;|唤醒者选核=当前 CPU| C[&quot;+ prefer_current_cpu&lt;br/&gt;实测 -92.69%&quot;]
+    C --&gt;|bypass 调度器| D[&quot;direct-thread-switch&lt;br/&gt;较基线 -37.1%（openEuler）&quot;]
+</code></pre>
+<h3><span id="71-futex_swapgooglepeteroskolkov">7.1 futex_swap（Google，Peter
+Oskolkov）</span></h3>
+<p><code>futex_swap(uaddr, val, abs_time, uaddr2)</code>：一次系统调用内完成「唤醒
+<code>uaddr2</code> 上至多一个等待者 next + 让自己 wait 在
+<code>uaddr</code> 上」。为 SwitchTo（Google
+闭源用户态调度框架）而设。</p>
+<blockquote>
+<p>[!note] 魅族实测的泼冷水 移植到 Android 后与
+<code>FUTEX_WAKE_WAIT</code> 耗时相差不大。拆解 trace：省下的 2
+次系统调用发生在<strong>并行时间</strong>里，不在关键路径上，只降低系统整体负载。但「一次调用完成唤醒+休眠」为后续优化打开了接口。</p>
+</blockquote>
+<h3><span id="72wake_up_process_prefer_current_cpu">7.2
+wake_up_process_prefer_current_cpu</span></h3>
+<p>futex_swap 唤醒 next 时传入 <code>WF_CURRENT_CPU</code>
+标志，<code>select_task_rq_fair</code> 选核时直接选中唤醒者所在
+CPU。效果：两线程乒乓跑在同一个核上，<code>schedule()</code> 的
+<code>pick_next_task</code> 大概率无缝选中对方。实测 3 轮切换 182µs →
+18.4µs（10 倍），但拆解为：<strong>CPU 频率 5
+倍</strong>（单核满载触发提频 500MHz→2.5GHz）× <strong>调度效率 2
+倍</strong>（免 idle 退出、尾延更低、cache 热）。patch 本身的净收益约 2
+倍。与 Android binder 线程互醒场景同构，有移植价值。</p>
+<h3><span id="73direct-thread-switchopeneuler">7.3
+direct-thread-switch（openEuler）</span></h3>
+<p>思想出自论文《The Case for Thread
+Migration》：<strong>执行实体与调度实体分离</strong>——线程切换时只换执行上下文，不换调度实体，新任务直接用原任务剩余时间片运行，bypass
+选核/入队/负载更新，runnable 尾延归零。Linux 的 <code>task_struct</code>
+把两者焊死多年，直接拆分不现实；于是基于 futex_swap，在
+<code>T1→T2</code> 切换点用 <code>__direct_thread_switch(next)</code>
+替代 <code>schedule()</code>，辅以「共享调度实体 shared
+sched_entry」保住 CFS 公平性。openEuler 数据：futex_swap 较基线
++29.5%，叠加 direct-thread-switch +37.1%。适用面窄：同步线程模型（典型即
+IPC）。</p>
+<h3><span id="74-futex-vip插队与继承魅族落地手机场景">7.4 futex vip
+插队与继承（魅族落地手机场景）</span></h3>
+<ul>
+<li><strong>插队</strong>：等待队列里普通线程按 FIFO 排，前台
+UX（vip）线程排不过 RT/普通线程 → 让 vip 插到 RT
+之后、普通线程之前；设防饿死保护（队首普通线程等待超阈值则本次不插队）。</li>
+<li><strong>继承</strong>：vip 线程等一把被普通线程持有的用户锁时，对
+owner 临时授予 vip 特权（调度/IO/内存倾斜）直到它
+<code>futex_wake</code>，解决用户空间锁的<strong>优先级反转</strong>。实现难点：futex
+协议本身不携带 owner 信息，需扩展接口在 <code>futex_wait</code> 时传入
+<code>futex_info</code>（含 <code>owner_id</code>）。</li>
+</ul>
+<p>实测（模拟用户场景）：vip 等锁最大等待时间
+<strong>-70%</strong>（重载 -67%），超 100ms 次数 -25%（重载 -38%），vip
+等锁总时长 -24%（重载 -21%）。</p>
+<hr>
+<h2><span id="8-陷阱清单">8 陷阱清单</span></h2>
+<table>
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr>
+<th>陷阱</th>
+<th>后果</th>
+<th>对策</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>不校验 <code>EAGAIN</code> / 不循环检查</td>
+<td>丢失唤醒、死等</td>
+<td><code>WAIT</code> 前读值传入；醒后重查条件（见 §3 示例）</td>
+</tr>
+<tr>
+<td>假设 <code>WAIT</code> 不虚假返回</td>
+<td>条件未满足就往下走</td>
+<td>等待逻辑必须包在循环里</td>
+</tr>
+<tr>
+<td>拿 <code>futex(2)</code> 直接写应用同步</td>
+<td>丢掉用户态快速路径，得不偿失</td>
+<td>用 <code>pthread_mutex</code> / <code>std::mutex</code></td>
+</tr>
+<tr>
+<td>进程间共享却没放共享内存</td>
+<td>fork 后 COW，各睡各的</td>
+<td><code>shmget</code>/<code>mmap(MAP_SHARED)</code>；op 带 shared
+语义</td>
+</tr>
+<tr>
+<td>忘记 <code>FUTEX_PRIVATE_FLAG</code></td>
+<td>内核走物理地址 key，白白变慢</td>
+<td>线程内锁一律 private</td>
+</tr>
+<tr>
+<td><code>std::atomic&lt;int&gt;</code> 强转 <code>int*</code> 传
+futex</td>
+<td>平台相关 hack（x86-64 可用）</td>
+<td>仅教学演示，勿进生产</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2><span id="延伸阅读">延伸阅读</span></h2>
+<ul>
+<li>Ulrich Drepper, <em>Futexes Are Tricky</em> — mutex
+正确性论证的第一手材料</li>
+<li>Franke, Russell, Kirkwood, <em>Fuss, Futexes and Furwocks</em>（OLS
+2002）— futex 起源论文</li>
+<li><a target="_blank" rel="noopener" href="https://lwn.net/Articles/360699/">LWN: A futex overview and
+update</a> — 经典哈希队列架构图出处</li>
+<li><a target="_blank" rel="noopener" href="https://man7.org/linux/man-pages/man2/futex.2.html">futex(2) man
+page</a> — op 全集与错误码权威定义</li>
+<li>源码：<code>kernel/futex.c</code>（4.19）/
+<code>kernel/futex/core.c</code>（新版拆分）；glibc
+<code>nptl/pthread_mutex_lock.c</code>、<code>sysdeps/nptl/lowlevellock.h</code></li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/">Notes</a>
+                    
+                      <a class="hover-with-bg" href="/categories/Notes/Kernel/">Kernel</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/multi-thread/">multi-thread</a>
+                    
+                      <a class="hover-with-bg" href="/tags/performance/">performance</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/35195d0c.html">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Invariant-at-Complie-Time</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/e1708a14.html">
+                        <span class="hidden-mobile">Exploring-Async-Basics-with-Rust</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'RacleRay/comments');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://github.com/RacleRay" class="hint--bottom hint--rounded" aria-label="GitHub" target="_blank"> <i class="iconfont icon-github-fill" aria-hidden="true"></i> </a>
+<a href="mailto:969232057@qq.com" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-mail" aria-hidden="true"></i> </a>
+<a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=969232057" class="hint--bottom hint--rounded" aria-label="QQ" target="_blank"> <i class="iconfont icon-qq-fill" aria-hidden="true"></i> </a>
+<a class="qr-trigger" target="_self"> <i class="iconfont icon-wechat-fill" aria-hidden="true"></i> <img class="qr-img" src="/img/wexin.jpg" srcset="/img/loading.gif" lazyload alt="qrcode"> </a>
+<a href="/atom.xml" class="hint--bottom hint--rounded" aria-label="Email" target="_blank"> <i class="iconfont icon-rss" aria-hidden="true"></i> </a>
+<div></div> <a> POWERED BY </a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/mermaid/8.8.3/mermaid.min.js" ></script>
+  <script>
+    if (window.mermaid) {
+      mermaid.initialize({"theme":"default"});
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>

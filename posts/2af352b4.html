@@ -35,11 +35,11 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA.assets/image-20200224220549264.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA.assets/image-20200225224943995.png">
 <meta property="article:published_time" content="2020-07-06T15:11:07.000Z">
-<meta property="article:modified_time" content="2023-08-07T11:54:31.045Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:32.000Z">
 <meta property="article:author" content="江左时雨">
+<meta property="article:tag" content="fastText">
 <meta property="article:tag" content="word2vec">
 <meta property="article:tag" content="representation">
-<meta property="article:tag" content="fastText">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%96%87%E6%9C%AC%E8%A1%A8%E7%A4%BA.assets/image-20200224205921462.png">
   
@@ -337,7 +337,7 @@ IDF可以进行平滑：假设存在一个文档，包含所有的词。计算ID
 <h2><span id="3文本分布式表示">3.文本分布式表示</span></h2>
 <p>​ one-hot
 vector：假设我们的词库总共有n个词，那我们开一个1*n的高维向量。</p>
-<p>​ <span class="math display">\[ w^{aardcark}=
+<p>​ <span class="math display">\[w^{aardcark}=
 \begin{bmatrix}
 ​     1  \\
 ​     0  \\
@@ -520,10 +520,9 @@ word j occur in the context of word i）</li>
 <li><span class="math inline">\(v_i\)</span>和<span class="math inline">\(u_j\)</span>相乘，不需要用指数函数。(推导结果)</li>
 <li>加入weighted function <span class="math inline">\(f(X_{ij})\)</span></li>
 </ul>
-<p>损失函数： <span class="math display">\[
-J=\sum_{i=1}^{V} \sum_{j=1}^{V} f\left(X_{i j}\right)\left(w_{i}^{T}
-w_{j}+b_{i}+b_{j}-\log X_{i j}\right)^{2}
-\]</span></p>
+<p>损失函数： <span class="math display">\[J=\sum_{i=1}^{V}
+\sum_{j=1}^{V} f\left(X_{i j}\right)\left(w_{i}^{T}
+w_{j}+b_{i}+b_{j}-\log X_{i j}\right)^{2}\]</span></p>
 <blockquote>
 <p><span class="math inline">\(X_{ij}\)</span> --<span class="math inline">\(i\ \textrm{and}\
 j\)</span>在某个窗口大小中的共现频率<br>
@@ -564,12 +563,10 @@ fastText 是一个监督模型。</li>
 </ol>
 <p>​ fastText 的网络结构和 CBOW 基本一致，同时在输出层的分类上也使用了
 Hierachical Softmax 技巧来加速训练。</p>
-<p>​ 目标函数： <span class="math display">\[
--\frac{1}{N} \sum_{n=1}^{N} y_{n} \log f\left(B A x_{n}\right)
-\]</span></p>
-<p><span class="math display">\[
-x_{n}=\sum_{i=1}^{l_{n}} x_{n, i}
-\]</span></p>
+<p>​ 目标函数： <span class="math display">\[-\frac{1}{N} \sum_{n=1}^{N}
+y_{n} \log f\left(B A x_{n}\right)\]</span></p>
+<p><span class="math display">\[x_{n}=\sum_{i=1}^{l_{n}} x_{n,
+i}\]</span></p>
 <blockquote>
 <p><span class="math inline">\(x_{n, i}\)</span> --语料当中第 n
 篇文档的第 i 个（词 或者 char N-gram）</p>
@@ -660,11 +657,11 @@ x_{n}=\sum_{i=1}^{l_{n}} x_{n, i}
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
+                      <a class="hover-with-bg" href="/tags/fastText/">fastText</a>
+                    
                       <a class="hover-with-bg" href="/tags/word2vec/">word2vec</a>
                     
                       <a class="hover-with-bg" href="/tags/representation/">representation</a>
-                    
-                      <a class="hover-with-bg" href="/tags/fastText/">fastText</a>
                     
                   </div>
                 

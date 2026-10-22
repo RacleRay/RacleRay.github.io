@@ -18,15 +18,15 @@
   <meta name="description" content="个人博客&amp;笔记">
   <meta name="author" content="江左时雨">
   <meta name="keywords" content="机器学习,Machine Learning,自然语言处理,NLP,深度学习,Deep Learning,计算机,Coding,生活随笔">
-  <meta name="description" content="概率语言模型，如最大熵模型和概率神经模型，在参数估计时，都有计算量大的问题，词汇表实在是太大了。这让配分函数的计算量大得就想优化它。 只看NCE和Negative Sampling（以下简写为NS），就不说其他的方法了。 NCE和NS刚接触时，看着好像一样一样的。再看，还真是大意了，不够严谨。（废话真多） 标准开头 假设以下是一个模型，根据上下文 \(c\) 预测词表 \(V\) 中的词">
+  <meta name="description" content="概率语言模型，如最大熵模型和概率神经模型，在参数估计时，都有计算量大的问题，词汇表实在是太大了。这让配分函数的计算量大得就想优化它。 只看NCE和Negative Sampling（以下简写为NS），就不说其他的方法了。 NCE和NS刚接触时，看着好像一样一样的。再看，还真是大意了，不够严谨。（废话真多） 标准开头 假设以下是一个模型，根据上下文 \(c\) 预测词表 \(V\) 中的词 \(w\">
 <meta property="og:type" content="article">
 <meta property="og:title" content="再看NCE">
 <meta property="og:url" content="https://racleray.github.io/posts/68340e67.html">
 <meta property="og:site_name" content="Racle&#96;s Story">
-<meta property="og:description" content="概率语言模型，如最大熵模型和概率神经模型，在参数估计时，都有计算量大的问题，词汇表实在是太大了。这让配分函数的计算量大得就想优化它。 只看NCE和Negative Sampling（以下简写为NS），就不说其他的方法了。 NCE和NS刚接触时，看着好像一样一样的。再看，还真是大意了，不够严谨。（废话真多） 标准开头 假设以下是一个模型，根据上下文 \(c\) 预测词表 \(V\) 中的词">
+<meta property="og:description" content="概率语言模型，如最大熵模型和概率神经模型，在参数估计时，都有计算量大的问题，词汇表实在是太大了。这让配分函数的计算量大得就想优化它。 只看NCE和Negative Sampling（以下简写为NS），就不说其他的方法了。 NCE和NS刚接触时，看着好像一样一样的。再看，还真是大意了，不够严谨。（废话真多） 标准开头 假设以下是一个模型，根据上下文 \(c\) 预测词表 \(V\) 中的词 \(w\">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-04-08T15:41:42.000Z">
-<meta property="article:modified_time" content="2023-08-07T11:54:31.039Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:32.000Z">
 <meta property="article:author" content="江左时雨">
 <meta property="article:tag" content="NCE">
 <meta property="article:tag" content="language model">
@@ -278,12 +278,9 @@
 <p>NCE和NS刚接触时，看着好像一样一样的。再看，还真是大意了，不够严谨。（废话真多）</p>
 <h2><span id="标准开头">标准开头</span></h2>
 <p>假设以下是一个模型，根据上下文 <span class="math inline">\(c\)</span>
-预测词表 <span class="math inline">\(V\)</span> 中的词 <span class="math inline">\(w\)</span>。 <span class="math display">\[
-p_{\theta}(w \mid c)=\frac{u_{\theta}(w, c)}{\sum_{w^{\prime} \in V}
-u_{\theta}\left(w^{\prime}, c\right)}=\frac{u_{\theta}(w,
-c)}{Z_{\theta}(c)}
-\]</span> 假设 <span class="math inline">\(u_\theta = \exp(s_\theta(w,
-c))\)</span>，<span class="math inline">\(Z_\theta(c)\)</span>自然是配分函数。<span class="math inline">\(s_\theta\)</span> 假设是一个可微的函数。</p>
+预测词表 <span class="math inline">\(V\)</span> 中的词 <span class="math inline">\(w\)</span>。 <span class="math display">\[p_{\theta}(w \mid c)=\frac{u_{\theta}(w,
+c)}{\sum_{w^{\prime} \in V} u_{\theta}\left(w^{\prime},
+c\right)}=\frac{u_{\theta}(w, c)}{Z_{\theta}(c)}\]</span> 假设 <span class="math inline">\(u_\theta = \exp(s_\theta(w, c))\)</span>，<span class="math inline">\(Z_\theta(c)\)</span>自然是配分函数。<span class="math inline">\(s_\theta\)</span> 假设是一个可微的函数。</p>
 <p>如果了解概率图模型，应该见过使用 Importance Sampling + MC
 的方式近似配分函数的期望的法子。NCE走得就是这条路，只是稍稍改进了些。</p>
 <p>其他定义：</p>
@@ -296,20 +293,17 @@ c))\)</span>，<span class="math inline">\(Z_\theta(c)\)</span>自然是配分�
 <h2><span id="nce">NCE</span></h2>
 <p>方法：通过建立二分类模型，区分来自经验分布（训练数据）和噪声分布的数据，得到最优的模型参数，就是需要的参数求解结果。</p>
 <h3><span id="数据生成">数据生成</span></h3>
-<p>Label d = ｛0，1｝，表示数据属于噪声或者真实数据。分布表示为： <span class="math display">\[
-p(d, w \mid c)=\left\{\begin{array}{ll}
+<p>Label d = ｛0，1｝，表示数据属于噪声或者真实数据。分布表示为： <span class="math display">\[p(d, w \mid c)=\left\{\begin{array}{ll}
 \frac{k}{1+k} \times q(w) &amp; \text { if } d=0 \\
 \frac{1}{1+k} \times \tilde{p}(w \mid c) &amp; \text { if } d=1
-\end{array}\right.
-\]</span> 转换成 d 关于 c 和 w 的条件分布（定义直接推导）： <span class="math display">\[
-\begin{aligned}
+\end{array}\right.\]</span> 转换成 d 关于 c 和 w
+的条件分布（定义直接推导）： <span class="math display">\[\begin{aligned}
 p(d=0 \mid c, w) &amp;=\frac{\frac{k}{1+k} \times q(w)}{\frac{1}{1+k}
 \times \tilde{p}(w \mid c)+\frac{k}{1+k} \times q(w)} \\
 &amp;=\frac{k \times q(w)}{\tilde{p}(w \mid c)+k \times q(w)} \\
 p(d=1 \mid c, w) &amp;=\frac{\tilde{p}(w \mid c)}{\tilde{p}(w \mid c)+k
 \times q(w)}
-\end{aligned}
-\]</span> 以上是构建的"proxy
+\end{aligned}\]</span> 以上是构建的"proxy
 corpus"代理的训练数据分布，那么把模型拟合的分布<span class="math inline">\(p_\theta(w|c)\)</span>带入，替换掉经验分布 <span class="math inline">\(\hat{p}(w|c)\)</span>，就可以得到一个可以操作的目标。</p>
 <h3><span id="方法">方法</span></h3>
 <p>但是，<span class="math inline">\(\hat{p}(w|c)\)</span>还是有 <span class="math inline">\(Z_\theta(c)\)</span>
@@ -319,37 +313,30 @@ corpus"代理的训练数据分布，那么把模型拟合的分布<span class="
 <span class="math inline">\(Z_\theta(c)\)</span> 直接设为 1
 ，反而是一种有效且高效的做法，文章里叫做 self-normalized。</p>
 <p>所以，得到的关于 参数 <span class="math inline">\(\theta\)</span>
-的分布表示为： <span class="math display">\[
-\begin{aligned}
+的分布表示为： <span class="math display">\[\begin{aligned}
 p(d=0 \mid c, w) &amp;=\frac{k \times q(w)}{u_{\theta}(w, c)+k \times
 q(w)} \\
 p(d=1 \mid c, w) &amp;=\frac{u_{\theta}(w, c)}{u_{\theta}(w, c)+k \times
 q(w)}
-\end{aligned}
-\]</span> 直接操作掉了求和配分项。目标也变成了一个二分类： <span class="math display">\[
-\mathcal{L}_{\mathrm{NCE}_{k}}=\sum_{(w, c) \in \mathcal{D}}\left(\log
-p(d=1 \mid c, w)+k \mathbb{E}_{\bar{w} \sim q} \log p(d=0 \mid c,
-\bar{w})\right)
-\]</span>
+\end{aligned}\]</span> 直接操作掉了求和配分项。目标也变成了一个二分类：
+<span class="math display">\[\mathcal{L}_{\mathrm{NCE}_{k}}=\sum_{(w, c)
+\in \mathcal{D}}\left(\log p(d=1 \mid c, w)+k \mathbb{E}_{\bar{w} \sim
+q} \log p(d=0 \mid c, \bar{w})\right)\]</span>
 只是，其中求期望的部分需要所有单词在噪声分布下求值，得到期望，这显然是低效的。简单的办法，直接MC，期望转Sampling：
-<span class="math display">\[
-\begin{aligned}
+<span class="math display">\[\begin{aligned}
 \mathcal{L}_{\mathrm{NCE}_{k}}^{\mathrm{MC}} &amp;=\sum_{(w, c) \in
 \mathcal{D}}\left(\log p(d=1 \mid c, w)+k \times \sum_{i=1, \bar{w} \sim
 q}^{k} \frac{1}{k} \times \log p(d=0 \mid c, \bar{w})\right) \\
 &amp;=\sum_{(w, c) \in \mathcal{D}}\left(\log p(d=1 \mid c,
 w)+\sum_{i=1, \bar{w} \sim q}^{k} \log p(d=0 \mid c, \bar{w})\right)
-\end{aligned}
-\]</span> 完</p>
+\end{aligned}\]</span> 完</p>
 <p>可以证明（求极值点嘛，再分析一波k趋于无穷的极限），这个目标函数的最优时，就是模型所表示的分布和经验分布匹配的时候。</p>
 <h2><span id="nsnegative-sampling">NS(Negative Sampling)</span></h2>
-<p>word2vec使用过的方法，直接可以写出目标条件分布： <span class="math display">\[
-\begin{array}{l}
+<p>word2vec使用过的方法，直接可以写出目标条件分布： <span class="math display">\[\begin{array}{l}
 p(d=0 \mid c, w)=\frac{1}{u_{\theta}(w, c)+1} \\
 p(d=1 \mid c, w)=\frac{u_{\theta}(w, c)}{u_{\theta}(w, c)+1}
-\end{array}
-\]</span> 可以看成 k = |V| 且 q 为均匀分布的NCE特殊情况。在分析一次像
-<span class="math inline">\(\mathcal{L}_{\mathrm{NCE}_{k}}\)</span>
+\end{array}\]</span> 可以看成 k = |V| 且 q
+为均匀分布的NCE特殊情况。在分析一次像 <span class="math inline">\(\mathcal{L}_{\mathrm{NCE}_{k}}\)</span>
 的损失函数，或者是hinge
 loss形式的损失函数，求导分析极值，可以发现它最优时，模型所表示的分布和经验分布并不匹配，可以不一致。</p>
 <p>也就是说，NS虽然在word2vec训练时，可以学习到word的representation，但是它并不适用于语言模型等更general的情景。</p>

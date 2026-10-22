@@ -42,7 +42,7 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E4%B8%80%E4%BA%9B%E5%85%B3%E7%B3%BB%E6%8A%BD%E5%8F%96model_pic/image-20210324232211689.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E4%B8%80%E4%BA%9B%E5%85%B3%E7%B3%BB%E6%8A%BD%E5%8F%96model_pic/image-20210324232521827.png">
 <meta property="article:published_time" content="2021-03-24T15:37:55.000Z">
-<meta property="article:modified_time" content="2023-08-07T11:54:31.030Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:32.000Z">
 <meta property="article:author" content="江左时雨">
 <meta property="article:tag" content="relation extraction">
 <meta name="twitter:card" content="summary_large_image">
@@ -305,21 +305,21 @@ relations：一个实体可以出现则同一文本中的多个关系中。</li>
 <col style="width: 41%">
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th></th>
 <th>Texts</th>
 <th style="text-align: left;">Triplets</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Normal</td>
 <td>[The United States] President [Trump] will meet [Xi Jinping], the
 president of [China].</td>
 <td style="text-align: left;">(The United States, <em>president</em>,
 Trump) <br>(China, <em>president</em>, Xi Jinping)</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Single Entity Overlapping</td>
 <td>Two of them, [Jeff Francoeur] and [Brian McCann], are from
 <strong>[Atlanta]</strong>.</td>
@@ -327,7 +327,7 @@ Trump) <br>(China, <em>president</em>, Xi Jinping)</td>
 <strong>Atlanta</strong>) <br>(Brian McCann, <em>live in</em>,
 <strong>Atlanta</strong>)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Entity Pair Overlapping</td>
 <td>The new mayor of [<strong>New York City</strong>] [<strong>De
 Blasio</strong>] is native-born.</td>
@@ -335,7 +335,7 @@ Blasio</strong>] is native-born.</td>
 <em>mayor</em>, <strong>De Blasio</strong>) <br>(<strong>De
 Blasio</strong>, <em>born in</em>, <strong>New York City</strong>)</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Nested</td>
 <td>The new mayor of <strong>[[New York] City]</strong> [De Blasio] is
 native-born.</td>
@@ -349,11 +349,9 @@ York</strong>) (<strong>New York</strong>, <em>contains</em>,
 <p>同时，还存在的问题有：预测标签的不平衡，相同实体出现不同关系时model难以拟合。</p>
 <h3><span id="framework">framework</span></h3>
 <p>CasRel是一种framework，将关系预测从标注分类转化为一个隐式变换，参与模型训练：
-<span class="math display">\[
-f(s, o) \rightarrow r
-\]</span> 本来是subject + object推断relation，变化为： <span class="math display">\[
-f_r(s) \rightarrow o
-\]</span> 将relation建模成一种function。</p>
+<span class="math display">\[f(s, o) \rightarrow r\]</span>
+本来是subject + object推断relation，变化为： <span class="math display">\[f_r(s) \rightarrow o\]</span>
+将relation建模成一种function。</p>
 <p>将likelihood变成以下形式：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/一些关系抽取model_pic/image-20210324205241218.png" srcset="/img/loading.gif" lazyload alt style="zoom:50%;"></p>
 <p>模型整体架构</p>

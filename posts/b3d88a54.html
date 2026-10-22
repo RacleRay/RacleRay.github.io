@@ -29,7 +29,7 @@
 <meta property="og:image" content="https://racleray.github.io/posts/images/Effective-Modern-Cpp/item20_fig1.png">
 <meta property="og:image" content="https://racleray.github.io/posts/images/Effective-Modern-Cpp/item20_fig2.png">
 <meta property="article:published_time" content="2022-04-12T13:00:52.000Z">
-<meta property="article:modified_time" content="2024-01-09T10:23:43.747Z">
+<meta property="article:modified_time" content="2024-01-09T10:23:44.000Z">
 <meta property="article:author" content="江左时雨">
 <meta property="article:tag" content="C++">
 <meta property="article:tag" content="Book">
@@ -1647,25 +1647,25 @@ dispatch</em>，使用 <code>enable_if</code> 约束模板。</li>
 <p>这些组合的的结果：如果两个中任一引用为左值引用，则结果为左值引用。否则（即，如果引用都是右值引用），结果为右值引用。</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>组合</th>
 <th>结果</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>左值的右值</td>
 <td>左值</td>
 </tr>
-<tr class="even">
+<tr>
 <td>左值的左值</td>
 <td>左值</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>右值的左值</td>
 <td>左值</td>
 </tr>
-<tr class="even">
+<tr>
 <td>右值的右值</td>
 <td>右值</td>
 </tr>

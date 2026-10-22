@@ -54,7 +54,7 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%A8%A1%E5%9E%8B.assets/image-20200229180448787.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%A8%A1%E5%9E%8B.assets/image-20200229180545407.png">
 <meta property="article:published_time" content="2020-07-07T10:49:20.000Z">
-<meta property="article:modified_time" content="2023-08-07T11:54:31.045Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:32.000Z">
 <meta property="article:author" content="江左时雨">
 <meta property="article:tag" content="text similarity">
 <meta property="article:tag" content="DSSM">
@@ -333,8 +333,7 @@ Averaging模型：合并前向和反向LSTM编码得到的隐向量作为句子�
 </ul></li>
 <li><p>优化目标：hinge loss</p>
 <ul>
-<li><span class="math display">\[
-\begin{array}{l}
+<li><span class="math display">\[\begin{array}{l}
 \min _{W_{c}, W_{w}} \frac{1}{|S|}\left(\sum_{\left\langle s_{1},
 s_{2}\right\rangle \in S} \max \left(0, \delta-\cos
 \left(g\left(s_{1}\right), g\left(s_{2}\right)\right)\right.\right. \\
@@ -344,8 +343,7 @@ g\left(t_{1}\right)\right)\right)+\max \left(0, \delta-\cos
 \left.\left.+\cos \left(g\left(s_{2}\right),
 g\left(t_{2}\right)\right)\right)\right)+\lambda_{c}\left\|W_{c}\right\|^{2}+\lambda_{w}\left\|W_{w_{\text
 {initial}}}-W_{w}\right\|^{2}
-\end{array}
-\]</span></li>
+\end{array}\]</span></li>
 </ul>
 <p>s之间正样本相似度要尽量接近<span class="math inline">\(\delta\)</span>，与负样本t之间相似度要尽量大。同时在正则化中加入词向量变化约束，计算之后的词向量不能和初始化使用的Glove（或其他）词向量相差过大。</p></li>
 </ol>

@@ -27,7 +27,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/img/picgo/2021/10/05/18-25-55-99cbd5.png">
 <meta property="article:published_time" content="2021-10-08T13:30:33.000Z">
-<meta property="article:modified_time" content="2023-08-07T11:54:31.043Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:32.000Z">
 <meta property="article:author" content="江左时雨">
 <meta property="article:tag" content="data structure">
 <meta property="article:tag" content="cs basic">
@@ -378,7 +378,7 @@ Disjoint Set Union，表示用于求不相交集合并集的相关算法。</p>
 <p>使用不同的数据结构实现，时间复杂度不同。</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th></th>
 <th>EXTRACT-MIN</th>
 <th>DECREASE-KEY</th>
@@ -386,19 +386,19 @@ Disjoint Set Union，表示用于求不相交集合并集的相关算法。</p>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>array</td>
 <td>O(V)</td>
 <td>O(1)</td>
 <td><span class="math inline">\(O(V^2)\)</span></td>
 </tr>
-<tr class="even">
+<tr>
 <td>binary heap</td>
 <td>O(log V)</td>
 <td>O(log V)</td>
 <td><span class="math inline">\(O(E \log V)\)</span></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Fibonacci heap</td>
 <td>O(log V)</td>
 <td>O(1)</td>

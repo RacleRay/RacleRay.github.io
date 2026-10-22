@@ -27,7 +27,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://images.unsplash.com/uploads/14126758789351371c7ec/aa322c2d?crop=entropy&amp;cs=srgb&amp;fm=jpg&amp;ixid=M3w2NDU1OTF8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzI4OTE5MDl8&amp;ixlib=rb-4.1.0&amp;q=85&amp;w=1024&amp;h=768">
 <meta property="article:published_time" content="2026-03-06T15:12:13.000Z">
-<meta property="article:modified_time" content="2026-03-07T15:23:40.811Z">
+<meta property="article:modified_time" content="2026-03-07T15:23:42.000Z">
 <meta property="article:author" content="江左时雨">
 <meta property="article:tag" content="C">
 <meta property="article:tag" content="memory order">
@@ -456,7 +456,7 @@ Buffer，直接操作缓存或内存，且禁止任何指令跨越它进行重�
 <col style="width: 25%">
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th style="text-align: left;">处理器 0</th>
 <th style="text-align: left;">处理器 1</th>
 <th style="text-align: left;">处理器 2</th>
@@ -464,14 +464,14 @@ Buffer，直接操作缓存或内存，且禁止任何指令跨越它进行重�
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td style="text-align: left;"><code>mov r, [y]</code>
 <strong>E</strong></td>
 <td style="text-align: left;">-</td>
 <td style="text-align: left;">-</td>
 <td style="text-align: left;">P0 独占读取 y (内存中也有最新备份)</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: left;"><strong>S</strong></td>
 <td style="text-align: left;"><code>mov r, [y]</code>
 <strong>S</strong></td>
@@ -479,7 +479,7 @@ Buffer，直接操作缓存或内存，且禁止任何指令跨越它进行重�
 <td style="text-align: left;">P1 读取，P0 状态降级为 Shared，P1 为
 Shared</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: left;"><strong>I</strong></td>
 <td style="text-align: left;"><strong>I</strong></td>
 <td style="text-align: left;"><code>mov [y], 1</code>
@@ -487,7 +487,7 @@ Shared</td>
 <td style="text-align: left;">P2 写入，发出 Invalidate 信号，P0/P1 变为
 Invalid</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: left;"><code>mov [y], 2</code>
 <strong>M</strong></td>
 <td style="text-align: left;"><strong>I</strong></td>
@@ -495,7 +495,7 @@ Invalid</td>
 <td style="text-align: left;">P0 写入，P2 状态被 Invalidate
 (通常通过总线仲裁)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: left;"><strong>S</strong></td>
 <td style="text-align: left;"><code>mov r, [y]</code>
 <strong>S</strong></td>
@@ -503,7 +503,7 @@ Invalid</td>
 <td style="text-align: left;">P1 读取，P0 将数据 Flush 到内存，P0/P1
 变为 Shared</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: left;"><strong>S</strong></td>
 <td style="text-align: left;"><strong>S</strong></td>
 <td style="text-align: left;"><code>mov r, [y]</code>
@@ -1018,29 +1018,29 @@ Happens-Before 关系有序化，程序就是数据竞争无的，其行为符�
 <col style="width: 49%">
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>特性</th>
 <th>成员函数 (C++ Style)</th>
 <th>自由函数 (C Style / Explicit)</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><strong>语法</strong></td>
 <td><code>obj.store(val, order)</code></td>
 <td><code>atomic_store_explicit(&amp;obj, val, order)</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>语言支持</strong></td>
 <td>仅 C++</td>
 <td>C 和 C++</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>默认参数</strong></td>
 <td><code>order</code> 可选，默认为 <code>seq_cst</code></td>
 <td><code>order</code> <strong>必须</strong>显式提供</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>使用场景</strong></td>
 <td>面向对象编程，常规 C++ 代码</td>
 <td>C 语言代码、泛型编程、C/C++ 互操作</td>
@@ -1146,7 +1146,7 @@ A 写入 1，线程 B 写入 2，那么所有线程要么看到“先 1 后 2”
 <col style="width: 30%">
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>场景</th>
 <th>原子性保证</th>
 <th>顺序保证</th>
@@ -1155,21 +1155,21 @@ A 写入 1，线程 B 写入 2，那么所有线程要么看到“先 1 后 2”
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><strong>读读</strong></td>
 <td>✅ 无撕裂</td>
 <td>✅ 认同修改顺序</td>
 <td>❌ 允许读到不同快照</td>
 <td>线程间数据可能不一致（陈旧）</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>写写</strong></td>
 <td>✅ 无撕裂</td>
 <td>✅ 单一全序 (Total Order)</td>
 <td>✅ 最终值一致</td>
 <td>竞态条件（谁最后写）</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>读写</strong></td>
 <td>✅ 无撕裂</td>
 <td>✅ 读到顺序中的某值</td>

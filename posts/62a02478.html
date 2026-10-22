@@ -29,7 +29,7 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/fairseq.gif">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/cnn-nmt.png">
 <meta property="article:published_time" content="2020-07-07T09:01:06.000Z">
-<meta property="article:modified_time" content="2023-08-07T11:54:31.029Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:32.000Z">
 <meta property="article:author" content="江左时雨">
 <meta property="article:tag" content="cnn">
 <meta property="article:tag" content="Fairseq">
@@ -292,8 +292,8 @@ embeddings。</p>
 R^f\)</span></li>
 <li>absolute position embeddings用于编码<mark>位置信息</mark>　<span class="math inline">\(p=[p_1,\cdots,p_m],~\forall~p_j\in R^f\)</span>
 <span class="math display">\[e_j = w_j + p_j,~~ z_j = {1\over k}
-\sum_{t=-k/2}^{k/2}e_{j+t} \]</span></li>
-<li>传统的attention机制 <span class="math display">\[ c_i = \sum_{j=1}^m
+\sum_{t=-k/2}^{k/2}e_{j+t}\]</span></li>
+<li>传统的attention机制 <span class="math display">\[c_i = \sum_{j=1}^m
 a_{ij} e_j\]</span></li>
 </ul>
 </blockquote>
@@ -303,7 +303,7 @@ a_{ij} e_j\]</span></li>
 <li>​ 卷积编码器在pooling encoder的基础上进行改进，使用一个CNN-a
 卷积层来进一步编码源语言句子中的词。输出原句长度的第一层卷积结果Z。</li>
 </ul>
-<p>​ <span class="math display">\[z_j = CNN\_a(e)_j \]</span></p>
+<p>​ <span class="math display">\[z_j = CNN\_a(e)_j\]</span></p>
 <ul>
 <li>​
 注意attention的时候，使用了另一个CNN-c卷积层来编码源语言句子中的单词，还是输出原句长度的第一层卷积结果，作为计算atttention
@@ -324,7 +324,7 @@ CNN\_c(e)_j\]</span></p>
 <span class="math inline">\(b_w\in
 \mathbb{R}^{2d}\)</span>。对于窗口内的词向量　<span class="math inline">\(X\in \mathbb{R}^{k\times
 d}\)</span>把所有单词拼接成一个长向量　<span class="math inline">\(X&#39;\in \mathbb{R}^{kd}\)</span>. <span class="math display">\[Y=WX&#39;+b_w = [A B] \in \mathbb{R}^{2d} \\
-A,B\in \mathbb{R}^{d} \]</span></p></li>
+A,B\in \mathbb{R}^{d}\]</span></p></li>
 <li><p>接下来采用<strong>Gated Linear
 Unites(GLU)</strong>的方式来进行编码, <span class="math inline">\(\sigma()\)</span>是一个非线性的激活函数，　<span class="math inline">\(\otimes\)</span>是element-wise mulitiplication
 <span class="math display">\[v([A B] = A \otimes \sigma(B) \in
@@ -353,17 +353,17 @@ state）, 其中　<span class="math inline">\(z_j^u\)</span>　代表的是第u
 g_n]\)</span>，跟源语言的词表达一样，这里也是word
 embeddings加上positional embeddings</p></li>
 <li><p>假设decoder的卷积核的hidden state <span class="math inline">\(h_i^l\)</span>,
-可以进一步计算decoder已经生成的单词的每一层的单词表达 <span class="math display">\[d_i^l = W_d^l h_i^l + b_d^l + g_i
-\]</span></p></li>
+可以进一步计算decoder已经生成的单词的每一层的单词表达 <span class="math display">\[d_i^l = W_d^l h_i^l + b_d^l +
+g_i\]</span></p></li>
 <li><p>假设encoder 最顶层(假设是第u层)中，每个单词的表达是<span class="math inline">\(z_j^u\)</span>。可以计算decoder第l层中第i个已经生成的单词<span class="math inline">\(h_i^l\)</span>与源语言句子中最顶层（也即是第u层）的第j个单词
 <span class="math inline">\(z_j^u\)</span>的权重:<br>
 <span class="math display">\[a_{ij}^l = {\exp(d_i^l \cdot z_j^u) \over
-\sum_{t=1}^m \exp(d_i^l \cdot z_t^u) } \]</span></p></li>
+\sum_{t=1}^m \exp(d_i^l \cdot z_t^u) }\]</span></p></li>
 <li><p>可以进一步计算在decoder第l层，在第i个时刻的上下文向量（也即是context
 vector）如以下公式，其中将encoder最顶层(第u层)的词向量<span class="math inline">\(z_j^u\)</span>与最底层的词向量<span class="math inline">\(e_j\)</span>相加。</p></li>
 </ul>
 <p>​ <span class="math display">\[c_i^l = \sum_{j=1}^m a_{ij}^l (z_j^u +
-e_j) \]</span></p>
+e_j)\]</span></p>
 <ul>
 <li>将<span class="math inline">\(c_i^l\)</span>加到<span class="math inline">\(h_i^l\)</span>中，作为decoder 的下一层的输入</li>
 </ul></li>
@@ -372,7 +372,7 @@ e_j) \]</span></p>
 <li>把decoder最顶层的hidden state <span class="math inline">\(h_i^L\)</span>　通过一个线性的函数映射到词表空间上<span class="math inline">\(d\rightarrow
 |V|\)</span>，之后在通过一个softmax函数　归一化成一个条件概率向量：
 <span class="math display">\[p(y_{i+1}|y_1,\cdots, y_i, x)= softmax(W_o
-h_i^L + b_0) \in \mathbb{R}^{|V|} \]</span></li>
+h_i^L + b_0) \in \mathbb{R}^{|V|}\]</span></li>
 </ul></li>
 <li><p>模型的结构图</p></li>
 </ul>

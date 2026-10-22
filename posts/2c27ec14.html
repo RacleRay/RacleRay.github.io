@@ -26,7 +26,7 @@
 <meta property="og:description" content="记录个人桌面版Linux配置过程。但是在本机安装双系统很不稳定，虚拟机在我的小破笔记本上也表现很一般，最后还是转战云主机了。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-07-06T14:42:23.000Z">
-<meta property="article:modified_time" content="2023-08-07T11:54:31.038Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:32.000Z">
 <meta property="article:author" content="江左时雨">
 <meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary_large_image">
@@ -393,53 +393,53 @@ libs:(boost版本较低，需要手动安装较高版本，见下文Boost部分)
 </ul>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th style="text-align: left;">快捷键</th>
 <th style="text-align: left;">作用</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td style="text-align: left;">Ctrl+Shift+E</td>
 <td style="text-align: left;">垂直分割窗口</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: left;">Ctrl+Shift+O</td>
 <td style="text-align: left;">水平分割窗口</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: left;">Ctrl+Shift+W</td>
 <td style="text-align: left;">关闭当前窗格</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: left;">Ctrl+Shift+C</td>
 <td style="text-align: left;">复制</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: left;">Ctrl+Shift+V</td>
 <td style="text-align: left;">粘贴</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: left;">Ctrl+Shift+X</td>
 <td style="text-align: left;">放大或缩小某一窗口</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: left;">Ctrl+Shift+Z</td>
 <td style="text-align: left;">从放大窗口回到多窗格界面</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: left;">ALT+↑[↓,←,→]</td>
 <td style="text-align: left;">移动到上[下、左、右]面一个窗口</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: left;">Ctrl+Tab</td>
 <td style="text-align: left;">切换窗口</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: left;">Ctrl+<code>-</code></td>
 <td style="text-align: left;">缩小字体</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: left;">Ctrl+Shift+<code>=</code>也就是Ctrl+<code>+</code></td>
 <td style="text-align: left;">放大字体</td>
 </tr>
@@ -506,33 +506,33 @@ Ctrl + b ?。那么在Tmux窗口下，先按下 Ctrl + b，再按下
 <col style="width: 32%">
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>tmux new -s <session_name></session_name></th>
 <th>新建一个特定名称的会话</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>tmux detach</td>
 <td>将当前会话与窗口分离</td>
 </tr>
-<tr class="even">
+<tr>
 <td>tmux ls / tmux list-session</td>
 <td>查看当前所有的Tmux会话</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>tmux attach -t <session_name></session_name></td>
 <td>重新连接某个已存在的会话</td>
 </tr>
-<tr class="even">
+<tr>
 <td>tmux kill-session -t <session_name></session_name></td>
 <td>删除某个会话</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>tmux switch -t <session-name></session-name></td>
 <td>切换会话</td>
 </tr>
-<tr class="even">
+<tr>
 <td>tmux rename-session -t <old_session> <new_session></new_session></old_session></td>
 <td>重新命名会话</td>
 </tr>
@@ -541,17 +541,17 @@ Ctrl + b ?。那么在Tmux窗口下，先按下 Ctrl + b，再按下
 <p>会话相关的快捷键：</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Ctrl + b d</th>
 <th>分离会话</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Ctrl + b s</td>
 <td>列出所有会话</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Ctrl + b $</td>
 <td>重命名当前会话</td>
 </tr>
@@ -566,53 +566,53 @@ Ctrl + b ?。那么在Tmux窗口下，先按下 Ctrl + b，再按下
 <h4><span id="-代码折叠">- 代码折叠</span></h4>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th><code>zc</code></th>
 <th>关闭当前打开的折叠</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>zo</code></td>
 <td>打开当前的折叠</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>zm</code></td>
 <td>关闭所有折叠</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>zM</code></td>
 <td>关闭所有折叠及其嵌套的折叠</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>zr</code></td>
 <td>打开所有折叠</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>zR</code></td>
 <td>打开所有折叠及其嵌套的折叠</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>zd</code></td>
 <td>删除当前折叠</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>zE</code></td>
 <td>删除所有折叠</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>zj</code></td>
 <td>移动至下一个折叠</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>zk</code></td>
 <td>移动至上一个折叠</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>zn</code></td>
 <td>禁用折叠</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>zN</code></td>
 <td>启用折叠</td>
 </tr>
@@ -649,11 +649,9 @@ apt-get dist-upgrade # 发行版升级（如，从10.10到11.04）</p></li>
 安装软件包<pkg>，多个软件包用空格隔开<br>
 apt-get install --reinstall <pkg> # 重新安装软件包<pkg><br>
 apt-get install -f <pkg> # 修复安装（破损的依赖关系）软件包<pkg></pkg></pkg></pkg></pkg></pkg></pkg></p>
-<ol start="3" type="1">
-<li>卸载类操作： apt-get remove <pkg> #
+<p>3. 卸载类操作： apt-get remove <pkg> #
 删除软件包<pkg>（不包括配置文件）<br>
-apt-get purge <pkg> # 删除软件包<pkg>（包括配置文件）</pkg></pkg></pkg></pkg></li>
-</ol></li>
+apt-get purge <pkg> # 删除软件包<pkg>（包括配置文件）</pkg></pkg></pkg></pkg></p></li>
 <li><p>下载清除类操作： apt-get source <pkg> #
 下载pkg包的源代码到当前目录<br>
 apt-get download <pkg> # 下载pkg包的二进制包到当前目录<br>

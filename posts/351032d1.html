@@ -26,7 +26,7 @@
 <meta property="og:description" content="C++ STL 笔记">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-06-13T14:23:13.000Z">
-<meta property="article:modified_time" content="2024-01-09T10:19:57.349Z">
+<meta property="article:modified_time" content="2024-01-09T10:19:58.000Z">
 <meta property="article:author" content="江左时雨">
 <meta property="article:tag" content="C++">
 <meta property="article:tag" content="STL">
@@ -421,7 +421,7 @@ CompT&gt; CompT定义排序函数</li>
 <col style="width: 28%">
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th></th>
 <th><strong>提供的运算符重载</strong></th>
 <th><strong>具有此迭代器的容器</strong></th>
@@ -429,37 +429,37 @@ CompT&gt; CompT定义排序函数</li>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>输入迭代器</td>
 <td>*（可读取），!=，==，++（一次性）</td>
 <td>istream_iterator</td>
 <td>input_iterator</td>
 </tr>
-<tr class="even">
+<tr>
 <td>输出迭代器</td>
 <td>*（可写入），!=，==，++（一次性）</td>
 <td>back_insert_iterator</td>
 <td>output_iterator</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>前向迭代器</td>
 <td>*，!=，==，++</td>
 <td>forward_list</td>
 <td>forward_iterator</td>
 </tr>
-<tr class="even">
+<tr>
 <td>双向迭代器</td>
 <td>*，!=，==，++，--</td>
 <td>set，map，list</td>
 <td>bidirectional_iterator</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>随机访问迭代器</td>
 <td>*，!=，==，++，--，+，-，+=，-=，[]</td>
 <td>vector，array，deque</td>
 <td>random_access_iterator</td>
 </tr>
-<tr class="even">
+<tr>
 <td>迭代器外包装</td>
 <td>和他所包装的迭代器保持一致</td>
 <td>reverse_iterator</td>
@@ -505,25 +505,25 @@ set.count(x) != 0 会高效一些。</p>
 <figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-comment">// 删除 [3, 6] 区间内的元素</span><br>a_set.<span class="hljs-built_in">erase</span>(a_set.<span class="hljs-built_in">lower_bound</span>(<span class="hljs-number">3</span>), a_set.<span class="hljs-built_in">upper_bound</span>(<span class="hljs-number">6</span>));<br></code></pre></div></td></tr></table></figure>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th><strong>操作</strong></th>
 <th><strong>实现方法</strong></th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>增</td>
 <td>a.insert(x)</td>
 </tr>
-<tr class="even">
+<tr>
 <td>删</td>
 <td>a.erase(x) 或者 a.erase(a.find(x))</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>改</td>
 <td>一旦插入就无法修改，只能先删再增</td>
 </tr>
-<tr class="even">
+<tr>
 <td>查</td>
 <td>a.find(x) != a.end() 或者 a.count(x)</td>
 </tr>
@@ -560,7 +560,7 @@ emplace_hint() 的效率会更高。</p>
 <col style="width: 21%">
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th><strong>函数</strong></th>
 <th><strong>含义</strong></th>
 <th><strong>set</strong></th>
@@ -569,49 +569,49 @@ emplace_hint() 的效率会更高。</p>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>insert(x)</td>
 <td>插入一个元素 x</td>
 <td>√</td>
 <td>√</td>
 <td>√</td>
 </tr>
-<tr class="even">
+<tr>
 <td>erase(x)</td>
 <td>删除所有等于 x 的元素</td>
 <td>√</td>
 <td>√</td>
 <td>√</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>count(x)</td>
 <td>有多少个等于 x 的元素</td>
 <td>√，0或1</td>
 <td>√</td>
 <td>√，0或1</td>
 </tr>
-<tr class="even">
+<tr>
 <td>find(x)</td>
 <td>指向第一个等于 x 的元素</td>
 <td>√</td>
 <td>√</td>
 <td>√</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>lower_bound(x)</td>
 <td>指向第一个大于等于 x 的元素</td>
 <td>√</td>
 <td>√</td>
 <td>×</td>
 </tr>
-<tr class="even">
+<tr>
 <td>upper_bound(x)</td>
 <td>指向第一个大于 x 的元素</td>
 <td>√</td>
 <td>√</td>
 <td>×</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>equal_range(x)</td>
 <td>所有等于 x 的元素所组成的区间</td>
 <td>√</td>
@@ -623,7 +623,7 @@ emplace_hint() 的效率会更高。</p>
 <p>和 vector 的横向比较：</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th><strong>类型</strong></th>
 <th><strong>去重</strong></th>
 <th><strong>有序</strong></th>
@@ -632,35 +632,35 @@ emplace_hint() 的效率会更高。</p>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>vector</td>
 <td>×</td>
 <td>×</td>
 <td>O(n)</td>
 <td>O(1) ~ O(n)</td>
 </tr>
-<tr class="even">
+<tr>
 <td>set</td>
 <td>√</td>
 <td>√</td>
 <td>O(logn)</td>
 <td>O(logn)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>multiset</td>
 <td>×</td>
 <td>√</td>
 <td>O(logn)</td>
 <td>O(logn)</td>
 </tr>
-<tr class="even">
+<tr>
 <td>unordered_set</td>
 <td>√</td>
 <td>×</td>
 <td>O(1)</td>
 <td>O(1)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>unordered_multiset</td>
 <td>×</td>
 <td>×</td>
@@ -678,7 +678,7 @@ emplace_hint() 的效率会更高。</p>
 <col style="width: 12%">
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th><strong>类型</strong></th>
 <th><strong>头文件</strong></th>
 <th><strong>lower/upper_bound</strong></th>
@@ -687,35 +687,35 @@ emplace_hint() 的效率会更高。</p>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>vector</td>
 <td><vector></vector></td>
 <td>√，O(logn)</td>
 <td>√，O(logn)</td>
 <td>√，O(n)</td>
 </tr>
-<tr class="even">
+<tr>
 <td>set</td>
 <td><set></set></td>
 <td>√，O(logn)</td>
 <td>√，O(logn)</td>
 <td>√，O(logn)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>multiset</td>
 <td><set></set></td>
 <td>√，O(logn)</td>
 <td>√，O(logn)</td>
 <td>√，O(logn)</td>
 </tr>
-<tr class="even">
+<tr>
 <td>unordered_set</td>
 <td><unordered_set></unordered_set></td>
 <td>×</td>
 <td>√，O(1)</td>
 <td>√，O(1)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>unordered_multiset</td>
 <td><unordered_set></unordered_set></td>
 <td>×</td>

@@ -30,7 +30,7 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/transformer.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/racleray/image_storage/images/pic/compare.png">
 <meta property="article:published_time" content="2020-07-07T09:30:12.000Z">
-<meta property="article:modified_time" content="2023-08-07T11:54:31.035Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:32.000Z">
 <meta property="article:author" content="江左时雨">
 <meta property="article:tag" content="transformer">
 <meta name="twitter:card" content="summary_large_image">
@@ -302,8 +302,7 @@ Attention
 fully connected feed-forward network）</p></li>
 <li><p>会使用残差连接的方式，分别对每个子层的输入加到这个子层的输出上，然后再接一个Layer
 normalization的归一化层。</p>
-<p>​ <span class="math display">\[ \text{LayerNorm}(x+\text{Sublayer}(x))
-\]</span></p></li>
+<p>​ <span class="math display">\[\text{LayerNorm}(x+\text{Sublayer}(x))\]</span></p></li>
 <li><p>所有的embedding及hidden state的维度都是512</p></li>
 </ul></li>
 </ul>
@@ -317,8 +316,8 @@ connected feed-forward network）</li>
 <li><font color="red">第三个子层用于对encoder的输出向量进行multi-head
 attention</font></li>
 <li>同样的，会使用残差连接的方式，然后再接一个Layer
-normalization的归一化层。 <span class="math display">\[
-\text{LayerNorm}(x+\text{Sublayer}(x))\\ \]</span></li>
+normalization的归一化层。 <span class="math display">\[\text{LayerNorm}(x+\text{Sublayer}(x))\\
+\]</span></li>
 <li>decoder还需要将还没有生成的后续序列掩盖（masking），这样做是为了防止decoder在做self-attention的时候关注到后续还未生成的单词上去。</li>
 </ul></li>
 </ul>
@@ -346,9 +345,9 @@ V分别映射到<span class="math inline">\(d_k,~d_k,~d_v\)</span>空间中</p><
 <li><p>对映射之后的Q, K, V 做h次attention，并将h个attention
 head连接在一起形成一个新的向量</p></li>
 <li><p>最后再将这个向量映射到<span class="math inline">\(d_\text{model}\)</span>空间，作为下一层的输入</p>
-<p>​ <span class="math display">\[ \text{MultiHead}(Q,K,V) =
+<p>​ <span class="math display">\[\text{MultiHead}(Q,K,V) =
 \text{Concat}(\text{head}_1,\cdots, \text{head}_h) W^O \\ \text{head}_i
-= \text{Attention}(QW^Q_i, KW^K_i, VW^V_i) \]</span></p></li>
+= \text{Attention}(QW^Q_i, KW^K_i, VW^V_i)\]</span></p></li>
 <li><p>其中<span class="math inline">\(W^Q_i\in
 \mathbb{R}^{d_\text{model}\times d_k}, W^K_i\in
 \mathbb{R}^{d_\text{model}\times d_k}, W^V_i\in
@@ -417,7 +416,7 @@ warmup_steps个训练迭代中learning
 rate是线性增长的，往后随着步长的增加而下降。 一般会设置 warmup_steps =
 4000 <span class="math display">\[lr = d_\text{model}^{-0.5} \cdot
 \min(\text{step_num}^{-0.5},\text{step_num}\cdot
-\text{warmup_steps}^{-1.5}) \]</span></li>
+\text{warmup_steps}^{-1.5})\]</span></li>
 </ul>
 <h3><span id="22-正则化-regularization">2.2 正则化 Regularization</span></h3>
 <ul>

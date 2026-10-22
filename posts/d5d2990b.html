@@ -26,7 +26,7 @@
 <meta property="og:description" content="C++ string 笔记">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-11-12T15:20:11.000Z">
-<meta property="article:modified_time" content="2024-01-09T10:19:17.591Z">
+<meta property="article:modified_time" content="2024-01-09T10:19:18.000Z">
 <meta property="article:author" content="江左时雨">
 <meta property="article:tag" content="C++">
 <meta property="article:tag" content="String">
@@ -354,7 +354,7 @@ GBK。Linux 也可根据环境变量 LANG 和 LC_ALL
 <col style="width: 25%">
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th><strong>字符类型</strong></th>
 <th><strong>字符串类型</strong></th>
 <th><strong>字符串常量语法</strong></th>
@@ -363,42 +363,42 @@ GBK。Linux 也可根据环境变量 LANG 和 LC_ALL
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>char</td>
 <td>string</td>
 <td>"字符"</td>
 <td>1</td>
 <td>随系统默认编码格式而变</td>
 </tr>
-<tr class="even">
+<tr>
 <td>wchar_t（Linux）</td>
 <td>wstring</td>
 <td>L"字符"</td>
 <td>4</td>
 <td>UTF-32</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>wchar_t（Windows）</td>
 <td>wstring</td>
 <td>L"字符"</td>
 <td>2</td>
 <td>UTF-16</td>
 </tr>
-<tr class="even">
+<tr>
 <td>char8_t（C++20）</td>
 <td>u8string</td>
 <td>u8"字符"</td>
 <td>1</td>
 <td>UTF-8</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>char16_t（C++11）</td>
 <td>u16string</td>
 <td>u"字符"</td>
 <td>2</td>
 <td>UTF-16</td>
 </tr>
-<tr class="even">
+<tr>
 <td>char32_t（C++11）</td>
 <td>u32string</td>
 <td>U"字符"</td>
@@ -657,29 +657,29 @@ string_view 被销毁时，其指向的字符串仍存在（弱引用不影响�
 <p>常见强弱引用：</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th><strong>强引用</strong></th>
 <th><strong>弱引用</strong></th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>string</td>
 <td>string_view</td>
 </tr>
-<tr class="even">
+<tr>
 <td>wstring</td>
 <td>wstring_view</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>vector<t></t></td>
 <td>span<t></t></td>
 </tr>
-<tr class="even">
+<tr>
 <td>unique_ptr<t></t></td>
 <td>T *</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>shared_ptr<t></t></td>
 <td>weak_ptr<t></t></td>
 </tr>

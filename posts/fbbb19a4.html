@@ -26,7 +26,7 @@
 <meta property="og:description" content="Brief summary notes about discrete math.">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-10-03T12:54:44.000Z">
-<meta property="article:modified_time" content="2023-08-07T11:54:31.048Z">
+<meta property="article:modified_time" content="2023-08-07T11:54:32.000Z">
 <meta property="article:author" content="江左时雨">
 <meta property="article:tag" content="cs basic">
 <meta property="article:tag" content="math">
@@ -351,7 +351,7 @@ q\)</span></p>
 <h4><span id="truth-table">Truth table</span></h4>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>p</th>
 <th>q</th>
 <th><span class="math inline">\(\lnot p\)</span></th>
@@ -360,28 +360,28 @@ q\)</span></p>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>T</td>
 <td>T</td>
 <td>F</td>
 <td>T</td>
 <td>T</td>
 </tr>
-<tr class="even">
+<tr>
 <td>T</td>
 <td>F</td>
 <td>F</td>
 <td>F</td>
 <td>T</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>F</td>
 <td>T</td>
 <td>T</td>
 <td>F</td>
 <td>T</td>
 </tr>
-<tr class="even">
+<tr>
 <td>F</td>
 <td>F</td>
 <td>T</td>
@@ -430,14 +430,12 @@ contradiction\)</span></p>
 tautology\)</span></p></li>
 </ol>
 <blockquote>
-<p>Ex: <span class="math display">\[
-\begin{align*}
+<p>Ex: <span class="math display">\[\begin{align*}
 (\lnot(p \lor \lnot q)) \land tautology(t) &amp; \\
 (DeMorgan`s\ Law) &amp; \equiv (\lnot p \land \lnot(\lnot q)) \land t \\
 (Double\ Negative) &amp; \equiv (\lnot p \land q) \land t \\
 (Identity) &amp; \equiv \lnot p \land q
-\end{align*}
-\]</span></p>
+\end{align*}\]</span></p>
 </blockquote>
 <hr>
 <h3><span id="conditional-statements">Conditional statements</span></h3>
@@ -447,7 +445,7 @@ tautology\)</span></p></li>
 then q is True"</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>p</th>
 <th>q</th>
 <th><span class="math inline">\(p \to q\)</span></th>
@@ -455,25 +453,25 @@ then q is True"</p>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>T</td>
 <td>T</td>
 <td>T</td>
 <td>T</td>
 </tr>
-<tr class="even">
+<tr>
 <td>T</td>
 <td>F</td>
 <td>F</td>
 <td>F</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>F</td>
 <td>T</td>
 <td>T(vacuously true)</td>
 <td>T</td>
 </tr>
-<tr class="even">
+<tr>
 <td>F</td>
 <td>F</td>
 <td>T(vacuously true)</td>
@@ -504,12 +502,10 @@ whole statement is <code>True</code>.</p>
 <li><span class="math inline">\(\lnot (p \to q) \equiv \lnot (\lnot p
 \lor q)\)</span></li>
 </ul>
-<p><span class="math display">\[
-\begin{align*}
+<p><span class="math display">\[\begin{align*}
 \lnot (\lnot p \lor q) &amp; \equiv (\lnot \lnot p \land \lnot q) \\
 &amp; \equiv p \land \lnot q
-\end{align*}
-\]</span></p>
+\end{align*}\]</span></p>
 <h4><span id="contrapositive-of-astatement">Contrapositive of a
 statement</span></h4>
 <ul>
@@ -569,7 +565,7 @@ conclusion follows.</p>
 </blockquote>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>p</th>
 <th>q</th>
 <th><span class="math inline">\(p \to q\)</span>(premises)</th>
@@ -578,28 +574,28 @@ conclusion follows.</p>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>T</td>
 <td>T</td>
 <td>T</td>
 <td>T</td>
 <td>T</td>
 </tr>
-<tr class="even">
+<tr>
 <td>T</td>
 <td>F</td>
 <td>F</td>
 <td><span class="math inline">\(\boxtimes\)</span></td>
 <td><span class="math inline">\(\boxtimes\)</span></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>F</td>
 <td>T</td>
 <td>T</td>
 <td><span class="math inline">\(\boxtimes\)</span></td>
 <td><span class="math inline">\(\boxtimes\)</span></td>
 </tr>
-<tr class="even">
+<tr>
 <td>F</td>
 <td>F</td>
 <td>T</td>
@@ -690,9 +686,10 @@ person is the oldest in the world." -&gt; <code>Statement</code></li>
 <h3><span id="negate-quantifier">Negate Quantifier</span></h3>
 <p>For example, we have "<span class="math inline">\(\forall x \in Z^+,
 x &gt; 4\)</span>".</p>
-<p>Negate the quantifier: <span class="math display">\[
-\lnot(\forall x \in D, P(x)) \equiv (\exists x \in D, \lnot P(x))
-\]</span> So, for the example, we have "<span class="math inline">\(\exists x \in Z^+, x \leqslant 4\)</span>".</p>
+<p>Negate the quantifier: <span class="math display">\[\lnot(\forall x
+\in D, P(x)) \equiv (\exists x \in D, \lnot P(x))\]</span> So, for the
+example, we have "<span class="math inline">\(\exists x \in Z^+, x
+\leqslant 4\)</span>".</p>
 <blockquote>
 <p>Ex:</p>
 <p>​ Every integer has a larger integer.</p>
@@ -759,12 +756,10 @@ Z\)</span>, such that <span class="math inline">\(n=2k+1\)</span>.</p>
 <p>​ <span class="math inline">\(\exists k_1 \in Z \ and \ \exists k_2
 \in Z\)</span> , so that <span class="math inline">\(m = 2*k_1\)</span>
 and <span class="math inline">\(n=2*k_2+1\)</span>.</p>
-<p>Manipulate: Then, <span class="math display">\[
-\begin{align*}
+<p>Manipulate: Then, <span class="math display">\[\begin{align*}
 m+n &amp; = 2k_1+2k_2+1 \\
 &amp; = 2(k_1+k_2) + 1
-\end{align*}
-\]</span> Definitions: Thus,</p>
+\end{align*}\]</span> Definitions: Thus,</p>
 <p>​ <span class="math inline">\(\exists k_3 \in Z\)</span> so that <span class="math inline">\(m+n=2k_3+1\)</span>.</p>
 <p>Conclusion:</p>
 <p>​ Thus <span class="math inline">\(m+n\)</span> is <span style="color:orange">odd</span>.</p>
@@ -782,12 +777,10 @@ even, then <span class="math inline">\(mn\)</span> is even.</p>
 <p>Definition:</p>
 <p>​ <span class="math inline">\(\exists k_1, k_2 \in Z\)</span> so that
 <span class="math inline">\(m = 2k_1, n=2k_2\)</span>.</p>
-<p>Manipulation: <span class="math display">\[
-\begin{align*}
+<p>Manipulation: <span class="math display">\[\begin{align*}
 mn &amp; = 2k_1 *2k_2 \\
 &amp; = 2(2*k_1*k_2)
-\end{align*}
-\]</span> Definition:</p>
+\end{align*}\]</span> Definition:</p>
 <p>​ Let t = <span class="math inline">\(2k_1k_2\)</span>, <span class="math inline">\(t \in Z\)</span>.</p>
 <p>Conclusion:</p>
 <p>​ Thus, <span class="math inline">\(mn\)</span> is
