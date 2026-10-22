@@ -12,21 +12,7 @@
     <![CDATA[Recording & Thinking & Story telling]]>
   </subtitle>
   <title>Racle`s Story</title>
-  <updated>2026-10-22T15:40:25.000Z</updated>
-  <entry>
-    <author>
-      <name>江左时雨</name>
-    </author>
-    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
-    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
-    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
-    <id>https://racleray.github.io/posts/dad61cf6.html</id>
-    <link href="https://racleray.github.io/posts/dad61cf6.html"/>
-    <published>2026-10-22T15:40:25.000Z</published>
-    <summary>Rust TLS notes</summary>
-    <title>Rust-TLS</title>
-    <updated>2026-10-22T15:40:25.000Z</updated>
-  </entry>
+  <updated>2026-09-22T14:47:34.000Z</updated>
   <entry>
     <author>
       <name>江左时雨</name>
@@ -273,6 +259,20 @@
     <summary>Rust Notes</summary>
     <title>RUST Part2</title>
     <updated>2024-11-09T12:30:44.000Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>江左时雨</name>
+    </author>
+    <category term="Notes" scheme="https://racleray.github.io/categories/Notes/"/>
+    <category term="Rust" scheme="https://racleray.github.io/categories/Notes/Rust/"/>
+    <category term="Rust" scheme="https://racleray.github.io/tags/Rust/"/>
+    <id>https://racleray.github.io/posts/dad61cf6.html</id>
+    <link href="https://racleray.github.io/posts/dad61cf6.html"/>
+    <published>2024-08-23T14:54:55.000Z</published>
+    <summary>Rust TLS notes</summary>
+    <title>Rust-TLS</title>
+    <updated>2026-10-22T16:13:50.486Z</updated>
   </entry>
   <entry>
     <author>
